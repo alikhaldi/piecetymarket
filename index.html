@@ -1785,11 +1785,12 @@
                 const imageUrl = await uploadImage(formData.get('image'));
                 const newProduct = { title: formData.get('title'), brand: formData.get('brand'), model: formData.get('model'), year: formData.get('year'), wilaya: formData.get('wilaya'), commune: formData.get('commune'), condition: formData.get('condition'), price: parseInt(formData.get('price')), description: formData.get('description'), imageUrl, timestamp: new Date() };
                 await addDoc(collection(db, "products"), newProduct);
+                
                 showMessage("Annonce soumise avec succès!", 4000, 'success');
                 e.target.reset();
                 elements.postProductModal.classList.add('hidden');
-                allProducts = []; // Invalidate product cache
-                renderListings();
+                allProducts = []; // Invalidate product cache to force re-fetch
+                renderView('home'); // Go to home page to see the new product
             } catch (error) {
                 showMessage("Erreur lors de la soumission de l'annonce.", 4000, 'error');
                 console.error("Error submitting form: ", error);
