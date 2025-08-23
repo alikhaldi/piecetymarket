@@ -96,7 +96,7 @@
                         placeholder="Rechercher une pièce..."
                         class="w-full p-3 pl-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 shadow-inner"
                         aria-label="Rechercher une pièce"
-                />
+                / data-i18n-key="search_placeholder">
                 <i
                         class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
                 ></i>
@@ -559,7 +559,7 @@
                 <div
                         class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
                 >
-                    <i class="fas fa-brake-disc text-3xl"></i>
+                    <i class="fas fa-car text-3xl"></i>
                 </div>
                 <h3 class="font-semibold text-lg" data-i18n-key="category_brakes">
                     Freins
@@ -886,7 +886,7 @@
 </template>
 
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
     import {
         getFirestore,
         collection,
@@ -898,14 +898,14 @@
         doc,
         setDoc,
         getDoc,
-    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
     import {
         getStorage,
         ref,
         uploadBytes,
         getDownloadURL,
-    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
-    import { getAuth, signInWithPopup, signOut, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-storage.js";
+    import { getAuth, signInWithPopup, signOut, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
     
     // NOTE: For this app to work correctly in your Firebase project, you need to set up Firestore security rules.
     // These rules will allow public read access for product and review data,
@@ -1982,7 +1982,7 @@
     window.onload = bootApp;
 </script>
    <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBIptEskV2soajxRYPDfwYFYyz9pWQvZL0",
@@ -2011,3 +2011,30 @@
 </body>
 </html>
 
+
+<script>
+(function(){
+  function safeRender(){
+    try {
+      if (typeof renderView === 'function') {
+        renderView('home');
+        return true;
+      }
+      // Try to inject home template manually as a fallback
+      var tpl = document.getElementById('home-view-template');
+      var container = document.getElementById('app-container');
+      if (tpl && container && container.children.length === 0) {
+        container.innerHTML = '';
+        container.appendChild(tpl.content.cloneNode(true));
+        return true;
+      }
+    } catch(e) { console.error('Bootstrap render error:', e); }
+    return false;
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', safeRender);
+  } else {
+    safeRender();
+  }
+})();
+</script>
