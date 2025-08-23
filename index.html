@@ -1775,7 +1775,7 @@
             e.preventDefault();
             const submitBtn = document.getElementById('submit-ad-btn');
             const originalBtnText = submitBtn.innerHTML;
-            if (!validatePostForm(e.target)) { showMessage("Veuillez remplir tous les champs obligatoires.", 3000, 'error'); return; }
+            if (!validatePostForm(e.target)) { showMessage(translations[currentLang].login_required, 3000, 'error'); return; }
             
             submitBtn.disabled = true;
             submitBtn.innerHTML = `<span data-i18n-key="submitting">${translations[currentLang].submitting}</span>`;
@@ -1783,7 +1783,24 @@
             const formData = new FormData(e.target);
             try {
                 const imageUrl = await uploadImage(formData.get('image'));
-                const newProduct = { title: formData.get('title'), brand: formData.get('brand'), model: formData.get('model'), year: formData.get('year'), wilaya: formData.get('wilaya'), commune: formData.get('commune'), condition: formData.get('condition'), price: parseInt(formData.get('price')), description: formData.get('description'), imageUrl, timestamp: new Date() };
+                
+                // **FIX:** Safely parse the price to prevent NaN errors
+                const price = parseInt(formData.get('price')) || 0;
+
+                const newProduct = { 
+                    title: formData.get('title'), 
+                    brand: formData.get('brand'), 
+                    model: formData.get('model'), 
+                    year: formData.get('year'), 
+                    wilaya: formData.get('wilaya'), 
+                    commune: formData.get('commune'), 
+                    condition: formData.get('condition'), 
+                    price: price, 
+                    description: formData.get('description'), 
+                    imageUrl, 
+                    timestamp: new Date() 
+                };
+
                 await addDoc(collection(db, "products"), newProduct);
                 
                 showMessage("Annonce soumise avec succès!", 4000, 'success');
