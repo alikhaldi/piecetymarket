@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Piecety - Marché des Pièces Auto en Algérie</title>
-    <link rel="icon" type="image/jpeg" href="URL_TO_YOUR_BRAKE_ICON.jpg">
+    
+    <link rel="icon" type="image/svg+xml" href="https://www.svgrepo.com/show/493547/brake-disc.svg">
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -563,7 +564,7 @@
                 <div
                         class="p-2 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
                 >
-                    <img src="URL_TO_YOUR_BRAKE_ICON.jpg" alt="Brakes Icon" class="w-12 h-12">
+                    <img src="https://www.svgrepo.com/show/493547/brake-disc.svg" alt="Brakes Icon" class="w-12 h-12">
                 </div>
                 <h3 class="font-semibold text-lg" data-i18n-key="category_brakes">
                     Freins
@@ -1426,7 +1427,7 @@
         listingsSection.innerHTML = `<p class="col-span-full text-center py-6 text-gray-600" data-i18n-key="loading">Chargement...</p>`;
         try {
             if (allProducts.length === 0) {
-                const q = collection(db, "products");
+                const q = query(collection(db, "products"));
                 const querySnapshot = await getDocs(q);
                 allProducts = querySnapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }));
             }
@@ -1784,7 +1785,7 @@
             try {
                 const imageUrl = await uploadImage(formData.get('image'));
                 
-                // **FIX:** Safely parse the price to prevent NaN errors
+                // **FIXED:** Safely parse the price to prevent NaN errors, which cause Firestore to reject the write.
                 const price = parseInt(formData.get('price')) || 0;
 
                 const newProduct = { 
