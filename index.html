@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Piecety - Marché des Pièces Auto en Algérie</title>
+    <link rel="icon" type="image/jpeg" href="URL_TO_YOUR_BRAKE_ICON.jpg">
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -84,7 +86,7 @@
     <div
             class="container mx-auto p-4 flex items-center justify-between"
     >
-        <a href="#" id="home-link" class="text-3xl font-bold text-blue-600 logo">
+        <a href="#" id="home-link" class="text-3xl font-bold text-blue-600 logo cursor-pointer">
             Piecety
         </a>
 
@@ -268,7 +270,7 @@
         aria-labelledby="modal-title"
 >
     <div
-            class="bg-white rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 relative"
+            class="bg-white rounded-lg shadow-lg max-w-2xl w-11/12 max-h-[90vh] overflow-y-auto p-6 relative"
     >
         <button
                 id="modal-close-btn"
@@ -471,11 +473,11 @@
 
             <div class="text-center">
                 <button
+                        id="submit-ad-btn"
                         type="submit"
-                        class="mt-4 px-6 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md"
-                        data-i18n-key="submit_ad_btn_text"
+                        class="mt-4 px-6 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md disabled:bg-blue-400"
                 >
-                    Soumettre
+                    <span data-i18n-key="submit_ad_btn_text">Soumettre</span>
                 </button>
             </div>
         </form>
@@ -490,7 +492,7 @@
         aria-labelledby="auth-modal-title"
 >
     <div
-            class="bg-white rounded-lg shadow-lg max-w-sm w-full p-6 relative"
+            class="bg-white rounded-lg shadow-lg max-w-sm w-11/12 p-6 relative"
     >
         <button
                 id="auth-modal-close-btn"
@@ -559,9 +561,9 @@
                     data-category="brakes"
             >
                 <div
-                        class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
+                        class="p-2 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
                 >
-                    <i class="fas fa-compact-disc text-3xl"></i>
+                    <img src="URL_TO_YOUR_BRAKE_ICON.jpg" alt="Brakes Icon" class="w-12 h-12">
                 </div>
                 <h3 class="font-semibold text-lg" data-i18n-key="category_brakes">
                     Freins
@@ -1006,7 +1008,8 @@
             quantity: "Quantité",
             item_total: "Total de l'article",
             login_required: "Veuillez vous connecter pour utiliser cette fonctionnalité.",
-            brands_title: "Choisissez une marque"
+            brands_title: "Choisissez une marque",
+            submitting: "Soumission en cours..."
         },
         en: {
             fr_short: "FR", en_short: "EN", ar_short: "AR",
@@ -1040,7 +1043,8 @@
             quantity: "Quantity",
             item_total: "Item Total",
             login_required: "Please log in to use this feature.",
-            brands_title: "Choose a brand"
+            brands_title: "Choose a brand",
+            submitting: "Submitting..."
         },
         ar: {
             fr_short: "FR", en_short: "EN", ar_short: "AR",
@@ -1074,7 +1078,8 @@
             quantity: "الكمية",
             item_total: "إجمالي السلعة",
             login_required: "يرجى تسجيل الدخول لاستخدام هذه الميزة.",
-            brands_title: "اختر ماركة"
+            brands_title: "اختر ماركة",
+            submitting: "...جاري الإرسال"
         }
     };
 
@@ -1133,16 +1138,16 @@
     };
 
     const car_data = {
-        "Toyota": { logo: "https://upload.wikimedia.org/wikipedia/commons/9/9d/Toyota_carlogo.svg", models: ["Yaris", "Corolla", "Camry", "Land Cruiser", "Hilux"] },
-        "Peugeot": { logo: "https://upload.wikimedia.org/wikipedia/commons/f/f7/Peugeot_Logo.svg", models: ["208", "308", "301", "2008", "3008", "508"] },
-        "Volkswagen": { logo: "https://upload.wikimedia.org/wikipedia/commons/6/6d/Volkswagen_logo_2019.svg", models: ["Golf", "Polo", "Passat", "Tiguan", "Touareg", "Jetta"] },
-        "Renault": { logo: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Renault_2021_logo.svg", models: ["Clio", "Megane", "Captur", "Duster", "Symbol"] },
-        "Hyundai": { logo: "https://upload.wikimedia.org/wikipedia/commons/e/e3/Hyundai_logo_2.svg", models: ["i10", "i20", "Accent", "Tucson", "Santa Fe"] },
-        "Nissan": { logo: "https://upload.wikimedia.org/wikipedia/commons/8/8c/Nissan_logo.svg", models: ["Micra", "Sentra", "Qashqai", "X-Trail", "Juke"] },
-        "Fiat": { logo: "https://upload.wikimedia.org/wikipedia/commons/f/f9/Fiat_logo.svg", models: ["Panda", "500", "Tipo", "Punto"] },
-        "Citroën": { logo: "https://upload.wikimedia.org/wikipedia/commons/0/01/Citro%C3%ABn_logo_2022.svg", models: ["C3", "C4", "Berlingo", "C-Elysée"] },
-        "Kia": { logo: "https://upload.wikimedia.org/wikipedia/commons/4/4b/Kia-logo.svg", models: ["Picanto", "Rio", "Sportage", "Sorento"] },
-        "Mercedes-Benz": { logo: "https://upload.wikimedia.org/wikipedia/commons/9/90/Mercedes-Logo.svg", models: ["A-Class", "C-Class", "E-Class", "GLA", "GLC"] }
+        "Toyota": { logo: "https://cdn.worldvectorlogo.com/logos/toyota-1.svg", models: ["Yaris", "Corolla", "Camry", "Land Cruiser", "Hilux"] },
+        "Peugeot": { logo: "https://cdn.worldvectorlogo.com/logos/peugeot-01.svg", models: ["208", "308", "301", "2008", "3008", "508"] },
+        "Volkswagen": { logo: "https://cdn.worldvectorlogo.com/logos/volkswagen-3.svg", models: ["Golf", "Polo", "Passat", "Tiguan", "Touareg", "Jetta"] },
+        "Renault": { logo: "https://cdn.worldvectorlogo.com/logos/renault-1.svg", models: ["Clio", "Megane", "Captur", "Duster", "Symbol"] },
+        "Hyundai": { logo: "https://cdn.worldvectorlogo.com/logos/hyundai-5.svg", models: ["i10", "i20", "Accent", "Tucson", "Santa Fe"] },
+        "Nissan": { logo: "https://cdn.worldvectorlogo.com/logos/nissan-7.svg", models: ["Micra", "Sentra", "Qashqai", "X-Trail", "Juke"] },
+        "Fiat": { logo: "https://cdn.worldvectorlogo.com/logos/fiat-4.svg", models: ["Panda", "500", "Tipo", "Punto"] },
+        "Citroën": { logo: "https://cdn.worldvectorlogo.com/logos/citroen-1.svg", models: ["C3", "C4", "Berlingo", "C-Elysée"] },
+        "Kia": { logo: "https://cdn.worldvectorlogo.com/logos/kia-2021.svg", models: ["Picanto", "Rio", "Sportage", "Sorento"] },
+        "Mercedes-Benz": { logo: "https://cdn.worldvectorlogo.com/logos/mercedes-benz-9.svg", models: ["A-Class", "C-Class", "E-Class", "GLA", "GLC"] }
     };
 
     const currentYear = new Date().getFullYear();
@@ -1758,7 +1763,7 @@
             translatePage(currentLang);
             closeMobileMenu();
             if (currentView === 'brands') renderView('brands');
-            else if (currentView === 'home') renderView('home', { preFilterBrand: elements.brandFilter.value });
+            else if (currentView === 'home') renderView('home', { preFilterBrand: elements.brandFilter?.value });
         }));
         
         if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', () => { elements.mobileMenu.classList.remove('hidden'); document.body.classList.add('overflow-hidden'); });
@@ -1768,7 +1773,13 @@
         
         if (postProductForm) postProductForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            const submitBtn = document.getElementById('submit-ad-btn');
+            const originalBtnText = submitBtn.innerHTML;
             if (!validatePostForm(e.target)) { showMessage("Veuillez remplir tous les champs obligatoires.", 3000, 'error'); return; }
+            
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<span data-i18n-key="submitting">${translations[currentLang].submitting}</span>`;
+            
             const formData = new FormData(e.target);
             try {
                 const imageUrl = await uploadImage(formData.get('image'));
@@ -1782,6 +1793,9 @@
             } catch (error) {
                 showMessage("Erreur lors de la soumission de l'annonce.", 4000, 'error');
                 console.error("Error submitting form: ", error);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
             }
         });
         
