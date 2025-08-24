@@ -480,20 +480,6 @@
                 ></textarea>
             </div>
             
-            <div>
-                <label for="product-image" class="block font-medium mb-1" data-i18n-key="image_label">
-                    Image de la pièce
-                </label>
-                <input
-                        type="file"
-                        id="product-image"
-                        name="image"
-                        accept="image/*"
-                        class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                />
-                <div id="image-preview-container" class="mt-2"></div>
-            </div>
-
             <div class="text-center">
                 <button
                         id="submit-ad-btn"
@@ -543,7 +529,7 @@
 
 <template id="home-view-template">
     <section
-            class="text-center py-12 md:py-24 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl shadow-lg mb-8 md:mb-12"
+            class="text-center py-8 sm:py-12 md:py-24 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl shadow-lg mb-8 md:mb-12"
     >
         <h1 class="text-3xl md:text-5xl font-extrabold mb-4" data-i18n-key="hero_title">
             Trouvez la bonne pièce pour votre voiture
@@ -570,11 +556,11 @@
                     data-category="engine"
             >
                 <div
-                        class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
+                        class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
                 >
                     <i class="fas fa-cogs text-3xl"></i>
                 </div>
-                <h3 class="font-semibold text-lg" data-i18n-key="category_engine">
+                <h3 class="font-semibold text-base sm:text-lg" data-i18n-key="category_engine">
                     Moteur
                 </h3>
             </a>
@@ -584,11 +570,11 @@
                     data-category="brakes"
             >
                 <div
-                        class="p-2 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
+                        class="p-2 rounded-full bg-blue-100 text-blue-600 mx-auto w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
                 >
-                    <img src="https://www.svgrepo.com/show/493547/brake-disc.svg" alt="Brakes Icon" class="w-12 h-12">
+                    <img src="https://www.svgrepo.com/show/493547/brake-disc.svg" alt="Brakes Icon" class="w-10 h-10 sm:w-12 sm:h-12">
                 </div>
-                <h3 class="font-semibold text-lg" data-i18n-key="category_brakes">
+                <h3 class="font-semibold text-base sm:text-lg" data-i18n-key="category_brakes">
                     Freins
                 </h3>
             </a>
@@ -598,11 +584,11 @@
                     data-category="fuel_system"
             >
                 <div
-                        class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
+                        class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
                 >
                     <i class="fas fa-gas-pump text-3xl"></i>
                 </div>
-                <h3 class="font-semibold text-lg" data-i18n-key="category_fuel_system">
+                <h3 class="font-semibold text-base sm:text-lg" data-i18n-key="category_fuel_system">
                     Système de carburant
                 </h3>
             </a>
@@ -612,11 +598,11 @@
                     data-category="cooling"
             >
                 <div
-                        class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
+                        class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
                 >
                     <i class="fas fa-fan text-3xl"></i>
                 </div>
-                <h3 class="font-semibold text-lg" data-i18n-key="category_cooling">
+                <h3 class="font-semibold text-base sm:text-lg" data-i18n-key="category_cooling">
                     Refroidissement
                 </h3>
             </a>
@@ -626,11 +612,11 @@
                     data-category="tires"
             >
                 <div
-                        class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
+                        class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
                 >
                     <i class="fas fa-circle text-3xl"></i>
                 </div>
-                <h3 class="font-semibold text-lg" data-i18n-key="category_tires">
+                <h3 class="font-semibold text-base sm:text-lg" data-i18n-key="category_tires">
                     Pneus &amp; Jantes
                 </h3>
             </a>
@@ -640,11 +626,11 @@
                     data-category="electrical"
             >
                 <div
-                        class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
+                        class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
                 >
                     <i class="fas fa-bolt text-3xl"></i>
                 </div>
-                <h3 class="font-semibold text-lg" data-i18n-key="category_electrical">
+                <h3 class="font-semibold text-base sm:text-lg" data-i18n-key="category_electrical">
                     Électrique
                 </h3>
             </a>
@@ -654,11 +640,11 @@
                     data-category="body"
             >
                 <div
-                        class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
+                        class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
                 >
                     <i class="fas fa-car-side text-3xl"></i>
                 </div>
-                <h3 class="font-semibold text-lg" data-i18n-key="category_body">
+                <h3 class="font-semibold text-base sm:text-lg" data-i18n-key="category_body">
                     Carrosserie
                 </h3>
             </a>
@@ -668,11 +654,11 @@
                     data-category="tools"
             >
                 <div
-                        class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
+                        class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
                 >
                     <i class="fas fa-wrench text-3xl"></i>
                 </div>
-                <h3 class="font-semibold text-lg" data-i18n-key="category_tools">
+                <h3 class="font-semibold text-base sm:text-lg" data-i18n-key="category_tools">
                     Outillage
                 </h3>
             </a>
@@ -802,7 +788,7 @@
         </div>
 
         <div
-                class="mt-6 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center"
+                class="mt-6 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 justify-center"
         >
             <button
                     id="filter-apply-btn"
@@ -849,7 +835,7 @@
             <span data-i18n-key="back_to_listings">Retour aux annonces</span>
         </button>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <img id="product-image-detail" src="" alt="" class="w-full h-96 object-cover rounded-lg shadow-md" />
+            <img id="product-image-detail" src="" alt="" class="w-full h-80 object-cover rounded-lg shadow-md" />
             <div>
                 <h2 id="product-title-detail" class="text-3xl font-bold mb-2"></h2>
                 <p id="product-price-detail" class="text-blue-600 font-bold text-2xl mb-4"></p>
@@ -874,35 +860,6 @@
                     </button>
                 </div>
             </div>
-        </div>
-
-        <div class="mt-12">
-            <h3 class="text-2xl font-bold mb-4" data-i18n-key="reviews_title">Avis des utilisateurs</h3>
-            <div id="reviews-container" class="space-y-4">
-            </div>
-        </div>
-
-        <div class="mt-8" id="add-review-section">
-            <h4 class="text-xl font-bold mb-2" data-i18n-key="add_review_title">Ajouter votre avis</h4>
-            <form id="add-review-form" class="space-y-4">
-                <div>
-                    <label for="review-rating" class="block text-sm font-medium text-gray-700">Note</label>
-                    <select id="review-rating" name="rating" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                        <option value="5">5 Étoiles</option>
-                        <option value="4">4 Étoiles</option>
-                        <option value="3">3 Étoiles</option>
-                        <option value="2">2 Étoiles</option>
-                        <option value="1">1 Étoile</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="review-comment" class="block text-sm font-medium text-gray-700">Commentaire</label>
-                    <textarea id="review-comment" name="comment" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
-                </div>
-                <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                    <span data-i18n-key="submit_review">Soumettre l'avis</span>
-                </button>
-            </form>
         </div>
     </div>
 </template>
@@ -929,33 +886,19 @@
 </template>
 
 <script type="module">
+    // --- Firebase SDK Imports ---
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import {
-        getFirestore,
-        collection,
-        addDoc,
-        query,
-        onSnapshot,
-        where,
-        getDocs,
-        doc,
-        setDoc,
-        getDoc,
-        enableNetwork, 
-        disableNetwork
+        getFirestore, collection, addDoc, query, getDocs, doc, setDoc, getDoc
     } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
     import { getAuth, signInWithPopup, signOut, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
     
     // --- App State ---
     let currentUser = null;
     let currentLang = localStorage.getItem("piecety_lang") || "fr";
-    let currentView = 'home';
     let allProducts = [];
-    let userCart = {};
 
     // --- Firebase Config ---
-    // IMPORTANT: For production, use environment variables or Firebase Hosting's reserved URLs to hide your config.
     const firebaseConfig = {
       apiKey: "AIzaSyBIptEskV2soajxRYPDfwYFYyz9pWQvZL0",
       authDomain: "piecety-app-b39c4.firebaseapp.com",
@@ -969,227 +912,67 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
-    const storage = getStorage(app);
     const provider = new GoogleAuthProvider();
 
     // --- Translations ---
     const translations = {
         fr: {
-            fr_short: "FR", en_short: "EN", ar_short: "AR",
-            menu: "Menu", sell: "Vendre", connect: "Se connecter", logout: "Déconnexion", language: "Langue",
-            hero_title: "Trouvez la bonne pièce pour votre voiture",
-            hero_subtitle: "Le marché algérien des pièces automobiles le plus fiable.",
-            categories_title: "Catégories de Pièces",
-            category_engine: "Moteur", category_brakes: "Freins", category_fuel_system: "Système de carburant",
-            category_cooling: "Refroidissement", category_tires: "Pneus & Jantes", category_electrical: "Électrique",
-            category_body: "Carrosserie", category_tools: "Outillage",
-            filters_title: "Filtrer les annonces", all_brands: "Toutes les marques", all_models: "Tous les modèles",
-            all_years: "Toutes années", all_wilayas: "Toutes wilayas", all_communes: "Toutes communes",
-            condition: "État", any_condition: "Tout", new: "Neuf", used: "Occasion",
-            apply_filters: "Appliquer les filtres", reset: "Réinitialiser",
-            search_placeholder: "Rechercher une pièce...",
-            footer_text: "&copy; <span id='current-year'></span> Piecety - Marché des Pièces Auto en Algérie. Tous droits réservés.",
-            submit_ad: "Soumettre une annonce rapide", ad_title_label: "Titre de la pièce", brand_label: "Marque",
-            select_brand: "Sélectionnez une marque", other_brand_label: "Autre Marque", model_label: "Modèle", select_model: "Sélectionnez un modèle",
-            year_label: "Année", select_year: "Sélectionnez une année", wilaya_label: "Wilaya",
-            select_wilaya: "Sélectionnez une wilaya", commune_label: "Commune", select_commune: "Sélectionnez une commune",
-            condition_label: "État", price_label: "Prix (DA)", description_label: "Description",
-            submit_ad_btn_text: "Soumettre",
-            login_text: "Connectez-vous pour accéder à toutes les fonctionnalités.", google_login: "Se connecter avec Google",
-            back_to_listings: "Retour aux annonces", back_to_categories: "Retour aux catégories", add_to_cart: "Ajouter au panier",
-            reviews_title: "Avis des utilisateurs", add_review_title: "Ajouter votre avis", submit_review: "Soumettre l'avis",
-            cart_title: "Mon panier", cart_total: "Total", checkout_btn: "Passer à la caisse",
-            no_listings: "Aucune annonce trouvée.",
-            profile_title: "Mon profil",
-            your_cart_is_empty: "Votre panier est vide.",
-            remove: "Supprimer", quantity: "Quantité", item_total: "Total de l'article",
-            login_required: "Veuillez vous connecter pour utiliser cette fonctionnalité.",
-            brands_title: "Choisissez une marque",
-            submitting: "Soumission en cours...",
-            phone_label: "Numéro de téléphone", image_label: "Image de la pièce", show_contact: "Contacter le Vendeur",
+            sell: "Vendre", connect: "Se connecter", logout: "Déconnexion",
+            hero_title: "Trouvez la bonne pièce pour votre voiture", hero_subtitle: "Le marché algérien des pièces automobiles le plus fiable.",
+            categories_title: "Catégories de Pièces", category_engine: "Moteur", category_brakes: "Freins", category_fuel_system: "Système de carburant", category_cooling: "Refroidissement", category_tires: "Pneus & Jantes", category_electrical: "Électrique", category_body: "Carrosserie", category_tools: "Outillage",
+            filters_title: "Filtrer les annonces", all_brands: "Toutes les marques", all_models: "Tous les modèles", all_years: "Toutes années", all_wilayas: "Toutes wilayas", all_communes: "Toutes communes", condition: "État", any_condition: "Tout", new: "Neuf", used: "Occasion", apply_filters: "Appliquer les filtres", reset: "Réinitialiser",
+            submit_ad: "Soumettre une annonce rapide", ad_title_label: "Titre de la pièce", brand_label: "Marque", select_brand: "Sélectionnez une marque", other_brand_label: "Autre Marque", model_label: "Modèle", select_model: "Sélectionnez un modèle", year_label: "Année", select_year: "Sélectionnez une année", wilaya_label: "Wilaya", select_wilaya: "Sélectionnez une wilaya", commune_label: "Commune", select_commune: "Sélectionnez une commune", condition_label: "État", price_label: "Prix (DA)", description_label: "Description", submit_ad_btn_text: "Soumettre", phone_label: "Numéro de téléphone",
+            login_required: "Veuillez vous connecter pour utiliser cette fonctionnalité.", brands_title: "Choisissez une marque", submitting: "Soumission en cours...",
+            back_to_listings: "Retour aux annonces", back_to_categories: "Retour aux catégories", add_to_cart: "Ajouter au panier", show_contact: "Contacter le Vendeur",
+            no_listings: "Aucune annonce trouvée.", your_cart_is_empty: "Votre panier est vide.", cart_title: "Mon panier", cart_total: "Total", checkout_btn: "Passer à la caisse"
         },
         en: {
-            fr_short: "FR", en_short: "EN", ar_short: "AR",
-            menu: "Menu", sell: "Sell", connect: "Log In", logout: "Log Out", language: "Language",
-            hero_title: "Find the right car part for your vehicle",
-            hero_subtitle: "The most trusted Algerian car parts marketplace.",
-            categories_title: "Parts Categories",
-            category_engine: "Engine", category_brakes: "Brakes", category_fuel_system: "Fuel System",
-            category_cooling: "Cooling", category_tires: "Tires & Rims", category_electrical: "Electrical",
-            category_body: "Body", category_tools: "Tools",
-            filters_title: "Filter Listings", all_brands: "All brands", all_models: "All models",
-            all_years: "All years", all_wilayas: "All wilayas", all_communes: "All communes",
-            condition: "Condition", any_condition: "Any", new: "New", used: "Used",
-            apply_filters: "Apply Filters", reset: "Reset",
-            search_placeholder: "Search for a part...",
-            footer_text: "&copy; <span id='current-year'></span> Piecety - Car Parts Marketplace in Algeria. All rights reserved.",
-            submit_ad: "Submit a quick ad", ad_title_label: "Part Title", brand_label: "Brand",
-            select_brand: "Select a brand", other_brand_label: "Other Brand", model_label: "Model", select_model: "Select a model",
-            year_label: "Year", select_year: "Select a year", wilaya_label: "Wilaya",
-            select_wilaya: "Select a wilaya", commune_label: "Commune", select_commune: "Select a commune",
-            condition_label: "Condition", price_label: "Price (DA)", description_label: "Description",
-            submit_ad_btn_text: "Submit",
-            login_text: "Log in to access all features.", google_login: "Sign in with Google",
-            back_to_listings: "Back to listings", back_to_categories: "Back to Categories", add_to_cart: "Add to cart",
-            reviews_title: "User Reviews", add_review_title: "Add your review", submit_review: "Submit Review",
-            cart_title: "My Cart", cart_total: "Total", checkout_btn: "Proceed to Checkout",
-            no_listings: "No listings found.",
-            profile_title: "My Profile",
-            your_cart_is_empty: "Your cart is empty.",
-            remove: "Remove", quantity: "Quantity", item_total: "Item Total",
-            login_required: "Please log in to use this feature.",
-            brands_title: "Choose a brand",
-            submitting: "Submitting...",
-            phone_label: "Phone Number", image_label: "Part Image", show_contact: "Contact Seller",
+            sell: "Sell", connect: "Log In", logout: "Log Out",
+            hero_title: "Find the right car part for your vehicle", hero_subtitle: "The most trusted Algerian car parts marketplace.",
+            categories_title: "Parts Categories", category_engine: "Engine", category_brakes: "Brakes", category_fuel_system: "Fuel System", category_cooling: "Cooling", category_tires: "Tires & Rims", category_electrical: "Electrical", category_body: "Body", category_tools: "Tools",
+            filters_title: "Filter Listings", all_brands: "All brands", all_models: "All models", all_years: "All years", all_wilayas: "All wilayas", all_communes: "All communes", condition: "Condition", any_condition: "Any", new: "New", used: "Used", apply_filters: "Apply Filters", reset: "Reset",
+            submit_ad: "Submit a quick ad", ad_title_label: "Part Title", brand_label: "Brand", select_brand: "Select a brand", other_brand_label: "Other Brand", model_label: "Model", select_model: "Select a model", year_label: "Year", select_year: "Select a year", wilaya_label: "Wilaya", select_wilaya: "Select a wilaya", commune_label: "Commune", select_commune: "Select a commune", condition_label: "Condition", price_label: "Price (DA)", description_label: "Description", submit_ad_btn_text: "Submit", phone_label: "Phone Number",
+            login_required: "Please log in to use this feature.", brands_title: "Choose a brand", submitting: "Submitting...",
+            back_to_listings: "Back to listings", back_to_categories: "Back to Categories", add_to_cart: "Add to cart", show_contact: "Contact Seller",
+            no_listings: "No listings found.", your_cart_is_empty: "Your cart is empty.", cart_title: "My Cart", cart_total: "Total", checkout_btn: "Proceed to Checkout"
         },
         ar: {
-            fr_short: "FR", en_short: "EN", ar_short: "AR",
-            menu: "القائمة", sell: "بيع", connect: "تسجيل الدخول", logout: "تسجيل الخروج", language: "اللغة",
-            hero_title: "ابحث عن قطعة الغيار المناسبة لسيارتك",
-            hero_subtitle: "أكثر أسواق قطع غيار السيارات ثقة في الجزائر.",
-            categories_title: "فئات القطع",
-            category_engine: "محرك", category_brakes: "مكابح", category_fuel_system: "نظام الوقود",
-            category_cooling: "التبريد", category_tires: "الإطارات والعجلات", category_electrical: "كهربائي",
-            category_body: "هيكل", category_tools: "أدوات",
-            filters_title: "تصفية الإعلانات", all_brands: "جميع الماركات", all_models: "جميع الموديلات",
-            all_years: "جميع السنوات", all_wilayas: "جميع الولايات", all_communes: "جميع البلديات",
-            condition: "الحالة", any_condition: "الكل", new: "جديد", used: "مستعمل",
-            apply_filters: "تطبيق الفلاتر", reset: "إعادة تعيين",
-            search_placeholder: "ابحث عن قطعة...",
-            footer_text: "&copy; <span id='current-year'></span> Piecety - سوق قطع غيار السيارات في الجزائر. جميع الحقوق محفوظة.",
-            submit_ad: "إرسال إعلان سريع", ad_title_label: "عنوان القطعة", brand_label: "الماركة",
-            select_brand: "اختر ماركة", other_brand_label: "ماركة أخرى", model_label: "الموديل", select_model: "اختر موديل",
-            year_label: "السنة", select_year: "اختر سنة", wilaya_label: "الولاية",
-            select_wilaya: "اختر ولاية", commune_label: "البلدية", select_commune: "اختر بلدية",
-            condition_label: "الحالة", price_label: "السعر (دج)", description_label: "الوصف",
-            submit_ad_btn_text: "إرسال",
-            login_text: "تسجيل الدخول للوصول إلى جميع الميزات.", google_login: "تسجيل الدخول باستخدام Google",
-            back_to_listings: "العودة إلى الإعلانات", back_to_categories: "العودة إلى الفئات", add_to_cart: "أضف إلى السلة",
-            reviews_title: "آراء المستخدمين", add_review_title: "أضف رأيك", submit_review: "إرسال الرأي",
-            cart_title: "سلة التسوق", cart_total: "الإجمالي", checkout_btn: "الدفع",
-            no_listings: "لم يتم العثور على إعلانات.",
-            profile_title: "ملفي الشخصي",
-            your_cart_is_empty: "سلة التسوق فارغة.",
-            remove: "حذف", quantity: "الكمية", item_total: "إجمالي السلعة",
-            login_required: "يرجى تسجيل الدخول لاستخدام هذه الميزة.",
-            brands_title: "اختر ماركة",
-            submitting: "...جاري الإرسال",
-            phone_label: "رقم الهاتف", image_label: "صورة القطعة", show_contact: "اتصل بالبائع",
+            sell: "بيع", connect: "تسجيل الدخول", logout: "تسجيل الخروج",
+            hero_title: "ابحث عن قطعة الغيار المناسبة لسيارتك", hero_subtitle: "أكثر أسواق قطع غيار السيارات ثقة في الجزائر.",
+            categories_title: "فئات القطع", category_engine: "محرك", category_brakes: "مكابح", category_fuel_system: "نظام الوقود", category_cooling: "التبريد", category_tires: "الإطارات والعجلات", category_electrical: "كهربائي", category_body: "هيكل", category_tools: "أدوات",
+            filters_title: "تصفية الإعلانات", all_brands: "جميع الماركات", all_models: "جميع الموديلات", all_years: "جميع السنوات", all_wilayas: "جميع الولايات", all_communes: "جميع البلديات", condition: "الحالة", any_condition: "الكل", new: "جديد", used: "مستعمل", apply_filters: "تطبيق الفلاتر", reset: "إعادة تعيين",
+            submit_ad: "إرسال إعلان سريع", ad_title_label: "عنوان القطعة", brand_label: "الماركة", select_brand: "اختر ماركة", other_brand_label: "ماركة أخرى", model_label: "الموديل", select_model: "اختر موديل", year_label: "السنة", select_year: "اختر سنة", wilaya_label: "الولاية", select_wilaya: "اختر ولاية", commune_label: "البلدية", select_commune: "اختر بلدية", condition_label: "الحالة", price_label: "السعر (دج)", description_label: "الوصف", submit_ad_btn_text: "إرسال", phone_label: "رقم الهاتف",
+            login_required: "يرجى تسجيل الدخول لاستخدام هذه الميزة.", brands_title: "اختر ماركة", submitting: "...جاري الإرسال",
+            back_to_listings: "العودة إلى الإعلانات", back_to_categories: "العودة إلى الفئات", add_to_cart: "أضف إلى السلة", show_contact: "اتصل بالبائع",
+            no_listings: "لم يتم العثور على إعلانات.", your_cart_is_empty: "سلة التسوق فارغة.", cart_title: "سلة التسوق", cart_total: "الإجمالي", checkout_btn: "الدفع"
         }
     };
 
     // --- Static Data ---
-    const wilayas = {
-        "Adrar": ["Adrar", "Charouine", "Tamest", "Reggane", "Aoulef", "Fenoughil", "Timimoun", "Talmine", "Bordj Badji Mokhtar", "In Salah"],
-        "Chlef": ["Chlef", "Ténès", "Ouled Farès", "El Marsa", "Abou El Hassan", "Oued Fodda", "Beni Haoua", "El Karimia", "Taougrite", "Harchoun"],
-        "Laghouat": ["Aïn Madhi", "Aflou", "El Ghicha", "El Houaita", "El Assafia", "Ksar El Hirane", "Laghouat", "Taougrite", "Sidi Makhlouf", "Ouled Farès"],
-        "Oum El Bouaghi": ["Aïn Beïda", "Aïn Fekroun", "Aïn Babouche", "Aïn M'lila", "Dhalaâ", "F'kirina", "Oum El Bouaghi", "Sidi R'ghiss", "Souk Naamane", "El Fedjoudj"],
-        "Batna": ["Aïn Touta", "Arris", "Barika", "Batna", "El Madher", "Menaa", "Merouana", "Ras El Aioun", "Timgad", "Ouled Si Slimane"],
-        "Béjaïa": ["Aïn El Kebira", "Akbou", "Béjaïa", "El Kseur", "Sidi Aïch", "Tichy", "Toudja", "Aokas", "Ighil Ali", "Darguina"],
-        "Biskra": ["Biskra", "El Kantara", "Sidi Okba", "Ourlal", "Zeribet El Oued", "Tolga", "Sidi Khaled", "Djemorah", "M'chouneche", "El Outaya"],
-        "Béchar": ["Béchar", "Abadla", "Beni Ounif", "Lahmar", "Tabelbala", "Kenadsa", "Igli", "Taghit", "Mechraâ Houari Boumediene", "Ouled Khoudir"],
-        "Blida": ["Blida", "Boufarik", "Chebli", "Oued El Alleug", "Larbaâ", "Meftah", "Soumaâ", "Bougara", "Mouzaia", "Chréa"],
-        "Bouira": ["Bouira", "Lakhdaria", "Sour El Ghozlane", "Ahnif", "Bir Ghbalou", "Haïzer", "M'chedallah", "El Hachimia", "Sidi Aïssa", "Taghzout"],
-        "Tamanrasset": ["Tamanrasset", "Abalessa", "Idles", "In Amguel", "Tazrouk", "Tin Zaouatine", "In Guezzam", "Djanet", "Bordj Omar Driss", "Illizi"],
-        "Tébessa": ["Tébessa", "Bir El Ater", "Cheria", "El Aouinet", "El Kouif", "El Ma Labiod", "Morsott", "Ouenza", "Bir Mokkadem", "Hammamet"],
-        "Tlemcen": ["Tlemcen", "Ghazaouet", "Maghnia", "Remchi", "Sebdou", "Sidi Djillali", "Hennaya", "Nedroma", "Marsa Ben M'Hidi", "Beni Snous"],
-        "Tiaret": ["Tiaret", "Aïn Deheb", "Frenda", "Ksar Chellala", "Mahdia", "Rahouia", "Sougueur", "Dahmouni", "Sidi Ali Mellal", "Medroussa"],
-        "Tizi Ouzou": ["Tizi Ouzou", "Aïn El Hammam", "Azazga", "Bouzeguène", "Draâ Ben Khedda", "Ouacif", "Larbaâ Nath Irathen", "Tigzirt", "Tizi Gheniff", "Maâtkas"],
-        "Alger": ["Alger", "Bab El Oued", "Baraki", "Bir Mourad Raïs", "Birkhadem", "Bologhine", "Bordj El Kiffan", "Hussein Dey", "Hydra", "Dar El Beïda"],
-        "Djelfa": ["Djelfa", "Aïn Oussera", "Messaad", "Hassi Bahbah", "Had Sahary", "Guettara", "El Idrissia", "Dar Chioukh", "Zaccar", "Faidh El Botma"],
-        "Jijel": ["Jijel", "Taher", "El Milia", "Chekfa", "Ziamamansouria", "Texenna", "Djemaa Beni Habibi", "Sidi Maarouf", "Settara", "Kaous"],
-        "Sétif": ["Sétif", "Aïn Oulmane", "El Eulma", "Bousselam", "Beni Ouartilane", "Bougaâ", "Salah Bey", "Hammamlou", "Guenzet", "Maouaklane"],
-        "Saïda": ["Saïda", "Aïn El Hadjar", "Sidi Boubkeur", "Youb", "El Hassasna", "Tircine", "Maamora", "Ouled Brahim", "Aïn Sekhouna", "Moulay Larbi"],
-        "Skikda": ["Skikda", "Aïn Bouziane", "Azzaba", "El Harrouch", "Collo", "Filfila", "Ramdane Djamel", "Salah Bouchaour", "Zerdaza", "Beni Oulbane"],
-        "Sidi Bel Abbès": ["Sidi Bel Abbès", "Sfisef", "Telagh", "Ras El Ma", "Tessala", "Aïn El Berd", "Boukhanafis", "Ben Badis", "Sidi Chaib", "Moulay Slissen"],
-        "Annaba": ["Annaba", "El Hadjar", "Berrahal", "El Bouni", "Seraïdi", "Chetaïbi", "Oued El Aneb", "Aïn El Berda", "Trézel", "Sidi Amar"],
-        "Guelma": ["Guelma", "Héliopolis", "Oued Zenati", "Bouchegouf", "Ain Reggada", "Tamlouka", "Dkhila", "Bou Hachana", "Belkheir", "Bordj Sabath"],
-        "Constantine": ["Constantine", "El Khroub", "Hamma Bouziane", "Aïn Smara", "Didouche Mourad", "Zighoud Youcef", "Messaoud Boudjriou", "Beni Hamidane", "Ibn Ziad", "Oued El Hadjar"],
-        "Médéa": ["Médéa", "Berrouaghia", "Chahbounia", "Tablat", "Aïn Boucif", "Beni Slimane", "El Azizia", "Si Mahdjoub", "Ouzera", "Ksar Boukhari"],
-        "Mostaganem": ["Mostaganem", "Hassi Mameche", "Aïn Tédelès", "Sidi Ali", "Bouguirat", "Achaacha", "Khadra", "Oued El Kheir", "Mazagran", "Foran"],
-        "M'Sila": ["M'Sila", "Bou Saâda", "Aïn El Melh", "Sidi Aïssa", "Magra", "M'Cif", "Hammam Dhalaâ", "Ouled Derradj", "Ben Srour", "Ouanougha"],
-        "Mascara": ["Mascara", "Ghriss", "Tighennif", "Sig", "Bou Hanifia", "Oued Taria", "Hachem", "Mohammadia", "El Bordj", "Aïn Fares"],
-        "Ouargla": ["Ouargla", "Hassi Messaoud", "Rouissat", "N'Goussa", "Sidi Khouiled", "Blidet Amor", "El Borma", "Tebesbest", "Zaouia El Abidia", "Hassi Ben Abdallah"],
-        "Oran": ["Oran", "Arzew", "Bir El Djir", "Es Senia", "Boutlélis", "Hassi Bounif", "Oued Tlélat", "Sidi Chami", "Gdyel", "Aïn El Turk"],
-        "El Bayadh": ["El Bayadh", "Bougtob", "Chellala", "Breïna", "Rogassa", "Brezina", "Boussemghoun", "El Kheiter", "Kraïr", "Ghassoul"],
-        "Illizi": ["Illizi", "Djanet", "Bordj El Houasse", "Tamanrasset", "In Salah", "Abalessa", "Tazrouk", "Idles", "In Amguel", "Tin Zaouatine"],
-        "Bordj Bou Arréridj": ["Bordj Bou Arréridj", "Ras El Oued", "Mansoura", "Tassameurt", "El Achir", "Medjana", "Bordj Ghedir", "Hammam El Biban", "L'Hassaneia", "Ghassira"],
-        "Boumerdès": ["Boumerdès", "Dellys", "Boudouaou", "Isser", "Béni Amrane", "Naciria", "Corso", "Zemmouri", "Réghaïa", "Tidjelabine"],
-        "El Tarf": ["El Tarf", "Ben M'Hidi", "Besbes", "Drea", "El Kala", "Bougous", "Raml Souk", "Sidi Khelil", "Oued Zitoun", "Aïn Kerma"],
-        "Tindouf": ["Tindouf", "Oum El Assel"],
-        "Tissemsilt": ["Tissemsilt", "Bordj Bounaama", "Lardjem", "Théniet El Had", "Ammi Moussa", "Sidi Boutouchent", "Layoune", "Lazharia", "Bougara", "Bordj Emir Khaled"],
-        "El Oued": ["El Oued", "Guemar", "Hassi Khalifa", "Robbah", "Debila", "Bayadha", "Magrane", "Nakhla", "Kouinine", "El Ogla"],
-        "Khenchela": ["Khenchela", "Aïn Touila", "Bab El Ain", "Kais", "Yabous", "Chechar", "M'Sara", "Ouled Rechache", "Taouzianat", "Remila"],
-        "Souk Ahras": ["Souk Ahras", "Heddada", "M'daourouch", "Mechrouha", "Ouled Driss", "Taoura", "Zaarouria", "Ouillen", "Sidi Fredj", "Tiffech"],
-        "Tipaza": ["Tipaza", "Cherchell", "Koléa", "Fouka", "Hadjout", "Sidi Rached", "Menaceur", "Bou Ismaïl", "Khemis Miliana", "Aïn Tagourait"],
-        "Mila": ["Mila", "Bouhatem", "Ferdjioua", "Grarem Gouga", "Tadjenanet", "Sidi Merouane", "Oued Endja", "Teleghma", "Chigara", "Rouached"],
-        "Aïn Defla": ["Aïn Defla", "Khemis Miliana", "El Attaf", "Aïn Torki", "Djelida", "Rouina", "Hammam Righa", "Miliana", "Boumedfaa", "Aïn Soltane"],
-        "Naâma": ["Naâma", "Mécheria", "Aïn Sefra", "Moghrar", "Tiout", "Sfissifa", "Makman Ben Amer", "Asla", "Kasdir", "El Biod"],
-        "Aïn Témouchent": ["Aïn Témouchent", "Hammam Bou Hadjar", "El Malah", "Béni Saf", "Aghlal", "Chaabat El Ham", "Oued Berkeche", "Aoubellil", "Bouzedjar", "Tamesna"],
-        "Ghardaïa": ["Ghardaïa", "El Guerrara", "Berriane", "Dhayet Bendhahoua", "Metlili", "Zelfana", "Bounoura", "El Atteuf", "Guerrara", "Dra' El Mizan"],
-        "Relizane": ["Relizane", "Oued Rhiou", "Zemmoura", "Sidi M'Hamed Ben Ali", "El H'madna", "Ammi Moussa", "Mazouna", "Mendes", "Ain Tarek", "Oued El Djemaa"],
-        "El M'ghair": ["El M'ghair", "Sidi Amrane", "Djamaa", "Oum Toub", "M'Rara", "Oued Allenda", "Sidi Khelil", "Oued R'hiou", "Sidi Yahia", "Bouchakroun"],
-        "El Meniaa": ["El Meniaa", "Hassi Gara", "Mansourah", "Dhiafat", "El Guerrara", "Tadjmout", "El Hachane", "El Oued", "Chabet El Ami", "Ouled Gacem"]
-    };
-    const car_data = {
-        "Toyota": { logo: "https://cdn.worldvectorlogo.com/logos/toyota-1.svg", models: ["Yaris", "Corolla", "Camry", "Land Cruiser", "Hilux", "RAV4", "Prado", "Fortuner"] },
-        "Peugeot": { logo: "https://cdn.worldvectorlogo.com/logos/peugeot-01.svg", models: ["208", "308", "301", "2008", "3008", "508", "Partner", "Expert"] },
-        "Volkswagen": { logo: "https://cdn.worldvectorlogo.com/logos/volkswagen-3.svg", models: ["Golf", "Polo", "Passat", "Tiguan", "Touareg", "Jetta", "Caddy", "Amarok"] },
-        "Renault": { logo: "https://cdn.worldvectorlogo.com/logos/renault-1.svg", models: ["Clio", "Megane", "Captur", "Duster", "Symbol", "Kadjar", "Kangoo"] },
-        "Hyundai": { logo: "https://cdn.worldvectorlogo.com/logos/hyundai-5.svg", models: ["i10", "i20", "Accent", "Tucson", "Santa Fe", "Elantra", "Creta"] },
-        "Nissan": { logo: "https://cdn.worldvectorlogo.com/logos/nissan-7.svg", models: ["Micra", "Sentra", "Qashqai", "X-Trail", "Juke", "Navara", "Patrol"] },
-        "Fiat": { logo: "https://cdn.worldvectorlogo.com/logos/fiat-4.svg", models: ["500", "Tipo", "Punto", "Ducato", "Doblo"] },
-        "Citroën": { logo: "https://cdn.worldvectorlogo.com/logos/citroen-1.svg", models: ["C3", "C4", "C-Elysée", "Berlingo", "Jumper"] },
-        "Kia": { logo: "https://cdn.worldvectorlogo.com/logos/kia-2021.svg", models: ["Picanto", "Rio", "Sportage", "Sorento", "Cerato"] },
-        "Mercedes-Benz": { logo: "https://cdn.worldvectorlogo.com/logos/mercedes-benz-9.svg", models: ["A-Class", "C-Class", "E-Class", "GLA", "GLC", "GLE", "Sprinter"] },
-        "BMW": { logo: "https://cdn.worldvectorlogo.com/logos/bmw.svg", models: ["Series 1", "Series 3", "Series 5", "X1", "X3", "X5"] },
-        "Audi": { logo: "https://cdn.worldvectorlogo.com/logos/audi-1.svg", models: ["A3", "A4", "A6", "Q3", "Q5", "Q7"] },
-        "Ford": { logo: "https://cdn.worldvectorlogo.com/logos/ford-5.svg", models: ["Fiesta", "Focus", "Ranger", "Transit"] },
-        "Chevrolet": { logo: "https://cdn.worldvectorlogo.com/logos/chevrolet-5.svg", models: ["Spark", "Aveo", "Cruze", "Captiva"] },
-        "Skoda": { logo: "https://cdn.worldvectorlogo.com/logos/skoda-4.svg", models: ["Fabia", "Octavia", "Rapid", "Kodiaq"] },
-        "Seat": { logo: "https://cdn.worldvectorlogo.com/logos/seat-1.svg", models: ["Ibiza", "Leon", "Arona", "Ateca"] },
-        "Dacia": { logo: "https://cdn.worldvectorlogo.com/logos/dacia-2.svg", models: ["Logan", "Sandero", "Duster", "Lodgy"] },
-        "Jeep": { logo: "https://cdn.worldvectorlogo.com/logos/jeep.svg", models: ["Renegade", "Compass", "Cherokee", "Grand Cherokee", "Wrangler"] },
-        "Land Rover": { logo: "https://cdn.worldvectorlogo.com/logos/land-rover-1.svg", models: ["Defender", "Discovery", "Range Rover Evoque", "Range Rover Sport", "Range Rover"] },
-        "Mitsubishi": { logo: "https://cdn.worldvectorlogo.com/logos/mitsubishi-5.svg", models: ["L200", "Pajero", "Outlander"] },
-        "Suzuki": { logo: "https://cdn.worldvectorlogo.com/logos/suzuki-4.svg", models: ["Swift", "Vitara", "Jimny"] }
-    };
+    const wilayas = {"Adrar": ["Adrar", "Charouine"], "Chlef": ["Chlef", "Ténès"], "Laghouat": ["Laghouat", "Aflou"], "Oum El Bouaghi": ["Oum El Bouaghi", "Aïn Beïda"], "Batna": ["Batna", "Barika"], "Béjaïa": ["Béjaïa", "Akbou"], "Biskra": ["Biskra", "Tolga"], "Béchar": ["Béchar", "Abadla"], "Blida": ["Blida", "Boufarik"], "Bouira": ["Bouira", "Lakhdaria"], "Tamanrasset": ["Tamanrasset", "In Salah"], "Tébessa": ["Tébessa", "Chéria"], "Tlemcen": ["Tlemcen", "Maghnia"], "Tiaret": ["Tiaret", "Frenda"], "Tizi Ouzou": ["Tizi Ouzou", "Azazga"], "Alger": ["Alger Centre", "Bab El Oued", "Hydra"], "Djelfa": ["Djelfa", "Messaad"], "Jijel": ["Jijel", "Taher"], "Sétif": ["Sétif", "El Eulma"], "Saïda": ["Saïda"], "Skikda": ["Skikda", "Azzaba"], "Sidi Bel Abbès": ["Sidi Bel Abbès", "Telagh"], "Annaba": ["Annaba", "El Bouni"], "Guelma": ["Guelma", "Oued Zenati"], "Constantine": ["Constantine", "El Khroub"], "Médéa": ["Médéa", "Berrouaghia"], "Mostaganem": ["Mostaganem", "Sidi Ali"], "M'Sila": ["M'Sila", "Bou Saâda"], "Mascara": ["Mascara", "Tighennif"], "Ouargla": ["Ouargla", "Hassi Messaoud"], "Oran": ["Oran", "Es Senia"], "El Bayadh": ["El Bayadh"], "Illizi": ["Illizi", "Djanet"], "Bordj Bou Arréridj": ["Bordj Bou Arréridj"], "Boumerdès": ["Boumerdès", "Réghaïa"], "El Tarf": ["El Tarf", "El Kala"], "Tindouf": ["Tindouf"], "Tissemsilt": ["Tissemsilt", "Théniet El Had"], "El Oued": ["El Oued", "Guemar"], "Khenchela": ["Khenchela", "Kaïs"], "Souk Ahras": ["Souk Ahras"], "Tipaza": ["Tipaza", "Cherchell"], "Mila": ["Mila", "Ferdjioua"], "Aïn Defla": ["Aïn Defla", "Khemis Miliana"], "Naâma": ["Naâma", "Mécheria"], "Aïn Témouchent": ["Aïn Témouchent", "Béni Saf"], "Ghardaïa": ["Ghardaïa", "Metlili"], "Relizane": ["Relizane", "Oued Rhiou"]};
+    const car_data = {"Toyota": {models: ["Yaris", "Corolla", "Hilux"]}, "Peugeot": {models: ["208", "308", "301"]}, "Volkswagen": {models: ["Golf", "Polo", "Passat"]}, "Renault": {models: ["Clio", "Megane", "Symbol"]},"Hyundai": {models: ["i10", "i20", "Accent"]}, "Nissan": {models: ["Micra", "Sunny"]}, "Fiat": {models: ["500", "Tipo"]}, "Citroën": {models: ["C3", "C-Elysée"]}, "Kia": {models: ["Picanto", "Rio"]}, "Mercedes-Benz": {models: ["Class A", "Class C"]}, "BMW": {models: ["Series 1", "Series 3"]}, "Audi": {models: ["A3", "A4"]}, "Dacia": {models: ["Logan", "Sandero", "Duster"]}};
     const currentYear = new Date().getFullYear();
     const years = Array.from({ length: currentYear - 1979 }, (_, i) => currentYear - i);
 
-    // --- DOM References (Lazy-loaded within functions) ---
+    // --- DOM References ---
     const appContainer = document.getElementById("app-container");
 
     // --- Utility Functions ---
-    const showMessage = (msg, duration = 3500, type = "info") => {
+    const showMessage = (msg, type = "info") => {
         const messageBox = document.getElementById("message-box");
-        if (!messageBox) return;
         messageBox.textContent = msg;
-        messageBox.className = `message-box show`;
-        messageBox.classList.add(
-            type === "error" ? "bg-red-100 text-red-800" : 
-            type === "success" ? "bg-green-100 text-green-800" : 
-            "bg-white text-gray-800"
-        );
-        setTimeout(() => messageBox.classList.remove("show"), duration);
-    };
-
-    const closeMobileMenu = () => {
-        document.getElementById('mobile-menu')?.classList.add('hidden');
-        document.body.classList.remove('overflow-hidden');
+        messageBox.className = `message-box show ${type === "error" ? "bg-red-100 text-red-800" : "bg-green-100 text-green-800"}`;
+        setTimeout(() => messageBox.classList.remove("show"), 3500);
     };
 
     const translatePage = (lang) => {
-        document.getElementById("current-lang").textContent = translations[lang][lang + "_short"];
+        document.getElementById("current-lang").textContent = lang.toUpperCase();
         document.body.setAttribute("dir", lang === "ar" ? "rtl" : "ltr");
         document.querySelectorAll("[data-i18n-key]").forEach(el => {
             const key = el.getAttribute("data-i18n-key");
-            if (translations[lang][key]) {
-                if (el.placeholder !== undefined) {
-                    el.placeholder = translations[lang][key];
-                } else {
-                    el.innerHTML = translations[lang][key];
-                }
+            if(translations[lang]?.[key]) {
+                if(el.placeholder !== undefined) el.placeholder = translations[lang][key];
+                else el.innerHTML = translations[lang][key];
             }
         });
     };
@@ -1205,124 +988,68 @@
 
     // --- View Rendering ---
     const renderView = (viewName, data = null) => {
-        if (!appContainer) return;
         appContainer.innerHTML = '';
-        currentView = viewName;
         const template = document.getElementById(`${viewName}-view-template`);
         if (template) {
             appContainer.appendChild(template.content.cloneNode(true));
-            // Call the corresponding render function
-            const renderFunctions = {
-                'home': renderHomePage,
-                'brands': renderBrandsPage,
-                'product-detail': renderProductPage,
-                'cart': renderCartPage
-            };
+            const renderFunctions = {'home': renderHomePage, 'brands': renderBrandsPage, 'product-detail': renderProductPage, 'cart': renderCartPage};
             renderFunctions[viewName]?.(data);
         } else {
-            renderView('home'); // Fallback to home
+            renderView('home');
         }
         translatePage(currentLang);
     };
     
     const renderHomePage = () => {
         const brandFilter = document.getElementById('brand');
-        const modelFilter = document.getElementById('model');
-        const yearFilter = document.getElementById('year');
-        const wilayaFilter = document.getElementById('wilaya');
-        const communeFilter = document.getElementById('commune');
         const modelFilterContainer = document.getElementById('model-filter-container');
-        const communeContainer = document.getElementById('commune-container');
-
         populateSelect(brandFilter, Object.keys(car_data), "all_brands", currentLang);
-        populateSelect(yearFilter, years, "all_years", currentLang);
-        populateSelect(wilayaFilter, Object.keys(wilayas), "all_wilayas", currentLang);
-
-        document.querySelectorAll('.category-link').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                renderView('brands', { category: e.currentTarget.dataset.category });
-            });
+        populateSelect(document.getElementById('year'), years, "all_years", currentLang);
+        populateSelect(document.getElementById('wilaya'), Object.keys(wilayas), "all_wilayas", currentLang);
+        document.querySelectorAll('.category-link').forEach(link => link.addEventListener('click', e => { e.preventDefault(); renderView('brands'); }));
+        brandFilter.addEventListener('change', () => {
+            const modelFilter = document.getElementById('model');
+            if (brandFilter.value && car_data[brandFilter.value]) {
+                populateSelect(modelFilter, car_data[brandFilter.value].models, "all_models", currentLang);
+                modelFilterContainer.classList.remove("hidden");
+                modelFilter.disabled = false;
+            } else {
+                modelFilterContainer.classList.add("hidden");
+                modelFilter.disabled = true;
+            }
         });
-
-        const setupFilterListeners = () => {
-            brandFilter.addEventListener('change', () => {
-                const selectedBrand = brandFilter.value;
-                if (selectedBrand && car_data[selectedBrand]) {
-                    populateSelect(modelFilter, car_data[selectedBrand].models, "all_models", currentLang);
-                    modelFilterContainer.classList.remove("hidden");
-                    modelFilter.disabled = false;
-                } else {
-                    modelFilter.innerHTML = `<option value="">${translations[currentLang]["all_models"]}</option>`;
-                    modelFilterContainer.classList.add("hidden");
-                    modelFilter.disabled = true;
-                }
-            });
-
-            wilayaFilter.addEventListener('change', () => {
-                const val = wilayaFilter.value;
-                if (val) {
-                    populateSelect(communeFilter, wilayas[val], "all_communes", currentLang);
-                    communeContainer.classList.remove("hidden");
-                    communeFilter.disabled = false;
-                } else {
-                    communeFilter.innerHTML = `<option value="">${translations[currentLang]["all_communes"]}</option>`;
-                    communeContainer.classList.add("hidden");
-                    communeFilter.disabled = true;
-                }
-            });
-            
-            document.getElementById('filter-apply-btn').addEventListener('click', renderListings);
-            document.getElementById('filter-reset-btn').addEventListener('click', () => {
-                document.getElementById('brand').value = '';
-                document.getElementById('model').value = '';
-                document.getElementById('year').value = '';
-                document.getElementById('wilaya').value = '';
-                document.getElementById('commune').value = '';
-                document.getElementById('condition').value = '';
-                document.getElementById('search-input').value = '';
-                modelFilterContainer.classList.add('hidden');
-                communeContainer.classList.add('hidden');
-                renderListings();
-            });
-        };
-
-        setupFilterListeners();
+        document.getElementById('filter-apply-btn').addEventListener('click', renderListings);
+        document.getElementById('filter-reset-btn').addEventListener('click', () => {
+            document.getElementById('brand').value = ''; document.getElementById('model').value = ''; document.getElementById('year').value = '';
+            document.getElementById('wilaya').value = ''; document.getElementById('search-input').value = '';
+            modelFilterContainer.classList.add('hidden');
+            renderListings();
+        });
         renderListings();
     };
     
     const renderBrandsPage = () => {
         const brandsGrid = document.getElementById('brands-grid');
         document.getElementById('back-to-home-btn').addEventListener('click', () => renderView('home'));
-        brandsGrid.innerHTML = '';
-        for (const brandName in car_data) {
-            const brand = car_data[brandName];
-            const card = document.createElement('div');
-            card.className = "bg-white p-4 rounded-lg shadow-md flex flex-col items-center justify-center cursor-pointer hover:shadow-xl hover:scale-105 transition-all duration-200";
-            card.innerHTML = `
-                <img src="${brand.logo}" alt="${brandName} Logo" class="h-16 w-full object-contain mb-2">
+        brandsGrid.innerHTML = Object.keys(car_data).map(brandName => `
+            <div class="brand-card bg-white p-4 rounded-lg shadow-md flex flex-col items-center justify-center cursor-pointer hover:shadow-xl hover:scale-105 transition-transform duration-200" data-brand="${brandName}">
                 <span class="font-semibold text-gray-700">${brandName}</span>
-            `;
-            card.addEventListener('click', () => {
-                // This flow takes user back to homepage with the brand pre-selected.
-                renderView('home');
-                // Use a timeout to ensure the home page elements are rendered before setting the value
-                setTimeout(() => {
-                    const brandFilter = document.getElementById('brand');
-                    if(brandFilter) {
-                        brandFilter.value = brandName;
-                        brandFilter.dispatchEvent(new Event('change')); // Trigger change to populate models
-                        renderListings();
-                    }
-                }, 100);
-            });
-            brandsGrid.appendChild(card);
-        }
+            </div>`).join('');
+        brandsGrid.querySelectorAll('.brand-card').forEach(card => card.addEventListener('click', () => {
+            renderView('home');
+            setTimeout(() => {
+                const brandFilter = document.getElementById('brand');
+                if(brandFilter) {
+                    brandFilter.value = card.dataset.brand;
+                    brandFilter.dispatchEvent(new Event('change'));
+                    renderListings();
+                }
+            }, 100);
+        }));
     };
 
     const renderProductPage = (product) => {
         if (!product) { renderView('home'); return; }
-        
         document.getElementById('product-image-detail').src = product.imageUrl || 'https://via.placeholder.com/600x400.png?text=No+Image';
         document.getElementById('product-title-detail').textContent = product.title;
         document.getElementById('product-price-detail').textContent = `${product.price.toLocaleString()} DA`;
@@ -1332,31 +1059,32 @@
         document.getElementById('product-year-detail').textContent = product.year || "-";
         document.getElementById('product-wilaya-detail').textContent = product.wilaya;
         document.getElementById('product-commune-detail').textContent = product.commune || "-";
-        
         document.getElementById('back-to-listings-btn').addEventListener('click', () => renderView('home'));
-        
         const contactBtn = document.getElementById('show-contact-btn');
         contactBtn.addEventListener('click', () => {
             if (product.phoneNumber) {
-                const anchor = document.createElement('a');
-                anchor.href = `tel:${product.phoneNumber}`;
-                anchor.className = contactBtn.className;
-                anchor.innerHTML = `<i class="fas fa-phone mr-2"></i> ${product.phoneNumber}`;
-                contactBtn.parentNode.replaceChild(anchor, contactBtn);
+                contactBtn.outerHTML = `<a href="tel:${product.phoneNumber}" class="${contactBtn.className}"><i class="fas fa-phone mr-2"></i> ${product.phoneNumber}</a>`;
             } else {
                 contactBtn.textContent = 'Contact non disponible';
                 contactBtn.disabled = true;
             }
-        }, { once: true }); // The listener will only run once
-
-        document.getElementById('add-to-cart-btn').addEventListener('click', () => addToCart(product));
+        }, { once: true });
     };
 
+    // JS FIX: Added the missing renderCartPage function to prevent the app from crashing.
+    const renderCartPage = () => {
+        const cartItemsContainer = document.getElementById('cart-items-container');
+        document.getElementById('back-from-cart-btn').addEventListener('click', () => renderView('home'));
+        if (cartItemsContainer) {
+            cartItemsContainer.innerHTML = `<p class="text-center text-gray-500" data-i18n-key="your_cart_is_empty"></p>`;
+            translatePage(currentLang);
+        }
+    };
+
+    // --- Data & Logic ---
     const renderListings = async () => {
         const listingsSection = document.getElementById('listings-section');
-        if (!listingsSection) return;
         listingsSection.innerHTML = `<p class="col-span-full text-center py-6 text-gray-600">Chargement...</p>`;
-        
         try {
             if (allProducts.length === 0) {
                 const querySnapshot = await getDocs(query(collection(db, "products")));
@@ -1367,24 +1095,12 @@
             listingsSection.innerHTML = `<p class="col-span-full text-center py-6 text-red-600">Erreur de chargement des annonces.</p>`;
         }
     };
-
-    // --- Data & Logic ---
+    
     const filterProducts = (products) => {
-        const brand = document.getElementById('brand')?.value.trim().toLowerCase();
-        const model = document.getElementById('model')?.value.trim().toLowerCase();
-        const year = document.getElementById('year')?.value.trim();
-        const wilaya = document.getElementById('wilaya')?.value.trim().toLowerCase();
-        const commune = document.getElementById('commune')?.value.trim().toLowerCase();
-        const condition = document.getElementById('condition')?.value.trim().toLowerCase();
-        const searchTerm = document.getElementById('search-input')?.value.trim().toLowerCase();
-
+        const brand = document.getElementById('brand')?.value;
+        const searchTerm = document.getElementById('search-input')?.value.toLowerCase();
         return products.filter(p => 
-            (!brand || p.brand.toLowerCase() === brand) &&
-            (!model || p.model?.toLowerCase() === model) &&
-            (!year || p.year?.toString() === year) &&
-            (!wilaya || p.wilaya.toLowerCase() === wilaya) &&
-            (!commune || p.commune?.toLowerCase() === commune) &&
-            (!condition || p.condition.toLowerCase() === condition) &&
+            (!brand || p.brand === brand) &&
             (!searchTerm || p.title.toLowerCase().includes(searchTerm))
         );
     };
@@ -1401,180 +1117,94 @@
             card.className = "bg-white rounded-lg shadow-md overflow-hidden flex flex-col cursor-pointer hover:shadow-xl transition-shadow duration-300";
             card.addEventListener('click', () => renderView('product-detail', item));
             card.innerHTML = `
-                <img src="${item.imageUrl || 'https://via.placeholder.com/300x200.png?text=No+Image'}" alt="${item.title}" class="w-full h-48 object-cover" loading="lazy" />
+                <img src="${item.imageUrl || 'https://via.placeholder.com/300x200.png?text=No+Image'}" alt="${item.title}" class="w-full h-40 sm:h-48 object-cover" loading="lazy" />
                 <div class="p-4 flex-1 flex flex-col">
                     <h3 class="font-semibold text-lg mb-1">${item.title}</h3>
                     <p class="text-blue-600 font-bold text-lg mt-auto pt-2">${item.price.toLocaleString()} DA</p>
-                </div>
-            `;
+                </div>`;
             container.appendChild(card);
         });
     };
-
-    const addToCart = (product) => {
-        if (!currentUser) { showMessage(translations[currentLang].login_required, 4000, 'error'); return; }
-        // Cart logic would go here
-        showMessage(`${product.title} ajouté au panier (simulation).`, 3000, 'success');
-    };
-
-    // --- Modal Logic ---
-    const openAuthModal = () => document.getElementById('auth-modal').classList.remove('hidden');
-    const closeAuthModal = () => document.getElementById('auth-modal').classList.add('hidden');
-    const openSellModal = () => {
-        if (!currentUser) {
-            showMessage(translations[currentLang].login_required, 4000, 'error');
-            openAuthModal();
-            return;
-        }
-        document.getElementById('post-product-modal').classList.remove('hidden');
-    }
-
-    const validatePostForm = (form) => {
-        let isValid = true;
-        form.querySelectorAll('[required]').forEach(input => {
-            const errorEl = document.getElementById(`${input.id}-error`);
-            if (!input.value.trim()) {
-                if (errorEl) errorEl.classList.remove("hidden");
-                isValid = false;
-            } else {
-                if (errorEl) errorEl.classList.add("hidden");
-            }
-        });
-        return isValid;
-    };
-
+    
     const handleSellFormSubmit = async (e) => {
         e.preventDefault();
         const form = e.target;
         const submitBtn = form.querySelector('#submit-ad-btn');
-        if (!validatePostForm(form)) { showMessage("Veuillez remplir tous les champs obligatoires.", 3000, 'error'); return; }
-
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = `<span data-i18n-key="submitting">${translations[currentLang].submitting}</span>`;
+        let isValid = true;
+        form.querySelectorAll('[required]').forEach(input => { if (!input.value) isValid = false; });
+        if (!isValid) { showMessage("Veuillez remplir tous les champs obligatoires.", "error"); return; }
         
-        const formData = new FormData(form);
-        const imageFile = formData.get('image');
-        let imageUrl = '';
-
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<span>${translations[currentLang].submitting}</span>`;
+        
         try {
-            if (imageFile && imageFile.size > 0) {
-                const imageName = `${Date.now()}-${imageFile.name}`;
-                const storageRef = ref(storage, `product_images/${imageName}`);
-                const snapshot = await uploadBytes(storageRef, imageFile);
-                imageUrl = await getDownloadURL(snapshot.ref);
-            }
-
+            const formData = new FormData(form);
             let brand = formData.get('brand');
             if (brand === 'other') brand = formData.get('brand-other');
-            
             const newProduct = { 
                 title: formData.get('title'), brand,
                 model: formData.get('model'), year: formData.get('year'),
                 wilaya: formData.get('wilaya'), commune: formData.get('commune'),
                 condition: formData.get('condition'), price: parseInt(formData.get('price')) || 0,
                 phoneNumber: formData.get('phone'), description: formData.get('description'),
-                imageUrl, timestamp: new Date(),
-                sellerId: currentUser.uid
+                imageUrl: 'https://via.placeholder.com/300x200.png?text=No+Image', // Placeholder since upload is removed
+                timestamp: new Date(), sellerId: currentUser.uid
             };
-
             await addDoc(collection(db, "products"), newProduct);
-            
-            showMessage("Annonce soumise avec succès!", 4000, 'success');
+            showMessage("Annonce soumise avec succès!", "success");
             form.reset();
-            document.getElementById('image-preview-container').innerHTML = '';
             document.getElementById('post-product-modal').classList.add('hidden');
-            allProducts = []; // Invalidate cache
+            allProducts = []; // Refresh cache
             renderView('home');
         } catch (error) {
-            showMessage("Erreur lors de la soumission de l'annonce.", 4000, 'error');
+            showMessage("Erreur lors de la soumission.", "error");
         } finally {
             submitBtn.disabled = false;
-            submitBtn.innerHTML = `<span data-i18n-key="submit_ad_btn_text">${translations[currentLang].submit_ad_btn_text}</span>`;
+            submitBtn.innerHTML = `<span>${translations[currentLang].submit_ad_btn_text}</span>`;
         }
     };
     
     // --- Initial Setup ---
     const setupGlobalEventListeners = () => {
-        // Language switcher
-        document.getElementById('lang-dropdown-btn').addEventListener('click', () => {
-            document.getElementById('lang-dropdown').classList.toggle('hidden');
-        });
+        document.getElementById('lang-dropdown-btn').addEventListener('click', () => document.getElementById('lang-dropdown').classList.toggle('hidden'));
         document.querySelectorAll(".lang-btn").forEach(btn => btn.addEventListener('click', (e) => {
             currentLang = e.target.dataset.lang;
             localStorage.setItem('piecety_lang', currentLang);
             translatePage(currentLang);
-            closeMobileMenu();
             document.getElementById('lang-dropdown').classList.add('hidden');
         }));
-
-        // Modals
         document.getElementById('modal-close-btn').addEventListener('click', () => document.getElementById('post-product-modal').classList.add('hidden'));
-        document.getElementById('auth-modal-close-btn').addEventListener('click', closeAuthModal);
+        document.getElementById('auth-modal-close-btn').addEventListener('click', () => document.getElementById('auth-modal').classList.add('hidden'));
+        const openSellModal = () => { if (currentUser) document.getElementById('post-product-modal').classList.remove('hidden'); else document.getElementById('auth-modal').classList.remove('hidden'); };
         document.getElementById('sell-link').addEventListener('click', openSellModal);
         document.getElementById('sell-link-mobile').addEventListener('click', openSellModal);
-
-        // Mobile Menu
-        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
-            document.getElementById('mobile-menu').classList.remove('hidden');
-            document.body.classList.add('overflow-hidden');
-        });
-        document.getElementById('mobile-menu-close-btn').addEventListener('click', closeMobileMenu);
-
-        // Navigation
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => document.getElementById('mobile-menu').classList.remove('hidden'));
+        document.getElementById('mobile-menu-close-btn').addEventListener('click', () => document.getElementById('mobile-menu').classList.add('hidden'));
         document.getElementById('home-link').addEventListener('click', (e) => { e.preventDefault(); renderView('home'); });
+        document.getElementById('cart-btn').addEventListener('click', () => renderView('cart'));
 
-        // Sell Form Logic
         const postProductForm = document.getElementById('post-product-form');
         const brandSelect = postProductForm.querySelector('#product-brand');
-        const modelSelect = postProductForm.querySelector('#product-model');
-        const wilayaSelect = postProductForm.querySelector('#product-wilaya');
-        const communeSelect = postProductForm.querySelector('#product-commune');
-        const imageInput = postProductForm.querySelector('#product-image');
-
         populateSelect(brandSelect, Object.keys(car_data), "select_brand", currentLang, true);
         populateSelect(postProductForm.querySelector('#product-year'), years, "select_year", currentLang);
-        populateSelect(wilayaSelect, Object.keys(wilayas), "select_wilaya", currentLang);
-
+        populateSelect(postProductForm.querySelector('#product-wilaya'), Object.keys(wilayas), "select_wilaya", currentLang);
         brandSelect.addEventListener('change', () => {
-            const selected = brandSelect.value;
-            const otherContainer = postProductForm.querySelector('#other-brand-container');
-            if (selected === 'other') {
-                otherContainer.classList.remove('hidden');
-                modelSelect.disabled = true;
+            const modelSelect = postProductForm.querySelector('#product-model');
+            if (brandSelect.value === 'other') {
+                postProductForm.querySelector('#other-brand-container').classList.remove('hidden'); modelSelect.disabled = true;
             } else {
-                otherContainer.classList.add('hidden');
-                if (selected && car_data[selected]) {
-                    populateSelect(modelSelect, car_data[selected].models, "select_model", currentLang);
-                    modelSelect.disabled = false;
-                } else {
-                    modelSelect.disabled = true;
-                }
-            }
-        });
-        wilayaSelect.addEventListener('change', () => {
-            if (wilayaSelect.value) {
-                populateSelect(communeSelect, wilayas[wilayaSelect.value], "select_commune", currentLang);
-                communeSelect.disabled = false;
-            } else {
-                communeSelect.disabled = true;
-            }
-        });
-        imageInput.addEventListener('change', () => {
-            const previewContainer = document.getElementById('image-preview-container');
-            previewContainer.innerHTML = '';
-            if (imageInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = e => previewContainer.innerHTML = `<img src="${e.target.result}" class="w-24 h-24 object-cover rounded-md shadow-md">`;
-                reader.readAsDataURL(imageInput.files[0]);
+                postProductForm.querySelector('#other-brand-container').classList.add('hidden');
+                if (brandSelect.value && car_data[brandSelect.value]) {
+                    populateSelect(modelSelect, car_data[brandSelect.value].models, "select_model", currentLang); modelSelect.disabled = false;
+                } else { modelSelect.disabled = true; }
             }
         });
         postProductForm.addEventListener('submit', handleSellFormSubmit);
     };
 
     const bootApp = () => {
-        document.getElementById('current-year').textContent = currentYear;
+        document.getElementById('current-year').textContent = new Date().getFullYear();
         setupGlobalEventListeners();
-
         onAuthStateChanged(auth, user => {
             currentUser = user;
             const authLinks = document.getElementById('auth-links');
@@ -1583,29 +1213,23 @@
                 authLinks.innerHTML = `<button id="signout-btn" class="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-full font-semibold" data-i18n-key="logout"></button>`;
                 authLinks.querySelector('#signout-btn').addEventListener('click', () => signOut(auth));
                 mobileAuthBtn.setAttribute('data-i18n-key', 'logout');
-                mobileAuthBtn.onclick = () => { signOut(auth); closeMobileMenu(); };
+                mobileAuthBtn.onclick = () => { signOut(auth); document.getElementById('mobile-menu').classList.add('hidden'); };
             } else {
                 authLinks.innerHTML = `<button id="login-btn" class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full font-semibold" data-i18n-key="connect"></button>`;
+                const openAuthModal = () => document.getElementById('auth-modal').classList.remove('hidden');
                 authLinks.querySelector('#login-btn').addEventListener('click', openAuthModal);
                 mobileAuthBtn.setAttribute('data-i18n-key', 'connect');
                 mobileAuthBtn.onclick = openAuthModal;
             }
             translatePage(currentLang);
         });
-
         document.getElementById('google-login-btn').addEventListener('click', () => {
-            signInWithPopup(auth, provider)
-              .then(result => showMessage(`Bienvenue, ${result.user.displayName}!`, 3000, 'success'))
-              .catch(err => showMessage("Erreur de connexion avec Google.", 3000, 'error'))
-              .finally(closeAuthModal);
+            signInWithPopup(auth, provider).then(() => document.getElementById('auth-modal').classList.add('hidden'));
         });
-
         renderView('home');
     };
 
-    // --- Start the App ---
     bootApp();
-
 </script>
     
 </body>
