@@ -1659,7 +1659,7 @@
     };
     
     const fetchReviews = async (productId) => {
-        const { reviewsContainer } = elements;
+        const reviewsContainer = document.getElementById('reviews-container');
         if (!reviewsContainer) return;
         reviewsContainer.innerHTML = '<p class="text-gray-500">Chargement des avis...</p>';
         const reviewsRef = collection(db, 'products', productId, 'reviews');
