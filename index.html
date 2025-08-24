@@ -4,377 +4,2039 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Piecety - Marché des Pièces Auto en Algérie</title>
-    
-    <link rel="icon" type="image/svg+xml" href="https://www.svgrepo.com/show/493547/brake-disc.svg">
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
             rel="stylesheet"
     />
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module" src="https://cdn.tailwindcss.com" type="module"></script>
     <link
-        rel="stylesheet"
+            rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            /* DESIGN ENHANCEMENT: Softer background color */
-            background-color: #f9fafb; /* gray-50 */
+            background-color: #f7fafc;
         }
-        /* Custom scrollbar for a more polished look */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #999; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #555; }
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
         .message-box {
-            position: fixed; top: 20px; right: 20px; z-index: 1000;
-            padding: 1rem; border-radius: 0.5rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            transition: all 0.5s ease-in-out; opacity: 0; transform: translateX(100%);
-            max-width: 300px; word-wrap: break-word;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+            0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.5s ease-in-out;
+            opacity: 0;
+            transform: translateX(100%);
+            max-width: 300px;
+            word-wrap: break-word;
         }
-        .message-box.show { opacity: 1; transform: translateX(0); }
-        .category-card:hover .category-icon { transform: scale(1.1); }
+        .message-box.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .category-card:hover .category-icon {
+            transform: scale(1.1);
+        }
+        .modal-bg {
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+        /* RTL-specific styles */
+        body[dir="rtl"] .logo {
+            text-align: right;
+        }
+        body[dir="rtl"] .flex-1.mx-4.sm\:mx-8 {
+            margin-right: 0.5rem;
+            margin-left: 0.5rem;
+        }
+        body[dir="rtl"] .fa-search {
+            right: 3px;
+            left: auto;
+        }
     </style>
+  <link rel="icon" href="https://www.svgrepo.com/show/5129/car.svg">
 </head>
 <body class="flex flex-col min-h-screen text-gray-800">
 
 <div id="message-box" class="message-box bg-white text-gray-800"></div>
 
-<header class="bg-white shadow-sm sticky top-0 z-50" role="banner">
-    <div class="container mx-auto p-4 flex items-center justify-between">
-        <a href="#" id="home-link" class="text-3xl font-extrabold text-blue-600 logo cursor-pointer">Piecety</a>
+<header
+        class="bg-white shadow-sm sticky top-0 z-50"
+        role="banner"
+>
+    <div
+            class="container mx-auto p-4 flex items-center justify-between"
+    >
+        <a href="#" id="home-link" class="text-3xl font-bold text-blue-600 logo">
+            Piecety
+        </a>
+
         <div class="flex-1 mx-4 sm:mx-8">
             <div class="relative">
-                <input id="search-input" type="text" placeholder="Rechercher une pièce..." class="w-full p-3 pl-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 shadow-inner" aria-label="Rechercher une pièce"/>
-                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                <input
+                        id="search-input"
+                        type="text"
+                        placeholder="Rechercher une pièce..."
+                        class="w-full p-3 pl-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 shadow-inner"
+                        aria-label="Rechercher une pièce"
+                />
+                <i
+                        class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                ></i>
             </div>
         </div>
-        <nav class="hidden md:flex items-center space-x-6" role="navigation">
-            <a href="#" class="text-gray-600 hover:text-blue-600 font-medium transition-colors duration-200" data-i18n-key="sell" id="sell-link">Vendre</a>
+
+        <nav class="hidden md:flex items-center space-x-6" role="navigation" aria-label="Main navigation">
+            <div class="relative group">
+                <button
+                        id="lang-dropdown-btn"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        class="flex items-center space-x-1 font-medium text-gray-600 hover:text-blue-600 transition-colors duration-200"
+                >
+                    <span id="current-lang" class="lang-text">FR</span>
+                    <i class="fas fa-chevron-down text-xs"></i>
+                </button>
+                <div
+                        id="lang-dropdown"
+                        class="absolute right-0 mt-2 w-28 bg-white rounded-lg shadow-lg py-1 hidden transition-all duration-300 z-10"
+                        role="menu"
+                        aria-label="Select Language"
+                >
+                    <button
+                            class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 lang-btn"
+                            data-lang="fr"
+                            role="menuitem"
+                    >
+                        Français
+                    </button>
+                    <button
+                            class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 lang-btn"
+                            data-lang="en"
+                            role="menuitem"
+                    >
+                        English
+                    </button>
+                    <button
+                            class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 lang-btn"
+                            data-lang="ar"
+                            role="menuitem"
+                    >
+                        العربية
+                    </button>
+                </div>
+            </div>
+            <a
+                    href="#"
+                    class="text-gray-600 hover:text-blue-600 font-medium transition-colors duration-200"
+                    data-i18n-key="sell"
+                    id="sell-link"
+            >Vendre</a
+            >
+            <button
+                    id="cart-btn"
+                    class="relative p-2 text-gray-600 hover:text-blue-600 focus:outline-none"
+            >
+                <i class="fas fa-shopping-cart text-xl"></i>
+                <span id="cart-count" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full hidden">0</span>
+            </button>
             <div id="auth-links" class="flex items-center space-x-4">
-                <button id="login-btn" class="text-white bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded-full font-semibold transition-all duration-200 shadow-md hover:shadow-lg" data-i18n-key="connect">Se connecter</button>
+                <button
+                        id="login-btn"
+                        class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full font-semibold transition-colors duration-200 shadow-md"
+                        data-i18n-key="connect"
+                >
+                    Se connecter
+                </button>
             </div>
         </nav>
-        <button id="mobile-menu-btn" class="md:hidden p-2 text-gray-600 hover:text-blue-600 focus:outline-none" aria-label="Menu">
+
+        <button
+                id="mobile-menu-btn"
+                class="md:hidden p-2 text-gray-600 hover:text-blue-600 focus:outline-none"
+                aria-label="Menu"
+                aria-expanded="false"
+                aria-controls="mobile-menu"
+        >
             <i class="fas fa-bars text-xl"></i>
         </button>
     </div>
 </header>
 
-<div id="mobile-menu" class="fixed inset-0 bg-white z-40 hidden flex-col p-6 md:hidden" role="dialog">
-    <div class="flex justify-between items-center mb-8">
-        <h2 class="text-2xl font-bold text-blue-600" data-i18n-key="menu">Menu</h2>
-        <button id="mobile-menu-close-btn" class="text-gray-600 hover:text-blue-600" aria-label="Fermer menu">
-            <i class="fas fa-times text-2xl"></i>
+<div
+        id="mobile-menu"
+        class="fixed inset-0 bg-white z-40 hidden flex-col p-6 space-y-6 md:hidden"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="mobile-menu-label"
+>
+    <div class="flex justify-between items-center">
+        <h2
+                id="mobile-menu-label"
+                class="text-2xl font-bold text-blue-600"
+                data-i18n-key="menu"
+        >
+            Menu
+        </h2>
+        <button
+                id="mobile-menu-close-btn"
+                class="text-gray-600 hover:text-blue-600"
+                aria-label="Fermer menu"
+        >
+            <i class="fas fa-times text-xl"></i>
         </button>
     </div>
-    <div class="flex flex-col space-y-4">
-        <a href="#" class="text-xl font-medium text-gray-800 hover:text-blue-600 py-2" data-i18n-key="sell" id="sell-link-mobile">Vendre</a>
-        <div id="auth-links-mobile" class="text-xl font-medium text-gray-800">
-             <button class="text-left w-full hover:text-blue-600 py-2" data-i18n-key="connect">Se connecter</button>
+    <a
+            href="#"
+            class="text-xl font-medium text-gray-800 hover:text-blue-600"
+            data-i18n-key="sell"
+            id="sell-link-mobile"
+    >Vendre</a
+    >
+    <button
+            id="post-product-btn-mobile"
+            class="text-xl font-medium text-gray-800 hover:text-blue-600 text-left"
+            data-i18n-key="connect"
+    >
+        Se connecter
+    </button>
+
+    <div class="pt-4 border-t border-gray-200">
+        <h3 class="text-lg font-semibold text-gray-600" data-i18n-key="language">
+            Langue
+        </h3>
+        <div class="flex space-x-4 mt-2">
+            <button
+                    class="p-2 border rounded-md text-sm font-medium lang-btn"
+                    data-lang="fr"
+            >
+                Français
+            </button>
+            <button
+                    class="p-2 border rounded-md text-sm font-medium lang-btn"
+                    data-lang="en"
+            >
+                English
+            </button>
+            <button
+                    class="p-2 border rounded-md text-sm font-medium lang-btn"
+                    data-lang="ar"
+            >
+                العربية
+            </button>
         </div>
     </div>
 </div>
 
-<main id="app-container" class="flex-1 container mx-auto p-4 md:p-8" role="main"></main>
+<main
+        id="app-container"
+        class="flex-1 container mx-auto p-4 md:p-8"
+        role="main"
+        aria-live="polite"
+>
+    </main>
 
 <footer class="bg-gray-800 text-white p-6 md:p-8 mt-auto text-center">
-    <p class="text-sm font-light">&copy; <span id="current-year"></span> Piecety - Marché des Pièces Auto en Algérie. Tous droits réservés.</p>
+    <p class="text-sm font-light" data-i18n-key="footer_text">
+        &copy; <span id="current-year"></span> Piecety - Marché des Pièces Auto en
+        Algérie. Tous droits réservés.
+    </p>
 </footer>
 
-<div id="auth-modal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
-    <div class="bg-white rounded-lg shadow-xl max-w-sm w-11/12 p-6 relative">
-        <button id="auth-modal-close-btn" class="absolute top-4 right-4 text-gray-600 hover:text-red-600"><i class="fas fa-times text-2xl"></i></button>
-        <h3 class="text-2xl font-bold mb-6 text-center" data-i18n-key="connect">Se connecter</h3>
+<div
+        id="post-product-modal"
+        class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+>
+    <div
+            class="bg-white rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 relative"
+    >
+        <button
+                id="modal-close-btn"
+                class="absolute top-4 right-4 text-gray-600 hover:text-red-600 focus:outline-none"
+                aria-label="Fermer le formulaire"
+        >
+            <i class="fas fa-times text-2xl"></i>
+        </button>
+        <h3
+                id="modal-title"
+                class="text-2xl font-bold mb-6 text-center"
+                data-i18n-key="submit_ad"
+        >
+            Soumettre une annonce rapide
+        </h3>
+        <form id="post-product-form" class="space-y-4" novalidate>
+            <div>
+                <label for="product-title" class="block font-medium mb-1" data-i18n-key="ad_title_label">
+                    Titre de la pièce <span class="text-red-500">*</span>
+                </label>
+                <input
+                        type="text"
+                        id="product-title"
+                        name="title"
+                        required
+                        placeholder="Ex: Disque de frein avant"
+                        class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        aria-describedby="title-error"
+                />
+                <p
+                        id="title-error"
+                        class="text-red-600 text-sm mt-1 hidden"
+                        aria-live="assertive"
+                >
+                    Veuillez entrer un titre valide.
+                </p>
+            </div>
+
+            <div>
+                <label for="product-brand" class="block font-medium mb-1" data-i18n-key="brand_label">
+                    Marque <span class="text-red-500">*</span>
+                </label>
+                <select
+                        id="product-brand"
+                        name="brand"
+                        required
+                        class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        aria-describedby="brand-error"
+                >
+                    <option value="" data-i18n-key="select_brand">Sélectionnez une marque</option>
+                    </select>
+                <p
+                        id="brand-error"
+                        class="text-red-600 text-sm mt-1 hidden"
+                        aria-live="assertive"
+                >
+                    Veuillez sélectionner une marque.
+                </p>
+            </div>
+
+            <div>
+                <label for="product-model" class="block font-medium mb-1" data-i18n-key="model_label">
+                    Modèle
+                </label>
+                <select
+                        id="product-model"
+                        name="model"
+                        class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        disabled
+                >
+                    <option value="" data-i18n-key="select_model">Sélectionnez un modèle</option>
+                    </select>
+            </div>
+
+            <div>
+                <label for="product-year" class="block font-medium mb-1" data-i18n-key="year_label">
+                    Année
+                </label>
+                <select
+                        id="product-year"
+                        name="year"
+                        class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                    <option value="" data-i18n-key="select_year">Sélectionnez une année</option>
+                    </select>
+            </div>
+
+            <div>
+                <label for="product-wilaya" class="block font-medium mb-1" data-i18n-key="wilaya_label">
+                    Wilaya <span class="text-red-500">*</span>
+                </label>
+                <select
+                        id="product-wilaya"
+                        name="wilaya"
+                        required
+                        class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        aria-describedby="wilaya-error"
+                >
+                    <option value="" data-i18n-key="select_wilaya">Sélectionnez une wilaya</option>
+                    </select>
+                <p
+                        id="wilaya-error"
+                        class="text-red-600 text-sm mt-1 hidden"
+                        aria-live="assertive"
+                >
+                    Veuillez sélectionner une wilaya.
+                </p>
+            </div>
+
+            <div>
+                <label for="product-commune" class="block font-medium mb-1" data-i18n-key="commune_label">
+                    Commune
+                </label>
+                <select
+                        id="product-commune"
+                        name="commune"
+                        class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        disabled
+                >
+                    <option value="" data-i18n-key="select_commune">Sélectionnez une commune</option>
+                    </select>
+            </div>
+
+            <div>
+                <label for="product-condition" class="block font-medium mb-1" data-i18n-key="condition_label">
+                    État
+                </label>
+                <select
+                        id="product-condition"
+                        name="condition"
+                        class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                    <option value="new" data-i18n-key="new">Neuf</option>
+                    <option value="used" data-i18n-key="used">Occasion</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="product-price" class="block font-medium mb-1" data-i18n-key="price_label">
+                    Prix (DA) <span class="text-red-500">*</span>
+                </label>
+                <input
+                        type="number"
+                        id="product-price"
+                        name="price"
+                        min="0"
+                        required
+                        placeholder="Ex: 15000"
+                        class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        aria-describedby="price-error"
+                />
+                <p
+                        id="price-error"
+                        class="text-red-600 text-sm mt-1 hidden"
+                        aria-live="assertive"
+                >
+                    Veuillez entrer un prix valide.
+                </p>
+            </div>
+
+            <div>
+                <label for="product-description" class="block font-medium mb-1" data-i18n-key="description_label">
+                    Description
+                </label>
+                <textarea
+                        id="product-description"
+                        name="description"
+                        rows="3"
+                        placeholder="Informations supplémentaires..."
+                        class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                ></textarea>
+            </div>
+
+            <div>
+                <label for="product-image" class="block font-medium mb-1" data-i18n-key="image_label">
+                    Image <span class="text-red-500">*</span>
+                </label>
+                <input
+                        type="file"
+                        id="product-image"
+                        name="image"
+                        accept="image/*"
+                        required
+                        aria-describedby="image-error"
+                        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
+                               file:rounded-md file:border-0
+                               file:text-sm file:font-semibold
+                               file:bg-blue-50 file:text-blue-700
+                               hover:file:bg-blue-100
+                               "
+                />
+                <p
+                        id="image-error"
+                        class="text-red-600 text-sm mt-1 hidden"
+                        aria-live="assertive"
+                >
+                    Veuillez choisir une image.
+                </p>
+            </div>
+
+            <div class="text-center">
+                <button
+                        type="submit"
+                        class="mt-4 px-6 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md"
+                        data-i18n-key="submit_ad_btn_text"
+                >
+                    Soumettre
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div
+        id="auth-modal"
+        class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="auth-modal-title"
+>
+    <div
+            class="bg-white rounded-lg shadow-lg max-w-sm w-full p-6 relative"
+    >
+        <button
+                id="auth-modal-close-btn"
+                class="absolute top-4 right-4 text-gray-600 hover:text-red-600 focus:outline-none"
+                aria-label="Fermer le formulaire de connexion"
+        >
+            <i class="fas fa-times text-2xl"></i>
+        </button>
+        <h3
+                id="auth-modal-title"
+                class="text-2xl font-bold mb-6 text-center"
+                data-i18n-key="connect"
+        >
+            Se connecter
+        </h3>
         <div class="space-y-4">
             <p class="text-center text-gray-600" data-i18n-key="login_text">Connectez-vous pour accéder à toutes les fonctionnalités.</p>
             <button id="google-login-btn" class="w-full flex items-center justify-center px-4 py-3 bg-white border border-gray-300 rounded-full text-gray-700 font-semibold hover:bg-gray-100 transition-colors duration-200 shadow-sm">
-                <i class="fab fa-google text-xl mr-3"></i><span data-i18n-key="google_login">Se connecter avec Google</span>
+                <i class="fab fa-google text-xl mr-2"></i>
+                <span data-i18n-key="google_login">Se connecter avec Google</span>
             </button>
         </div>
     </div>
 </div>
 
 <template id="home-view-template">
-    <section class="text-center py-12 md:py-20 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-xl shadow-xl mb-8 md:mb-12">
-        <h1 class="text-3xl md:text-5xl font-extrabold mb-4" data-i18n-key="hero_title">Trouvez la bonne pièce pour votre voiture</h1>
-        <p class="text-lg md:text-xl font-light mb-8 max-w-2xl mx-auto px-4" data-i18n-key="hero_subtitle">Le marché algérien des pièces automobiles le plus fiable.</p>
+    <section
+            class="text-center py-12 md:py-24 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl shadow-lg mb-8 md:mb-12"
+    >
+        <h1 class="text-3xl md:text-5xl font-extrabold mb-4" data-i18n-key="hero_title">
+            Trouvez la bonne pièce pour votre voiture
+        </h1>
+        <p
+                class="text-lg md:text-xl font-light mb-8"
+                data-i18n-key="hero_subtitle"
+        >
+            Le marché algérien des pièces automobiles le plus fiable.
+        </p>
     </section>
-    <section class="mb-8 md:mb-12" aria-label="Catégories de pièces">
-        <h2 class="text-2xl md:text-3xl font-bold mb-6 text-center" data-i18n-key="categories_title">Catégories de Pièces</h2>
-        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4 sm:gap-6">
-            <a href="#" class="category-link bg-white rounded-xl shadow-lg p-4 text-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl category-card" data-category="engine">
-                <div class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-3 transition-transform duration-300 category-icon"><i class="fas fa-cogs text-3xl"></i></div>
-                <h3 class="font-semibold text-base" data-i18n-key="category_engine">Moteur</h3>
-            </a>
-            <a href="#" class="category-link bg-white rounded-xl shadow-lg p-4 text-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl category-card" data-category="brakes">
-                <div class="p-2 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-3 transition-transform duration-300 category-icon"><img src="https://www.svgrepo.com/show/493547/brake-disc.svg" alt="Brakes Icon" class="w-12 h-12"></div>
-                <h3 class="font-semibold text-base" data-i18n-key="category_brakes">Freins</h3>
-            </a>
-            </div>
-    </section>
-    <section id="listings-section" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" aria-live="polite"></section>
-</template>
 
-<template id="filter-drilldown-view-template">
-    <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
-        <button id="back-to-home-btn" class="mb-6 text-blue-600 hover:text-blue-800 font-semibold flex items-center">
-            <i class="fas fa-arrow-left mr-2"></i>
-            <span>Retour</span>
-        </button>
-        <h2 id="drilldown-title" class="text-2xl md:text-3xl font-bold mb-6 text-center">Filtres</h2>
-        <div id="drilldown-filters" class="max-w-xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-6">
+    <section class="mb-8 md:mb-12" aria-label="Catégories de pièces">
+        <h2
+                class="text-2xl md:text-3xl font-bold mb-6 text-center"
+                data-i18n-key="categories_title"
+        >
+            Catégories de Pièces
+        </h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
+            <a
+                    href="#"
+                    class="bg-white rounded-xl shadow-md p-4 text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-xl category-card"
+            >
+                <div
+                        class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
+                >
+                    <i class="fas fa-cogs text-3xl"></i>
+                </div>
+                <h3 class="font-semibold text-lg" data-i18n-key="category_engine">
+                    Moteur
+                </h3>
+            </a>
+            <a
+                    href="#"
+                    class="bg-white rounded-xl shadow-md p-4 text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-xl category-card"
+            >
+                <div
+                        class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
+                >
+                    <i class="fas fa-car text-3xl"></i>
+                </div>
+                <h3 class="font-semibold text-lg" data-i18n-key="category_brakes">
+                    Freins
+                </h3>
+            </a>
+            <a
+                    href="#"
+                    class="bg-white rounded-xl shadow-md p-4 text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-xl category-card"
+            >
+                <div
+                        class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
+                >
+                    <i class="fas fa-gas-pump text-3xl"></i>
+                </div>
+                <h3 class="font-semibold text-lg" data-i18n-key="category_fuel_system">
+                    Système de carburant
+                </h3>
+            </a>
+            <a
+                    href="#"
+                    class="bg-white rounded-xl shadow-md p-4 text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-xl category-card"
+            >
+                <div
+                        class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
+                >
+                    <i class="fas fa-fan text-3xl"></i>
+                </div>
+                <h3 class="font-semibold text-lg" data-i18n-key="category_cooling">
+                    Refroidissement
+                </h3>
+            </a>
+            <a
+                    href="#"
+                    class="bg-white rounded-xl shadow-md p-4 text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-xl category-card"
+            >
+                <div
+                        class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
+                >
+                    <i class="fas fa-circle text-3xl"></i>
+                </div>
+                <h3 class="font-semibold text-lg" data-i18n-key="category_tires">
+                    Pneus &amp; Jantes
+                </h3>
+            </a>
+            <a
+                    href="#"
+                    class="bg-white rounded-xl shadow-md p-4 text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-xl category-card"
+            >
+                <div
+                        class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
+                >
+                    <i class="fas fa-bolt text-3xl"></i>
+                </div>
+                <h3 class="font-semibold text-lg" data-i18n-key="category_electrical">
+                    Électrique
+                </h3>
+            </a>
+            <a
+                    href="#"
+                    class="bg-white rounded-xl shadow-md p-4 text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-xl category-card"
+            >
+                <div
+                        class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
+                >
+                    <i class="fas fa-car-side text-3xl"></i>
+                </div>
+                <h3 class="font-semibold text-lg" data-i18n-key="category_body">
+                    Carrosserie
+                </h3>
+            </a>
+            <a
+                    href="#"
+                    class="bg-white rounded-xl shadow-md p-4 text-center transform transition-transform duration-300 hover:scale-105 hover:shadow-xl category-card"
+            >
+                <div
+                        class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
+                >
+                    <i class="fas fa-wrench text-3xl"></i>
+                </div>
+                <h3 class="font-semibold text-lg" data-i18n-key="category_tools">
+                    Outillage
+                </h3>
+            </a>
+        </div>
+    </section>
+
+    <section
+            class="bg-white rounded-xl shadow-lg p-6 md:p-8 mb-12"
+            aria-label="Filtrer les annonces"
+    >
+        <h2 class="text-2xl font-bold mb-6" data-i18n-key="filters_title">
+            Filtrer les annonces
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <div>
-                <label for="filter-company" class="block text-sm font-medium text-gray-700">Constructeur</label>
-                <select id="filter-company" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"></select>
+                <label
+                        for="brand"
+                        class="block text-sm font-medium text-gray-700"
+                        data-i18n-key="all_brands"
+                >Toutes les marques</label
+                >
+                <select
+                        id="brand"
+                        aria-describedby="brand-desc"
+                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md shadow-sm"
+                >
+                    <option value="" data-i18n-key="all_brands">
+                        Toutes les marques
+                    </option>
+                    </select>
+                <p id="brand-desc" class="sr-only">
+                    Sélectionnez une marque de voiture pour filtrer les annonces
+                </p>
+            </div>
+            <div id="model-filter-container" class="hidden">
+                <label
+                        for="model"
+                        class="block text-sm font-medium text-gray-700"
+                        data-i18n-key="all_models"
+                >Tous les modèles</label
+                >
+                <select
+                        id="model"
+                        aria-describedby="model-desc"
+                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md shadow-sm"
+                >
+                    <option value="" data-i18n-key="all_models">Tous les modèles</option>
+                </select>
+                <p id="model-desc" class="sr-only">
+                    Sélectionnez un modèle pour filtrer les annonces
+                </p>
             </div>
             <div>
-                <label for="filter-brand" class="block text-sm font-medium text-gray-700">Marque</label>
-                <select id="filter-brand" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md" disabled></select>
+                <label
+                        for="year"
+                        class="block text-sm font-medium text-gray-700"
+                        data-i18n-key="all_years"
+                >Toutes années</label
+                >
+                <select
+                        id="year"
+                        aria-describedby="year-desc"
+                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md shadow-sm"
+                >
+                    <option value="" data-i18n-key="all_years">Toutes années</option>
+                    </select>
+                <p id="year-desc" class="sr-only">
+                    Sélectionnez une année pour filtrer les annonces
+                </p>
             </div>
             <div>
-                <label for="filter-model" class="block text-sm font-medium text-gray-700">Modèle</label>
-                <select id="filter-model" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md" disabled></select>
+                <label
+                        for="wilaya"
+                        class="block text-sm font-medium text-gray-700"
+                        data-i18n-key="all_wilayas"
+                >Toutes wilayas</label
+                >
+                <select
+                        id="wilaya"
+                        aria-describedby="wilaya-desc"
+                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md shadow-sm"
+                >
+                    <option value="" data-i18n-key="all_wilayas">Toutes wilayas</option>
+                    </select>
+                <p id="wilaya-desc" class="sr-only">
+                    Sélectionnez une wilaya pour filtrer les annonces
+                </p>
+            </div>
+            <div id="commune-container" class="hidden">
+                <label
+                        for="commune"
+                        class="block text-sm font-medium text-gray-700"
+                        data-i18n-key="all_communes"
+                >Toutes communes</label
+                >
+                <select
+                        id="commune"
+                        aria-describedby="commune-desc"
+                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md shadow-sm"
+                >
+                    <option value="" data-i18n-key="all_communes">Toutes communes</option>
+                    </select>
+                <p id="commune-desc" class="sr-only">
+                    Sélectionnez une commune pour filtrer les annonces
+                </p>
             </div>
             <div>
-                <label for="filter-year" class="block text-sm font-medium text-gray-700">Année</label>
-                <select id="filter-year" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md" disabled></select>
+                <label
+                        for="condition"
+                        class="block text-sm font-medium text-gray-700"
+                        data-i18n-key="condition"
+                >État</label
+                >
+                <select
+                        id="condition"
+                        aria-describedby="condition-desc"
+                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md shadow-sm"
+                >
+                    <option value="" data-i18n-key="any_condition">Tout</option>
+                    <option value="new" data-i18n-key="new">Neuf</option>
+                    <option value="used" data-i18n-key="used">Occasion</option>
+                </select>
+                <p id="condition-desc" class="sr-only">
+                    Sélectionnez l'état du produit
+                </p>
             </div>
         </div>
-        <div class="text-center mt-8">
-            <button id="show-results-btn" class="w-full sm:w-auto px-8 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-lg transform hover:scale-105">Afficher les résultats</button>
+
+        <div
+                class="mt-6 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center"
+        >
+            <button
+                    id="filter-apply-btn"
+                    class="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md"
+                    data-i18n-key="apply_filters"
+            >
+                Appliquer les filtres
+            </button>
+            <button
+                    id="filter-reset-btn"
+                    class="w-full sm:w-auto px-6 py-3 bg-gray-200 text-gray-700 rounded-md font-semibold hover:bg-gray-300 transition-colors duration-200 shadow-md"
+                    data-i18n-key="reset"
+            >
+                Réinitialiser
+            </button>
+        </div>
+    </section>
+
+    <section
+            id="listings-section"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            aria-live="polite"
+            aria-label="Liste des annonces"
+    >
+        </section>
+</template>
+
+<template id="product-detail-view-template">
+    <div id="product-detail" class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+        <button id="back-to-listings-btn" class="mb-4 text-blue-600 hover:text-blue-800 font-semibold flex items-center">
+            <i class="fas fa-arrow-left mr-2"></i>
+            <span data-i18n-key="back_to_listings">Retour aux annonces</span>
+        </button>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <img id="product-image-detail" src="" alt="" class="w-full h-96 object-cover rounded-lg shadow-md" />
+            <div>
+                <h2 id="product-title-detail" class="text-3xl font-bold mb-2"></h2>
+                <p id="product-price-detail" class="text-blue-600 font-bold text-2xl mb-4"></p>
+                <p id="product-description-detail" class="text-gray-700 mb-6"></p>
+
+                <div class="space-y-2 text-gray-700 text-sm mb-6">
+                    <p><strong><span data-i18n-key="brand_label">Marque</span>:</strong> <span id="product-brand-detail"></span></p>
+                    <p><strong><span data-i18n-key="model_label">Modèle</span>:</strong> <span id="product-model-detail"></span></p>
+                    <p><strong><span data-i18n-key="year_label">Année</span>:</strong> <span id="product-year-detail"></span></p>
+                    <p><strong><span data-i18n-key="wilaya_label">Wilaya</span>:</strong> <span id="product-wilaya-detail"></span></p>
+                    <p><strong><span data-i18n-key="commune_label">Commune</span>:</strong> <span id="product-commune-detail"></span></p>
+                </div>
+
+                <button id="add-to-cart-btn" class="w-full px-6 py-3 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition-colors duration-200 shadow-md">
+                    <i class="fas fa-cart-plus mr-2"></i>
+                    <span data-i18n-key="add_to_cart">Ajouter au panier</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="mt-12">
+            <h3 class="text-2xl font-bold mb-4" data-i18n-key="reviews_title">Avis des utilisateurs</h3>
+            <div id="reviews-container" class="space-y-4">
+                </div>
+        </div>
+
+        <div class="mt-8" id="add-review-section">
+            <h4 class="text-xl font-bold mb-2" data-i18n-key="add_review_title">Ajouter votre avis</h4>
+            <form id="add-review-form" class="space-y-4">
+                <div>
+                    <label for="review-rating" class="block text-sm font-medium text-gray-700">Note</label>
+                    <select id="review-rating" name="rating" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <option value="5">5 Étoiles</option>
+                        <option value="4">4 Étoiles</option>
+                        <option value="3">3 Étoiles</option>
+                        <option value="2">2 Étoiles</option>
+                        <option value="1">1 Étoile</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="review-comment" class="block text-sm font-medium text-gray-700">Commentaire</label>
+                    <textarea id="review-comment" name="comment" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+                </div>
+                <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                    <span data-i18n-key="submit_review">Soumettre l'avis</span>
+                </button>
+            </form>
         </div>
     </div>
 </template>
 
-<template id="product-detail-view-template">
-    </template>
+<template id="cart-view-template">
+    <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+        <button id="back-from-cart-btn" class="mb-4 text-blue-600 hover:text-blue-800 font-semibold flex items-center">
+            <i class="fas fa-arrow-left mr-2"></i>
+            <span data-i18n-key="back_to_listings">Retour aux annonces</span>
+        </button>
+        <h2 class="text-2xl md:text-3xl font-bold mb-6" data-i18n-key="cart_title">Mon panier</h2>
+        <div id="cart-items-container" class="space-y-4">
+            </div>
+        <div id="cart-summary" class="mt-8 pt-4 border-t border-gray-200">
+            <p class="text-xl font-bold flex justify-between">
+                <span data-i18n-key="cart_total">Total</span>:
+                <span id="cart-total-price">0 DA</span>
+            </p>
+            <button id="checkout-btn" class="w-full mt-4 px-6 py-3 bg-green-600 text-white rounded-md font-semibold hover:bg-green-700 transition-colors duration-200 shadow-md">
+                <span data-i18n-key="checkout_btn">Passer à la caisse</span>
+            </button>
+        </div>
+    </div>
+</template>
 
-<script type="module">
-    // --- Firebase SDK Imports ---
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, query, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-    import { getAuth, signInWithPopup, signOut, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+<template id="user-profile-view-template">
+    <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+        <h2 class="text-2xl md:text-3xl font-bold mb-6" data-i18n-key="profile_title">Mon profil</h2>
+        <div id="profile-details" class="space-y-4">
+            </div>
+    </div>
+</template>
+
+<script type="module" type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+    import {
+        getFirestore,
+        collection,
+        addDoc,
+        query,
+        onSnapshot,
+        where,
+        getDocs,
+        doc,
+        setDoc,
+        getDoc,
+    } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+    import {
+        getStorage,
+        ref,
+        uploadBytes,
+        getDownloadURL,
+    } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-storage.js";
+    import { getAuth, signInWithPopup, signOut, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
     
-    // --- App State ---
+    // NOTE: For this app to work correctly in your Firebase project, you need to set up Firestore security rules.
+    // These rules will allow public read access for product and review data,
+    // while restricting write access to authenticated users and protecting private user data.
+    // Copy the rules below and paste them into the 'Rules' tab of your Firestore console.
+    
+    /*
+    rules_version = '2';
+    service cloud.firestore {
+      match /databases/{database}/documents {
+        // Public data (products, reviews)
+        match /products/{productId} {
+          allow read: if true;
+          allow create, update, delete: if request.auth != null;
+        }
+        match /artifacts/{appId}/public/data/products/{productId}/reviews/{reviewId} {
+          allow read: if true;
+          allow create, update, delete: if request.auth != null;
+        }
+        // Private user data (cart, orders)
+        match /artifacts/{appId}/users/{userId}/{documents=**} {
+          allow read, write: if request.auth != null && request.auth.uid == userId;
+        }
+      }
+    }
+    */
+    
+    // Global state variables
     let currentUser = null;
+    let currentLang = localStorage.getItem("piecety_lang") || "fr";
+    let currentView = 'home';
     let allProducts = [];
-    let currentLang = 'fr'; // Default language
+    let userCart = {};
 
-    // --- Firebase Config (Ensure this is filled with your actual config) ---
+    // Firebase Configuration
+    const appId = 'piecety-app-b39c4'; // Use your actual Firebase Project ID here
     const firebaseConfig = {
-      apiKey: "AIzaSyBIptEskV2soajxRYPDfwYFYyz9pWQvZL0",
-      authDomain: "piecety-app-b39c4.firebaseapp.com",
-      projectId: "piecety-app-b39c4",
-      storageBucket: "piecety-app-b39c4.appspot.com",
-      messagingSenderId: "265795860915",
-      appId: "1:265795860915:web:aa10241788cce42f6373c6"
+        apiKey: "AIzaSyBIptEskV2soajxRYPDfwYFYyz9pWQvZL0",
+        authDomain: "piecety-app-b39c4.firebaseapp.com",
+        projectId: "piecety-app-b39c4",
+        storageBucket: "piecety-app-b39c4.appspot.com",
+        messagingSenderId: "265795860915",
+        appId: "1:265795860915:web:aa10241788cce42f6373c6"
     };
-
-    // --- Firebase Initialization ---
+    
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const storage = getStorage(app);
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
 
-    // --- Translations (Full object restored) ---
+    // Translations for internationalization
     const translations = {
         fr: {
-            menu: "Menu", sell: "Vendre", connect: "Se connecter", logout: "Déconnexion",
-            hero_title: "Trouvez la bonne pièce pour votre voiture", hero_subtitle: "Le marché algérien des pièces automobiles le plus fiable.",
-            categories_title: "Catégories de Pièces", category_engine: "Moteur", category_brakes: "Freins",
+            fr_short: "FR", en_short: "EN", ar_short: "AR",
+            menu: "Menu", sell: "Vendre", connect: "Se connecter", language: "Langue",
+            hero_title: "Trouvez la bonne pièce pour votre voiture",
+            hero_subtitle: "Le marché algérien des pièces automobiles le plus fiable.",
+            categories_title: "Catégories de Pièces",
+            category_engine: "Moteur", category_brakes: "Freins", category_fuel_system: "Système de carburant",
+            category_cooling: "Refroidissement", category_tires: "Pneus & Jantes", category_electrical: "Électrique",
+            category_body: "Carrosserie", category_tools: "Outillage",
+            filters_title: "Filtrer les annonces", all_brands: "Toutes les marques", all_models: "Tous les modèles",
+            all_years: "Toutes années", all_wilayas: "Toutes wilayas", all_communes: "Toutes communes",
+            condition: "État", any_condition: "Tout", new: "Neuf", used: "Occasion",
+            apply_filters: "Appliquer les filtres", reset: "Réinitialiser",
+            search_placeholder: "Rechercher une pièce...",
+            footer_text: "&copy; <span id='current-year'></span> Piecety - Marché des Pièces Auto en Algérie. Tous droits réservés.",
+            submit_ad: "Soumettre une annonce rapide", ad_title_label: "Titre de la pièce", brand_label: "Marque",
+            select_brand: "Sélectionnez une marque", model_label: "Modèle", select_model: "Sélectionnez un modèle",
+            year_label: "Année", select_year: "Sélectionnez une année", wilaya_label: "Wilaya",
+            select_wilaya: "Sélectionnez une wilaya", commune_label: "Commune", select_commune: "Sélectionnez une commune",
+            condition_label: "État", price_label: "Prix (DA)", description_label: "Description",
+            image_label: "Image", submit_ad_btn_text: "Soumettre",
             login_text: "Connectez-vous pour accéder à toutes les fonctionnalités.", google_login: "Se connecter avec Google",
+            back_to_listings: "Retour aux annonces", add_to_cart: "Ajouter au panier",
+            reviews_title: "Avis des utilisateurs", add_review_title: "Ajouter votre avis", submit_review: "Soumettre l'avis",
+            cart_title: "Mon panier", cart_total: "Total", checkout_btn: "Passer à la caisse",
+            no_listings: "Aucune annonce trouvée.",
+            profile_title: "Mon profil",
+            your_cart_is_empty: "Votre panier est vide.",
+            remove: "Supprimer",
+            quantity: "Quantité",
+            item_total: "Total de l'article",
+            login_required: "Veuillez vous connecter pour utiliser cette fonctionnalité."
         },
-        // Add 'en' and 'ar' translations here if needed
+        en: {
+            fr_short: "FR", en_short: "EN", ar_short: "AR",
+            menu: "Menu", sell: "Sell", connect: "Log In", language: "Language",
+            hero_title: "Find the right car part for your vehicle",
+            hero_subtitle: "The most trusted Algerian car parts marketplace.",
+            categories_title: "Parts Categories",
+            category_engine: "Engine", category_brakes: "Brakes", category_fuel_system: "Fuel System",
+            category_cooling: "Cooling", category_tires: "Tires & Rims", category_electrical: "Electrical",
+            category_body: "Body", category_tools: "Tools",
+            filters_title: "Filter Listings", all_brands: "All brands", all_models: "All models",
+            all_years: "All years", all_wilayas: "All wilayas", all_communes: "All communes",
+            condition: "Condition", any_condition: "Any", new: "New", used: "Used",
+            apply_filters: "Apply Filters", reset: "Reset",
+            search_placeholder: "Search for a part...",
+            footer_text: "&copy; <span id='current-year'></span> Piecety - Car Parts Marketplace in Algeria. All rights reserved.",
+            submit_ad: "Submit a quick ad", ad_title_label: "Part Title", brand_label: "Brand",
+            select_brand: "Select a brand", model_label: "Model", select_model: "Select a model",
+            year_label: "Year", select_year: "Select a year", wilaya_label: "Wilaya",
+            select_wilaya: "Select a wilaya", commune_label: "Commune", select_commune: "Select a commune",
+            condition_label: "Condition", price_label: "Price (DA)", description_label: "Description",
+            image_label: "Image", submit_ad_btn_text: "Submit",
+            login_text: "Log in to access all features.", google_login: "Sign in with Google",
+            back_to_listings: "Back to listings", add_to_cart: "Add to cart",
+            reviews_title: "User Reviews", add_review_title: "Add your review", submit_review: "Submit Review",
+            cart_title: "My Cart", cart_total: "Total", checkout_btn: "Proceed to Checkout",
+            no_listings: "No listings found.",
+            profile_title: "My Profile",
+            your_cart_is_empty: "Your cart is empty.",
+            remove: "Remove",
+            quantity: "Quantity",
+            item_total: "Item Total",
+            login_required: "Please log in to use this feature."
+        },
+        ar: {
+            fr_short: "FR", en_short: "EN", ar_short: "AR",
+            menu: "القائمة", sell: "بيع", connect: "تسجيل الدخول", language: "اللغة",
+            hero_title: "ابحث عن قطعة الغيار المناسبة لسيارتك",
+            hero_subtitle: "أكثر أسواق قطع غيار السيارات ثقة في الجزائر.",
+            categories_title: "فئات القطع",
+            category_engine: "محرك", category_brakes: "مكابح", category_fuel_system: "نظام الوقود",
+            category_cooling: "التبريد", category_tires: "الإطارات والعجلات", category_electrical: "كهربائي",
+            category_body: "هيكل", category_tools: "أدوات",
+            filters_title: "تصفية الإعلانات", all_brands: "جميع الماركات", all_models: "جميع الموديلات",
+            all_years: "جميع السنوات", all_wilayas: "جميع الولايات", all_communes: "جميع البلديات",
+            condition: "الحالة", any_condition: "الكل", new: "جديد", used: "مستعمل",
+            apply_filters: "تطبيق الفلاتر", reset: "إعادة تعيين",
+            search_placeholder: "ابحث عن قطعة...",
+            footer_text: "&copy; <span id='current-year'></span> Piecety - سوق قطع غيار السيارات في الجزائر. جميع الحقوق محفوظة.",
+            submit_ad: "إرسال إعلان سريع", ad_title_label: "عنوان القطعة", brand_label: "الماركة",
+            select_brand: "اختر ماركة", model_label: "الموديل", select_model: "اختر موديل",
+            year_label: "السنة", select_year: "اختر سنة", wilaya_label: "الولاية",
+            select_wilaya: "اختر ولاية", commune_label: "البلدية", select_commune: "اختر بلدية",
+            condition_label: "الحالة", price_label: "السعر (دج)", description_label: "الوصف",
+            image_label: "الصورة", submit_ad_btn_text: "إرسال",
+            login_text: "تسجيل الدخول للوصول إلى جميع الميزات.", google_login: "تسجيل الدخول باستخدام Google",
+            back_to_listings: "العودة إلى الإعلانات", add_to_cart: "أضف إلى السلة",
+            reviews_title: "آراء المستخدمين", add_review_title: "أضف رأيك", submit_review: "إرسال الرأي",
+            cart_title: "سلة التسوق", cart_total: "الإجمالي", checkout_btn: "الدفع",
+            no_listings: "لم يتم العثور على إعلانات.",
+            profile_title: "ملفي الشخصي",
+            your_cart_is_empty: "سلة التسوق فارغة.",
+            remove: "حذف",
+            quantity: "الكمية",
+            item_total: "إجمالي السلعة",
+            login_required: "يرجى تسجيل الدخول لاستخدام هذه الميزة."
+        }
     };
 
-    // --- Car Data (Full object restored) ---
+    // Data for dynamic dropdowns
+    const wilayas = {
+        "Adrar": ["Adrar", "Charouine", "Tamest", "Reggane", "Aoulef", "Fenoughil", "Timimoun", "Talmine", "Bordj Badji Mokhtar", "In Salah"],
+        "Chlef": ["Chlef", "Ténès", "Ouled Farès", "El Marsa", "Abou El Hassan", "Oued Fodda", "Beni Haoua", "El Karimia", "Taougrite", "Harchoun"],
+        "Laghouat": ["Aïn Madhi", "Aflou", "El Ghicha", "El Houaita", "El Assafia", "Ksar El Hirane", "Laghouat", "Taougrite", "Sidi Makhlouf", "Ouled Farès"],
+        "Oum El Bouaghi": ["Aïn Beïda", "Aïn Fekroun", "Aïn Babouche", "Aïn M'lila", "Dhalaâ", "F'kirina", "Oum El Bouaghi", "Sidi R'ghiss", "Souk Naamane", "El Fedjoudj"],
+        "Batna": ["Aïn Touta", "Arris", "Barika", "Batna", "El Madher", "Menaa", "Merouana", "Ras El Aioun", "Timgad", "Ouled Si Slimane"],
+        "Béjaïa": ["Aïn El Kebira", "Akbou", "Béjaïa", "El Kseur", "Sidi Aïch", "Tichy", "Toudja", "Aokas", "Ighil Ali", "Darguina"],
+        "Biskra": ["Biskra", "El Kantara", "Sidi Okba", "Ourlal", "Zeribet El Oued", "Tolga", "Sidi Khaled", "Djemorah", "M'chouneche", "El Outaya"],
+        "Béchar": ["Béchar", "Abadla", "Beni Ounif", "Lahmar", "Tabelbala", "Kenadsa", "Igli", "Taghit", "Mechraâ Houari Boumediene", "Ouled Khoudir"],
+        "Blida": ["Blida", "Boufarik", "Chebli", "Oued El Alleug", "Larbaâ", "Meftah", "Soumaâ", "Bougara", "Mouzaia", "Chréa"],
+        "Bouira": ["Bouira", "Lakhdaria", "Sour El Ghozlane", "Ahnif", "Bir Ghbalou", "Haïzer", "M'chedallah", "El Hachimia", "Sidi Aïssa", "Taghzout"],
+        "Tamanrasset": ["Tamanrasset", "Abalessa", "Idles", "In Amguel", "Tazrouk", "Tin Zaouatine", "In Guezzam", "Djanet", "Bordj Omar Driss", "Illizi"],
+        "Tébessa": ["Tébessa", "Bir El Ater", "Cheria", "El Aouinet", "El Kouif", "El Ma Labiod", "Morsott", "Ouenza", "Bir Mokkadem", "Hammamet"],
+        "Tlemcen": ["Tlemcen", "Ghazaouet", "Maghnia", "Remchi", "Sebdou", "Sidi Djillali", "Hennaya", "Nedroma", "Marsa Ben M'Hidi", "Beni Snous"],
+        "Tiaret": ["Tiaret", "Aïn Deheb", "Frenda", "Ksar Chellala", "Mahdia", "Rahouia", "Sougueur", "Dahmouni", "Sidi Ali Mellal", "Medroussa"],
+        "Tizi Ouzou": ["Tizi Ouzou", "Aïn El Hammam", "Azazga", "Bouzeguène", "Draâ Ben Khedda", "Ouacif", "Larbaâ Nath Irathen", "Tigzirt", "Tizi Gheniff", "Maâtkas"],
+        "Alger": ["Alger", "Bab El Oued", "Baraki", "Bir Mourad Raïs", "Birkhadem", "Bologhine", "Bordj El Kiffan", "Hussein Dey", "Hydra", "Dar El Beïda"],
+        "Djelfa": ["Djelfa", "Aïn Oussera", "Messaad", "Hassi Bahbah", "Had Sahary", "Guettara", "El Idrissia", "Dar Chioukh", "Zaccar", "Faidh El Botma"],
+        "Jijel": ["Jijel", "Taher", "El Milia", "Chekfa", "Ziamamansouria", "Texenna", "Djemaa Beni Habibi", "Sidi Maarouf", "Settara", "Kaous"],
+        "Sétif": ["Sétif", "Aïn Oulmane", "El Eulma", "Bousselam", "Beni Ouartilane", "Bougaâ", "Salah Bey", "Hammamlou", "Guenzet", "Maouaklane"],
+        "Saïda": ["Saïda", "Aïn El Hadjar", "Sidi Boubkeur", "Youb", "El Hassasna", "Tircine", "Maamora", "Ouled Brahim", "Aïn Sekhouna", "Moulay Larbi"],
+        "Skikda": ["Skikda", "Aïn Bouziane", "Azzaba", "El Harrouch", "Collo", "Filfila", "Ramdane Djamel", "Salah Bouchaour", "Zerdaza", "Beni Oulbane"],
+        "Sidi Bel Abbès": ["Sidi Bel Abbès", "Sfisef", "Telagh", "Ras El Ma", "Tessala", "Aïn El Berd", "Boukhanafis", "Ben Badis", "Sidi Chaib", "Moulay Slissen"],
+        "Annaba": ["Annaba", "El Hadjar", "Berrahal", "El Bouni", "Seraïdi", "Chetaïbi", "Oued El Aneb", "Aïn El Berda", "Trézel", "Sidi Amar"],
+        "Guelma": ["Guelma", "Héliopolis", "Oued Zenati", "Bouchegouf", "Ain Reggada", "Tamlouka", "Dkhila", "Bou Hachana", "Belkheir", "Bordj Sabath"],
+        "Constantine": ["Constantine", "El Khroub", "Hamma Bouziane", "Aïn Smara", "Didouche Mourad", "Zighoud Youcef", "Messaoud Boudjriou", "Beni Hamidane", "Ibn Ziad", "Oued El Hadjar"],
+        "Médéa": ["Médéa", "Berrouaghia", "Chahbounia", "Tablat", "Aïn Boucif", "Beni Slimane", "El Azizia", "Si Mahdjoub", "Ouzera", "Ksar Boukhari"],
+        "Mostaganem": ["Mostaganem", "Hassi Mameche", "Aïn Tédelès", "Sidi Ali", "Bouguirat", "Achaacha", "Khadra", "Oued El Kheir", "Mazagran", "Foran"],
+        "M'Sila": ["M'Sila", "Bou Saâda", "Aïn El Melh", "Sidi Aïssa", "Magra", "M'Cif", "Hammam Dhalaâ", "Ouled Derradj", "Ben Srour", "Ouanougha"],
+        "Mascara": ["Mascara", "Ghriss", "Tighennif", "Sig", "Bou Hanifia", "Oued Taria", "Hachem", "Mohammadia", "El Bordj", "Aïn Fares"],
+        "Ouargla": ["Ouargla", "Hassi Messaoud", "Rouissat", "N'Goussa", "Sidi Khouiled", "Blidet Amor", "El Borma", "Tebesbest", "Zaouia El Abidia", "Hassi Ben Abdallah"],
+        "Oran": ["Oran", "Arzew", "Bir El Djir", "Es Senia", "Boutlélis", "Hassi Bounif", "Oued Tlélat", "Sidi Chami", "Gdyel", "Aïn El Turk"],
+        "El Bayadh": ["El Bayadh", "Bougtob", "Chellala", "Breïna", "Rogassa", "Brezina", "Boussemghoun", "El Kheiter", "Kraïr", "Ghassoul"],
+        "Illizi": ["Illizi", "Djanet", "Bordj El Houasse", "Tamanrasset", "In Salah", "Abalessa", "Tazrouk", "Idles", "In Amguel", "Tin Zaouatine"],
+        "Bordj Bou Arréridj": ["Bordj Bou Arréridj", "Ras El Oued", "Mansoura", "Tassameurt", "El Achir", "Medjana", "Bordj Ghedir", "Hammam El Biban", "L'Hassaneia", "Ghassira"],
+        "Boumerdès": ["Boumerdès", "Dellys", "Boudouaou", "Isser", "Béni Amrane", "Naciria", "Corso", "Zemmouri", "Réghaïa", "Tidjelabine"],
+        "El Tarf": ["El Tarf", "Ben M'Hidi", "Besbes", "Drea", "El Kala", "Bougous", "Raml Souk", "Sidi Khelil", "Oued Zitoun", "Aïn Kerma"],
+        "Tindouf": ["Tindouf", "Oum El Assel"],
+        "Tissemsilt": ["Tissemsilt", "Bordj Bounaama", "Lardjem", "Théniet El Had", "Ammi Moussa", "Sidi Boutouchent", "Layoune", "Lazharia", "Bougara", "Bordj Emir Khaled"],
+        "El Oued": ["El Oued", "Guemar", "Hassi Khalifa", "Robbah", "Debila", "Bayadha", "Magrane", "Nakhla", "Kouinine", "El Ogla"],
+        "Khenchela": ["Khenchela", "Aïn Touila", "Bab El Ain", "Kais", "Yabous", "Chechar", "M'Sara", "Ouled Rechache", "Taouzianat", "Remila"],
+        "Souk Ahras": ["Souk Ahras", "Heddada", "M'daourouch", "Mechrouha", "Ouled Driss", "Taoura", "Zaarouria", "Ouillen", "Sidi Fredj", "Tiffech"],
+        "Tipaza": ["Tipaza", "Cherchell", "Koléa", "Fouka", "Hadjout", "Sidi Rached", "Menaceur", "Bou Ismaïl", "Khemis Miliana", "Aïn Tagourait"],
+        "Mila": ["Mila", "Bouhatem", "Ferdjioua", "Grarem Gouga", "Tadjenanet", "Sidi Merouane", "Oued Endja", "Teleghma", "Chigara", "Rouached"],
+        "Aïn Defla": ["Aïn Defla", "Khemis Miliana", "El Attaf", "Aïn Torki", "Djelida", "Rouina", "Hammam Righa", "Miliana", "Boumedfaa", "Aïn Soltane"],
+        "Naâma": ["Naâma", "Mécheria", "Aïn Sefra", "Moghrar", "Tiout", "Sfissifa", "Makman Ben Amer", "Asla", "Kasdir", "El Biod"],
+        "Aïn Témouchent": ["Aïn Témouchent", "Hammam Bou Hadjar", "El Malah", "Béni Saf", "Aghlal", "Chaabat El Ham", "Oued Berkeche", "Aoubellil", "Bouzedjar", "Tamesna"],
+        "Ghardaïa": ["Ghardaïa", "El Guerrara", "Berriane", "Dhayet Bendhahoua", "Metlili", "Zelfana", "Bounoura", "El Atteuf", "Guerrara", "Dra' El Mizan"],
+        "Relizane": ["Relizane", "Oued Rhiou", "Zemmoura", "Sidi M'Hamed Ben Ali", "El H'madna", "Ammi Moussa", "Mazouna", "Mendes", "Ain Tarek", "Oued El Djemaa"],
+        "El M'ghair": ["El M'ghair", "Sidi Amrane", "Djamaa", "Oum Toub", "M'Rara", "Oued Allenda", "Sidi Khelil", "Oued R'hiou", "Sidi Yahia", "Bouchakroun"],
+        "El Meniaa": ["El Meniaa", "Hassi Gara", "Mansourah", "Dhiafat", "El Guerrara", "Tadjmout", "El Hachane", "El Oued", "Chabet El Ami", "Ouled Gacem"]
+    };
+
     const car_data = {
-        "Stellantis": { "Peugeot": { models: ["208", "308", "301"] }, "Citroën": { models: ["C3", "C4"] }, "Fiat": { models: ["500", "Tipo"] }, "Jeep": { models: ["Renegade", "Compass"] } },
-        "Volkswagen Group": { "Volkswagen": { models: ["Golf", "Polo", "Passat"] }, "Audi": { models: ["A3", "A4"] }, "Seat": { models: ["Ibiza", "Leon"] }, "Skoda": { models: ["Fabia", "Octavia"] } },
-        "Renault-Nissan-Mitsubishi Alliance": { "Renault": { models: ["Clio", "Megane", "Captur"] }, "Nissan": { models: ["Micra", "Qashqai"] }, "Dacia": { models: ["Logan", "Sandero", "Duster"] }, "Mitsubishi": { models: ["L200", "Pajero"] } },
-        "Hyundai Motor Group": { "Hyundai": { models: ["i10", "i20", "Accent"] }, "Kia": { models: ["Picanto", "Rio", "Sportage"] } },
-        "Toyota Motor Corp": { "Toyota": { models: ["Yaris", "Corolla", "Hilux"] } },
-        "Mercedes-Benz Group": { "Mercedes-Benz": { models: ["A-Class", "C-Class"] } },
-        "BMW Group": { "BMW": { models: ["Series 1", "Series 3", "X1"] } }
+        "Toyota": ["Yaris", "Corolla", "Camry", "Land Cruiser", "Hilux"],
+        "Peugeot": ["208", "308", "301", "2008", "3008", "508"],
+        "Volkswagen": ["Golf", "Polo", "Passat", "Tiguan", "Touareg", "Jetta"],
+        "Renault": ["Clio", "Megane", "Captur", "Duster", "Symbol"],
+        "Hyundai": ["i10", "i20", "Accent", "Tucson", "Santa Fe"],
+        "Nissan": ["Micra", "Sentra", "Qashqai", "X-Trail", "Juke"],
+        "Fiat": ["Panda", "500", "Tipo", "Punto"],
+        "Citroën": ["C3", "C4", "Berlingo", "C-Elysée"],
+        "Kia": ["Picanto", "Rio", "Sportage", "Sorento"],
+        "Mercedes-Benz": ["A-Class", "C-Class", "E-Class", "GLA", "GLC"]
     };
+
     const currentYear = new Date().getFullYear();
-    const years = Array.from({ length: currentYear - 1989 }, (_, i) => currentYear - i);
-    
-    // --- DOM References ---
-    const appContainer = document.getElementById("app-container");
+    const years = [];
+    for (let y = currentYear; y >= 1980; y--) {
+        years.push(y);
+    }
 
-    // --- Utility Functions ---
-    const populateSelect = (selectEl, options, defaultLabel) => {
-        if (!selectEl) return;
-        selectEl.innerHTML = `<option value="">${defaultLabel}</option>`;
-        options.forEach(opt => selectEl.insertAdjacentHTML('beforeend', `<option value="${opt}">${opt}</option>`));
+    // DOM references
+    const elements = {
+        appContainer: document.getElementById("app-container"),
+        langDropdownBtn: document.getElementById("lang-dropdown-btn"),
+        langDropdown: document.getElementById("lang-dropdown"),
+        currentLangSpan: document.getElementById("current-lang"),
+        langBtns: document.querySelectorAll(".lang-btn"),
+        body: document.body,
+        searchInput: document.getElementById("search-input"),
+        postProductModal: document.getElementById("post-product-modal"),
+        modalCloseBtn: document.getElementById("modal-close-btn"),
+        postProductForm: document.getElementById("post-product-form"),
+        messageBox: document.getElementById("message-box"),
+        mobileMenuBtn: document.getElementById("mobile-menu-btn"),
+        mobileMenu: document.getElementById("mobile-menu"),
+        mobileMenuCloseBtn: document.getElementById("mobile-menu-close-btn"),
+        authModal: document.getElementById("auth-modal"),
+        authModalCloseBtn: document.getElementById("auth-modal-close-btn"),
+        googleLoginBtn: document.getElementById("google-login-btn"),
+        cartBtn: document.getElementById("cart-btn"),
+        cartCountSpan: document.getElementById("cart-count"),
+        authLinksContainer: document.getElementById("auth-links"),
+        homeLink: document.getElementById("home-link"),
+        sellLink: document.getElementById("sell-link"),
+        sellLinkMobile: document.getElementById("sell-link-mobile"),
+        loginBtn: document.getElementById('login-btn'),
+        // Filter elements in home-view-template
+        brandFilter: null,
+        modelFilter: null,
+        yearFilter: null,
+        wilayaFilter: null,
+        communeFilter: null,
+        conditionFilter: null,
+        modelFilterContainer: null,
+        communeContainer: null,
+        filterApplyBtn: null,
+        filterResetBtn: null,
+        // Product Detail View elements
+        backToListingsBtn: null,
+        addToCartBtn: null,
+        reviewsContainer: null,
+        addReviewSection: null,
+        addReviewForm: null,
+        // Cart View elements
+        cartItemsContainer: null,
+        cartTotalSpan: null,
+        checkoutBtn: null,
+        backFromCartBtn: null,
+        // Post Product Form elements
+        postProductBrandSelect: document.getElementById('product-brand'),
+        postProductModelSelect: document.getElementById('product-model'),
+        postProductYearSelect: document.getElementById('product-year'),
+        postProductWilayaSelect: document.getElementById('product-wilaya'),
+        postProductCommuneSelect: document.getElementById('product-commune')
     };
-    const translatePage = () => { /* Simplified for brevity, you can add your full translation logic here */ };
 
+    // Global functions
+    const showMessage = (msg, duration = 3500, type = "info") => {
+        const { messageBox } = elements;
+        if (!messageBox) return;
+        messageBox.textContent = msg;
+        messageBox.className = `message-box bg-white shadow-lg px-4 py-2 rounded-lg show`;
+        messageBox.classList.add(type === "error" ? "bg-red-100" : type === "success" ? "bg-green-100" : "bg-white",
+            type === "error" ? "text-red-800" : type === "success" ? "text-green-800" : "text-gray-800");
 
-    // --- View Rendering ---
-    const renderView = (viewName, data = null) => {
-        appContainer.innerHTML = '';
-        const template = document.getElementById(`${viewName}-view-template`);
-        if (template) {
-            appContainer.appendChild(template.content.cloneNode(true));
-            const renderFunctions = {
-                'home': renderHomePage,
-                'filter-drilldown': renderFilterDrilldownPage,
-                // Add other render functions here as you build them
-            };
-            // Use optional chaining to prevent crash if function doesn't exist yet
-            renderFunctions[viewName]?.(data);
+        setTimeout(() => {
+            messageBox.classList.remove("show");
+        }, duration);
+    };
+
+    const closeMobileMenu = () => {
+        const { mobileMenu, body } = elements;
+        if(mobileMenu) mobileMenu.classList.add('hidden');
+        if(body) body.classList.remove('overflow-hidden');
+    };
+    
+    const translatePage = (lang) => {
+        const { currentLangSpan, body } = elements;
+        if (currentLangSpan) currentLangSpan.textContent = translations[lang][lang + "_short"];
+        if (body) setDirection(lang);
+        document.querySelectorAll("[data-i18n-key]").forEach(el => {
+            const key = el.getAttribute("data-i18n-key");
+            if (translations[lang][key]) {
+                if ((el.tagName === 'INPUT' && (el.type === 'text' || el.type === 'search')) || el.tagName === 'TEXTAREA') {
+                    el.placeholder = translations[lang][key];
+                } else {
+                    el.innerHTML = translations[lang][key];
+                }
+            }
+        });
+    };
+
+    const setDirection = (lang) => {
+        const { body } = elements;
+        if (!body) return;
+        if (lang === "ar") {
+            body.setAttribute("dir", "rtl");
+            body.classList.add("rtl");
         } else {
-            console.error(`Template not found for view: ${viewName}`);
-            renderView('home'); // Fallback to home
+            body.setAttribute("dir", "ltr");
+            body.classList.remove("rtl");
         }
     };
     
-    const renderHomePage = (filters = null) => {
-        document.querySelectorAll('.category-link').forEach(link => 
-            link.addEventListener('click', e => {
-                e.preventDefault();
-                renderView('filter-drilldown', { category: e.currentTarget.dataset.category });
-            })
-        );
-        renderListings(filters);
-    };
-
-    const renderFilterDrilldownPage = (data) => {
-        document.getElementById('back-to-home-btn').addEventListener('click', () => renderView('home'));
-        const categoryName = translations['fr'][`category_${data.category}`] || "Filtres";
-        document.getElementById('drilldown-title').textContent = `Filtres pour: ${categoryName}`;
-
-        const companySelect = document.getElementById('filter-company');
-        const brandSelect = document.getElementById('filter-brand');
-        const modelSelect = document.getElementById('filter-model');
-        const yearSelect = document.getElementById('filter-year');
-
-        populateSelect(companySelect, Object.keys(car_data), "Choisissez un constructeur");
-        
-        companySelect.addEventListener('change', () => {
-            const selectedCompany = companySelect.value;
-            brandSelect.disabled = true; modelSelect.disabled = true; yearSelect.disabled = true;
-            if (selectedCompany) {
-                populateSelect(brandSelect, Object.keys(car_data[selectedCompany]), "Choisissez une marque");
-                brandSelect.disabled = false;
-            }
-        });
-
-        brandSelect.addEventListener('change', () => {
-            const selectedCompany = companySelect.value;
-            const selectedBrand = brandSelect.value;
-            modelSelect.disabled = true; yearSelect.disabled = true;
-            if (selectedBrand) {
-                populateSelect(modelSelect, car_data[selectedCompany][selectedBrand].models, "Choisissez un modèle");
-                modelSelect.disabled = false;
-            }
-        });
-
-        modelSelect.addEventListener('change', () => {
-            yearSelect.disabled = true;
-            if(modelSelect.value){
-                populateSelect(yearSelect, years, "Choisissez une année");
-                yearSelect.disabled = false;
-            }
-        });
-        
-        document.getElementById('show-results-btn').addEventListener('click', () => {
-            const filters = {
-                category: data.category,
-                company: companySelect.value,
-                brand: brandSelect.value,
-                model: modelSelect.value,
-                year: yearSelect.value
-            };
-            renderView('home', filters);
+    const populateSelect = (selectEl, options, defaultLabelKey, lang) => {
+        if (!selectEl) return;
+        selectEl.innerHTML = "";
+        const defaultText = translations[lang][defaultLabelKey] || defaultLabelKey;
+        const defaultOption = document.createElement('option');
+        defaultOption.value = "";
+        defaultOption.textContent = defaultText;
+        selectEl.appendChild(defaultOption);
+        options.forEach(opt => {
+            const option = document.createElement('option');
+            option.value = opt;
+            option.textContent = opt;
+            selectEl.appendChild(option);
         });
     };
-    
-    const renderListings = async (filters) => {
-        const listingsSection = document.getElementById('listings-section');
-        listingsSection.innerHTML = `<p class="col-span-full text-center py-12 text-gray-600">Chargement des annonces...</p>`;
+
+    const openAuthModal = () => {
+        const { authModal } = elements;
+        if (authModal) authModal.classList.remove('hidden');
+    };
+
+    const closeAuthModal = () => {
+        const { authModal } = elements;
+        if (authModal) authModal.classList.add('hidden');
+    };
+
+    const postProductBtnClick = () => {
+        const { postProductModal } = elements;
+        if (!currentUser || currentUser.isAnonymous) {
+            showMessage(translations[currentLang].login_required, 4000, 'error');
+            openAuthModal();
+            return;
+        }
+        if (postProductModal) postProductModal.classList.remove("hidden");
+    };
+
+    const renderView = (viewName, data = null) => {
+        const { appContainer } = elements;
+        if (!appContainer) return;
+        appContainer.innerHTML = '';
+        switch (viewName) {
+            case 'home':
+                appContainer.appendChild(document.getElementById('home-view-template').content.cloneNode(true));
+                renderHomePage();
+                break;
+            case 'product-detail':
+                appContainer.appendChild(document.getElementById('product-detail-view-template').content.cloneNode(true));
+                renderProductPage(data);
+                break;
+            case 'cart':
+                appContainer.appendChild(document.getElementById('cart-view-template').content.cloneNode(true));
+                renderCartPage();
+                break;
+            default:
+                renderView('home');
+                break;
+        }
+        currentView = viewName;
+        translatePage(currentLang);
+    };
+
+    const renderHomePage = async () => {
+        const { searchInput } = elements;
+        elements.brandFilter = document.getElementById('brand');
+        elements.modelFilter = document.getElementById('model');
+        elements.yearFilter = document.getElementById('year');
+        elements.wilayaFilter = document.getElementById('wilaya');
+        elements.communeFilter = document.getElementById('commune');
+        elements.conditionFilter = document.getElementById('condition');
+        elements.modelFilterContainer = document.getElementById('model-filter-container');
+        elements.communeContainer = document.getElementById('commune-container');
+        elements.filterApplyBtn = document.getElementById('filter-apply-btn');
+        elements.filterResetBtn = document.getElementById('filter-reset-btn');
+
+        const { brandFilter, modelFilter, yearFilter, wilayaFilter, communeFilter, conditionFilter, modelFilterContainer, communeContainer, filterApplyBtn, filterResetBtn } = elements;
+
+        populateSelect(brandFilter, Object.keys(car_data), "all_brands", currentLang);
+        populateSelect(yearFilter, years, "all_years", currentLang);
+        populateSelect(wilayaFilter, Object.keys(wilayas), "all_wilayas", currentLang);
+
+        const filterAndSearch = () => {
+            renderListings();
+        };
+
+        if (brandFilter) brandFilter.addEventListener('change', (e) => {
+            const val = e.target.value;
+            if (val) {
+                populateSelect(modelFilter, car_data[val], "all_models", currentLang);
+                if (modelFilterContainer) modelFilterContainer.classList.remove("hidden");
+                if (modelFilter) modelFilter.disabled = false;
+            } else {
+                if (modelFilter) modelFilter.innerHTML = `<option value="">${translations[currentLang]["all_models"]}</option>`;
+                if (modelFilterContainer) modelFilterContainer.classList.add("hidden");
+                if (modelFilter) modelFilter.disabled = true;
+            }
+            filterAndSearch();
+        });
+
+        if (wilayaFilter) wilayaFilter.addEventListener('change', (e) => {
+            const val = e.target.value;
+            if (val) {
+                populateSelect(communeFilter, wilayas[val], "all_communes", currentLang);
+                if (communeContainer) communeContainer.classList.remove("hidden");
+                if (communeFilter) communeFilter.disabled = false;
+            } else {
+                if (communeFilter) communeFilter.innerHTML = `<option value="">${translations[currentLang]["all_communes"]}</option>`;
+                if (communeContainer) communeContainer.classList.add("hidden");
+                if (communeFilter) communeFilter.disabled = true;
+            }
+            filterAndSearch();
+        });
+
+        if (filterApplyBtn) filterApplyBtn.addEventListener('click', filterAndSearch);
+        if (searchInput) searchInput.addEventListener('input', filterAndSearch);
+        if (modelFilter) modelFilter.addEventListener('change', filterAndSearch);
+        if (yearFilter) yearFilter.addEventListener('change', filterAndSearch);
+        if (communeFilter) communeFilter.addEventListener('change', filterAndSearch);
+        if (conditionFilter) conditionFilter.addEventListener('change', filterAndSearch);
+
+        if (filterResetBtn) filterResetBtn.addEventListener('click', () => {
+            if (brandFilter) brandFilter.value = '';
+            if (modelFilter) {
+                modelFilter.value = '';
+                modelFilter.disabled = true;
+                modelFilter.innerHTML = `<option value="">${translations[currentLang]["all_models"]}</option>`;
+            }
+            if (yearFilter) yearFilter.value = '';
+            if (wilayaFilter) wilayaFilter.value = '';
+            if (communeFilter) {
+                communeFilter.value = '';
+                communeFilter.disabled = true;
+                communeFilter.innerHTML = `<option value="">${translations[currentLang]["all_communes"]}</option>`;
+            }
+            if (conditionFilter) conditionFilter.value = '';
+            if (searchInput) searchInput.value = '';
+            if (modelFilterContainer) modelFilterContainer.classList.add('hidden');
+            if (communeContainer) communeContainer.classList.add('hidden');
+            renderListings();
+        });
+
+        renderListings();
+    };
+
+    const renderListings = async () => {
+        const { listingsSection, searchInput } = elements;
+        if (!listingsSection) return;
+        listingsSection.innerHTML = `<p class="col-span-full text-center py-6 text-gray-600" data-i18n-key="loading">Chargement...</p>`;
         try {
-            if (allProducts.length === 0) {
-                const querySnapshot = await getDocs(query(collection(db, "products")));
-                allProducts = querySnapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }));
-            }
-            // Simple filter for demonstration. You can make this more complex.
-            let filteredProducts = allProducts;
-            if(filters?.brand) {
-                filteredProducts = allProducts.filter(p => p.brand === filters.brand);
-            }
-            displayProducts(filteredProducts, listingsSection);
-        } catch (err) { 
-             listingsSection.innerHTML = `<p class="col-span-full text-center py-12 text-red-500">Erreur de chargement.</p>`;
+            const q = collection(db, "products");
+            const querySnapshot = await getDocs(q);
+            allProducts = querySnapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }));
+            const filtered = filterProducts(allProducts);
+            displayProducts(filtered);
+            translatePage(currentLang);
+        } catch (err) {
+            listingsSection.innerHTML = `<p class="col-span-full text-center py-6 text-red-600">Erreur de chargement des annonces.</p>`;
+            console.error(err);
         }
     };
 
-    const displayProducts = (products, container) => {
-        if (!container) return;
-        container.innerHTML = "";
+    const filterProducts = (products) => {
+        const { brandFilter, modelFilter, yearFilter, wilayaFilter, communeFilter, conditionFilter, searchInput } = elements;
+        const brand = brandFilter?.value.trim().toLowerCase() || '';
+        const model = modelFilter?.value.trim().toLowerCase() || '';
+        const year = yearFilter?.value.trim() || '';
+        const wilaya = wilayaFilter?.value.trim().toLowerCase() || '';
+        const commune = communeFilter?.value.trim().toLowerCase() || '';
+        const condition = conditionFilter?.value.trim().toLowerCase() || '';
+        const searchTerm = searchInput?.value.trim().toLowerCase() || '';
+
+        return products.filter(d => {
+            let match = true;
+            if (brand && d.brand.toLowerCase() !== brand) match = false;
+            if (model && d.model?.toLowerCase() !== model) match = false;
+            if (year && d.year?.toString() !== year) match = false;
+            if (wilaya && d.wilaya.toLowerCase() !== wilaya) match = false;
+            if (commune && d.commune?.toLowerCase() !== commune) match = false;
+            if (condition && d.condition.toLowerCase() !== condition) match = false;
+            if (searchTerm && !(d.title.toLowerCase().includes(searchTerm) || (d.description && d.description.toLowerCase().includes(searchTerm)))) match = false;
+            return match;
+        });
+    };
+
+    const displayProducts = (products) => {
+        const { listingsSection } = elements;
+        if (!listingsSection) return;
+        listingsSection.innerHTML = "";
         if (products.length === 0) {
-            container.innerHTML = `<p class="col-span-full text-center py-12 text-gray-500">Aucune annonce trouvée pour ces critères.</p>`;
+            listingsSection.innerHTML = `<p class="col-span-full text-center py-6 text-gray-600" data-i18n-key="no_listings">Aucune annonce trouvée.</p>`;
             return;
         }
         products.forEach(item => {
             const card = document.createElement("article");
-            card.className = "bg-white rounded-xl shadow-lg overflow-hidden flex flex-col cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl";
-            // card.addEventListener('click', () => renderView('product-detail', item)); // Temporarily disable to prevent errors
+            card.className = "bg-white rounded-lg shadow-md overflow-hidden flex flex-col cursor-pointer hover:shadow-xl transition-shadow duration-300";
+            card.addEventListener('click', () => renderView('product-detail', item));
             card.innerHTML = `
-                <img src="https://via.placeholder.com/300x200.png?text=No+Image" alt="${item.title}" class="w-full h-40 sm:h-48 object-cover" loading="lazy" />
+                <img src="${item.imageUrl}" alt="${item.title}" class="w-full h-48 object-cover" loading="lazy" />
                 <div class="p-4 flex-1 flex flex-col">
-                    <h3 class="font-semibold text-gray-800 text-lg mb-1">${item.title}</h3>
-                    <p class="text-blue-600 font-bold text-xl mt-auto pt-2">${(item.price || 0).toLocaleString()} DA</p>
-                </div>`;
-            container.appendChild(card);
+                    <h3 class="font-semibold text-lg mb-1">${item.title}</h3>
+                    <p class="text-gray-600 flex-grow text-sm mb-2">${item.description || ''}</p>
+                    <ul class="text-gray-700 text-sm space-y-1 mb-3">
+                        <li><strong>${translations[currentLang]["brand_label"]}:</strong> ${item.brand}</li>
+                        <li><strong>${translations[currentLang]["model_label"]}:</strong> ${item.model || "-"}</li>
+                    </ul>
+                    <p class="text-blue-600 font-bold text-lg">${item.price.toLocaleString()} DA</p>
+                </div>
+            `;
+            listingsSection.appendChild(card);
         });
     };
 
-    // --- Initial Setup ---
-    const setupGlobalEventListeners = () => {
-        document.getElementById('mobile-menu-btn').addEventListener('click', () => document.getElementById('mobile-menu').classList.remove('hidden'));
-        document.getElementById('mobile-menu-close-btn').addEventListener('click', () => document.getElementById('mobile-menu').classList.add('hidden'));
-        document.getElementById('home-link').addEventListener('click', (e) => { e.preventDefault(); renderView('home'); });
+    const renderProductPage = (product) => {
+        const { backToListingsBtn, addToCartBtn, reviewsContainer, addReviewSection, addReviewForm } = elements;
+        if (!product) return;
+        
+        elements.backToListingsBtn = document.getElementById('back-to-listings-btn');
+        elements.addToCartBtn = document.getElementById('add-to-cart-btn');
+        elements.reviewsContainer = document.getElementById('reviews-container');
+        elements.addReviewSection = document.getElementById('add-review-section');
+        elements.addReviewForm = document.getElementById('add-review-form');
+
+        if (document.getElementById('product-image-detail')) document.getElementById('product-image-detail').src = product.imageUrl;
+        if (document.getElementById('product-image-detail')) document.getElementById('product-image-detail').alt = product.title;
+        if (document.getElementById('product-title-detail')) document.getElementById('product-title-detail').textContent = product.title;
+        if (document.getElementById('product-price-detail')) document.getElementById('product-price-detail').textContent = `${product.price.toLocaleString()} DA`;
+        if (document.getElementById('product-description-detail')) document.getElementById('product-description-detail').textContent = product.description;
+        if (document.getElementById('product-brand-detail')) document.getElementById('product-brand-detail').textContent = product.brand;
+        if (document.getElementById('product-model-detail')) document.getElementById('product-model-detail').textContent = product.model || "-";
+        if (document.getElementById('product-year-detail')) document.getElementById('product-year-detail').textContent = product.year || "-";
+        if (document.getElementById('product-wilaya-detail')) document.getElementById('product-wilaya-detail').textContent = product.wilaya;
+        if (document.getElementById('product-commune-detail')) document.getElementById('product-commune-detail').textContent = product.commune || "-";
+        
+        if (elements.backToListingsBtn) elements.backToListingsBtn.addEventListener('click', () => renderView('home'));
+        
+        if (elements.addToCartBtn) {
+            elements.addToCartBtn.addEventListener('click', () => {
+                if (!currentUser || currentUser.isAnonymous) {
+                    showMessage(translations[currentLang].login_required, 4000, 'error');
+                    openAuthModal();
+                    return;
+                }
+                addToCart(product);
+            });
+        }
+        
+        if (!currentUser || currentUser.isAnonymous) {
+            if (elements.addReviewSection) {
+                elements.addReviewSection.innerHTML = `<p class="text-center text-gray-500">${translations[currentLang].login_required}</p>`;
+                if (elements.reviewsContainer) elements.reviewsContainer.innerHTML = '';
+            }
+        } else {
+            if (elements.addReviewForm) elements.addReviewForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const rating = elements.addReviewForm.querySelector('#review-rating').value;
+                const comment = elements.addReviewForm.querySelector('#review-comment').value.trim();
+                if (comment === '') {
+                    showMessage("Veuillez entrer un commentaire.", 3000, 'error');
+                    return;
+                }
+                try {
+                    await addReview(product.id, {
+                        uid: currentUser.uid,
+                        username: currentUser.displayName || currentUser.email,
+                        rating: parseInt(rating),
+                        comment: comment,
+                        timestamp: new Date()
+                    });
+                    showMessage("Avis soumis avec succès!", 3000, 'success');
+                    elements.addReviewForm.reset();
+                    fetchReviews(product.id);
+                } catch (error) {
+                    showMessage("Erreur lors de l'envoi de l'avis.", 3000, 'error');
+                    console.error("Error adding review: ", error);
+                }
+            });
+            fetchReviews(product.id);
+        }
+    };
+    
+    const renderCartPage = async () => {
+        const { cartItemsContainer, cartTotalSpan, checkoutBtn, backFromCartBtn } = elements;
+        elements.cartItemsContainer = document.getElementById('cart-items-container');
+        elements.cartTotalSpan = document.getElementById('cart-total-price');
+        elements.checkoutBtn = document.getElementById('checkout-btn');
+        elements.backFromCartBtn = document.getElementById('back-from-cart-btn');
+
+        if (!elements.cartItemsContainer) return;
+        elements.cartItemsContainer.innerHTML = '';
+        if (elements.cartTotalSpan) elements.cartTotalSpan.textContent = "0 DA";
+        
+        if (elements.checkoutBtn) {
+            elements.checkoutBtn.disabled = true;
+            elements.checkoutBtn.addEventListener('click', checkout);
+        }
+        
+        if (elements.backFromCartBtn) elements.backFromCartBtn.addEventListener('click', () => renderView('home'));
+        
+        if (!currentUser || Object.keys(userCart).length === 0) {
+            elements.cartItemsContainer.innerHTML = `<p class="text-center text-gray-500">${translations[currentLang].your_cart_is_empty}</p>`;
+            if (elements.checkoutBtn) elements.checkoutBtn.disabled = true;
+            return;
+        }
+
+        let total = 0;
+        const productIds = Object.keys(userCart);
+        const productsInCart = allProducts.filter(p => productIds.includes(p.id));
+
+        productsInCart.forEach(product => {
+            const item = userCart[product.id];
+            const itemTotal = product.price * item.quantity;
+            total += itemTotal;
+            const cartItemEl = document.createElement('div');
+            cartItemEl.className = 'flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 p-4 border-b border-gray-200';
+            cartItemEl.innerHTML = `
+                <img src="${product.imageUrl}" alt="${product.title}" class="w-24 h-24 object-cover rounded-lg">
+                <div class="flex-1">
+                    <h4 class="font-semibold">${product.title}</h4>
+                    <p class="text-gray-500">${product.price.toLocaleString()} DA</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span data-i18n-key="quantity">${translations[currentLang].quantity}:</span>
+                    <input type="number" min="1" value="${item.quantity}" class="w-16 text-center border rounded-md" data-product-id="${product.id}">
+                </div>
+                <p class="font-semibold"><span data-i18n-key="item_total">${translations[currentLang].item_total}</span>: ${itemTotal.toLocaleString()} DA</p>
+                <button class="text-red-500 hover:text-red-700 remove-from-cart-btn" data-product-id="${product.id}">
+                    <i class="fas fa-trash"></i> <span data-i18n-key="remove">${translations[currentLang].remove}</span>
+                </button>
+            `;
+            elements.cartItemsContainer.appendChild(cartItemEl);
+        });
+
+        elements.cartItemsContainer.querySelectorAll('input[type="number"]').forEach(input => {
+            input.addEventListener('change', (e) => {
+                updateCartItem(e.target.dataset.productId, e.target.value);
+            });
+        });
+
+        elements.cartItemsContainer.querySelectorAll('.remove-from-cart-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                removeFromCart(e.currentTarget.dataset.productId);
+            });
+        });
+    
+        if (elements.cartTotalSpan) elements.cartTotalSpan.textContent = `${total.toLocaleString()} DA`;
+        if (elements.checkoutBtn && total > 0) {
+            elements.checkoutBtn.disabled = false;
+        }
+        translatePage(currentLang);
     };
 
-    const bootApp = () => {
-        document.getElementById('current-year').textContent = new Date().getFullYear();
-        setupGlobalEventListeners();
-        onAuthStateChanged(auth, user => {
-            currentUser = user;
-            const authLinks = document.getElementById('auth-links');
-            const authLinksMobile = document.getElementById('auth-links-mobile');
-            const openAuthModal = () => document.getElementById('auth-modal').classList.remove('hidden');
-
-            if (user) {
-                authLinks.innerHTML = `<button id="signout-btn" class="text-white bg-red-500 hover:bg-red-600 px-5 py-2 rounded-full font-semibold transition-all duration-200 shadow-md hover:shadow-lg" data-i18n-key="logout">Déconnexion</button>`;
-                authLinks.querySelector('#signout-btn').addEventListener('click', () => signOut(auth));
-                
-                authLinksMobile.innerHTML = `<button class="text-left w-full hover:text-red-500 py-2" data-i18n-key="logout">Déconnexion</button>`;
-                authLinksMobile.querySelector('button').onclick = () => { signOut(auth); document.getElementById('mobile-menu').classList.add('hidden'); };
-
+    const updateCartDisplay = () => {
+        const { cartCountSpan } = elements;
+        const cartItemCount = Object.values(userCart).reduce((sum, item) => sum + item.quantity, 0);
+        if (cartCountSpan) {
+            if (cartItemCount > 0) {
+                cartCountSpan.textContent = cartItemCount;
+                cartCountSpan.classList.remove('hidden');
             } else {
-                authLinks.innerHTML = `<button id="login-btn" class="text-white bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded-full font-semibold transition-all duration-200 shadow-md hover:shadow-lg" data-i18n-key="connect">Se connecter</button>`;
-                authLinks.querySelector('#login-btn').addEventListener('click', openAuthModal);
-
-                authLinksMobile.innerHTML = `<button class="text-left w-full hover:text-blue-600 py-2" data-i18n-key="connect">Se connecter</button>`;
-                authLinksMobile.querySelector('button').onclick = openAuthModal;
+                cartCountSpan.classList.add('hidden');
+            }
+        }
+    };
+    
+    const addToCart = async (product) => {
+        if (!currentUser) return;
+        const userDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid);
+        
+        userCart[product.id] = {
+            productId: product.id,
+            quantity: (userCart[product.id]?.quantity || 0) + 1
+        };
+        try {
+            await setDoc(userDocRef, { cart: userCart }, { merge: true });
+            showMessage(`${product.title} ajouté au panier.`, 3000, 'success');
+            updateCartDisplay();
+        } catch (error) {
+            showMessage("Erreur lors de l'ajout au panier.", 3000, 'error');
+            console.error("Error adding to cart: ", error);
+        }
+    };
+    
+    const updateCartItem = async (productId, quantity) => {
+        if (!currentUser) return;
+        const userDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid);
+        userCart[productId].quantity = parseInt(quantity);
+        if (userCart[productId].quantity <= 0) {
+            delete userCart[productId];
+        }
+        try {
+            await setDoc(userDocRef, { cart: userCart }, { merge: true });
+            renderView('cart');
+            updateCartDisplay();
+        } catch(error) {
+            console.error(error);
+        }
+    };
+    
+    const removeFromCart = async (productId) => {
+        if (!currentUser) return;
+        const userDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid);
+        delete userCart[productId];
+        try {
+            await setDoc(userDocRef, { cart: userCart }, { merge: true });
+            renderView('cart');
+            updateCartDisplay();
+        } catch(error) {
+            console.error(error);
+        }
+    };
+    
+    const checkout = async () => {
+        if (!currentUser || currentUser.isAnonymous) {
+            showMessage(translations[currentLang].login_required, 4000, 'error');
+            openAuthModal();
+            return;
+        }
+        const order = {
+            userId: currentUser.uid,
+            items: userCart,
+            total: Object.values(userCart).reduce((sum, item) => {
+                const product = allProducts.find(p => p.id === item.productId);
+                return sum + (product ? product.price * item.quantity : 0);
+            }, 0),
+            timestamp: new Date()
+        };
+        try {
+            await addDoc(collection(db, `artifacts/${appId}/users/${currentUser.uid}/orders`), order);
+            showMessage("Commande soumise avec succès! (Le paiement n'est pas encore implémenté)", 5000, 'success');
+            userCart = {};
+            const userDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid);
+            await setDoc(userDocRef, { cart: userCart }, { merge: true });
+            renderView('home');
+            updateCartDisplay();
+        } catch (error) {
+            showMessage("Erreur lors de la soumission de la commande.", 4000, 'error');
+            console.error("Error submitting order: ", error);
+        }
+    };
+    
+    const addReview = async (productId, review) => {
+        const reviewRef = collection(db, `artifacts/${appId}/public/data/products/${productId}/reviews`);
+        return await addDoc(reviewRef, review);
+    };
+    
+    const fetchReviews = async (productId) => {
+        const { reviewsContainer } = elements;
+        if (!reviewsContainer) return;
+        reviewsContainer.innerHTML = '<p class="text-gray-500">Chargement des avis...</p>';
+        const reviewsRef = collection(db, `artifacts/${appId}/public/data/products/${productId}/reviews`);
+        const q = query(reviewsRef);
+        onSnapshot(q, (querySnapshot) => {
+            reviewsContainer.innerHTML = '';
+            if (querySnapshot.empty) {
+                reviewsContainer.innerHTML = '<p class="text-gray-500">Aucun avis pour le moment.</p>';
+                return;
+            }
+            querySnapshot.forEach(doc => {
+                const review = doc.data();
+                const reviewEl = document.createElement('div');
+                reviewEl.className = 'p-4 bg-gray-50 rounded-lg';
+                reviewEl.innerHTML = `
+                    <p class="font-semibold">${review.username}</p>
+                    <p class="text-yellow-500">${'★'.repeat(review.rating)}</p>
+                    <p class="text-gray-700 mt-1">${review.comment}</p>
+                `;
+                reviewsContainer.appendChild(reviewEl);
+            });
+        }, (error) => {
+            reviewsContainer.innerHTML = '<p class="text-red-500">Erreur lors du chargement des avis.</p>';
+            console.error("Error fetching reviews: ", error);
+        });
+    };
+    
+    const insertDemoListingsOnce = async () => {
+        if (localStorage.getItem("demoListingsInserted")) return;
+        const demoListings = [
+            {
+                title: "Disque de frein avant Toyota Yaris 2015",
+                brand: "Toyota",
+                model: "Yaris",
+                year: "2015",
+                wilaya: "Alger",
+                commune: "Bab El Oued",
+                condition: "used",
+                price: 12000,
+                description: "Disque en bon état, peu utilisé.",
+                imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fbrake_disc_toyota_yaris.jpg?alt=media"
+            },
+            {
+                title: "Pneu Michelin 205/55 R16 neuf",
+                brand: "Michelin",
+                model: "",
+                year: "",
+                wilaya: "Oran",
+                commune: "Es Senia",
+                condition: "new",
+                price: 8000,
+                description: "Pneu de haute qualité, jamais monté.",
+                imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fmichelin_tire.jpg?alt=media"
+            },
+            {
+                title: "Batterie 12V pour Peugeot 308",
+                brand: "Peugeot",
+                model: "308",
+                year: "2017",
+                wilaya: "Constantine",
+                commune: "El Khroub",
+                condition: "used",
+                price: 9000,
+                description: "Batterie d'occasion, testée OK.",
+                imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fbattery_peugeot_308.jpg?alt=media"
+            }
+        ];
+        for (const listing of demoListings) {
+            const q = query(collection(db, "products"), where("title", "==", listing.title));
+            const querySnapshot = await getDocs(q);
+            if (querySnapshot.empty) {
+                await addDoc(collection(db, "products"), listing);
+            }
+        }
+        localStorage.setItem("demoListingsInserted", "true");
+    };
+    
+    const uploadImage = async (file) => {
+        const timestamp = Date.now();
+        const storageRef = ref(storage, `product_images/${timestamp}_${file.name}`);
+        const snapshot = await uploadBytes(storageRef, file);
+        return await getDownloadURL(snapshot.ref);
+    };
+    
+    const validatePostForm = (form) => {
+        let isValid = true;
+        const requiredInputs = form.querySelectorAll('[required]');
+        requiredInputs.forEach(input => {
+            const errorEl = document.getElementById(input.id + "-error");
+            if (input.value.trim() === '' || (input.type === 'file' && input.files.length === 0)) {
+                if(errorEl) errorEl.classList.remove("hidden");
+                input.setAttribute("aria-invalid", "true");
+                isValid = false;
+            } else {
+                if(errorEl) errorEl.classList.add("hidden");
+                input.removeAttribute("aria-invalid");
             }
         });
-        document.getElementById('google-login-btn').addEventListener('click', () => {
-            signInWithPopup(auth, provider).then(() => document.getElementById('auth-modal').classList.add('hidden'));
+        return isValid;
+    };
+    
+    // Event listeners setup
+    const setupEventListeners = () => {
+        const { langDropdownBtn, langDropdown, langBtns, mobileMenuBtn, mobileMenu, mobileMenuCloseBtn, modalCloseBtn, postProductForm, loginBtn, homeLink, sellLink, sellLinkMobile, cartBtn, postProductBrandSelect, postProductModelSelect, postProductYearSelect, postProductWilayaSelect, postProductCommuneSelect } = elements;
+
+        if (langDropdownBtn) {
+            langDropdownBtn.addEventListener('click', () => {
+                langDropdown.classList.toggle('hidden');
+                langDropdownBtn.setAttribute('aria-expanded', langDropdown.classList.contains('hidden') ? 'false' : 'true');
+            });
+            window.addEventListener('click', (e) => {
+                if (!langDropdown.contains(e.target) && !langDropdownBtn.contains(e.target)) {
+                    langDropdown.classList.add('hidden');
+                    langDropdownBtn.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
+        
+        if (langBtns) {
+            langBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    currentLang = e.target.dataset.lang;
+                    localStorage.setItem('piecety_lang', currentLang);
+                    translatePage(currentLang);
+                    closeMobileMenu();
+                    renderView(currentView);
+                });
+            });
+        }
+        
+        if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+            mobileMenuBtn.setAttribute('aria-expanded', 'true');
         });
+
+        if (mobileMenuCloseBtn) mobileMenuCloseBtn.addEventListener('click', () => {
+            closeMobileMenu();
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        });
+        
+        if (modalCloseBtn) modalCloseBtn.addEventListener('click', () => {
+            const { postProductModal } = elements;
+            if (postProductModal) postProductModal.classList.add('hidden');
+        });
+
+        if (postProductForm) postProductForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!validatePostForm(e.target)) {
+                showMessage("Veuillez remplir tous les champs obligatoires.", 3000, 'error');
+                return;
+            }
+
+            const formData = new FormData(e.target);
+            const imageFile = formData.get('image');
+            
+            try {
+                const imageUrl = await uploadImage(imageFile);
+                const newProduct = {
+                    title: formData.get('title'),
+                    brand: formData.get('brand'),
+                    model: formData.get('model'),
+                    year: formData.get('year'),
+                    wilaya: formData.get('wilaya'),
+                    commune: formData.get('commune'),
+                    condition: formData.get('condition'),
+                    price: parseInt(formData.get('price')),
+                    description: formData.get('description'),
+                    imageUrl: imageUrl,
+                    timestamp: new Date()
+                };
+
+                await addDoc(collection(db, "products"), newProduct);
+                showMessage("Annonce soumise avec succès!", 4000, 'success');
+                e.target.reset();
+                elements.postProductModal.classList.add('hidden');
+                renderListings();
+            } catch (error) {
+                showMessage("Erreur lors de la soumission de l'annonce.", 4000, 'error');
+                console.error("Error submitting form: ", error);
+            }
+        });
+        
+        if (loginBtn) loginBtn.addEventListener('click', openAuthModal);
+        if (elements.authModalCloseBtn) elements.authModalCloseBtn.addEventListener('click', closeAuthModal);
+        if (elements.googleLoginBtn) elements.googleLoginBtn.addEventListener('click', () => {
+            signInWithPopup(auth, provider).then((result) => {
+                const user = result.user;
+                showMessage(`Bienvenue, ${user.displayName || user.email}!`, 3000, 'success');
+                closeAuthModal();
+            }).catch((error) => {
+                console.error("Google sign-in error: ", error);
+                showMessage("Erreur de connexion avec Google.", 3000, 'error');
+            });
+        });
+        
+        if (homeLink) homeLink.addEventListener('click', () => renderView('home'));
+        if (sellLink) sellLink.addEventListener('click', postProductBtnClick);
+        if (sellLinkMobile) sellLinkMobile.addEventListener('click', postProductBtnClick);
+        
+        if (cartBtn) cartBtn.addEventListener('click', () => {
+            if (!currentUser) {
+                showMessage(translations[currentLang].login_required, 4000, 'error');
+                openAuthModal();
+            } else {
+                renderView('cart');
+            }
+        });
+
+        populateSelect(postProductBrandSelect, Object.keys(car_data), "select_brand", currentLang);
+        populateSelect(postProductYearSelect, years, "select_year", currentLang);
+        populateSelect(postProductWilayaSelect, Object.keys(wilayas), "select_wilaya", currentLang);
+
+        postProductBrandSelect.addEventListener('change', (e) => {
+            const val = e.target.value;
+            if (val) {
+                populateSelect(postProductModelSelect, car_data[val], "select_model", currentLang);
+                postProductModelSelect.disabled = false;
+            } else {
+                postProductModelSelect.innerHTML = `<option value="" data-i18n-key="select_model">${translations[currentLang]["select_model"]}</option>`;
+                postProductModelSelect.disabled = true;
+            }
+        });
+
+        postProductWilayaSelect.addEventListener('change', (e) => {
+            const val = e.target.value;
+            if (val) {
+                populateSelect(postProductCommuneSelect, wilayas[val], "select_commune", currentLang);
+                postProductCommuneSelect.disabled = false;
+            } else {
+                postProductCommuneSelect.innerHTML = `<option value="" data-i18n-key="select_commune">${translations[currentLang]["select_commune"]}</option>`;
+                postProductCommuneSelect.disabled = true;
+            }
+        });
+    };
+    
+    // Main app bootstrapper
+    const bootApp = () => {
+        const { authLinksContainer } = elements;
+        
+        // Set initial language and render home view
+        translatePage(currentLang);
         renderView('home');
+        document.getElementById('current-year').textContent = currentYear;
+
+        // Set up event listeners for the main app
+        setupEventListeners();
+
+        // Listen for auth state changes
+        onAuthStateChanged(auth, async (user) => {
+            currentUser = user;
+            if (user) {
+                console.log("User logged in:", user.uid);
+                authLinksContainer.innerHTML = `
+                    <button id="profile-btn" class="p-2 text-gray-600 hover:text-blue-600 focus:outline-none">
+                        <i class="fas fa-user-circle text-2xl"></i>
+                    </button>
+                    <button id="signout-btn" class="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-full font-semibold transition-colors duration-200 shadow-md">
+                        Déconnexion
+                    </button>
+                `;
+                document.getElementById('signout-btn').addEventListener('click', () => {
+                    signOut(auth);
+                    showMessage("Déconnexion réussie.", 3000, 'info');
+                    renderView('home');
+                });
+                
+                const userDocRef = doc(db, 'artifacts', appId, 'users', user.uid);
+                const userDoc = await getDoc(userDocRef);
+                if (userDoc.exists() && userDoc.data().cart) {
+                    userCart = userDoc.data().cart;
+                } else {
+                    userCart = {};
+                }
+                updateCartDisplay();
+            } else {
+                console.log("User logged out or is anonymous.");
+                authLinksContainer.innerHTML = `
+                    <button
+                        id="login-btn"
+                        class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full font-semibold transition-colors duration-200 shadow-md"
+                        data-i18n-key="connect"
+                    >
+                        Se connecter
+                    </button>
+                `;
+                document.getElementById('login-btn').addEventListener('click', openAuthModal);
+                userCart = {};
+                updateCartDisplay();
+            }
+            translatePage(currentLang);
+        });
+
+        insertDemoListingsOnce();
     };
 
-    bootApp();
+    window.onload = bootApp;
 </script>
+   <script type="module" type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBIptEskV2soajxRYPDfwYFYyz9pWQvZL0",
+    authDomain: "piecety-app-b39c4.firebaseapp.com",
+    projectId: "piecety-app-b39c4",
+    storageBucket: "piecety-app-b39c4.appspot.com",
+    messagingSenderId: "265795860915",
+    appId: "1:265795860915:web:aa10241788cce42f6373c6"
+  };
+
+  const app = initializeApp(firebaseConfig);
+
+  // Your existing bootApp function
+  function bootApp() {
+    document.getElementById('login-btn').addEventListener('click', openAuthModal);
+    userCart = {};
+    updateCartDisplay();
+
+    translatePage(currentLang);
+    insertDemoListingsOnce();
+  }
+
+  window.onload = bootApp;
+</script>
+    
+
+<script>
+// exposure shim
+try { if (typeof renderView === 'function') window.renderView = renderView; } catch(_) {}
+try { if (typeof changeLanguage === 'function') window.changeLanguage = changeLanguage; } catch(_) {}
+try { if (typeof googleLogin === 'function') window.googleLogin = googleLogin; } catch(_) {}
+try { if (typeof logout === 'function') window.logout = logout; } catch(_) {}
+</script>
+
+
+<script>
+(function(){
+  function tryRender(){
+    try {
+      if (typeof renderView === 'function') { renderView('home'); return; }
+      // fallback: if there's a home template, clone it
+      var tpl = document.getElementById('home-view-template');
+      var app = document.getElementById('app') || document.getElementById('app-container') || document.getElementById('app-root');
+      if (tpl && app && app.children.length === 0) {
+        app.appendChild(tpl.content.cloneNode(true));
+      }
+    } catch(e){ console.error('Bootstrap render error:', e); }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', tryRender);
+  else tryRender();
+})();
+</script>
+
 </body>
 </html>
+
