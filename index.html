@@ -331,6 +331,19 @@
                     Veuillez sélectionner une marque.
                 </p>
             </div>
+            
+            <div id="other-brand-container" class="hidden">
+                 <label for="product-brand-other" class="block font-medium mb-1" data-i18n-key="other_brand_label">
+                    Autre Marque <span class="text-red-500">*</span>
+                </label>
+                <input
+                        type="text"
+                        id="product-brand-other"
+                        name="brand-other"
+                        placeholder="Entrez la marque"
+                        class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+            </div>
 
             <div>
                 <label for="product-model" class="block font-medium mb-1" data-i18n-key="model_label">
@@ -443,33 +456,6 @@
                         placeholder="Informations supplémentaires..."
                         class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                 ></textarea>
-            </div>
-
-            <div>
-                <label for="product-image" class="block font-medium mb-1" data-i18n-key="image_label">
-                    Image <span class="text-red-500">*</span>
-                </label>
-                <input
-                        type="file"
-                        id="product-image"
-                        name="image"
-                        accept="image/*"
-                        required
-                        aria-describedby="image-error"
-                        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
-                               file:rounded-md file:border-0
-                               file:text-sm file:font-semibold
-                               file:bg-blue-50 file:text-blue-700
-                               hover:file:bg-blue-100
-                               "
-                />
-                <p
-                        id="image-error"
-                        class="text-red-600 text-sm mt-1 hidden"
-                        aria-live="assertive"
-                >
-                    Veuillez choisir une image.
-                </p>
             </div>
 
             <div class="text-center">
@@ -931,12 +917,12 @@
 
     // **FIXED:** Updated Firebase Configuration as requested
     const firebaseConfig = {
-      apiKey: "AIzaSyBIptEskV2soajxRYPDfwYFYyz9pWQvZL0",
-      authDomain: "piecety-app-b39c4.firebaseapp.com",
-      projectId: "piecety-app-b39c4",
-      storageBucket: "piecety-app-b39c4.firebasestorage.app",
-      messagingSenderId: "265795860915",
-      appId: "1:265795860915:web:aa10241788cce42f6373c6"
+        apiKey: "AIzaSyBIptEskV2soajxRYPDfwYFYyz9pWQvZL0",
+        authDomain: "piecety-app-b39c4.firebaseapp.com",
+        projectId: "piecety-app-b39c4",
+        storageBucket: "piecety-app-b39c4.firebasestorage.app",
+        messagingSenderId: "265795860915",
+        appId: "1:265795860915:web:aa10241788cce42f6373c6"
     };
     
     const app = initializeApp(firebaseConfig);
@@ -963,11 +949,11 @@
             search_placeholder: "Rechercher une pièce...",
             footer_text: "&copy; <span id='current-year'></span> Piecety - Marché des Pièces Auto en Algérie. Tous droits réservés.",
             submit_ad: "Soumettre une annonce rapide", ad_title_label: "Titre de la pièce", brand_label: "Marque",
-            select_brand: "Sélectionnez une marque", model_label: "Modèle", select_model: "Sélectionnez un modèle",
+            select_brand: "Sélectionnez une marque", other_brand_label: "Autre Marque", model_label: "Modèle", select_model: "Sélectionnez un modèle",
             year_label: "Année", select_year: "Sélectionnez une année", wilaya_label: "Wilaya",
             select_wilaya: "Sélectionnez une wilaya", commune_label: "Commune", select_commune: "Sélectionnez une commune",
             condition_label: "État", price_label: "Prix (DA)", description_label: "Description",
-            image_label: "Image", submit_ad_btn_text: "Soumettre",
+            submit_ad_btn_text: "Soumettre",
             login_text: "Connectez-vous pour accéder à toutes les fonctionnalités.", google_login: "Se connecter avec Google",
             back_to_listings: "Retour aux annonces", back_to_categories: "Retour aux catégories", add_to_cart: "Ajouter au panier",
             reviews_title: "Avis des utilisateurs", add_review_title: "Ajouter votre avis", submit_review: "Soumettre l'avis",
@@ -998,11 +984,11 @@
             search_placeholder: "Search for a part...",
             footer_text: "&copy; <span id='current-year'></span> Piecety - Car Parts Marketplace in Algeria. All rights reserved.",
             submit_ad: "Submit a quick ad", ad_title_label: "Part Title", brand_label: "Brand",
-            select_brand: "Select a brand", model_label: "Model", select_model: "Select a model",
+            select_brand: "Select a brand", other_brand_label: "Other Brand", model_label: "Model", select_model: "Select a model",
             year_label: "Year", select_year: "Select a year", wilaya_label: "Wilaya",
             select_wilaya: "Select a wilaya", commune_label: "Commune", select_commune: "Select a commune",
             condition_label: "Condition", price_label: "Price (DA)", description_label: "Description",
-            image_label: "Image", submit_ad_btn_text: "Submit",
+            submit_ad_btn_text: "Submit",
             login_text: "Log in to access all features.", google_login: "Sign in with Google",
             back_to_listings: "Back to listings", back_to_categories: "Back to Categories", add_to_cart: "Add to cart",
             reviews_title: "User Reviews", add_review_title: "Add your review", submit_review: "Submit Review",
@@ -1033,11 +1019,11 @@
             search_placeholder: "ابحث عن قطعة...",
             footer_text: "&copy; <span id='current-year'></span> Piecety - سوق قطع غيار السيارات في الجزائر. جميع الحقوق محفوظة.",
             submit_ad: "إرسال إعلان سريع", ad_title_label: "عنوان القطعة", brand_label: "الماركة",
-            select_brand: "اختر ماركة", model_label: "الموديل", select_model: "اختر موديل",
+            select_brand: "اختر ماركة", other_brand_label: "ماركة أخرى", model_label: "الموديل", select_model: "اختر موديل",
             year_label: "السنة", select_year: "اختر سنة", wilaya_label: "الولاية",
             select_wilaya: "اختر ولاية", commune_label: "البلدية", select_commune: "اختر بلدية",
             condition_label: "الحالة", price_label: "السعر (دج)", description_label: "الوصف",
-            image_label: "الصورة", submit_ad_btn_text: "إرسال",
+            submit_ad_btn_text: "إرسال",
             login_text: "تسجيل الدخول للوصول إلى جميع الميزات.", google_login: "تسجيل الدخول باستخدام Google",
             back_to_listings: "العودة إلى الإعلانات", back_to_categories: "العودة إلى الفئات", add_to_cart: "أضف إلى السلة",
             reviews_title: "آراء المستخدمين", add_review_title: "أضف رأيك", submit_review: "إرسال الرأي",
@@ -1109,16 +1095,27 @@
     };
 
     const car_data = {
-        "Toyota": { logo: "https://cdn.worldvectorlogo.com/logos/toyota-1.svg", models: ["Yaris", "Corolla", "Camry", "Land Cruiser", "Hilux"] },
-        "Peugeot": { logo: "https://cdn.worldvectorlogo.com/logos/peugeot-01.svg", models: ["208", "308", "301", "2008", "3008", "508"] },
-        "Volkswagen": { logo: "https://cdn.worldvectorlogo.com/logos/volkswagen-3.svg", models: ["Golf", "Polo", "Passat", "Tiguan", "Touareg", "Jetta"] },
-        "Renault": { logo: "https://cdn.worldvectorlogo.com/logos/renault-1.svg", models: ["Clio", "Megane", "Captur", "Duster", "Symbol"] },
-        "Hyundai": { logo: "https://cdn.worldvectorlogo.com/logos/hyundai-5.svg", models: ["i10", "i20", "Accent", "Tucson", "Santa Fe"] },
-        "Nissan": { logo: "https://cdn.worldvectorlogo.com/logos/nissan-7.svg", models: ["Micra", "Sentra", "Qashqai", "X-Trail", "Juke"] },
-        "Fiat": { logo: "https://cdn.worldvectorlogo.com/logos/fiat-4.svg", models: ["Panda", "500", "Tipo", "Punto"] },
-        "Citroën": { logo: "https://cdn.worldvectorlogo.com/logos/citroen-1.svg", models: ["C3", "C4", "Berlingo", "C-Elysée"] },
-        "Kia": { logo: "https://cdn.worldvectorlogo.com/logos/kia-2021.svg", models: ["Picanto", "Rio", "Sportage", "Sorento"] },
-        "Mercedes-Benz": { logo: "https://cdn.worldvectorlogo.com/logos/mercedes-benz-9.svg", models: ["A-Class", "C-Class", "E-Class", "GLA", "GLC"] }
+        "Toyota": { logo: "https://cdn.worldvectorlogo.com/logos/toyota-1.svg", models: ["Yaris", "Corolla", "Camry", "Land Cruiser", "Hilux", "RAV4", "Prado", "Fortuner"] },
+        "Peugeot": { logo: "https://cdn.worldvectorlogo.com/logos/peugeot-01.svg", models: ["208", "308", "301", "2008", "3008", "508", "Partner", "Expert"] },
+        "Volkswagen": { logo: "https://cdn.worldvectorlogo.com/logos/volkswagen-3.svg", models: ["Golf", "Polo", "Passat", "Tiguan", "Touareg", "Jetta", "Caddy", "Amarok"] },
+        "Renault": { logo: "https://cdn.worldvectorlogo.com/logos/renault-1.svg", models: ["Clio", "Megane", "Captur", "Duster", "Symbol", "Kadjar", "Kangoo"] },
+        "Hyundai": { logo: "https://cdn.worldvectorlogo.com/logos/hyundai-5.svg", models: ["i10", "i20", "Accent", "Tucson", "Santa Fe", "Elantra", "Creta"] },
+        "Nissan": { logo: "https://cdn.worldvectorlogo.com/logos/nissan-7.svg", models: ["Micra", "Sentra", "Qashqai", "X-Trail", "Juke", "Navara", "Patrol"] },
+        "Fiat": { logo: "https://cdn.worldvectorlogo.com/logos/fiat-4.svg", models: ["500", "Tipo", "Punto", "Ducato", "Doblo"] },
+        "Citroën": { logo: "https://cdn.worldvectorlogo.com/logos/citroen-1.svg", models: ["C3", "C4", "C-Elysée", "Berlingo", "Jumper"] },
+        "Kia": { logo: "https://cdn.worldvectorlogo.com/logos/kia-2021.svg", models: ["Picanto", "Rio", "Sportage", "Sorento", "Cerato"] },
+        "Mercedes-Benz": { logo: "https://cdn.worldvectorlogo.com/logos/mercedes-benz-9.svg", models: ["A-Class", "C-Class", "E-Class", "GLA", "GLC", "GLE", "Sprinter"] },
+        "BMW": { logo: "https://cdn.worldvectorlogo.com/logos/bmw.svg", models: ["Series 1", "Series 3", "Series 5", "X1", "X3", "X5"] },
+        "Audi": { logo: "https://cdn.worldvectorlogo.com/logos/audi-1.svg", models: ["A3", "A4", "A6", "Q3", "Q5", "Q7"] },
+        "Ford": { logo: "https://cdn.worldvectorlogo.com/logos/ford-5.svg", models: ["Fiesta", "Focus", "Ranger", "Transit"] },
+        "Chevrolet": { logo: "https://cdn.worldvectorlogo.com/logos/chevrolet-5.svg", models: ["Spark", "Aveo", "Cruze", "Captiva"] },
+        "Skoda": { logo: "https://cdn.worldvectorlogo.com/logos/skoda-4.svg", models: ["Fabia", "Octavia", "Rapid", "Kodiaq"] },
+        "Seat": { logo: "https://cdn.worldvectorlogo.com/logos/seat-1.svg", models: ["Ibiza", "Leon", "Arona", "Ateca"] },
+        "Dacia": { logo: "https://cdn.worldvectorlogo.com/logos/dacia-2.svg", models: ["Logan", "Sandero", "Duster", "Lodgy"] },
+        "Jeep": { logo: "https://cdn.worldvectorlogo.com/logos/jeep.svg", models: ["Renegade", "Compass", "Cherokee", "Grand Cherokee", "Wrangler"] },
+        "Land Rover": { logo: "https://cdn.worldvectorlogo.com/logos/land-rover-1.svg", models: ["Defender", "Discovery", "Range Rover Evoque", "Range Rover Sport", "Range Rover"] },
+        "Mitsubishi": { logo: "https://cdn.worldvectorlogo.com/logos/mitsubishi-5.svg", models: ["L200", "Pajero", "Outlander"] },
+        "Suzuki": { logo: "https://cdn.worldvectorlogo.com/logos/suzuki-4.svg", models: ["Swift", "Vitara", "Jimny"] }
     };
 
     const currentYear = new Date().getFullYear();
@@ -1217,7 +1214,7 @@
         }
     };
 
-    const populateSelect = (selectEl, options, defaultLabelKey, lang) => {
+    const populateSelect = (selectEl, options, defaultLabelKey, lang, addOtherOption = false) => {
         if (!selectEl) return;
         selectEl.innerHTML = "";
         const defaultText = translations[lang][defaultLabelKey] || defaultLabelKey;
@@ -1231,6 +1228,12 @@
             option.textContent = opt;
             selectEl.appendChild(option);
         });
+        if (addOtherOption) {
+            const otherOption = document.createElement('option');
+            otherOption.value = "other";
+            otherOption.textContent = translations[lang].other_brand_label || "Other";
+            selectEl.appendChild(otherOption);
+        }
     };
 
     const openAuthModal = () => {
@@ -1282,7 +1285,7 @@
         }
         translatePage(currentLang);
     };
-    window.renderView = renderView; 
+    window.renderView = renderView;
 
     const renderHomePage = async (data = null) => {
         elements.brandFilter = document.getElementById('brand');
@@ -1445,7 +1448,7 @@
             card.className = "bg-white rounded-lg shadow-md overflow-hidden flex flex-col cursor-pointer hover:shadow-xl transition-shadow duration-300";
             card.addEventListener('click', () => renderView('product-detail', item));
             card.innerHTML = `
-                <img src="${item.imageUrl}" alt="${item.title}" class="w-full h-48 object-cover" loading="lazy" />
+                <img src="${item.imageUrl || 'https://via.placeholder.com/300x200.png?text=No+Image'}" alt="${item.title}" class="w-full h-48 object-cover" loading="lazy" />
                 <div class="p-4 flex-1 flex flex-col">
                     <h3 class="font-semibold text-lg mb-1">${item.title}</h3>
                     <p class="text-gray-600 flex-grow text-sm mb-2">${item.description || ''}</p>
@@ -1463,7 +1466,7 @@
     const renderProductPage = (product) => {
         if (!product) return;
         
-        document.getElementById('product-image-detail').src = product.imageUrl;
+        document.getElementById('product-image-detail').src = product.imageUrl || 'https://via.placeholder.com/600x400.png?text=No+Image';
         document.getElementById('product-image-detail').alt = product.title;
         document.getElementById('product-title-detail').textContent = product.title;
         document.getElementById('product-price-detail').textContent = `${product.price.toLocaleString()} DA`;
@@ -1548,7 +1551,7 @@
             const cartItemEl = document.createElement('div');
             cartItemEl.className = 'flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 p-4 border-b border-gray-200';
             cartItemEl.innerHTML = `
-                <img src="${product.imageUrl}" alt="${product.title}" class="w-24 h-24 object-cover rounded-lg">
+                <img src="${product.imageUrl || 'https://via.placeholder.com/150'}" alt="${product.title}" class="w-24 h-24 object-cover rounded-lg">
                 <div class="flex-1">
                     <h4 class="font-semibold">${product.title}</h4>
                     <p class="text-gray-500">${product.price.toLocaleString()} DA</p>
@@ -1694,19 +1697,12 @@
         }
         localStorage.setItem("demoListingsInserted", "true");
     };
-    
-    const uploadImage = async (file) => {
-        const timestamp = Date.now();
-        const storageRef = ref(storage, `product_images/${timestamp}_${file.name}`);
-        const snapshot = await uploadBytes(storageRef, file);
-        return await getDownloadURL(snapshot.ref);
-    };
-    
+
     const validatePostForm = (form) => {
         let isValid = true;
         form.querySelectorAll('[required]').forEach(input => {
             const errorEl = document.getElementById(input.id + "-error");
-            if (input.value.trim() === '' || (input.type === 'file' && input.files.length === 0)) {
+            if (input.value.trim() === '') {
                 if(errorEl) errorEl.classList.remove("hidden");
                 input.setAttribute("aria-invalid", "true");
                 isValid = false;
@@ -1746,20 +1742,21 @@
             e.preventDefault();
             const submitBtn = document.getElementById('submit-ad-btn');
             const originalBtnText = submitBtn.innerHTML;
-            if (!validatePostForm(e.target)) { showMessage(translations[currentLang].login_required, 3000, 'error'); return; }
+            if (!validatePostForm(e.target)) { showMessage("Veuillez remplir tous les champs obligatoires.", 3000, 'error'); return; }
             
             submitBtn.disabled = true;
             submitBtn.innerHTML = `<span data-i18n-key="submitting">${translations[currentLang].submitting}</span>`;
             
             const formData = new FormData(e.target);
             try {
-                const imageUrl = await uploadImage(formData.get('image'));
-                
+                let brand = formData.get('brand');
+                if (brand === 'other') {
+                    brand = formData.get('brand-other');
+                }
                 const price = parseInt(formData.get('price')) || 0;
-
                 const newProduct = { 
                     title: formData.get('title'), 
-                    brand: formData.get('brand'),
+                    brand: brand,
                     model: formData.get('model'), 
                     year: formData.get('year'), 
                     wilaya: formData.get('wilaya'), 
@@ -1767,7 +1764,7 @@
                     condition: formData.get('condition'),
                     price: price, 
                     description: formData.get('description'), 
-                    imageUrl, 
+                    imageUrl: 'https://via.placeholder.com/300x200.png?text=Image+Bient%C3%B4t+Disponible', 
                     timestamp: new Date() 
                 };
 
@@ -1797,18 +1794,26 @@
         if (sellLinkMobile) sellLinkMobile.addEventListener('click', postProductBtnClick);
         if (cartBtn) cartBtn.addEventListener('click', () => { if (!window.currentUser) { showMessage(translations[currentLang].login_required, 4000, 'error'); openAuthModal(); } else { renderView('cart'); } });
 
-        populateSelect(postProductBrandSelect, Object.keys(car_data), "select_brand", currentLang);
+        populateSelect(postProductBrandSelect, Object.keys(car_data), "select_brand", currentLang, true); // Add "Other" option
         populateSelect(elements.postProductYearSelect, years, "select_year", currentLang);
         populateSelect(postProductWilayaSelect, Object.keys(wilayas), "select_wilaya", currentLang);
 
         postProductBrandSelect.addEventListener('change', (e) => {
             const selectedBrand = e.target.value;
-            if (selectedBrand && car_data[selectedBrand]) {
-                populateSelect(postProductModelSelect, car_data[selectedBrand].models, "select_model", currentLang);
-                postProductModelSelect.disabled = false;
-            } else {
+            const otherBrandContainer = document.getElementById('other-brand-container');
+            if (selectedBrand === 'other') {
+                otherBrandContainer.classList.remove('hidden');
                 postProductModelSelect.innerHTML = `<option value="">${translations[currentLang]["select_model"]}</option>`;
                 postProductModelSelect.disabled = true;
+            } else {
+                otherBrandContainer.classList.add('hidden');
+                if (selectedBrand && car_data[selectedBrand]) {
+                    populateSelect(postProductModelSelect, car_data[selectedBrand].models, "select_model", currentLang);
+                    postProductModelSelect.disabled = false;
+                } else {
+                    postProductModelSelect.innerHTML = `<option value="">${translations[currentLang]["select_model"]}</option>`;
+                    postProductModelSelect.disabled = true;
+                }
             }
         });
 
