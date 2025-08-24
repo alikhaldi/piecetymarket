@@ -915,14 +915,13 @@
     let allProducts = [];
     let userCart = {};
 
-    // **FIXED:** Updated Firebase Configuration as requested
     const firebaseConfig = {
-        apiKey: "AIzaSyBIptEskV2soajxRYPDfwYFYyz9pWQvZL0",
-        authDomain: "piecety-app-b39c4.firebaseapp.com",
-        projectId: "piecety-app-b39c4",
-        storageBucket: "piecety-app-b39c4.firebasestorage.app",
-        messagingSenderId: "265795860915",
-        appId: "1:265795860915:web:aa10241788cce42f6373c6"
+      apiKey: "AIzaSyBIptEskV2soajxRYPDfwYFYyz9pWQvZL0",
+      authDomain: "piecety-app-b39c4.firebaseapp.com",
+      projectId: "piecety-app-b39c4",
+      storageBucket: "piecety-app-b39c4.appspot.com",
+      messagingSenderId: "265795860915",
+      appId: "1:265795860915:web:aa10241788cce42f6373c6"
     };
     
     const app = initializeApp(firebaseConfig);
@@ -1285,7 +1284,7 @@
         }
         translatePage(currentLang);
     };
-    window.renderView = renderView;
+    window.renderView = renderView; 
 
     const renderHomePage = async (data = null) => {
         elements.brandFilter = document.getElementById('brand');
@@ -1842,7 +1841,7 @@
                     authBtnMobile.setAttribute('data-i18n-key', 'logout');
                     authBtnMobile.onclick = () => { signOut(auth); closeMobileMenu(); };
                 }
-                const userDoc = await getDoc(doc(db, 'artifacts', appId, 'users', user.uid));
+                const userDoc = await getDoc(doc(db, 'artifacts', firebaseConfig.appId, 'users', user.uid));
                 userCart = (userDoc.exists() && userDoc.data().cart) ? userDoc.data().cart : {};
             } else {
                 elements.authLinksContainer.innerHTML = `<button id="login-btn" class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full font-semibold transition-colors duration-200 shadow-md" data-i18n-key="connect">Se connecter</button>`;
