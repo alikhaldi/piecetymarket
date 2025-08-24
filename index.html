@@ -827,10 +827,16 @@
                     <p><strong><span data-i18n-key="commune_label">Commune</span>:</strong> <span id="product-commune-detail"></span></p>
                 </div>
 
-                <button id="add-to-cart-btn" class="w-full px-6 py-3 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition-colors duration-200 shadow-md">
-                    <i class="fas fa-cart-plus mr-2"></i>
-                    <span data-i18n-key="add_to_cart">Ajouter au panier</span>
-                </button>
+                <div class="flex items-center space-x-4">
+                    <button id="add-to-cart-btn" class="w-full px-6 py-3 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition-colors duration-200 shadow-md">
+                        <i class="fas fa-cart-plus mr-2"></i>
+                        <span data-i18n-key="add_to_cart">Ajouter au panier</span>
+                    </button>
+                    <button id="contact-seller-btn" class="w-full px-6 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md">
+                        <i class="fas fa-comments mr-2"></i>
+                        <span>Contacter le Vendeur</span>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -1404,7 +1410,7 @@
             translatePage(currentLang);
         } catch (err) {
             listingsSection.innerHTML = `<p class="col-span-full text-center py-6 text-red-600">Erreur de chargement des annonces.</p>`;
-            console.error(err);
+            console.error("Firestore error on renderListings:", err);
         }
     };
 
