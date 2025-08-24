@@ -899,7 +899,7 @@
         doc,
         setDoc,
         getDoc,
-        enableNetwork,
+        enableNetwork, 
         disableNetwork
     } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
     import { getAuth, signInWithPopup, signOut, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -1860,7 +1860,7 @@
         insertDemoListingsOnce();
         renderView('home');
     };
-    
+
     window.addEventListener('online', () => enableNetwork(db));
     window.addEventListener('offline', () => disableNetwork(db));
     window.onload = bootApp;
