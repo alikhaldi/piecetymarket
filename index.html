@@ -909,7 +909,8 @@
     import { getAuth, signInWithPopup, signOut, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
     // Global state variables
-    window.currentUser = null;
+    let currentUser = null;
+    window.currentUser = currentUser; // Expose globally
     let currentLang = localStorage.getItem("piecety_lang") || "fr";
     let currentView = 'home';
     let allProducts = [];
@@ -1591,7 +1592,7 @@
     
     const addToCart = async (product) => {
         if (!window.currentUser) return;
-        const userDocRef = doc(db, 'artifacts', appId, 'users', window.currentUser.uid);
+        const userDocRef = doc(db, 'artifacts', firebaseConfig.appId, 'users', window.currentUser.uid);
         userCart[product.id] = { productId: product.id, quantity: (userCart[product.id]?.quantity || 0) + 1 };
         try {
             await setDoc(userDocRef, { cart: userCart }, { merge: true });
@@ -1605,7 +1606,7 @@
     
     const updateCartItem = async (productId, quantity) => {
         if (!window.currentUser) return;
-        const userDocRef = doc(db, 'artifacts', appId, 'users', window.currentUser.uid);
+        const userDocRef = doc(db, 'artifacts', firebaseConfig.appId, 'users', window.currentUser.uid);
         userCart[productId].quantity = parseInt(quantity);
         if (userCart[productId].quantity <= 0) delete userCart[productId];
         try {
@@ -1617,7 +1618,7 @@
     
     const removeFromCart = async (productId) => {
         if (!window.currentUser) return;
-        const userDocRef = doc(db, 'artifacts', appId, 'users', window.currentUser.uid);
+        const userDocRef = doc(db, 'artifacts', firebaseConfig.appId, 'users', window.currentUser.uid);
         delete userCart[productId];
         try {
             await setDoc(userDocRef, { cart: userCart }, { merge: true });
@@ -1638,10 +1639,10 @@
             timestamp: new Date()
         };
         try {
-            await addDoc(collection(db, `artifacts/${appId}/users/${window.currentUser.uid}/orders`), order);
+            await addDoc(collection(db, `artifacts/${firebaseConfig.appId}/users/${window.currentUser.uid}/orders`), order);
             showMessage("Commande soumise avec succès! (Le paiement n'est pas encore implémenté)", 5000, 'success');
             userCart = {};
-            const userDocRef = doc(db, 'artifacts', appId, 'users', window.currentUser.uid);
+            const userDocRef = doc(db, 'artifacts', firebaseConfig.appId, 'users', window.currentUser.uid);
             await setDoc(userDocRef, { cart: userCart }, { merge: true });
             renderView('home');
             updateCartDisplay();
@@ -1652,7 +1653,7 @@
     };
     
     const addReview = async (productId, review) => {
-        const reviewRef = collection(db, `artifacts/${appId}/public/data/products/${productId}/reviews`);
+        const reviewRef = collection(db, `artifacts/${firebaseConfig.appId}/public/data/products/${productId}/reviews`);
         return await addDoc(reviewRef, review);
     };
     
@@ -1660,7 +1661,7 @@
         const reviewsContainer = document.getElementById('reviews-container');
         if (!reviewsContainer) return;
         reviewsContainer.innerHTML = '<p class="text-gray-500">Chargement des avis...</p>';
-        const reviewsRef = collection(db, `artifacts/${appId}/public/data/products/${productId}/reviews`);
+        const reviewsRef = collection(db, `artifacts/${firebaseConfig.appId}/public/data/products/${productId}/reviews`);
         const q = query(reviewsRef);
         onSnapshot(q, (querySnapshot) => {
             reviewsContainer.innerHTML = '';
