@@ -10,7 +10,7 @@
             href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
             rel="stylesheet"
     />
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.js"></script>
     <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -22,63 +22,62 @@
         }
         /* Scrollbar */
         ::-webkit-scrollbar {
-            [cite_start]width: 8px; [cite: 4]
+            width: 8px;
         }
         ::-webkit-scrollbar-track {
-            [cite_start]background: #f1f1f1; [cite: 5]
+            background: #f1f1f1;
         }
         ::-webkit-scrollbar-thumb {
             background: #888;
-            [cite_start]border-radius: 4px; [cite: 6]
+            border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            [cite_start]background: #555; [cite: 7]
+            background: #555;
         }
-        /* ENHANCEMENT: More specific transitions for better performance */
         .message-box {
             position: fixed;
-            [cite_start]top: 20px; [cite: 8]
+            top: 20px;
             right: 20px;
             z-index: 1000;
             padding: 1rem;
             border-radius: 0.5rem;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-            [cite_start]0 2px 4px -1px rgba(0, 0, 0, 0.06); [cite: 9]
+            0 2px 4px -1px rgba(0, 0, 0, 0.06);
             transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
             opacity: 0;
             transform: translateX(100%);
             max-width: 300px;
-            [cite_start]word-wrap: break-word; [cite: 11]
+            word-wrap: break-word;
         }
         .message-box.show {
             opacity: 1;
-            [cite_start]transform: translateX(0); [cite: 12]
+            transform: translateX(0);
         }
         .category-card {
-            [cite_start]transition: transform 0.3s ease, box-shadow 0.3s ease; [cite: 13]
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .category-card:hover {
             transform: translateY(-5px);
-            [cite_start]box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); [cite: 14]
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
         }
         .category-card:hover .category-icon {
             transform: scale(1.1);
         }
         .modal-bg {
             background-color: rgba(0, 0, 0, 0.4);
-            [cite_start]transition: opacity 0.3s ease; [cite: 16]
+            transition: opacity 0.3s ease;
         }
         /* RTL-specific styles */
         body[dir="rtl"] .logo {
-            [cite_start]text-align: right; [cite: 17]
+            text-align: right;
         }
         body[dir="rtl"] .flex-1.mx-4.sm\:mx-8 {
-            [cite_start]margin-right: 0.5rem; [cite: 18]
+            margin-right: 0.5rem;
             margin-left: 0.5rem;
         }
         body[dir="rtl"] .fa-search {
             right: 3px;
-            [cite_start]left: auto; [cite: 19]
+            left: auto;
         }
     </style>
   <link rel="icon" href="https://www.svgrepo.com/show/5129/car.svg">
@@ -98,18 +97,18 @@
             Piecety
         </a>
 
-        [cite_start]<div class="flex-1 mx-4 sm:mx-8"> [cite: 23]
+        <div class="flex-1 mx-4 sm:mx-8">
             <div class="relative">
                 <input
                         id="search-input"
                         type="text"
-                        [cite_start]placeholder="Rechercher une pièce..." [cite: 24]
+                        placeholder="Rechercher une pièce..."
                         class="w-full p-3 pl-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 shadow-inner"
                         aria-label="Rechercher une pièce"
                 />
                 <i
                         class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                >[cite_start]</i> [cite: 25]
+                ></i>
             </div>
         </div>
 
@@ -118,29 +117,29 @@
                 <button
                         id="lang-dropdown-btn"
                         aria-haspopup="true"
-                        [cite_start]aria-expanded="false" [cite: 26]
-                        [cite_start]class="flex items-center space-x-1 font-medium text-gray-600 hover:text-blue-600 transition-colors duration-200" [cite: 27]
+                        aria-expanded="false"
+                        class="flex items-center space-x-1 font-medium text-gray-600 hover:text-blue-600 transition-colors duration-200"
                 >
                     <span id="current-lang" class="lang-text">FR</span>
                     <i class="fas fa-chevron-down text-xs"></i>
                 </button>
                 <div
                         id="lang-dropdown"
-                        [cite_start]class="absolute right-0 mt-2 w-28 bg-white rounded-lg shadow-lg py-1 hidden transition-all duration-300 z-10" [cite: 28]
+                        class="absolute right-0 mt-2 w-28 bg-white rounded-lg shadow-lg py-1 hidden transition-all duration-300 z-10"
                         role="menu"
-                        [cite_start]aria-label="Select Language" [cite: 29]
+                        aria-label="Select Language"
                 >
                     <button
                             class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 lang-btn"
-                            [cite_start]data-lang="fr" [cite: 30]
+                            data-lang="fr"
                             role="menuitem"
                     >
                         Français
-                    [cite_start]</button> [cite: 31]
+                    </button>
                     <button
                             class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 lang-btn"
                             data-lang="en"
-                            [cite_start]role="menuitem" [cite: 32]
+                            role="menuitem"
                     >
                         English
                     </button>
@@ -150,7 +149,7 @@
                             role="menuitem"
                     >
                         العربية
-                    [cite_start]</button> [cite: 34]
+                    </button>
                 </div>
             </div>
             <a
@@ -159,22 +158,22 @@
                     data-i18n-key="sell"
                     id="sell-link"
             >Vendre</a
-            > [cite_start][cite: 36]
+            >
             <button
                     id="cart-btn"
                     class="relative p-2 text-gray-600 hover:text-blue-600 focus:outline-none"
             >
                 <i class="fas fa-shopping-cart text-xl"></i>
-                [cite_start]<span id="cart-count" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full hidden">0</span> [cite: 37]
+                <span id="cart-count" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full hidden">0</span>
             </button>
             <div id="auth-links" class="flex items-center space-x-4">
                 <button
                         id="login-btn"
-                        [cite_start]class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full font-semibold transition-colors duration-200 shadow-md" [cite: 38]
+                        class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full font-semibold transition-colors duration-200 shadow-md"
                         data-i18n-key="connect"
                 >
                     Se connecter
-                [cite_start]</button> [cite: 39]
+                </button>
             </div>
         </nav>
 
@@ -182,7 +181,7 @@
                 id="mobile-menu-btn"
                 class="md:hidden p-2 text-gray-600 hover:text-blue-600 focus:outline-none"
                 aria-label="Menu"
-                [cite_start]aria-expanded="false" [cite: 40]
+                aria-expanded="false"
                 aria-controls="mobile-menu"
         >
             <i class="fas fa-bars text-xl"></i>
@@ -195,7 +194,7 @@
         class="fixed inset-0 bg-white z-40 hidden flex-col p-6 space-y-6 md:hidden"
         role="dialog"
         aria-modal="true"
-        [cite_start]aria-labelledby="mobile-menu-label" [cite: 41]
+        aria-labelledby="mobile-menu-label"
 >
     <div class="flex justify-between items-center">
         <h2
@@ -211,10 +210,10 @@
                 aria-label="Fermer menu"
         >
             <i class="fas fa-times text-xl"></i>
-        [cite_start]</button> [cite: 42]
+        </button>
     </div>
     <a
-            [cite_start]href="#" [cite: 43]
+            href="#"
             class="text-xl font-medium text-gray-800 hover:text-blue-600"
             data-i18n-key="sell"
             id="sell-link-mobile"
@@ -226,7 +225,7 @@
             data-i18n-key="connect"
     >
         Se connecter
-    [cite_start]</button> [cite: 44]
+    </button>
 
     <div class="pt-4 border-t border-gray-200">
         <h3 class="text-lg font-semibold text-gray-600" data-i18n-key="language">
@@ -234,20 +233,20 @@
         </h3>
         <div class="flex space-x-4 mt-2">
             <button
-                    [cite_start]class="p-2 border rounded-md text-sm font-medium lang-btn" [cite: 45]
+                    class="p-2 border rounded-md text-sm font-medium lang-btn"
                     data-lang="fr"
             >
                 Français
             </button>
             <button
                     class="p-2 border rounded-md text-sm font-medium lang-btn"
-                    [cite_start]data-lang="en" [cite: 46]
+                    data-lang="en"
             >
                 English
             </button>
             <button
                     class="p-2 border rounded-md text-sm font-medium lang-btn"
-                    [cite_start]data-lang="ar" [cite: 47]
+                    data-lang="ar"
             >
                 العربية
             </button>
@@ -259,14 +258,14 @@
         id="app-container"
         class="flex-1 container mx-auto p-4 md:p-8"
         role="main"
-        [cite_start]aria-live="polite" [cite: 48]
+        aria-live="polite"
 >
     </main>
 
 <footer class="bg-gray-800 text-white p-6 md:p-8 mt-auto text-center">
     <p class="text-sm font-light" data-i18n-key="footer_text">
-        &copy; [cite_start]<span id="current-year"></span> [cite: 49] Piecety - Marché des Pièces Auto en
-        Algérie. [cite_start]Tous droits réservés. [cite: 50]
+        &copy; <span id="current-year"></span> Piecety - Marché des Pièces Auto en
+        Algérie. Tous droits réservés.
     </p>
 </footer>
 
@@ -281,7 +280,7 @@
             class="bg-white rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 relative"
     >
         <button
-                [cite_start]id="modal-close-btn" [cite: 51]
+                id="modal-close-btn"
                 class="absolute top-4 right-4 text-gray-600 hover:text-red-600 focus:outline-none"
                 aria-label="Fermer le formulaire"
         >
@@ -289,31 +288,31 @@
         </button>
         <h3
                 id="modal-title"
-                [cite_start]class="text-2xl font-bold mb-6 text-center" [cite: 52]
+                class="text-2xl font-bold mb-6 text-center"
                 data-i18n-key="submit_ad"
         >
             Soumettre une annonce rapide
         </h3>
         <form id="post-product-form" class="space-y-4" novalidate>
             <div>
-                [cite_start]<label for="product-title" class="block font-medium mb-1" data-i18n-key="ad_title_label"> [cite: 53]
+                <label for="product-title" class="block font-medium mb-1" data-i18n-key="ad_title_label">
                     Titre de la pièce <span class="text-red-500">*</span>
                 </label>
                 <input
                         type="text"
-                        [cite_start]id="product-title" [cite: 54]
+                        id="product-title"
                         name="title"
                         required
                         placeholder="Ex: Disque de frein avant"
-                        [cite_start]class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" [cite: 55]
+                        class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         aria-describedby="title-error"
                 />
                 <p
                         id="title-error"
-                        [cite_start]class="text-red-600 text-sm mt-1 hidden" [cite: 56]
+                        class="text-red-600 text-sm mt-1 hidden"
                         aria-live="assertive"
                 >
-                    [cite_start]Veuillez entrer un titre valide. [cite: 57]
+                    Veuillez entrer un titre valide.
                 </p>
             </div>
 
@@ -322,10 +321,10 @@
                     Marque <span class="text-red-500">*</span>
                 </label>
                 <select
-                        [cite_start]id="product-brand" [cite: 58]
+                        id="product-brand"
                         name="brand"
                         required
-                        [cite_start]class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" [cite: 59]
+                        class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         aria-describedby="brand-error"
                 >
                     <option value="" data-i18n-key="select_brand">Sélectionnez une marque</option>
@@ -334,9 +333,9 @@
                         id="brand-error"
                         class="text-red-600 text-sm mt-1 hidden"
                         aria-live="assertive"
-                > [cite_start][cite: 60]
-                    [cite_start]Veuillez sélectionner une marque. [cite: 61]
-                [cite_start]</p> [cite: 62]
+                >
+                    Veuillez sélectionner une marque.
+                </p>
             </div>
 
             <div>
@@ -344,48 +343,48 @@
                     Modèle
                 </label>
                 <select
-                        [cite_start]id="product-model" [cite: 63]
+                        id="product-model"
                         name="model"
                         class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        [cite_start]disabled [cite: 64]
+                        disabled
                 >
                     <option value="" data-i18n-key="select_model">Sélectionnez un modèle</option>
                     </select>
             </div>
 
             <div>
-                [cite_start]<label for="product-year" class="block font-medium mb-1" data-i18n-key="year_label"> [cite: 65]
+                <label for="product-year" class="block font-medium mb-1" data-i18n-key="year_label">
                     Année
                 </label>
                 <select
                         id="product-year"
-                        [cite_start]name="year" [cite: 66]
+                        name="year"
                         class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                     <option value="" data-i18n-key="select_year">Sélectionnez une année</option>
                     </select>
-            [cite_start]</div> [cite: 67]
+            </div>
 
             <div>
                 <label for="product-wilaya" class="block font-medium mb-1" data-i18n-key="wilaya_label">
                     Wilaya <span class="text-red-500">*</span>
                 </label>
                 <select
-                        [cite_start]id="product-wilaya" [cite: 68]
+                        id="product-wilaya"
                         name="wilaya"
                         required
                         class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        [cite_start]aria-describedby="wilaya-error" [cite: 69]
+                        aria-describedby="wilaya-error"
                 >
                     <option value="" data-i18n-key="select_wilaya">Sélectionnez une wilaya</option>
                     </select>
                 <p
-                        [cite_start]id="wilaya-error" [cite: 70]
+                        id="wilaya-error"
                         class="text-red-600 text-sm mt-1 hidden"
                         aria-live="assertive"
                 >
-                    [cite_start]Veuillez sélectionner une wilaya. [cite: 71]
-                [cite_start]</p> [cite: 72]
+                    Veuillez sélectionner une wilaya.
+                </p>
             </div>
 
             <div>
@@ -393,27 +392,27 @@
                     Commune
                 </label>
                 <select
-                        [cite_start]id="product-commune" [cite: 73]
+                        id="product-commune"
                         name="commune"
                         class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        [cite_start]disabled [cite: 74]
+                        disabled
                 >
                     <option value="" data-i18n-key="select_commune">Sélectionnez une commune</option>
                     </select>
             </div>
 
             <div>
-                [cite_start]<label for="product-condition" class="block font-medium mb-1" data-i18n-key="condition_label"> [cite: 75]
+                <label for="product-condition" class="block font-medium mb-1" data-i18n-key="condition_label">
                     État
                 </label>
                 <select
                         id="product-condition"
-                        [cite_start]name="condition" [cite: 76]
+                        name="condition"
                         class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                     <option value="new" data-i18n-key="new">Neuf</option>
                     <option value="used" data-i18n-key="used">Occasion</option>
-                [cite_start]</select> [cite: 77]
+                </select>
             </div>
 
             <div>
@@ -424,18 +423,18 @@
                         type="number"
                         id="product-price"
                         name="price"
-                        [cite_start]min="0" [cite: 79]
+                        min="0"
                         required
                         placeholder="Ex: 15000"
                         class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        [cite_start]aria-describedby="price-error" [cite: 80]
+                        aria-describedby="price-error"
                 />
                 <p
                         id="price-error"
                         class="text-red-600 text-sm mt-1 hidden"
-                        [cite_start]aria-live="assertive" [cite: 81]
+                        aria-live="assertive"
                 >
-                    [cite_start]Veuillez entrer un prix valide. [cite: 82]
+                    Veuillez entrer un prix valide.
                 </p>
             </div>
 
@@ -444,29 +443,29 @@
                     Description
                 </label>
                 <textarea
-                        [cite_start]id="product-description" [cite: 83]
+                        id="product-description"
                         name="description"
                         rows="3"
                         placeholder="Informations supplémentaires..."
-                        [cite_start]class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" [cite: 84]
+                        class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                 ></textarea>
             </div>
 
             <div>
                 <label for="product-image" class="block font-medium mb-1" data-i18n-key="image_label">
-                    [cite_start]Image <span class="text-red-500">*</span> [cite: 85]
+                    Image <span class="text-red-500">*</span>
                 </label>
                 <input
                         type="file"
                         id="product-image"
-                        [cite_start]name="image" [cite: 86]
+                        name="image"
                         accept="image/*"
                         required
                         aria-describedby="image-error"
                         class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
                                file:rounded-md file:border-0
                                file:text-sm file:font-semibold
-                               [cite_start]file:bg-blue-50 file:text-blue-700 [cite: 88]
+                               file:bg-blue-50 file:text-blue-700
                                hover:file:bg-blue-100
                                "
                 />
@@ -474,9 +473,9 @@
                         id="image-error"
                         class="text-red-600 text-sm mt-1 hidden"
                         aria-live="assertive"
-                > [cite_start][cite: 89]
-                    [cite_start]Veuillez choisir une image. [cite: 90]
-                [cite_start]</p> [cite: 91]
+                >
+                    Veuillez choisir une image.
+                </p>
             </div>
 
             <div class="text-center">
@@ -484,7 +483,7 @@
                         type="submit"
                         id="submit-ad-btn"
                         class="mt-4 px-6 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md flex items-center justify-center disabled:bg-blue-400 disabled:cursor-not-allowed"
-                        [cite_start]data-i18n-key="submit_ad_btn_text" [cite: 92]
+                        data-i18n-key="submit_ad_btn_text"
                 >
                     <span class="btn-text">Soumettre</span>
                     <svg class="animate-spin ml-3 h-5 w-5 text-white hidden btn-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -498,7 +497,7 @@
 </div>
 
 <div
-        [cite_start]id="auth-modal" [cite: 93]
+        id="auth-modal"
         class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden"
         role="dialog"
         aria-modal="true"
@@ -509,21 +508,21 @@
     >
         <button
                 id="auth-modal-close-btn"
-                [cite_start]class="absolute top-4 right-4 text-gray-600 hover:text-red-600 focus:outline-none" [cite: 94]
+                class="absolute top-4 right-4 text-gray-600 hover:text-red-600 focus:outline-none"
                 aria-label="Fermer le formulaire de connexion"
         >
             <i class="fas fa-times text-2xl"></i>
         </button>
         <h3
                 id="auth-modal-title"
-                [cite_start]class="text-2xl font-bold mb-6 text-center" [cite: 95]
+                class="text-2xl font-bold mb-6 text-center"
                 data-i18n-key="connect"
         >
             Se connecter
         </h3>
         <div class="space-y-4">
             <p class="text-center text-gray-600" data-i18n-key="login_text">Connectez-vous pour accéder à toutes les fonctionnalités.</p>
-            [cite_start]<button id="google-login-btn" class="w-full flex items-center justify-center px-4 py-3 bg-white border border-gray-300 rounded-full text-gray-700 font-semibold hover:bg-gray-100 transition-colors duration-200 shadow-sm"> [cite: 96]
+            <button id="google-login-btn" class="w-full flex items-center justify-center px-4 py-3 bg-white border border-gray-300 rounded-full text-gray-700 font-semibold hover:bg-gray-100 transition-colors duration-200 shadow-sm">
                 <i class="fab fa-google text-xl mr-2"></i>
                 <span data-i18n-key="google_login">Se connecter avec Google</span>
             </button>
@@ -533,7 +532,7 @@
 
 <template id="home-view-template">
     <section
-            [cite_start]class="text-center py-12 md:py-24 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl shadow-lg mb-8 md:mb-12" [cite: 97]
+            class="text-center py-12 md:py-24 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl shadow-lg mb-8 md:mb-12"
     >
         <h1 class="text-3xl md:text-5xl font-extrabold mb-4" data-i18n-key="hero_title">
             Trouvez la bonne pièce pour votre voiture
@@ -542,7 +541,7 @@
                 class="text-lg md:text-xl font-light mb-8"
                 data-i18n-key="hero_subtitle"
         >
-            [cite_start]Le marché algérien des pièces automobiles le plus fiable. [cite: 99]
+            Le marché algérien des pièces automobiles le plus fiable.
         </p>
     </section>
 
@@ -553,28 +552,28 @@
         >
             Catégories de Pièces
         </h2>
-        [cite_start]<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6"> [cite: 100]
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
             <a
                     href="#"
                     class="bg-white rounded-xl shadow-md p-4 text-center category-card"
             >
                 <div
-                        [cite_start]class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon" [cite: 101]
+                        class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
                 >
                     <i class="fas fa-cogs text-3xl"></i>
                 </div>
-                [cite_start]<h3 class="font-semibold text-lg" data-i18n-key="category_engine"> [cite: 102]
+                <h3 class="font-semibold text-lg" data-i18n-key="category_engine">
                     Moteur
                 </h3>
             </a>
             <a
                     href="#"
-                    [cite_start]class="bg-white rounded-xl shadow-md p-4 text-center category-card" [cite: 103]
+                    class="bg-white rounded-xl shadow-md p-4 text-center category-card"
             >
                 <div
                         class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
                 >
-                    [cite_start]<i class="fas fa-car text-3xl"></i> [cite: 104]
+                    <i class="fas fa-car text-3xl"></i>
                 </div>
                 <h3 class="font-semibold text-lg" data-i18n-key="category_brakes">
                     Freins
@@ -582,25 +581,25 @@
             </a>
             <a
                     href="#"
-                    [cite_start]class="bg-white rounded-xl shadow-md p-4 text-center category-card" [cite: 105]
-            >
-                <div
-                        [cite_start]class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon" [cite: 106]
-                >
-                    <i class="fas fa-gas-pump text-3xl"></i>
-                </div>
-                <h3 class="font-semibold text-lg" data-i18n-key="category_fuel_system">
-                    [cite_start]Système de carburant [cite: 107]
-                </h3>
-            </a>
-            <a
-                    href="#"
-                    [cite_start]class="bg-white rounded-xl shadow-md p-4 text-center category-card" [cite: 108]
+                    class="bg-white rounded-xl shadow-md p-4 text-center category-card"
             >
                 <div
                         class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
                 >
-                    [cite_start]<i class="fas fa-fan text-3xl"></i> [cite: 109]
+                    <i class="fas fa-gas-pump text-3xl"></i>
+                </div>
+                <h3 class="font-semibold text-lg" data-i18n-key="category_fuel_system">
+                    Système de carburant
+                </h3>
+            </a>
+            <a
+                    href="#"
+                    class="bg-white rounded-xl shadow-md p-4 text-center category-card"
+            >
+                <div
+                        class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
+                >
+                    <i class="fas fa-fan text-3xl"></i>
                 </div>
                 <h3 class="font-semibold text-lg" data-i18n-key="category_cooling">
                     Refroidissement
@@ -608,53 +607,53 @@
             </a>
             <a
                     href="#"
-                    [cite_start]class="bg-white rounded-xl shadow-md p-4 text-center category-card" [cite: 110]
+                    class="bg-white rounded-xl shadow-md p-4 text-center category-card"
             >
                 <div
-                        [cite_start]class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon" [cite: 111]
+                        class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
                 >
                     <i class="fas fa-circle text-3xl"></i>
                 </div>
                 <h3 class="font-semibold text-lg" data-i18n-key="category_tires">
-                    [cite_start]Pneus &amp; [cite: 112]
-                    [cite_start]Jantes [cite: 113]
+                    Pneus &amp;
+                    Jantes
                 </h3>
             </a>
             <a
                     href="#"
                     class="bg-white rounded-xl shadow-md p-4 text-center category-card"
-            > [cite_start][cite: 114]
+            >
                 <div
                         class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
                 >
                     <i class="fas fa-bolt text-3xl"></i>
-                [cite_start]</div> [cite: 115]
+                </div>
                 <h3 class="font-semibold text-lg" data-i18n-key="category_electrical">
                     Électrique
                 </h3>
             </a>
             <a
-                    [cite_start]href="#" [cite: 116]
+                    href="#"
                     class="bg-white rounded-xl shadow-md p-4 text-center category-card"
             >
                 <div
-                        [cite_start]class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon" [cite: 117]
+                        class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
                 >
                     <i class="fas fa-car-side text-3xl"></i>
                 </div>
                 <h3 class="font-semibold text-lg" data-i18n-key="category_body">
                     Carrosserie
-                [cite_start]</h3> [cite: 118]
+                </h3>
             </a>
             <a
                     href="#"
                     class="bg-white rounded-xl shadow-md p-4 text-center category-card"
-            > [cite_start][cite: 119]
+            >
                 <div
                         class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon"
                 >
                     <i class="fas fa-wrench text-3xl"></i>
-                [cite_start]</div> [cite: 120]
+                </div>
                 <h3 class="font-semibold text-lg" data-i18n-key="category_tools">
                     Outillage
                 </h3>
@@ -663,7 +662,7 @@
     </section>
 
     <section
-            [cite_start]class="bg-white rounded-xl shadow-lg p-6 md:p-8 mb-12" [cite: 121]
+            class="bg-white rounded-xl shadow-lg p-6 md:p-8 mb-12"
             aria-label="Filtrer les annonces"
     >
         <h2 class="text-2xl font-bold mb-6" data-i18n-key="filters_title">
@@ -676,41 +675,41 @@
                         class="block text-sm font-medium text-gray-700"
                         data-i18n-key="all_brands"
                 >Toutes les marques</label
-                > [cite_start][cite: 123]
+                >
                 <select
                         id="brand"
                         aria-describedby="brand-desc"
-                        [cite_start]class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md shadow-sm" [cite: 124]
+                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md shadow-sm"
                 >
                     <option value="" data-i18n-key="all_brands">
                         Toutes les marques
                     </option>
-                [cite_start]</select> [cite: 125]
+                </select>
                 <p id="brand-desc" class="sr-only">
                     Sélectionnez une marque de voiture pour filtrer les annonces
                 </p>
             </div>
-            [cite_start]<div id="model-filter-container" class="hidden"> [cite: 126]
+            <div id="model-filter-container" class="hidden">
                 <label
                         for="model"
                         class="block text-sm font-medium text-gray-700"
                         data-i18n-key="all_models"
-                >[cite_start]Tous les modèles</label [cite: 127]
+                >Tous les modèles</label
                 >
                 <select
                         id="model"
                         aria-describedby="model-desc"
-                        [cite_start]class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md shadow-sm" [cite: 128]
+                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md shadow-sm"
                 >
                     <option value="" data-i18n-key="all_models">Tous les modèles</option>
                 </select>
-                [cite_start]<p id="model-desc" class="sr-only"> [cite: 129]
+                <p id="model-desc" class="sr-only">
                     Sélectionnez un modèle pour filtrer les annonces
                 </p>
             </div>
             <div>
                 <label
-                        [cite_start]for="year" [cite: 130]
+                        for="year"
                         class="block text-sm font-medium text-gray-700"
                         data-i18n-key="all_years"
                 >Toutes années</label
@@ -719,65 +718,65 @@
                         id="year"
                         aria-describedby="year-desc"
                         class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md shadow-sm"
-                > [cite_start][cite: 132]
+                >
                     <option value="" data-i18n-key="all_years">Toutes années</option>
                     </select>
                 <p id="year-desc" class="sr-only">
-                    [cite_start]Sélectionnez une année pour filtrer les annonces [cite: 133]
+                    Sélectionnez une année pour filtrer les annonces
                 </p>
             </div>
             <div>
                 <label
                         for="wilaya"
-                        [cite_start]class="block text-sm font-medium text-gray-700" [cite: 134]
+                        class="block text-sm font-medium text-gray-700"
                         data-i18n-key="all_wilayas"
                 >Toutes wilayas</label
                 >
                 <select
-                        [cite_start]id="wilaya" [cite: 135]
+                        id="wilaya"
                         aria-describedby="wilaya-desc"
                         class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md shadow-sm"
                 >
-                    [cite_start]<option value="" data-i18n-key="all_wilayas">Toutes wilayas</option> [cite: 136]
+                    <option value="" data-i18n-key="all_wilayas">Toutes wilayas</option>
                     </select>
                 <p id="wilaya-desc" class="sr-only">
                     Sélectionnez une wilaya pour filtrer les annonces
                 </p>
             </div>
-            [cite_start]<div id="commune-container" class="hidden"> [cite: 137]
+            <div id="commune-container" class="hidden">
                 <label
                         for="commune"
                         class="block text-sm font-medium text-gray-700"
-                        [cite_start]data-i18n-key="all_communes" [cite: 138]
+                        data-i18n-key="all_communes"
                 >Toutes communes</label
                 >
                 <select
                         id="commune"
                         aria-describedby="commune-desc"
-                        [cite_start]class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md shadow-sm" [cite: 139]
+                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md shadow-sm"
                 >
                     <option value="" data-i18n-key="all_communes">Toutes communes</option>
                     </select>
-                [cite_start]<p id="commune-desc" class="sr-only"> [cite: 140]
+                <p id="commune-desc" class="sr-only">
                     Sélectionnez une commune pour filtrer les annonces
                 </p>
             </div>
             <div>
                 <label
-                        [cite_start]for="condition" [cite: 141]
+                        for="condition"
                         class="block text-sm font-medium text-gray-700"
                         data-i18n-key="condition"
                 >État</label
-                > [cite_start][cite: 142]
+                >
                 <select
                         id="condition"
                         aria-describedby="condition-desc"
-                        [cite_start]class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md shadow-sm" [cite: 143]
+                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md shadow-sm"
                 >
                     <option value="" data-i18n-key="any_condition">Tout</option>
                     <option value="new" data-i18n-key="new">Neuf</option>
                     <option value="used" data-i18n-key="used">Occasion</option>
-                [cite_start]</select> [cite: 144]
+                </select>
                 <p id="condition-desc" class="sr-only">
                     Sélectionnez l'état du produit
                 </p>
@@ -785,18 +784,18 @@
         </div>
 
         <div
-                [cite_start]class="mt-6 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center" [cite: 145]
+                class="mt-6 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center"
         >
             <button
                     id="filter-apply-btn"
                     class="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md"
-                    [cite_start]data-i18n-key="apply_filters" [cite: 146]
+                    data-i18n-key="apply_filters"
             >
                 Appliquer les filtres
             </button>
             <button
                     id="filter-reset-btn"
-                    [cite_start]class="w-full sm:w-auto px-6 py-3 bg-gray-200 text-gray-700 rounded-md font-semibold hover:bg-gray-300 transition-colors duration-200 shadow-md" [cite: 147]
+                    class="w-full sm:w-auto px-6 py-3 bg-gray-200 text-gray-700 rounded-md font-semibold hover:bg-gray-300 transition-colors duration-200 shadow-md"
                     data-i18n-key="reset"
             >
                 Réinitialiser
@@ -806,7 +805,7 @@
 
     <section
             id="listings-section"
-            [cite_start]class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" [cite: 148]
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
             aria-live="polite"
             aria-label="Liste des annonces"
     >
@@ -817,32 +816,32 @@
     <div id="product-detail" class="bg-white rounded-xl shadow-lg p-6 md:p-8">
         <button id="back-to-listings-btn" class="mb-4 text-blue-600 hover:text-blue-800 font-semibold flex items-center">
             <i class="fas fa-arrow-left mr-2"></i>
-            [cite_start]<span data-i18n-key="back_to_listings">Retour aux annonces</span> [cite: 149]
+            <span data-i18n-key="back_to_listings">Retour aux annonces</span>
         </button>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <img id="product-image-detail" src="" alt="" class="w-full h-96 object-cover rounded-lg shadow-md" />
             <div>
                 <h2 id="product-title-detail" class="text-3xl font-bold mb-2"></h2>
                 <p id="product-price-detail" class="text-blue-600 font-bold text-2xl mb-4"></p>
-                [cite_start]<p id="product-description-detail" class="text-gray-700 mb-6"></p> [cite: 150]
+                <p id="product-description-detail" class="text-gray-700 mb-6"></p>
 
                 <div class="space-y-2 text-gray-700 text-sm mb-6">
                     <p><strong><span data-i18n-key="brand_label">Marque</span>:</strong> <span id="product-brand-detail"></span></p>
                     <p><strong><span data-i18n-key="model_label">Modèle</span>:</strong> <span id="product-model-detail"></span></p>
-                    [cite_start]<p><strong><span data-i18n-key="year_label">Année</span>:</strong> <span id="product-year-detail"></span></p> [cite: 151]
+                    <p><strong><span data-i18n-key="year_label">Année</span>:</strong> <span id="product-year-detail"></span></p>
                     <p><strong><span data-i18n-key="wilaya_label">Wilaya</span>:</strong> <span id="product-wilaya-detail"></span></p>
                     <p><strong><span data-i18n-key="commune_label">Commune</span>:</strong> <span id="product-commune-detail"></span></p>
                 </div>
 
                 <button id="add-to-cart-btn" class="w-full px-6 py-3 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition-colors duration-200 shadow-md">
-                    [cite_start]<i class="fas fa-cart-plus mr-2"></i> [cite: 152]
+                    <i class="fas fa-cart-plus mr-2"></i>
                     <span data-i18n-key="add_to_cart">Ajouter au panier</span>
                 </button>
             </div>
         </div>
 
         <div class="mt-12">
-            [cite_start]<h3 class="text-2xl font-bold mb-4" data-i18n-key="reviews_title">Avis des utilisateurs</h3> [cite: 153]
+            <h3 class="text-2xl font-bold mb-4" data-i18n-key="reviews_title">Avis des utilisateurs</h3>
             <div id="reviews-container" class="space-y-4">
                 </div>
         </div>
@@ -850,20 +849,20 @@
         <div class="mt-8" id="add-review-section">
             <h4 class="text-xl font-bold mb-2" data-i18n-key="add_review_title">Ajouter votre avis</h4>
             <form id="add-review-form" class="space-y-4">
-                [cite_start]<div> [cite: 154]
+                <div>
                     <label for="review-rating" class="block text-sm font-medium text-gray-700">Note</label>
                     <select id="review-rating" name="rating" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                         <option value="5">5 Étoiles</option>
-                        [cite_start]<option value="4">4 Étoiles</option> [cite: 155]
+                        <option value="4">4 Étoiles</option>
                         <option value="3">3 Étoiles</option>
                         <option value="2">2 Étoiles</option>
                         <option value="1">1 Étoile</option>
-                    [cite_start]</select> [cite: 156]
+                    </select>
                 </div>
                 <div>
                     <label for="review-comment" class="block text-sm font-medium text-gray-700">Commentaire</label>
                     <textarea id="review-comment" name="comment" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
-                [cite_start]</div> [cite: 157]
+                </div>
                 <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
                     <span data-i18n-key="submit_review">Soumettre l'avis</span>
                 </button>
@@ -873,7 +872,7 @@
 </template>
 
 <template id="cart-view-template">
-    [cite_start]<div class="bg-white rounded-xl shadow-lg p-6 md:p-8"> [cite: 158]
+    <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
         <button id="back-from-cart-btn" class="mb-4 text-blue-600 hover:text-blue-800 font-semibold flex items-center">
             <i class="fas fa-arrow-left mr-2"></i>
             <span data-i18n-key="back_to_listings">Retour aux annonces</span>
@@ -881,13 +880,13 @@
         <h2 class="text-2xl md:text-3xl font-bold mb-6" data-i18n-key="cart_title">Mon panier</h2>
         <div id="cart-items-container" class="space-y-4">
             </div>
-        [cite_start]<div id="cart-summary" class="mt-8 pt-4 border-t border-gray-200"> [cite: 159]
+        <div id="cart-summary" class="mt-8 pt-4 border-t border-gray-200">
             <p class="text-xl font-bold flex justify-between">
                 <span data-i18n-key="cart_total">Total</span>:
                 <span id="cart-total-price">0 DA</span>
             </p>
             <button id="checkout-btn" class="w-full mt-4 px-6 py-3 bg-green-600 text-white rounded-md font-semibold hover:bg-green-700 transition-colors duration-200 shadow-md">
-                [cite_start]<span data-i18n-key="checkout_btn">Passer à la caisse</span> [cite: 160]
+                <span data-i18n-key="checkout_btn">Passer à la caisse</span>
             </button>
         </div>
     </div>
@@ -902,7 +901,7 @@
 </template>
 
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
     import {
         getFirestore,
         collection,
@@ -914,63 +913,37 @@
         doc,
         setDoc,
         getDoc,
-    } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+    } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
     import {
         getStorage,
         ref,
         uploadBytes,
         getDownloadURL,
-    } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-storage.js";
-    import { getAuth, signInWithPopup, signOut, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+    } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-storage.js";
+    import { getAuth, signInWithPopup, signOut, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 
-    [cite_start]// NOTE: For this app to work correctly in your Firebase project, you need to set up Firestore security rules. [cite: 164]
-    [cite_start]// These rules will allow public read access for product and review data, [cite: 165]
-    // while restricting write access to authenticated users and protecting private user data.
-    [cite_start]// Copy the rules below and paste them into the 'Rules' tab of your Firestore console. [cite: 166]
-    /*
-    rules_version = '2';
-    service cloud.firestore {
-      match /databases/{database}/documents {
-        // Public data (products, reviews)
-        match /products/{productId} {
-          allow read: if true;
-          [cite_start]allow create, update, delete: if request.auth != null; [cite: 168]
-        }
-        match /artifacts/{appId}/public/data/products/{productId}/reviews/{reviewId} {
-          allow read: if true;
-          [cite_start]allow create, update, delete: if request.auth != null; [cite: 169]
-        }
-        // Private user data (cart, orders)
-        match /artifacts/{appId}/users/{userId}/{documents=**} {
-          [cite_start]allow read, write: if request.auth != null && request.auth.uid == userId; [cite: 170]
-        }
-      }
-    }
-    */
-    
     // Global state variables
     let currentUser = null;
-    let currentLang = localStorage.getItem("piecety_lang") || [cite_start]"fr"; [cite: 171]
+    let currentLang = localStorage.getItem("piecety_lang") || "fr";
     let currentView = 'home';
     let allProducts = [];
     let userCart = {};
 
-    [cite_start]// Firebase Configuration [cite: 172]
+    // Firebase Configuration
     const appId = 'piecety-app-b39c4';
-    [cite_start]// Use your actual Firebase Project ID here [cite: 173]
     const firebaseConfig = {
-        apiKey: "AIzaSyBIptEskV2soajxRYPDfwYFYyz9pWQvZL0", // Replace with your actual API key
+        apiKey: "AIzaSyBIptEskV2soajxRYPDfwYFYyz9pWQvZL0",
         authDomain: "piecety-app-b39c4.firebaseapp.com",
         projectId: "piecety-app-b39c4",
         storageBucket: "piecety-app-b39c4.appspot.com",
         messagingSenderId: "265795860915",
         appId: "1:265795860915:web:aa10241788cce42f6373c6"
     };
-    [cite_start]const app = initializeApp(firebaseConfig); [cite: 174]
+    const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const storage = getStorage(app);
     const auth = getAuth(app);
-    [cite_start]const provider = new GoogleAuthProvider(); [cite: 175]
+    const provider = new GoogleAuthProvider();
 
     // Translations for internationalization
     const translations = {
@@ -978,114 +951,114 @@
             fr_short: "FR", en_short: "EN", ar_short: "AR",
             menu: "Menu", sell: "Vendre", connect: "Se connecter", language: "Langue",
             hero_title: "Trouvez la bonne pièce pour votre voiture",
-            [cite_start]hero_subtitle: "Le marché algérien des pièces automobiles le plus fiable.", [cite: 176]
+            hero_subtitle: "Le marché algérien des pièces automobiles le plus fiable.",
             categories_title: "Catégories de Pièces",
             category_engine: "Moteur", category_brakes: "Freins", category_fuel_system: "Système de carburant",
             category_cooling: "Refroidissement", category_tires: "Pneus & Jantes", category_electrical: "Électrique",
             category_body: "Carrosserie", category_tools: "Outillage",
             filters_title: "Filtrer les annonces", all_brands: "Toutes les marques", all_models: "Tous les modèles",
-            [cite_start]all_years: "Toutes années", all_wilayas: "Toutes wilayas", all_communes: "Toutes communes", [cite: 177]
+            all_years: "Toutes années", all_wilayas: "Toutes wilayas", all_communes: "Toutes communes",
             condition: "État", any_condition: "Tout", new: "Neuf", used: "Occasion",
             apply_filters: "Appliquer les filtres", reset: "Réinitialiser",
             search_placeholder: "Rechercher une pièce...",
-            [cite_start]footer_text: "&copy; <span id='current-year'></span> Piecety - Marché des Pièces Auto en Algérie. Tous droits réservés.", [cite: 178, 179]
+            footer_text: "&copy; <span id='current-year'></span> Piecety - Marché des Pièces Auto en Algérie. Tous droits réservés.",
             submit_ad: "Soumettre une annonce rapide", ad_title_label: "Titre de la pièce", brand_label: "Marque",
             select_brand: "Sélectionnez une marque", model_label: "Modèle", select_model: "Sélectionnez un modèle",
             year_label: "Année", select_year: "Sélectionnez une année", wilaya_label: "Wilaya",
             select_wilaya: "Sélectionnez une wilaya", commune_label: "Commune", select_commune: "Sélectionnez une commune",
-            [cite_start]condition_label: "État", price_label: "Prix (DA)", description_label: "Description", [cite: 180]
+            condition_label: "État", price_label: "Prix (DA)", description_label: "Description",
             image_label: "Image", submit_ad_btn_text: "Soumettre", loading_text: "Envoi...",
             login_text: "Connectez-vous pour accéder à toutes les fonctionnalités.", google_login: "Se connecter avec Google",
             back_to_listings: "Retour aux annonces", add_to_cart: "Ajouter au panier",
             reviews_title: "Avis des utilisateurs", add_review_title: "Ajouter votre avis", submit_review: "Soumettre l'avis",
-            [cite_start]cart_title: "Mon panier", cart_total: "Total", checkout_btn: "Passer à la caisse", [cite: 181]
+            cart_title: "Mon panier", cart_total: "Total", checkout_btn: "Passer à la caisse",
             no_listings: "Aucune annonce trouvée.",
             profile_title: "Mon profil",
             your_cart_is_empty: "Votre panier est vide.",
             remove: "Supprimer",
             quantity: "Quantité",
             item_total: "Total de l'article",
-            [cite_start]login_required: "Veuillez vous connecter pour utiliser cette fonctionnalité." [cite: 182]
+            login_required: "Veuillez vous connecter pour utiliser cette fonctionnalité."
         },
         en: {
             fr_short: "FR", en_short: "EN", ar_short: "AR",
             menu: "Menu", sell: "Sell", connect: "Log In", language: "Language",
             hero_title: "Find the right car part for your vehicle",
-            [cite_start]hero_subtitle: "The most trusted Algerian car parts marketplace.", [cite: 183]
+            hero_subtitle: "The most trusted Algerian car parts marketplace.",
             categories_title: "Parts Categories",
             category_engine: "Engine", category_brakes: "Brakes", category_fuel_system: "Fuel System",
             category_cooling: "Cooling", category_tires: "Tires & Rims", category_electrical: "Electrical",
             category_body: "Body", category_tools: "Tools",
             filters_title: "Filter Listings", all_brands: "All brands", all_models: "All models",
-            [cite_start]all_years: "All years", all_wilayas: "All wilayas", all_communes: "All communes", [cite: 184]
+            all_years: "All years", all_wilayas: "All wilayas", all_communes: "All communes",
             condition: "Condition", any_condition: "Any", new: "New", used: "Used",
             apply_filters: "Apply Filters", reset: "Reset",
             search_placeholder: "Search for a part...",
-            [cite_start]footer_text: "&copy; <span id='current-year'></span> Piecety - Car Parts Marketplace in Algeria. All rights reserved.", [cite: 185]
+            footer_text: "&copy; <span id='current-year'></span> Piecety - Car Parts Marketplace in Algeria. All rights reserved.",
             submit_ad: "Submit a quick ad", ad_title_label: "Part Title", brand_label: "Brand",
             select_brand: "Select a brand", model_label: "Model", select_model: "Select a model",
             year_label: "Year", select_year: "Select a year", wilaya_label: "Wilaya",
             select_wilaya: "Select a wilaya", commune_label: "Commune", select_commune: "Select a commune",
-            [cite_start]condition_label: "Condition", price_label: "Price (DA)", description_label: "Description", [cite: 186]
+            condition_label: "Condition", price_label: "Price (DA)", description_label: "Description",
             image_label: "Image", submit_ad_btn_text: "Submit", loading_text: "Submitting...",
             login_text: "Log in to access all features.", google_login: "Sign in with Google",
             back_to_listings: "Back to listings", add_to_cart: "Add to cart",
             reviews_title: "User Reviews", add_review_title: "Add your review", submit_review: "Submit Review",
-            [cite_start]cart_title: "My Cart", cart_total: "Total", checkout_btn: "Proceed to Checkout", [cite: 187]
+            cart_title: "My Cart", cart_total: "Total", checkout_btn: "Proceed to Checkout",
             no_listings: "No listings found.",
             profile_title: "My Profile",
             your_cart_is_empty: "Your cart is empty.",
             remove: "Remove",
             quantity: "Quantity",
             item_total: "Item Total",
-            [cite_start]login_required: "Please log in to use this feature." [cite: 188]
+            login_required: "Please log in to use this feature."
         },
         ar: {
             fr_short: "FR", en_short: "EN", ar_short: "AR",
             menu: "القائمة", sell: "بيع", connect: "تسجيل الدخول", language: "اللغة",
             hero_title: "ابحث عن قطعة الغيار المناسبة لسيارتك",
-            [cite_start]hero_subtitle: "أكثر أسواق قطع غيار السيارات ثقة في الجزائر.", [cite: 189]
+            hero_subtitle: "أكثر أسواق قطع غيار السيارات ثقة في الجزائر.",
             categories_title: "فئات القطع",
             category_engine: "محرك", category_brakes: "مكابح", category_fuel_system: "نظام الوقود",
             category_cooling: "التبريد", category_tires: "الإطارات والعجلات", category_electrical: "كهربائي",
             category_body: "هيكل", category_tools: "أدوات",
             filters_title: "تصفية الإعلانات", all_brands: "جميع الماركات", all_models: "جميع الموديلات",
-            [cite_start]all_years: "جميع السنوات", all_wilayas: "جميع الولايات", all_communes: "جميع البلديات", [cite: 190]
+            all_years: "جميع السنوات", all_wilayas: "جميع الولايات", all_communes: "جميع البلديات",
             condition: "الحالة", any_condition: "الكل", new: "جديد", used: "مستعمل",
             apply_filters: "تطبيق الفلاتر", reset: "إعادة تعيين",
             search_placeholder: "ابحث عن قطعة...",
-            [cite_start]footer_text: "&copy; <span id='current-year'></span> Piecety - سوق قطع غيار السيارات في الجزائر. جميع الحقوق محفوظة.", [cite: 191, 192]
+            footer_text: "&copy; <span id='current-year'></span> Piecety - سوق قطع غيار السيارات في الجزائر. جميع الحقوق محفوظة.",
             submit_ad: "إرسال إعلان سريع", ad_title_label: "عنوان القطعة", brand_label: "الماركة",
             select_brand: "اختر ماركة", model_label: "الموديل", select_model: "اختر موديل",
             year_label: "السنة", select_year: "اختر سنة", wilaya_label: "الولاية",
             select_wilaya: "اختر ولاية", commune_label: "البلدية", select_commune: "اختر بلدية",
             condition_label: "الحالة", price_label: "السعر (دج)", description_label: "الوصف",
-            [cite_start]image_label: "الصورة", submit_ad_btn_text: "إرسال", loading_text: "جار الإرسال...", [cite: 193]
+            image_label: "الصورة", submit_ad_btn_text: "إرسال", loading_text: "جار الإرسال...",
             login_text: "تسجيل الدخول للوصول إلى جميع الميزات.", google_login: "تسجيل الدخول باستخدام Google",
             back_to_listings: "العودة إلى الإعلانات", add_to_cart: "أضف إلى السلة",
             reviews_title: "آراء المستخدمين", add_review_title: "أضف رأيك", submit_review: "إرسال الرأي",
             cart_title: "سلة التسوق", cart_total: "الإجمالي", checkout_btn: "الدفع",
-            [cite_start]no_listings: "لم يتم العثور على إعلانات.", [cite: 194]
+            no_listings: "لم يتم العثور على إعلانات.",
             profile_title: "ملفي الشخصي",
             your_cart_is_empty: "سلة التسوق فارغة.",
             remove: "حذف",
             quantity: "الكمية",
             item_total: "إجمالي السلعة",
             login_required: "يرجى تسجيل الدخول لاستخدام هذه الميزة."
-        [cite_start]} [cite: 195]
+        }
     };
 
     // Data for dynamic dropdowns
     const wilayas = {
-        [cite_start]"Adrar": ["Adrar", "Charouine", "Tamest", "Reggane", "Aoulef", "Fenoughil", "Timimoun", "Talmine", "Bordj Badji Mokhtar", "In Salah"], "Chlef": ["Chlef", "Ténès", "Ouled Farès", "El Marsa", "Abou El Hassan", "Oued Fodda", "Beni Haoua", "El Karimia", "Taougrite", "Harchoun"], "Laghouat": ["Aïn Madhi", "Aflou", "El Ghicha", "El Houaita", "El Assafia", "Ksar El Hirane", "Laghouat", "Taougrite", "Sidi Makhlouf", "Ouled Farès"], "Oum El Bouaghi": ["Aïn Beïda", "Aïn Fekroun", "Aïn Babouche", "Aïn M'lila", "Dhalaâ", "F'kirina", "Oum El Bouaghi", "Sidi R'ghiss", "Souk Naamane", "El Fedjoudj"], [cite: 196] [cite_start]"Batna": ["Aïn Touta", "Arris", "Barika", "Batna", "El Madher", "Menaa", "Merouana", "Ras El Aioun", "Timgad", "Ouled Si Slimane"], "Béjaïa": ["Aïn El Kebira", "Akbou", "Béjaïa", "El Kseur", "Sidi Aïch", "Tichy", "Toudja", "Aokas", "Ighil Ali", "Darguina"], "Biskra": ["Biskra", "El Kantara", "Sidi Okba", "Ourlal", "Zeribet El Oued", "Tolga", "Sidi Khaled", "Djemorah", "M'chouneche", "El Outaya"], "Béchar": ["Béchar", "Abadla", "Beni Ounif", "Lahmar", "Tabelbala", "Kenadsa", "Igli", "Taghit", "Mechraâ Houari Boumediene", "Ouled Khoudir"], [cite: 197] [cite_start]"Blida": ["Blida", "Boufarik", "Chebli", "Oued El Alleug", "Larbaâ", "Meftah", "Soumaâ", "Bougara", "Mouzaia", "Chréa"], "Bouira": ["Bouira", "Lakhdaria", "Sour El Ghozlane", "Ahnif", "Bir Ghbalou", "Haïzer", "M'chedallah", "El Hachimia", "Sidi Aïssa", "Taghzout"], "Tamanrasset": ["Tamanrasset", "Abalessa", "Idles", "In Amguel", "Tazrouk", "Tin Zaouatine", "In Guezzam", "Djanet", "Bordj Omar Driss", "Illizi"], "Tébessa": ["Tébessa", "Bir El Ater", "Cheria", "El Aouinet", "El Kouif", "El Ma Labiod", "Morsott", "Ouenza", "Bir Mokkadem", "Hammamet"], [cite: 198] [cite_start]"Tlemcen": ["Tlemcen", "Ghazaouet", "Maghnia", "Remchi", "Sebdou", "Sidi Djillali", "Hennaya", "Nedroma", "Marsa Ben M'Hidi", "Beni Snous"], "Tiaret": ["Tiaret", "Aïn Deheb", "Frenda", "Ksar Chellala", "Mahdia", "Rahouia", "Sougueur", "Dahmouni", "Sidi Ali Mellal", "Medroussa"], "Tizi Ouzou": ["Tizi Ouzou", "Aïn El Hammam", "Azazga", "Bouzeguène", "Draâ Ben Khedda", "Ouacif", "Larbaâ Nath Irathen", "Tigzirt", "Tizi Gheniff", "Maâtkas"], "Alger": ["Alger", "Bab El Oued", "Baraki", "Bir Mourad Raïs", "Birkhadem", "Bologhine", "Bordj El Kiffan", "Hussein Dey", "Hydra", "Dar El Beïda"], [cite: 199] [cite_start]"Djelfa": ["Djelfa", "Aïn Oussera", "Messaad", "Hassi Bahbah", "Had Sahary", "Guettara", "El Idrissia", "Dar Chioukh", "Zaccar", "Faidh El Botma"], "Jijel": ["Jijel", "Taher", "El Milia", "Chekfa", "Ziamamansouria", "Texenna", "Djemaa Beni Habibi", "Sidi Maarouf", "Settara", "Kaous"], "Sétif": ["Sétif", "Aïn Oulmane", "El Eulma", "Bousselam", "Beni Ouartilane", "Bougaâ", "Salah Bey", "Hammamlou", "Guenzet", "Maouaklane"], "Saïda": ["Saïda", "Aïn El Hadjar", "Sidi Boubkeur", "Youb", "El Hassasna", "Tircine", "Maamora", "Ouled Brahim", "Aïn Sekhouna", "Moulay Larbi"], "Skikda": ["Skikda", "Aïn Bouziane", "Azzaba", "El Harrouch", "Collo", "Filfila", "Ramdane Djamel", "Salah Bouchaour", "Zerdaza", "Beni Oulbane"], [cite: 200] [cite_start]"Sidi Bel Abbès": ["Sidi Bel Abbès", "Sfisef", "Telagh", "Ras El Ma", "Tessala", "Aïn El Berd", "Boukhanafis", "Ben Badis", "Sidi Chaib", "Moulay Slissen"], "Annaba": ["Annaba", "El Hadjar", "Berrahal", "El Bouni", "Seraïdi", "Chetaïbi", "Oued El Aneb", "Aïn El Berda", "Trézel", "Sidi Amar"], "Guelma": ["Guelma", "Héliopolis", "Oued Zenati", "Bouchegouf", "Ain Reggada", "Tamlouka", "Dkhila", "Bou Hachana", "Belkheir", "Bordj Sabath"], "Constantine": ["Constantine", "El Khroub", "Hamma Bouziane", "Aïn Smara", "Didouche Mourad", "Zighoud Youcef", "Messaoud Boudjriou", "Beni Hamidane", "Ibn Ziad", "Oued El Hadjar"], [cite: 201] [cite_start]"Médéa": ["Médéa", "Berrouaghia", "Chahbounia", "Tablat", "Aïn Boucif", "Beni Slimane", "El Azizia", "Si Mahdjoub", "Ouzera", "Ksar Boukhari"], "Mostaganem": ["Mostaganem", "Hassi Mameche", "Aïn Tédelès", "Sidi Ali", "Bouguirat", "Achaacha", "Khadra", "Oued El Kheir", "Mazagran", "Foran"], "M'Sila": ["M'Sila", "Bou Saâda", "Aïn El Melh", "Sidi Aïssa", "Magra", "M'Cif", "Hammam Dhalaâ", "Ouled Derradj", "Ben Srour", "Ouanougha"], "Mascara": ["Mascara", "Ghriss", "Tighennif", "Sig", "Bou Hanifia", "Oued Taria", "Hachem", "Mohammadia", "El Bordj", "Aïn Fares"], [cite: 202] [cite_start]"Ouargla": ["Ouargla", "Hassi Messaoud", "Rouissat", "N'Goussa", "Sidi Khouiled", "Blidet Amor", "El Borma", "Tebesbest", "Zaouia El Abidia", "Hassi Ben Abdallah"], "Oran": ["Oran", "Arzew", "Bir El Djir", "Es Senia", "Boutlélis", "Hassi Bounif", "Oued Tlélat", "Sidi Chami", "Gdyel", "Aïn El Turk"], "El Bayadh": ["El Bayadh", "Bougtob", "Chellala", "Breïna", "Rogassa", "Brezina", "Boussemghoun", "El Kheiter", "Kraïr", "Ghassoul"], "Illizi": ["Illizi", "Djanet", "Bordj El Houasse", "Tamanrasset", "In Salah", "Abalessa", "Tazrouk", "Idles", "In Amguel", "Tin Zaouatine"], [cite: 203] [cite_start]"Bordj Bou Arréridj": ["Bordj Bou Arréridj", "Ras El Oued", "Mansoura", "Tassameurt", "El Achir", "Medjana", "Bordj Ghedir", "Hammam El Biban", "L'Hassaneia", "Ghassira"], "Boumerdès": ["Boumerdès", "Dellys", "Boudouaou", "Isser", "Béni Amrane", "Naciria", "Corso", "Zemmouri", "Réghaïa", "Tidjelabine"], "El Tarf": ["El Tarf", "Ben M'Hidi", "Besbes", "Drea", "El Kala", "Bougous", "Raml Souk", "Sidi Khelil", "Oued Zitoun", "Aïn Kerma"], "Tindouf": ["Tindouf", "Oum El Assel"], "Tissemsilt": ["Tissemsilt", "Bordj Bounaama", "Lardjem", "Théniet El Had", "Ammi Moussa", "Sidi Boutouchent", "Layoune", "Lazharia", "Bougara", "Bordj Emir Khaled"], [cite: 204] [cite_start]"El Oued": ["El Oued", "Guemar", "Hassi Khalifa", "Robbah", "Debila", "Bayadha", "Magrane", "Nakhla", "Kouinine", "El Ogla"], "Khenchela": ["Khenchela", "Aïn Touila", "Bab El Ain", "Kais", "Yabous", "Chechar", "M'Sara", "Ouled Rechache", "Taouzianat", "Remila"], "Souk Ahras": ["Souk Ahras", "Heddada", "M'daourouch", "Mechrouha", "Ouled Driss", "Taoura", "Zaarouria", "Ouillen", "Sidi Fredj", "Tiffech"], "Tipaza": ["Tipaza", "Cherchell", "Koléa", "Fouka", "Hadjout", "Sidi Rached", "Menaceur", "Bou Ismaïl", "Khemis Miliana", "Aïn Tagourait"], [cite: 205] [cite_start]"Mila": ["Mila", "Bouhatem", "Ferdjioua", "Grarem Gouga", "Tadjenanet", "Sidi Merouane", "Oued Endja", "Teleghma", "Chigara", "Rouached"], "Aïn Defla": ["Aïn Defla", "Khemis Miliana", "El Attaf", "Aïn Torki", "Djelida", "Rouina", "Hammam Righa", "Miliana", "Boumedfaa", "Aïn Soltane"], "Naâma": ["Naâma", "Mécheria", "Aïn Sefra", "Moghrar", "Tiout", "Sfissifa", "Makman Ben Amer", "Asla", "Kasdir", "El Biod"], "Aïn Témouchent": ["Aïn Témouchent", "Hammam Bou Hadjar", "El Malah", "Béni Saf", "Aghlal", "Chaabat El Ham", "Oued Berkeche", "Aoubellil", "Bouzedjar", "Tamesna"], [cite: 206] [cite_start]"Ghardaïa": ["Ghardaïa", "El Guerrara", "Berriane", "Dhayet Bendhahoua", "Metlili", "Zelfana", "Bounoura", "El Atteuf", "Guerrara", "Dra' El Mizan"], "Relizane": ["Relizane", "Oued Rhiou", "Zemmoura", "Sidi M'Hamed Ben Ali", "El H'madna", "Ammi Moussa", "Mazouna", "Mendes", "Ain Tarek", "Oued El Djemaa"], "El M'ghair": ["El M'ghair", "Sidi Amrane", "Djamaa", "Oum Toub", "M'Rara", "Oued Allenda", "Sidi Khelil", "Oued R'hiou", "Sidi Yahia", "Bouchakroun"], "El Meniaa": ["El Meniaa", "Hassi Gara", "Mansourah", "Dhiafat", "El Guerrara", "Tadjmout", "El Hachane", "El Oued", "Chabet El Ami", "Ouled Gacem"] [cite: 207]
+        "Adrar": ["Adrar", "Charouine", "Tamest", "Reggane", "Aoulef", "Fenoughil", "Timimoun", "Talmine", "Bordj Badji Mokhtar", "In Salah"], "Chlef": ["Chlef", "Ténès", "Ouled Farès", "El Marsa", "Abou El Hassan", "Oued Fodda", "Beni Haoua", "El Karimia", "Taougrite", "Harchoun"], "Laghouat": ["Aïn Madhi", "Aflou", "El Ghicha", "El Houaita", "El Assafia", "Ksar El Hirane", "Laghouat", "Taougrite", "Sidi Makhlouf", "Ouled Farès"], "Oum El Bouaghi": ["Aïn Beïda", "Aïn Fekroun", "Aïn Babouche", "Aïn M'lila", "Dhalaâ", "F'kirina", "Oum El Bouaghi", "Sidi R'ghiss", "Souk Naamane", "El Fedjoudj"], "Batna": ["Aïn Touta", "Arris", "Barika", "Batna", "El Madher", "Menaa", "Merouana", "Ras El Aioun", "Timgad", "Ouled Si Slimane"], "Béjaïa": ["Aïn El Kebira", "Akbou", "Béjaïa", "El Kseur", "Sidi Aïch", "Tichy", "Toudja", "Aokas", "Ighil Ali", "Darguina"], "Biskra": ["Biskra", "El Kantara", "Sidi Okba", "Ourlal", "Zeribet El Oued", "Tolga", "Sidi Khaled", "Djemorah", "M'chouneche", "El Outaya"], "Béchar": ["Béchar", "Abadla", "Beni Ounif", "Lahmar", "Tabelbala", "Kenadsa", "Igli", "Taghit", "Mechraâ Houari Boumediene", "Ouled Khoudir"], "Blida": ["Blida", "Boufarik", "Chebli", "Oued El Alleug", "Larbaâ", "Meftah", "Soumaâ", "Bougara", "Mouzaia", "Chréa"], "Bouira": ["Bouira", "Lakhdaria", "Sour El Ghozlane", "Ahnif", "Bir Ghbalou", "Haïzer", "M'chedallah", "El Hachimia", "Sidi Aïssa", "Taghzout"], "Tamanrasset": ["Tamanrasset", "Abalessa", "Idles", "In Amguel", "Tazrouk", "Tin Zaouatine", "In Guezzam", "Djanet", "Bordj Omar Driss", "Illizi"], "Tébessa": ["Tébessa", "Bir El Ater", "Cheria", "El Aouinet", "El Kouif", "El Ma Labiod", "Morsott", "Ouenza", "Bir Mokkadem", "Hammamet"], "Tlemcen": ["Tlemcen", "Ghazaouet", "Maghnia", "Remchi", "Sebdou", "Sidi Djillali", "Hennaya", "Nedroma", "Marsa Ben M'Hidi", "Beni Snous"], "Tiaret": ["Tiaret", "Aïn Deheb", "Frenda", "Ksar Chellala", "Mahdia", "Rahouia", "Sougueur", "Dahmouni", "Sidi Ali Mellal", "Medroussa"], "Tizi Ouzou": ["Tizi Ouzou", "Aïn El Hammam", "Azazga", "Bouzeguène", "Draâ Ben Khedda", "Ouacif", "Larbaâ Nath Irathen", "Tigzirt", "Tizi Gheniff", "Maâtkas"], "Alger": ["Alger", "Bab El Oued", "Baraki", "Bir Mourad Raïs", "Birkhadem", "Bologhine", "Bordj El Kiffan", "Hussein Dey", "Hydra", "Dar El Beïda"], "Djelfa": ["Djelfa", "Aïn Oussera", "Messaad", "Hassi Bahbah", "Had Sahary", "Guettara", "El Idrissia", "Dar Chioukh", "Zaccar", "Faidh El Botma"], "Jijel": ["Jijel", "Taher", "El Milia", "Chekfa", "Ziamamansouria", "Texenna", "Djemaa Beni Habibi", "Sidi Maarouf", "Settara", "Kaous"], "Sétif": ["Sétif", "Aïn Oulmane", "El Eulma", "Bousselam", "Beni Ouartilane", "Bougaâ", "Salah Bey", "Hammamlou", "Guenzet", "Maouaklane"], "Saïda": ["Saïda", "Aïn El Hadjar", "Sidi Boubkeur", "Youb", "El Hassasna", "Tircine", "Maamora", "Ouled Brahim", "Aïn Sekhouna", "Moulay Larbi"], "Skikda": ["Skikda", "Aïn Bouziane", "Azzaba", "El Harrouch", "Collo", "Filfila", "Ramdane Djamel", "Salah Bouchaour", "Zerdaza", "Beni Oulbane"], "Sidi Bel Abbès": ["Sidi Bel Abbès", "Sfisef", "Telagh", "Ras El Ma", "Tessala", "Aïn El Berd", "Boukhanafis", "Ben Badis", "Sidi Chaib", "Moulay Slissen"], "Annaba": ["Annaba", "El Hadjar", "Berrahal", "El Bouni", "Seraïdi", "Chetaïbi", "Oued El Aneb", "Aïn El Berda", "Trézel", "Sidi Amar"], "Guelma": ["Guelma", "Héliopolis", "Oued Zenati", "Bouchegouf", "Ain Reggada", "Tamlouka", "Dkhila", "Bou Hachana", "Belkheir", "Bordj Sabath"], "Constantine": ["Constantine", "El Khroub", "Hamma Bouziane", "Aïn Smara", "Didouche Mourad", "Zighoud Youcef", "Messaoud Boudjriou", "Beni Hamidane", "Ibn Ziad", "Oued El Hadjar"], "Médéa": ["Médéa", "Berrouaghia", "Chahbounia", "Tablat", "Aïn Boucif", "Beni Slimane", "El Azizia", "Si Mahdjoub", "Ouzera", "Ksar Boukhari"], "Mostaganem": ["Mostaganem", "Hassi Mameche", "Aïn Tédelès", "Sidi Ali", "Bouguirat", "Achaacha", "Khadra", "Oued El Kheir", "Mazagran", "Foran"], "M'Sila": ["M'Sila", "Bou Saâda", "Aïn El Melh", "Sidi Aïssa", "Magra", "M'Cif", "Hammam Dhalaâ", "Ouled Derradj", "Ben Srour", "Ouanougha"], "Mascara": ["Mascara", "Ghriss", "Tighennif", "Sig", "Bou Hanifia", "Oued Taria", "Hachem", "Mohammadia", "El Bordj", "Aïn Fares"], "Ouargla": ["Ouargla", "Hassi Messaoud", "Rouissat", "N'Goussa", "Sidi Khouiled", "Blidet Amor", "El Borma", "Tebesbest", "Zaouia El Abidia", "Hassi Ben Abdallah"], "Oran": ["Oran", "Arzew", "Bir El Djir", "Es Senia", "Boutlélis", "Hassi Bounif", "Oued Tlélat", "Sidi Chami", "Gdyel", "Aïn El Turk"], "El Bayadh": ["El Bayadh", "Bougtob", "Chellala", "Breïna", "Rogassa", "Brezina", "Boussemghoun", "El Kheiter", "Kraïr", "Ghassoul"], "Illizi": ["Illizi", "Djanet", "Bordj El Houasse", "Tamanrasset", "In Salah", "Abalessa", "Tazrouk", "Idles", "In Amguel", "Tin Zaouatine"], "Bordj Bou Arréridj": ["Bordj Bou Arréridj", "Ras El Oued", "Mansoura", "Tassameurt", "El Achir", "Medjana", "Bordj Ghedir", "Hammam El Biban", "L'Hassaneia", "Ghassira"], "Boumerdès": ["Boumerdès", "Dellys", "Boudouaou", "Isser", "Béni Amrane", "Naciria", "Corso", "Zemmouri", "Réghaïa", "Tidjelabine"], "El Tarf": ["El Tarf", "Ben M'Hidi", "Besbes", "Drea", "El Kala", "Bougous", "Raml Souk", "Sidi Khelil", "Oued Zitoun", "Aïn Kerma"], "Tindouf": ["Tindouf", "Oum El Assel"], "Tissemsilt": ["Tissemsilt", "Bordj Bounaama", "Lardjem", "Théniet El Had", "Ammi Moussa", "Sidi Boutouchent", "Layoune", "Lazharia", "Bougara", "Bordj Emir Khaled"], "El Oued": ["El Oued", "Guemar", "Hassi Khalifa", "Robbah", "Debila", "Bayadha", "Magrane", "Nakhla", "Kouinine", "El Ogla"], "Khenchela": ["Khenchela", "Aïn Touila", "Bab El Ain", "Kais", "Yabous", "Chechar", "M'Sara", "Ouled Rechache", "Taouzianat", "Remila"], "Souk Ahras": ["Souk Ahras", "Heddada", "M'daourouch", "Mechrouha", "Ouled Driss", "Taoura", "Zaarouria", "Ouillen", "Sidi Fredj", "Tiffech"], "Tipaza": ["Tipaza", "Cherchell", "Koléa", "Fouka", "Hadjout", "Sidi Rached", "Menaceur", "Bou Ismaïl", "Khemis Miliana", "Aïn Tagourait"], "Mila": ["Mila", "Bouhatem", "Ferdjioua", "Grarem Gouga", "Tadjenanet", "Sidi Merouane", "Oued Endja", "Teleghma", "Chigara", "Rouached"], "Aïn Defla": ["Aïn Defla", "Khemis Miliana", "El Attaf", "Aïn Torki", "Djelida", "Rouina", "Hammam Righa", "Miliana", "Boumedfaa", "Aïn Soltane"], "Naâma": ["Naâma", "Mécheria", "Aïn Sefra", "Moghrar", "Tiout", "Sfissifa", "Makman Ben Amer", "Asla", "Kasdir", "El Biod"], "Aïn Témouchent": ["Aïn Témouchent", "Hammam Bou Hadjar", "El Malah", "Béni Saf", "Aghlal", "Chaabat El Ham", "Oued Berkeche", "Aoubellil", "Bouzedjar", "Tamesna"], "Ghardaïa": ["Ghardaïa", "El Guerrara", "Berriane", "Dhayet Bendhahoua", "Metlili", "Zelfana", "Bounoura", "El Atteuf", "Guerrara", "Dra' El Mizan"], "Relizane": ["Relizane", "Oued Rhiou", "Zemmoura", "Sidi M'Hamed Ben Ali", "El H'madna", "Ammi Moussa", "Mazouna", "Mendes", "Ain Tarek", "Oued El Djemaa"], "El M'ghair": ["El M'ghair", "Sidi Amrane", "Djamaa", "Oum Toub", "M'Rara", "Oued Allenda", "Sidi Khelil", "Oued R'hiou", "Sidi Yahia", "Bouchakroun"], "El Meniaa": ["El Meniaa", "Hassi Gara", "Mansourah", "Dhiafat", "El Guerrara", "Tadjmout", "El Hachane", "El Oued", "Chabet El Ami", "Ouled Gacem"]
     };
     const car_data = {
-        [cite_start]"Toyota": ["Yaris", "Corolla", "Camry", "Land Cruiser", "Hilux"], "Peugeot": ["208", "308", "301", "2008", "3008", "508"], "Volkswagen": ["Golf", "Polo", "Passat", "Tiguan", "Touareg", "Jetta"], "Renault": ["Clio", "Megane", "Captur", "Duster", "Symbol"], "Hyundai": ["i10", "i20", "Accent", "Tucson", "Santa Fe"], "Nissan": ["Micra", "Sentra", "Qashqai", "X-Trail", "Juke"], "Fiat": ["Panda", "500", "Tipo", "Punto"], "Citroën": ["C3", "C4", "Berlingo", "C-Elysée"], [cite: 209] "Kia": ["Picanto", "Rio", "Sportage", "Sorento"], "Mercedes-Benz": ["A-Class", "C-Class", "E-Class", "GLA", "GLC"]
-    [cite_start]}; [cite: 208]
-    [cite_start]const currentYear = new Date().getFullYear(); [cite: 210]
+        "Toyota": ["Yaris", "Corolla", "Camry", "Land Cruiser", "Hilux"], "Peugeot": ["208", "308", "301", "2008", "3008", "508"], "Volkswagen": ["Golf", "Polo", "Passat", "Tiguan", "Touareg", "Jetta"], "Renault": ["Clio", "Megane", "Captur", "Duster", "Symbol"], "Hyundai": ["i10", "i20", "Accent", "Tucson", "Santa Fe"], "Nissan": ["Micra", "Sentra", "Qashqai", "X-Trail", "Juke"], "Fiat": ["Panda", "500", "Tipo", "Punto"], "Citroën": ["C3", "C4", "Berlingo", "C-Elysée"], "Kia": ["Picanto", "Rio", "Sportage", "Sorento"], "Mercedes-Benz": ["A-Class", "C-Class", "E-Class", "GLA", "GLC"]
+    };
+    const currentYear = new Date().getFullYear();
     const years = [];
     for (let y = currentYear; y >= 1980; y--) {
-        [cite_start]years.push(y.toString()); [cite: 211]
+        years.push(y.toString());
     }
 
     // DOM references
@@ -1099,7 +1072,7 @@
         searchInput: document.getElementById("search-input"),
         postProductModal: document.getElementById("post-product-modal"),
         modalCloseBtn: document.getElementById("modal-close-btn"),
-        [cite_start]postProductForm: document.getElementById("post-product-form"), [cite: 212]
+        postProductForm: document.getElementById("post-product-form"),
         messageBox: document.getElementById("message-box"),
         mobileMenuBtn: document.getElementById("mobile-menu-btn"),
         mobileMenu: document.getElementById("mobile-menu"),
@@ -1110,13 +1083,13 @@
         cartBtn: document.getElementById("cart-btn"),
         cartCountSpan: document.getElementById("cart-count"),
         authLinksContainer: document.getElementById("auth-links"),
-        [cite_start]homeLink: document.getElementById("home-link"), [cite: 213]
+        homeLink: document.getElementById("home-link"),
         sellLink: document.getElementById("sell-link"),
         sellLinkMobile: document.getElementById("sell-link-mobile"),
         loginBtn: document.getElementById('login-btn'),
-        [cite_start]brandFilter: null, modelFilter: null, yearFilter: null, wilayaFilter: null, communeFilter: null, conditionFilter: null, modelFilterContainer: null, [cite: 214] communeContainer: null, filterApplyBtn: null, filterResetBtn: null,
+        brandFilter: null, modelFilter: null, yearFilter: null, wilayaFilter: null, communeFilter: null, conditionFilter: null, modelFilterContainer: null, communeContainer: null, filterApplyBtn: null, filterResetBtn: null,
         backToListingsBtn: null, addToCartBtn: null, reviewsContainer: null, addReviewSection: null, addReviewForm: null,
-        [cite_start]cartItemsContainer: null, [cite: 215] cartTotalSpan: null, checkoutBtn: null, backFromCartBtn: null,
+        cartItemsContainer: null, cartTotalSpan: null, checkoutBtn: null, backFromCartBtn: null,
         postProductBrandSelect: document.getElementById('product-brand'),
         postProductModelSelect: document.getElementById('product-model'),
         postProductYearSelect: document.getElementById('product-year'),
@@ -1124,135 +1097,135 @@
         postProductCommuneSelect: document.getElementById('product-commune')
     };
 
-    [cite_start]// Global functions [cite: 216]
+    // Global functions
     const showMessage = (msg, duration = 3500, type = "info") => {
         const { messageBox } = elements;
-        [cite_start]if (!messageBox) return; [cite: 217]
+        if (!messageBox) return;
         messageBox.textContent = msg;
         messageBox.className = `message-box shadow-lg px-4 py-2 rounded-lg show`;
         messageBox.classList.add(type === "error" ? "bg-red-100" : type === "success" ? "bg-green-100" : "bg-white",
-            [cite_start]type === "error" ? "text-red-800" : type === "success" ? "text-green-800" : "text-gray-800"); [cite: 218]
+            type === "error" ? "text-red-800" : type === "success" ? "text-green-800" : "text-gray-800");
         setTimeout(() => {
             messageBox.classList.remove("show");
-        [cite_start]}, duration); [cite: 219]
-    [cite_start]}; [cite: 220]
+        }, duration);
+    };
 
     const closeMobileMenu = () => {
         const { mobileMenu, body } = elements;
-        [cite_start]if(mobileMenu) mobileMenu.classList.add('hidden'); [cite: 221]
+        if(mobileMenu) mobileMenu.classList.add('hidden');
         if(body) body.classList.remove('overflow-hidden');
     };
     
     const translatePage = (lang) => {
         const { currentLangSpan, body } = elements;
-        [cite_start]if (currentLangSpan) currentLangSpan.textContent = translations[lang][lang + "_short"]; [cite: 222]
+        if (currentLangSpan) currentLangSpan.textContent = translations[lang][lang + "_short"];
         if (body) setDirection(lang);
-        [cite_start]document.querySelectorAll("[data-i18n-key]").forEach(el => { [cite: 223]
+        document.querySelectorAll("[data-i18n-key]").forEach(el => {
             const key = el.getAttribute("data-i18n-key");
             if (translations[lang][key]) {
                 if ((el.tagName === 'INPUT' && (el.type === 'text' || el.type === 'search')) || el.tagName === 'TEXTAREA') {
                     el.placeholder = translations[lang][key];
                 } else {
                     el.innerHTML = translations[lang][key];
-                [cite_start]} [cite: 224]
+                }
             }
         });
-    [cite_start]}; [cite: 225]
+    };
 
     const setDirection = (lang) => {
         const { body } = elements;
-        [cite_start]if (!body) return; [cite: 226]
+        if (!body) return;
         if (lang === "ar") {
             body.setAttribute("dir", "rtl");
-            [cite_start]body.classList.add("rtl"); [cite: 227]
+            body.classList.add("rtl");
         } else {
             body.setAttribute("dir", "ltr");
             body.classList.remove("rtl");
-        [cite_start]} [cite: 228]
+        }
     };
     
     const populateSelect = (selectEl, options, defaultLabelKey, lang) => {
         if (!selectEl) return;
-        [cite_start]selectEl.innerHTML = ""; [cite: 229]
+        selectEl.innerHTML = "";
         const defaultText = translations[lang][defaultLabelKey] || defaultLabelKey;
         const defaultOption = document.createElement('option');
         defaultOption.value = "";
         defaultOption.textContent = defaultText;
         selectEl.appendChild(defaultOption);
-        [cite_start]options.forEach(opt => { [cite: 230]
+        options.forEach(opt => {
             const option = document.createElement('option');
             option.value = opt;
             option.textContent = opt;
             selectEl.appendChild(option);
         });
-    [cite_start]}; [cite: 231]
+    };
 
     const openAuthModal = () => {
         const { authModal } = elements;
-        [cite_start]if (authModal) authModal.classList.remove('hidden'); [cite: 232]
+        if (authModal) authModal.classList.remove('hidden');
     };
 
     const closeAuthModal = () => {
         const { authModal } = elements;
-        [cite_start]if (authModal) authModal.classList.add('hidden'); [cite: 233]
+        if (authModal) authModal.classList.add('hidden');
     };
 
     const postProductBtnClick = () => {
         const { postProductModal } = elements;
-        [cite_start]if (!currentUser || currentUser.isAnonymous) { [cite: 234]
+        if (!currentUser || currentUser.isAnonymous) {
             showMessage(translations[currentLang].login_required, 4000, 'error');
             openAuthModal();
-            [cite_start]return; [cite: 235]
+            return;
         }
         if (postProductModal) postProductModal.classList.remove("hidden");
     };
 
-    [cite_start]const renderView = (viewName, data = null) => { [cite: 236]
+    const renderView = (viewName, data = null) => {
         const { appContainer } = elements;
-        [cite_start]if (!appContainer) return; [cite: 237]
+        if (!appContainer) return;
         appContainer.innerHTML = '';
         switch (viewName) {
             case 'home':
                 appContainer.appendChild(document.getElementById('home-view-template').content.cloneNode(true));
-                [cite_start]renderHomePage(); [cite: 238]
+                renderHomePage();
                 break;
             case 'product-detail':
                 appContainer.appendChild(document.getElementById('product-detail-view-template').content.cloneNode(true));
-                [cite_start]renderProductPage(data); [cite: 239]
+                renderProductPage(data);
                 break;
             case 'cart':
                 appContainer.appendChild(document.getElementById('cart-view-template').content.cloneNode(true));
-                [cite_start]renderCartPage(); [cite: 240]
+                renderCartPage();
                 break;
             default:
                 renderView('home');
                 break;
-        [cite_start]} [cite: 241]
+        }
         currentView = viewName;
         translatePage(currentLang);
     };
 
-    [cite_start]const renderHomePage = async () => { [cite: 242]
+    const renderHomePage = async () => {
         const { searchInput } = elements;
-        [cite_start]elements.brandFilter = document.getElementById('brand'); [cite: 243]
+        elements.brandFilter = document.getElementById('brand');
         elements.modelFilter = document.getElementById('model');
         elements.yearFilter = document.getElementById('year');
         elements.wilayaFilter = document.getElementById('wilaya');
         elements.communeFilter = document.getElementById('commune');
         elements.conditionFilter = document.getElementById('condition');
-        [cite_start]elements.modelFilterContainer = document.getElementById('model-filter-container'); [cite: 244]
+        elements.modelFilterContainer = document.getElementById('model-filter-container');
         elements.communeContainer = document.getElementById('commune-container');
         elements.filterApplyBtn = document.getElementById('filter-apply-btn');
         elements.filterResetBtn = document.getElementById('filter-reset-btn');
-        [cite_start]const { brandFilter, modelFilter, yearFilter, wilayaFilter, communeFilter, conditionFilter, modelFilterContainer, communeContainer, filterApplyBtn, filterResetBtn } = elements; [cite: 245]
+        const { brandFilter, modelFilter, yearFilter, wilayaFilter, communeFilter, conditionFilter, modelFilterContainer, communeContainer, filterApplyBtn, filterResetBtn } = elements;
 
         populateSelect(brandFilter, Object.keys(car_data), "all_brands", currentLang);
-        [cite_start]populateSelect(yearFilter, years, "all_years", currentLang); [cite: 246]
+        populateSelect(yearFilter, years, "all_years", currentLang);
         populateSelect(wilayaFilter, Object.keys(wilayas), "all_wilayas", currentLang);
 
         const filterAndSearch = () => {
             renderListings();
-        [cite_start]}; [cite: 247]
+        };
 
         if (brandFilter) brandFilter.addEventListener('change', (e) => {
             const val = e.target.value;
@@ -1260,32 +1233,32 @@
                 populateSelect(modelFilter, car_data[val], "all_models", currentLang);
                 if (modelFilterContainer) modelFilterContainer.classList.remove("hidden");
                 if (modelFilter) modelFilter.disabled = false;
-            [cite_start]} else { [cite: 248]
+            } else {
                 if (modelFilter) modelFilter.innerHTML = `<option value="">${translations[currentLang]["all_models"]}</option>`;
                 if (modelFilterContainer) modelFilterContainer.classList.add("hidden");
                 if (modelFilter) modelFilter.disabled = true;
             }
             filterAndSearch();
         });
-        [cite_start]if (wilayaFilter) wilayaFilter.addEventListener('change', (e) => { [cite: 249]
+        if (wilayaFilter) wilayaFilter.addEventListener('change', (e) => {
             const val = e.target.value;
             if (val) {
                 populateSelect(communeFilter, wilayas[val], "all_communes", currentLang);
                 if (communeContainer) communeContainer.classList.remove("hidden");
                 if (communeFilter) communeFilter.disabled = false;
-            [cite_start]} else { [cite: 250]
+            } else {
                 if (communeFilter) communeFilter.innerHTML = `<option value="">${translations[currentLang]["all_communes"]}</option>`;
                 if (communeContainer) communeContainer.classList.add("hidden");
                 if (communeFilter) communeFilter.disabled = true;
             }
             filterAndSearch();
         });
-        [cite_start]if (filterApplyBtn) filterApplyBtn.addEventListener('click', filterAndSearch); [cite: 251]
+        if (filterApplyBtn) filterApplyBtn.addEventListener('click', filterAndSearch);
         if (searchInput) searchInput.addEventListener('input', filterAndSearch);
         if (modelFilter) modelFilter.addEventListener('change', filterAndSearch);
         if (yearFilter) yearFilter.addEventListener('change', filterAndSearch);
         if (communeFilter) communeFilter.addEventListener('change', filterAndSearch);
-        [cite_start]if (conditionFilter) conditionFilter.addEventListener('change', filterAndSearch); [cite: 252]
+        if (conditionFilter) conditionFilter.addEventListener('change', filterAndSearch);
 
         if (filterResetBtn) filterResetBtn.addEventListener('click', () => {
             if (brandFilter) brandFilter.value = '';
@@ -1293,19 +1266,19 @@
                 modelFilter.value = '';
                 modelFilter.disabled = true;
                 modelFilter.innerHTML = `<option value="">${translations[currentLang]["all_models"]}</option>`;
-            [cite_start]} [cite: 253]
+            }
             if (yearFilter) yearFilter.value = '';
             if (wilayaFilter) wilayaFilter.value = '';
             if (communeFilter) {
                 communeFilter.value = '';
                 communeFilter.disabled = true;
-                [cite_start]communeFilter.innerHTML = `<option value="">${translations[currentLang]["all_communes"]}</option>`; [cite: 254]
+                communeFilter.innerHTML = `<option value="">${translations[currentLang]["all_communes"]}</option>`;
             }
             if (conditionFilter) conditionFilter.value = '';
             if (searchInput) searchInput.value = '';
             if (modelFilterContainer) modelFilterContainer.classList.add('hidden');
             if (communeContainer) communeContainer.classList.add('hidden');
-            [cite_start]renderListings(); [cite: 255]
+            renderListings();
         });
 
         renderListings();
@@ -1313,164 +1286,165 @@
 
     const renderListings = async () => {
         const listingsSection = document.getElementById('listings-section');
-        [cite_start]if (!listingsSection) return; [cite: 256]
+        if (!listingsSection) return;
         listingsSection.innerHTML = `<p class="col-span-full text-center py-6 text-gray-600" data-i18n-key="loading">Chargement...</p>`;
-        [cite_start]try { [cite: 257]
-            const q = query(collection(db, "products"));
-            [cite_start]const querySnapshot = await getDocs(q); [cite: 258]
+        try {
+            // FIXED: Updated collection path to match security rules
+            const q = query(collection(db, "artifacts", appId, "public", "data", "products"));
+            const querySnapshot = await getDocs(q);
             allProducts = querySnapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }));
             const filtered = filterProducts(allProducts);
             displayProducts(filtered);
             translatePage(currentLang);
-        [cite_start]} catch (err) { [cite: 259]
-            listingsSection.innerHTML = `<p class="col-span-full text-center py-6 text-red-600">Erreur de chargement des annonces.</p>`;
-            [cite_start]console.error(err); [cite: 260]
+        } catch (err) {
+            listingsSection.innerHTML = `<p class="col-span-full text-center py-6 text-red-600">Erreur de chargement des annonces. Vérifiez vos règles de sécurité Firestore.</p>`;
+            console.error(err);
         }
     };
 
     const filterProducts = (products) => {
         const { brandFilter, modelFilter, yearFilter, wilayaFilter, communeFilter, conditionFilter, searchInput } = elements;
-        const brand = brandFilter?.value.trim().toLowerCase() || [cite_start]''; [cite: 261]
+        const brand = brandFilter?.value.trim().toLowerCase() || '';
         const model = modelFilter?.value.trim().toLowerCase() || '';
         const year = yearFilter?.value.trim() || '';
-        const wilaya = wilayaFilter?.value.trim().toLowerCase() || [cite_start]''; [cite: 262]
+        const wilaya = wilayaFilter?.value.trim().toLowerCase() || '';
         const commune = communeFilter?.value.trim().toLowerCase() || '';
         const condition = conditionFilter?.value.trim().toLowerCase() || '';
-        const searchTerm = searchInput?.value.trim().toLowerCase() || [cite_start]''; [cite: 263]
+        const searchTerm = searchInput?.value.trim().toLowerCase() || '';
 
         return products.filter(d => {
             let match = true;
             if (brand && d.brand.toLowerCase() !== brand) match = false;
             if (model && d.model?.toLowerCase() !== model) match = false;
             if (year && d.year?.toString() !== year) match = false;
-            [cite_start]if (wilaya && d.wilaya.toLowerCase() !== wilaya) match = false; [cite: 264]
+            if (wilaya && d.wilaya.toLowerCase() !== wilaya) match = false;
             if (commune && d.commune?.toLowerCase() !== commune) match = false;
             if (condition && d.condition.toLowerCase() !== condition) match = false;
             if (searchTerm && !(d.title.toLowerCase().includes(searchTerm) || (d.description && d.description.toLowerCase().includes(searchTerm)))) match = false;
             return match;
         });
-    [cite_start]}; [cite: 265]
+    };
 
     const displayProducts = (products) => {
         const listingsSection = document.getElementById('listings-section');
-        [cite_start]if (!listingsSection) return; [cite: 266]
+        if (!listingsSection) return;
         listingsSection.innerHTML = "";
         if (products.length === 0) {
             listingsSection.innerHTML = `<p class="col-span-full text-center py-6 text-gray-600" data-i18n-key="no_listings">Aucune annonce trouvée.</p>`;
-            [cite_start]return; [cite: 267]
+            return;
         }
         products.forEach(item => {
             const card = document.createElement("article");
             card.className = "bg-white rounded-lg shadow-md overflow-hidden flex flex-col cursor-pointer hover:shadow-xl transition-shadow duration-300";
             card.addEventListener('click', () => renderView('product-detail', item));
             card.innerHTML = `
-                [cite_start]<img src="${item.imageUrl}" alt="${item.title}" class="w-full h-48 object-cover" loading="lazy" /> [cite: 268]
+                <img src="${item.imageUrl}" alt="${item.title}" class="w-full h-48 object-cover" loading="lazy" />
                 <div class="p-4 flex-1 flex flex-col">
                     <h3 class="font-semibold text-lg mb-1">${item.title}</h3>
                     <p class="text-gray-600 flex-grow text-sm mb-2">${item.description || ''}</p>
                     <ul class="text-gray-700 text-sm space-y-1 mb-3">
-                        [cite_start]<li><strong>${translations[currentLang]["brand_label"]}:</strong> ${item.brand}</li> [cite: 269]
-                        <li><strong>${translations[currentLang]["model_label"]}:</strong> ${item.model || [cite_start]"-"}</li> [cite: 270]
+                        <li><strong>${translations[currentLang]["brand_label"]}:</strong> ${item.brand}</li>
+                        <li><strong>${translations[currentLang]["model_label"]}:</strong> ${item.model || "-"}</li>
                     </ul>
                     <p class="text-blue-600 font-bold text-lg">${item.price.toLocaleString()} DA</p>
                 </div>
             `;
-            [cite_start]listingsSection.appendChild(card); [cite: 271]
+            listingsSection.appendChild(card);
         });
     };
 
     const renderProductPage = (product) => {
         if (!product) return;
         
-        [cite_start]elements.backToListingsBtn = document.getElementById('back-to-listings-btn'); [cite: 272]
+        elements.backToListingsBtn = document.getElementById('back-to-listings-btn');
         elements.addToCartBtn = document.getElementById('add-to-cart-btn');
         elements.reviewsContainer = document.getElementById('reviews-container');
         elements.addReviewSection = document.getElementById('add-review-section');
         elements.addReviewForm = document.getElementById('add-review-form');
 
         document.getElementById('product-image-detail').src = product.imageUrl;
-        [cite_start]document.getElementById('product-image-detail').alt = product.title; [cite: 273]
+        document.getElementById('product-image-detail').alt = product.title;
         document.getElementById('product-title-detail').textContent = product.title;
         document.getElementById('product-price-detail').textContent = `${product.price.toLocaleString()} DA`;
         document.getElementById('product-description-detail').textContent = product.description;
         document.getElementById('product-brand-detail').textContent = product.brand;
-        document.getElementById('product-model-detail').textContent = product.model || [cite_start]"-"; [cite: 274]
+        document.getElementById('product-model-detail').textContent = product.model || "-";
         document.getElementById('product-year-detail').textContent = product.year || "-";
         document.getElementById('product-wilaya-detail').textContent = product.wilaya;
         document.getElementById('product-commune-detail').textContent = product.commune || "-";
         
         if (elements.backToListingsBtn) elements.backToListingsBtn.addEventListener('click', () => renderView('home'));
-        [cite_start]if (elements.addToCartBtn) { [cite: 275]
+        if (elements.addToCartBtn) {
             elements.addToCartBtn.addEventListener('click', () => {
                 if (!currentUser || currentUser.isAnonymous) {
                     showMessage(translations[currentLang].login_required, 4000, 'error');
                     openAuthModal();
                     return;
-                [cite_start]} [cite: 276]
+                }
                 addToCart(product);
             });
-        [cite_start]} [cite: 277]
+        }
         
         if (!currentUser || currentUser.isAnonymous) {
             if (elements.addReviewSection) {
                 elements.addReviewSection.innerHTML = `<p class="text-center text-gray-500">${translations[currentLang].login_required}</p>`;
-                [cite_start]if (elements.reviewsContainer) elements.reviewsContainer.innerHTML = ''; [cite: 278]
+                if (elements.reviewsContainer) elements.reviewsContainer.innerHTML = '';
             }
         } else {
             if (elements.addReviewForm) elements.addReviewForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const rating = e.target.querySelector('#review-rating').value;
                 const comment = e.target.querySelector('#review-comment').value.trim();
-                [cite_start]if (comment === '') { [cite: 279]
+                if (comment === '') {
                     showMessage("Veuillez entrer un commentaire.", 3000, 'error');
                     return;
                 }
                 try {
-                    [cite_start]await addReview(product.id, { [cite: 280]
+                    await addReview(product.id, {
                         uid: currentUser.uid,
                         username: currentUser.displayName || currentUser.email,
                         rating: parseInt(rating),
-                        [cite_start]comment: comment, [cite: 281]
+                        comment: comment,
                         timestamp: new Date()
                     });
                     showMessage("Avis soumis avec succès!", 3000, 'success');
-                    [cite_start]elements.addReviewForm.reset(); [cite: 282]
+                    elements.addReviewForm.reset();
                     fetchReviews(product.id);
                 } catch (error) {
                     showMessage("Erreur lors de l'envoi de l'avis.", 3000, 'error');
-                    [cite_start]console.error("Error adding review: ", error); [cite: 283]
+                    console.error("Error adding review: ", error);
                 }
             });
             fetchReviews(product.id);
-        [cite_start]} [cite: 284]
+        }
     };
     
     const renderCartPage = async () => {
         elements.cartItemsContainer = document.getElementById('cart-items-container');
-        [cite_start]elements.cartTotalSpan = document.getElementById('cart-total-price'); [cite: 285]
+        elements.cartTotalSpan = document.getElementById('cart-total-price');
         elements.checkoutBtn = document.getElementById('checkout-btn');
         elements.backFromCartBtn = document.getElementById('back-from-cart-btn');
 
         if (!elements.cartItemsContainer) return;
         elements.cartItemsContainer.innerHTML = '';
-        [cite_start]if (elements.cartTotalSpan) elements.cartTotalSpan.textContent = "0 DA"; [cite: 286]
+        if (elements.cartTotalSpan) elements.cartTotalSpan.textContent = "0 DA";
         
         if (elements.checkoutBtn) {
             elements.checkoutBtn.disabled = true;
-            [cite_start]elements.checkoutBtn.addEventListener('click', checkout); [cite: 287]
+            elements.checkoutBtn.addEventListener('click', checkout);
         }
         
         if (elements.backFromCartBtn) elements.backFromCartBtn.addEventListener('click', () => renderView('home'));
-        [cite_start]if (!currentUser || Object.keys(userCart).length === 0) { [cite: 288]
+        if (!currentUser || Object.keys(userCart).length === 0) {
             elements.cartItemsContainer.innerHTML = `<p class="text-center text-gray-500">${translations[currentLang].your_cart_is_empty}</p>`;
-            [cite_start]if (elements.checkoutBtn) elements.checkoutBtn.disabled = true; [cite: 289]
+            if (elements.checkoutBtn) elements.checkoutBtn.disabled = true;
             return;
         }
 
         let total = 0;
-        [cite_start]const productIds = Object.keys(userCart); [cite: 290]
+        const productIds = Object.keys(userCart);
         const productsInCart = allProducts.filter(p => productIds.includes(p.id));
-        [cite_start]productsInCart.forEach(product => { [cite: 291]
+        productsInCart.forEach(product => {
             const item = userCart[product.id];
             const itemTotal = product.price * item.quantity;
             total += itemTotal;
@@ -1482,16 +1456,16 @@
                     <h4 class="font-semibold">${product.title}</h4>
                     <p class="text-gray-500">${product.price.toLocaleString()} DA</p>
                 </div>
-                [cite_start]<div class="flex items-center space-x-2"> [cite: 293]
+                <div class="flex items-center space-x-2">
                     <span data-i18n-key="quantity">${translations[currentLang].quantity}:</span>
                     <input type="number" min="1" value="${item.quantity}" class="w-16 text-center border rounded-md" data-product-id="${product.id}">
                 </div>
-                [cite_start]<p class="font-semibold"><span data-i18n-key="item_total">${translations[currentLang].item_total}</span>: ${itemTotal.toLocaleString()} DA</p> [cite: 294]
+                <p class="font-semibold"><span data-i18n-key="item_total">${translations[currentLang].item_total}</span>: ${itemTotal.toLocaleString()} DA</p>
                 <button class="text-red-500 hover:text-red-700 remove-from-cart-btn" data-product-id="${product.id}">
                     <i class="fas fa-trash"></i> <span data-i18n-key="remove">${translations[currentLang].remove}</span>
                 </button>
-            [cite_start]`; [cite: 292]
-            [cite_start]elements.cartItemsContainer.appendChild(cartItemEl); [cite: 295]
+            `;
+            elements.cartItemsContainer.appendChild(cartItemEl);
         });
 
         elements.cartItemsContainer.querySelectorAll('input[type="number"]').forEach(input => {
@@ -1499,82 +1473,82 @@
                 updateCartItem(e.target.dataset.productId, e.target.value);
             });
         });
-        [cite_start]elements.cartItemsContainer.querySelectorAll('.remove-from-cart-btn').forEach(btn => { [cite: 296]
+        elements.cartItemsContainer.querySelectorAll('.remove-from-cart-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 removeFromCart(e.currentTarget.dataset.productId);
             });
         });
-        [cite_start]if (elements.cartTotalSpan) elements.cartTotalSpan.textContent = `${total.toLocaleString()} DA`; [cite: 297]
+        if (elements.cartTotalSpan) elements.cartTotalSpan.textContent = `${total.toLocaleString()} DA`;
         if (elements.checkoutBtn && total > 0) {
             elements.checkoutBtn.disabled = false;
-        [cite_start]} [cite: 298]
+        }
         translatePage(currentLang);
     };
 
-    [cite_start]const updateCartDisplay = () => { [cite: 299]
+    const updateCartDisplay = () => {
         const { cartCountSpan } = elements;
-        [cite_start]const cartItemCount = Object.values(userCart).reduce((sum, item) => sum + item.quantity, 0); [cite: 300]
-        [cite_start]if (cartCountSpan) { [cite: 301]
+        const cartItemCount = Object.values(userCart).reduce((sum, item) => sum + item.quantity, 0);
+        if (cartCountSpan) {
             if (cartItemCount > 0) {
                 cartCountSpan.textContent = cartItemCount;
-                [cite_start]cartCountSpan.classList.remove('hidden'); [cite: 302]
+                cartCountSpan.classList.remove('hidden');
             } else {
                 cartCountSpan.classList.add('hidden');
-            [cite_start]} [cite: 303]
+            }
         }
     };
 
-    [cite_start]const addToCart = async (product) => { [cite: 304]
+    const addToCart = async (product) => {
         if (!currentUser) return;
-        [cite_start]const userDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid); [cite: 305]
+        const userDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid);
         
         userCart[product.id] = {
             productId: product.id,
             quantity: (userCart[product.id]?.quantity || 0) + 1
         };
-        [cite_start]try { [cite: 306]
+        try {
             await setDoc(userDocRef, { cart: userCart }, { merge: true });
-            [cite_start]showMessage(`${product.title} ajouté au panier.`, 3000, 'success'); [cite: 307]
+            showMessage(`${product.title} ajouté au panier.`, 3000, 'success');
             updateCartDisplay();
         } catch (error) {
             showMessage("Erreur lors de l'ajout au panier.", 3000, 'error');
-            [cite_start]console.error("Error adding to cart: ", error); [cite: 308]
+            console.error("Error adding to cart: ", error);
         }
     };
 
-    [cite_start]const updateCartItem = async (productId, quantity) => { [cite: 309]
+    const updateCartItem = async (productId, quantity) => {
         if (!currentUser) return;
-        [cite_start]const userDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid); [cite: 310]
+        const userDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid);
         userCart[productId].quantity = parseInt(quantity);
-        [cite_start]if (userCart[productId].quantity <= 0) { [cite: 311]
+        if (userCart[productId].quantity <= 0) {
             delete userCart[productId];
-        [cite_start]} [cite: 312]
+        }
         try {
             await setDoc(userDocRef, { cart: userCart }, { merge: true });
-            [cite_start]renderView('cart'); [cite: 313]
+            renderView('cart');
             updateCartDisplay();
         } catch(error) {
             console.error(error);
-        [cite_start]} [cite: 314]
+        }
     };
     
     const removeFromCart = async (productId) => {
         if (!currentUser) return;
-        [cite_start]const userDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid); [cite: 315]
+        const userDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid);
         delete userCart[productId];
-        [cite_start]try { [cite: 316]
+        try {
             await setDoc(userDocRef, { cart: userCart }, { merge: true });
-            [cite_start]renderView('cart'); [cite: 317]
+            renderView('cart');
             updateCartDisplay();
         } catch(error) {
             console.error(error);
-        [cite_start]} [cite: 318]
+        }
     };
     
     const checkout = async () => {
         if (!currentUser || currentUser.isAnonymous) {
             showMessage(translations[currentLang].login_required, 4000, 'error');
-            [cite_start]openAuthModal(); [cite: 319]
+            openAuthModal();
             return;
         }
         const order = {
@@ -1582,46 +1556,47 @@
             items: userCart,
             total: Object.values(userCart).reduce((sum, item) => {
                 const product = allProducts.find(p => p.id === item.productId);
-                [cite_start]return sum + (product ? product.price * item.quantity : 0); [cite: 320]
+                return sum + (product ? product.price * item.quantity : 0);
             }, 0),
             timestamp: new Date()
         };
-        [cite_start]try { [cite: 321]
+        try {
             await addDoc(collection(db, `artifacts/${appId}/users/${currentUser.uid}/orders`), order);
-            [cite_start]showMessage("Commande soumise avec succès! (Le paiement n'est pas encore implémenté)", 5000, 'success'); [cite: 322]
+            showMessage("Commande soumise avec succès! (Le paiement n'est pas encore implémenté)", 5000, 'success');
             userCart = {};
-            [cite_start]const userDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid); [cite: 323]
+            const userDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid);
             await setDoc(userDocRef, { cart: userCart }, { merge: true });
             renderView('home');
             updateCartDisplay();
-        [cite_start]} catch (error) { [cite: 324]
+        } catch (error) {
             showMessage("Erreur lors de la soumission de la commande.", 4000, 'error');
-            [cite_start]console.error("Error submitting order: ", error); [cite: 325]
+            console.error("Error submitting order: ", error);
         }
     };
 
-    [cite_start]const addReview = async (productId, review) => { [cite: 326]
-        const reviewRef = collection(db, `products/${productId}/reviews`);
-        [cite_start]return await addDoc(reviewRef, review); [cite: 327]
+    const addReview = async (productId, review) => {
+        // FIXED: Updated collection path to match security rules
+        const reviewRef = collection(db, `artifacts/${appId}/public/data/products/${productId}/reviews`);
+        return await addDoc(reviewRef, review);
     };
     
     const fetchReviews = async (productId) => {
         const { reviewsContainer } = elements;
-        [cite_start]if (!reviewsContainer) return; [cite: 328]
+        if (!reviewsContainer) return;
         reviewsContainer.innerHTML = '<p class="text-gray-500">Chargement des avis...</p>';
-        const reviewsRef = collection(db, `products/${productId}/reviews`);
+        // FIXED: Updated collection path to match security rules
+        const reviewsRef = collection(db, `artifacts/${appId}/public/data/products/${productId}/reviews`);
         const q = query(reviewsRef);
-        [cite_start]onSnapshot(q, (querySnapshot) => { [cite: 329]
+        onSnapshot(q, (querySnapshot) => {
             reviewsContainer.innerHTML = '';
             if (querySnapshot.empty) {
                 reviewsContainer.innerHTML = '<p class="text-gray-500">Aucun avis pour le moment.</p>';
                 return;
             }
             querySnapshot.forEach(doc => {
-                [cite_start]const review = doc.data(); [cite: 330]
+                const review = doc.data();
                 const reviewEl = document.createElement('div');
                 reviewEl.className = 'p-4 bg-gray-50 rounded-lg';
-                // FIXED: Correctly display empty stars for ratings less than 5
                 reviewEl.innerHTML = `
                     <p class="font-semibold">${review.username}</p>
                     <p class="text-yellow-500">${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</p>
@@ -1630,80 +1605,81 @@
                 reviewsContainer.appendChild(reviewEl);
             });
         }, (error) => {
-            [cite_start]reviewsContainer.innerHTML = '<p class="text-red-500">Erreur lors du chargement des avis.</p>'; [cite: 332]
+            reviewsContainer.innerHTML = '<p class="text-red-500">Erreur lors du chargement des avis.</p>';
             console.error("Error fetching reviews: ", error);
-        [cite_start]}); [cite: 333]
+        });
     };
     
     const insertDemoListingsOnce = async () => {
         if (localStorage.getItem("demoListingsInserted")) return;
-        [cite_start]const demoListings = [ [cite: 334]
-            [cite_start]{ title: "Disque de frein avant Toyota Yaris 2015", brand: "Toyota", model: "Yaris", year: "2015", wilaya: "Alger", [cite: 335] [cite_start]commune: "Bab El Oued", condition: "used", price: 12000, description: "Disque en bon état, peu utilisé.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fbrake_disc_toyota_yaris.jpg?alt=media" }, [cite: 336]
-            [cite_start]{ title: "Pneu Michelin 205/55 R16 neuf", brand: "Toyota", model: "Corolla", year: "2020", wilaya: "Oran", [cite: 337] [cite_start]commune: "Es Senia", condition: "new", price: 8000, description: "Pneu de haute qualité, jamais monté.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fmichelin_tire.jpg?alt=media" }, [cite: 338]
-            [cite_start]{ title: "Batterie 12V pour Peugeot 308", brand: "Peugeot", model: "308", year: "2017", wilaya: "Constantine", [cite: 339] [cite_start]commune: "El Khroub", condition: "used", price: 9000, description: "Batterie d'occasion, testée OK.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fbattery_peugeot_308.jpg?alt=media" } [cite: 340]
+        const demoListings = [
+            { title: "Disque de frein avant Toyota Yaris 2015", brand: "Toyota", model: "Yaris", year: "2015", wilaya: "Alger", commune: "Bab El Oued", condition: "used", price: 12000, description: "Disque en bon état, peu utilisé.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fbrake_disc_toyota_yaris.jpg?alt=media" },
+            { title: "Pneu Michelin 205/55 R16 neuf", brand: "Toyota", model: "Corolla", year: "2020", wilaya: "Oran", commune: "Es Senia", condition: "new", price: 8000, description: "Pneu de haute qualité, jamais monté.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fmichelin_tire.jpg?alt=media" },
+            { title: "Batterie 12V pour Peugeot 308", brand: "Peugeot", model: "308", year: "2017", wilaya: "Constantine", commune: "El Khroub", condition: "used", price: 9000, description: "Batterie d'occasion, testée OK.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fbattery_peugeot_308.jpg?alt=media" }
         ];
-        [cite_start]for (const listing of demoListings) { [cite: 341]
-            const q = query(collection(db, "products"), where("title", "==", listing.title));
-            [cite_start]const querySnapshot = await getDocs(q); [cite: 342]
+        for (const listing of demoListings) {
+            const collectionRef = collection(db, "artifacts", appId, "public", "data", "products");
+            const q = query(collectionRef, where("title", "==", listing.title));
+            const querySnapshot = await getDocs(q);
             if (querySnapshot.empty) {
-                await addDoc(collection(db, "products"), listing);
-            [cite_start]} [cite: 343]
+                await addDoc(collectionRef, listing);
+            }
         }
         localStorage.setItem("demoListingsInserted", "true");
     };
 
-    [cite_start]const uploadImage = async (file) => { [cite: 344]
+    const uploadImage = async (file) => {
         const timestamp = Date.now();
-        [cite_start]const storageRef = ref(storage, `product_images/${timestamp}_${file.name}`); [cite: 345]
+        const storageRef = ref(storage, `product_images/${timestamp}_${file.name}`);
         const snapshot = await uploadBytes(storageRef, file);
         return await getDownloadURL(snapshot.ref);
     };
 
-    [cite_start]const validatePostForm = (form) => { [cite: 346]
+    const validatePostForm = (form) => {
         let isValid = true;
-        [cite_start]const requiredInputs = form.querySelectorAll('[required]'); [cite: 347]
+        const requiredInputs = form.querySelectorAll('[required]');
         requiredInputs.forEach(input => {
             const errorEl = document.getElementById(input.id + "-error");
             if (input.value.trim() === '' || (input.type === 'file' && input.files.length === 0)) {
                 if(errorEl) errorEl.classList.remove("hidden");
                 input.setAttribute("aria-invalid", "true");
                 isValid = false;
-            [cite_start]} else { [cite: 348]
+            } else {
                 if(errorEl) errorEl.classList.add("hidden");
                 input.removeAttribute("aria-invalid");
             }
         });
-        [cite_start]return isValid; [cite: 349]
+        return isValid;
     };
     
     // Event listeners setup
     const setupEventListeners = () => {
         const { langDropdownBtn, langDropdown, langBtns, mobileMenuBtn, mobileMenu, mobileMenuCloseBtn, modalCloseBtn, postProductForm, loginBtn, homeLink, sellLink, sellLinkMobile, cartBtn, postProductBrandSelect, postProductModelSelect, postProductWilayaSelect, postProductCommuneSelect } = elements;
         
-        [cite_start]if (langDropdownBtn) { [cite: 350]
+        if (langDropdownBtn) {
             langDropdownBtn.addEventListener('click', () => {
                 langDropdown.classList.toggle('hidden');
                 langDropdownBtn.setAttribute('aria-expanded', !langDropdown.classList.contains('hidden'));
             });
-            [cite_start]window.addEventListener('click', (e) => { [cite: 351]
+            window.addEventListener('click', (e) => {
                 if (!langDropdown.contains(e.target) && !langDropdownBtn.contains(e.target)) {
                     langDropdown.classList.add('hidden');
                     langDropdownBtn.setAttribute('aria-expanded', 'false');
                 }
             });
-        [cite_start]} [cite: 352]
+        }
         
         if (langBtns) {
             langBtns.forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     currentLang = e.target.dataset.lang;
                     localStorage.setItem('piecety_lang', currentLang);
-                    [cite_start]translatePage(currentLang); [cite: 353]
+                    translatePage(currentLang);
                     closeMobileMenu();
                     renderView(currentView);
                 });
             });
-        [cite_start]} [cite: 354]
+        }
         
         if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', () => {
             mobileMenu.classList.remove('hidden');
@@ -1711,23 +1687,27 @@
             mobileMenuBtn.setAttribute('aria-expanded', 'true');
         });
 
-        [cite_start]if (mobileMenuCloseBtn) mobileMenuCloseBtn.addEventListener('click', () => { [cite: 355]
+        if (mobileMenuCloseBtn) mobileMenuCloseBtn.addEventListener('click', () => {
             closeMobileMenu();
             mobileMenuBtn.setAttribute('aria-expanded', 'false');
         });
 
-        [cite_start]if (modalCloseBtn) modalCloseBtn.addEventListener('click', () => { [cite: 356]
+        if (modalCloseBtn) modalCloseBtn.addEventListener('click', () => {
             elements.postProductModal.classList.add('hidden');
         });
 
-        [cite_start]if (postProductForm) postProductForm.addEventListener('submit', async (e) => { [cite: 357]
+        if (postProductForm) postProductForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (!currentUser) {
+                showMessage(translations[currentLang].login_required, 4000, 'error');
+                openAuthModal();
+                return;
+            }
             if (!validatePostForm(e.target)) {
                 showMessage("Veuillez remplir tous les champs obligatoires.", 3000, 'error');
                 return;
             }
 
-            // ENHANCEMENT: Show loading state on submit button
             const submitBtn = e.target.querySelector('#submit-ad-btn');
             const btnText = submitBtn.querySelector('.btn-text');
             const btnSpinner = submitBtn.querySelector('.btn-spinner');
@@ -1737,23 +1717,23 @@
             btnSpinner.classList.remove('hidden');
 
             const formData = new FormData(e.target);
-            [cite_start]const imageFile = formData.get('image'); [cite: 358]
+            const imageFile = formData.get('image');
             
             try {
                 const imageUrl = await uploadImage(imageFile);
                 const newProduct = {
-                    [cite_start]title: formData.get('title'), brand: formData.get('brand'), [cite: 359] [cite_start]model: formData.get('model'), year: formData.get('year'), wilaya: formData.get('wilaya'), commune: formData.get('commune'), [cite: 360] [cite_start]condition: formData.get('condition'), price: parseInt(formData.get('price')), description: formData.get('description'), imageUrl: imageUrl, timestamp: new Date() [cite: 361]
+                    title: formData.get('title'), brand: formData.get('brand'), model: formData.get('model'), year: formData.get('year'), wilaya: formData.get('wilaya'), commune: formData.get('commune'), condition: formData.get('condition'), price: parseInt(formData.get('price')), description: formData.get('description'), imageUrl: imageUrl, timestamp: new Date()
                 };
-                [cite_start]await addDoc(collection(db, "products"), newProduct); [cite: 362]
+                // FIXED: Updated collection path to match security rules
+                await addDoc(collection(db, "artifacts", appId, "public", "data", "products"), newProduct);
                 showMessage("Annonce soumise avec succès!", 4000, 'success');
                 e.target.reset();
                 elements.postProductModal.classList.add('hidden');
                 renderListings();
-            [cite_start]} catch (error) { [cite: 363]
+            } catch (error) {
                 showMessage("Erreur lors de la soumission de l'annonce.", 4000, 'error');
-                [cite_start]console.error("Error submitting form: ", error); [cite: 364]
+                console.error("Error submitting form: ", error);
             } finally {
-                // ENHANCEMENT: Reset button state after submission
                 submitBtn.disabled = false;
                 btnText.textContent = translations[currentLang].submit_ad_btn_text || "Soumettre";
                 btnSpinner.classList.add('hidden');
@@ -1761,108 +1741,105 @@
         });
         
         if (loginBtn) loginBtn.addEventListener('click', openAuthModal);
-        [cite_start]if (elements.authModalCloseBtn) elements.authModalCloseBtn.addEventListener('click', closeAuthModal); [cite: 365]
+        if (elements.authModalCloseBtn) elements.authModalCloseBtn.addEventListener('click', closeAuthModal);
         if (elements.googleLoginBtn) elements.googleLoginBtn.addEventListener('click', () => {
             signInWithPopup(auth, provider).then((result) => {
                 const user = result.user;
                 showMessage(`Bienvenue, ${user.displayName || user.email}!`, 3000, 'success');
                 closeAuthModal();
             }).catch((error) => {
-                [cite_start]console.error("Google sign-in error: ", error); [cite: 366]
+                console.error("Google sign-in error: ", error);
                 showMessage("Erreur de connexion avec Google.", 3000, 'error');
             });
         });
 
-        [cite_start]if (homeLink) homeLink.addEventListener('click', (e) => { e.preventDefault(); renderView('home'); }); [cite: 367]
+        if (homeLink) homeLink.addEventListener('click', (e) => { e.preventDefault(); renderView('home'); });
         if (sellLink) sellLink.addEventListener('click', (e) => { e.preventDefault(); postProductBtnClick(); });
         if (sellLinkMobile) sellLinkMobile.addEventListener('click', postProductBtnClick);
-        [cite_start]if (cartBtn) cartBtn.addEventListener('click', () => { [cite: 368]
+        if (cartBtn) cartBtn.addEventListener('click', () => {
             if (!currentUser) {
                 showMessage(translations[currentLang].login_required, 4000, 'error');
                 openAuthModal();
             } else {
                 renderView('cart');
             }
-        [cite_start]}); [cite: 369]
+        });
 
         populateSelect(postProductBrandSelect, Object.keys(car_data), "select_brand", currentLang);
         populateSelect(postProductYearSelect, years, "select_year", currentLang);
         populateSelect(postProductWilayaSelect, Object.keys(wilayas), "select_wilaya", currentLang);
 
-        [cite_start]if (postProductBrandSelect) postProductBrandSelect.addEventListener('change', (e) => { [cite: 370]
+        if (postProductBrandSelect) postProductBrandSelect.addEventListener('change', (e) => {
             const val = e.target.value;
             if (val) {
                 populateSelect(postProductModelSelect, car_data[val], "select_model", currentLang);
                 postProductModelSelect.disabled = false;
             } else {
-                [cite_start]postProductModelSelect.innerHTML = `<option value="" data-i18n-key="select_model">${translations[currentLang]["select_model"]}</option>`; [cite: 371]
+                postProductModelSelect.innerHTML = `<option value="" data-i18n-key="select_model">${translations[currentLang]["select_model"]}</option>`;
                 postProductModelSelect.disabled = true;
             }
         });
-        [cite_start]if (postProductWilayaSelect) postProductWilayaSelect.addEventListener('change', (e) => { [cite: 372]
+        if (postProductWilayaSelect) postProductWilayaSelect.addEventListener('change', (e) => {
             const val = e.target.value;
             if (val) {
                 populateSelect(postProductCommuneSelect, wilayas[val], "select_commune", currentLang);
                 postProductCommuneSelect.disabled = false;
             } else {
-                [cite_start]postProductCommuneSelect.innerHTML = `<option value="" data-i18n-key="select_commune">${translations[currentLang]["select_commune"]}</option>`; [cite: 373]
+                postProductCommuneSelect.innerHTML = `<option value="" data-i18n-key="select_commune">${translations[currentLang]["select_commune"]}</option>`;
                 postProductCommuneSelect.disabled = true;
             }
         });
-    [cite_start]}; [cite: 374]
+    };
     
     // Main app bootstrapper
     const bootApp = () => {
         const { authLinksContainer } = elements;
-        [cite_start]// Set initial language and render home view [cite: 375]
         translatePage(currentLang);
         renderView('home');
         document.getElementById('current-year').textContent = currentYear;
-        [cite_start]// Set up event listeners for the main app [cite: 376]
         setupEventListeners();
-        [cite_start]// Listen for auth state changes [cite: 377]
+
         onAuthStateChanged(auth, async (user) => {
             currentUser = user;
             if (user) {
                 console.log("User logged in:", user.uid);
                 authLinksContainer.innerHTML = `
-                    [cite_start]<button id="profile-btn" class="p-2 text-gray-600 hover:text-blue-600 focus:outline-none"> [cite: 378]
+                    <button id="profile-btn" class="p-2 text-gray-600 hover:text-blue-600 focus:outline-none">
                         <i class="fas fa-user-circle text-2xl"></i>
                     </button>
                     <button id="signout-btn" class="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-full font-semibold transition-colors duration-200 shadow-md">
-                        [cite_start]Déconnexion [cite: 379]
+                        Déconnexion
                     </button>
                 `;
-                // FIXED: More robust signout logic
                 document.getElementById('signout-btn').addEventListener('click', () => {
                     signOut(auth).then(() => {
-                        [cite_start]showMessage("Déconnexion réussie.", 3000, 'info'); [cite: 380]
+                        showMessage("Déconnexion réussie.", 3000, 'info');
                         renderView('home');
                     });
                 });
                 
                 const userDocRef = doc(db, 'artifacts', appId, 'users', user.uid);
-                [cite_start]const userDoc = await getDoc(userDocRef); [cite: 381]
-                [cite_start]userCart = (userDoc.exists() && userDoc.data().cart) ? userDoc.data().cart : {}; [cite: 382, 383]
+                const userDoc = await getDoc(userDocRef);
+                userCart = (userDoc.exists() && userDoc.data().cart) ? userDoc.data().cart : {};
                 updateCartDisplay();
-            [cite_start]} else { [cite: 384]
-                console.log("User logged out or is anonymous.");
+            } else {
+                // FIXED: Removed console.log for anonymous user state
                 authLinksContainer.innerHTML = `
                     <button
                         id="login-btn"
                         class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full font-semibold transition-colors duration-200 shadow-md"
-                        [cite_start]data-i18n-key="connect" [cite: 386]
+                        data-i18n-key="connect"
                     >
                         Se connecter
                     </button>
-                [cite_start]`; [cite: 385]
-                [cite_start]document.getElementById('login-btn').addEventListener('click', openAuthModal); [cite: 387]
+                `;
+                document.getElementById('login-btn').addEventListener('click', openAuthModal);
                 userCart = {};
                 updateCartDisplay();
             }
             translatePage(currentLang);
         });
-        [cite_start]insertDemoListingsOnce(); [cite: 388]
+        insertDemoListingsOnce();
     };
 
     bootApp();
