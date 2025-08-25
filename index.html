@@ -80,7 +80,7 @@
             left: auto;
         }
     </style>
-  <link rel="icon" href="https://www.svgrepo.com/show/5129/car.svg">
+  <link rel="icon" href="./car.svg">
 </head>
 <body class="flex flex-col min-h-screen text-gray-800">
 
@@ -263,9 +263,10 @@
     </main>
 
 <footer class="bg-gray-800 text-white p-6 md:p-8 mt-auto text-center">
-    <p class="text-sm font-light" data-i18n-key="footer_text">
+    <p class="text-sm font-light">
         &copy; <span id="current-year"></span> Piecety - Marché des Pièces Auto en
-        Algérie. Tous droits réservés.
+        Algérie. <br>
+        <span class="text-xs" data-i18n-key="footer_location_text">Fièrement au service de Hassi R'Mel et de toute l'Algérie.</span>
     </p>
 </footer>
 
@@ -961,7 +962,7 @@
             condition: "État", any_condition: "Tout", new: "Neuf", used: "Occasion",
             apply_filters: "Appliquer les filtres", reset: "Réinitialiser",
             search_placeholder: "Rechercher une pièce...",
-            footer_text: "&copy; <span id='current-year'></span> Piecety - Marché des Pièces Auto en Algérie. Tous droits réservés.",
+            footer_location_text: "Fièrement au service de Hassi R'Mel et de toute l'Algérie.",
             submit_ad: "Soumettre une annonce rapide", ad_title_label: "Titre de la pièce", brand_label: "Marque",
             select_brand: "Sélectionnez une marque", model_label: "Modèle", select_model: "Sélectionnez un modèle",
             year_label: "Année", select_year: "Sélectionnez une année", wilaya_label: "Wilaya",
@@ -978,7 +979,7 @@
             remove: "Supprimer",
             quantity: "Quantité",
             item_total: "Total de l'article",
-            login_required: "Veuillez vous connecter pour utiliser cette fonctionnalité."
+            login_required: "Veuillez vous connecter pour utiliser cette fonctionnalité.",
         },
         en: {
             fr_short: "FR", en_short: "EN", ar_short: "AR",
@@ -994,7 +995,7 @@
             condition: "Condition", any_condition: "Any", new: "New", used: "Used",
             apply_filters: "Apply Filters", reset: "Reset",
             search_placeholder: "Search for a part...",
-            footer_text: "&copy; <span id='current-year'></span> Piecety - Car Parts Marketplace in Algeria. All rights reserved.",
+            footer_location_text: "Proudly serving Hassi R'Mel and all of Algeria.",
             submit_ad: "Submit a quick ad", ad_title_label: "Part Title", brand_label: "Brand",
             select_brand: "Select a brand", model_label: "Model", select_model: "Select a model",
             year_label: "Year", select_year: "Select a year", wilaya_label: "Wilaya",
@@ -1011,7 +1012,7 @@
             remove: "Remove",
             quantity: "Quantity",
             item_total: "Item Total",
-            login_required: "Please log in to use this feature."
+            login_required: "Please log in to use this feature.",
         },
         ar: {
             fr_short: "FR", en_short: "EN", ar_short: "AR",
@@ -1027,7 +1028,7 @@
             condition: "الحالة", any_condition: "الكل", new: "جديد", used: "مستعمل",
             apply_filters: "تطبيق الفلاتر", reset: "إعادة تعيين",
             search_placeholder: "ابحث عن قطعة...",
-            footer_text: "&copy; <span id='current-year'></span> Piecety - سوق قطع غيار السيارات في الجزائر. جميع الحقوق محفوظة.",
+            footer_location_text: "بكل فخر في خدمة حاسي الرمل و كل الجزائر.",
             submit_ad: "إرسال إعلان سريع", ad_title_label: "عنوان القطعة", brand_label: "الماركة",
             select_brand: "اختر ماركة", model_label: "الموديل", select_model: "اختر موديل",
             year_label: "السنة", select_year: "اختر سنة", wilaya_label: "الولاية",
@@ -1044,13 +1045,62 @@
             remove: "حذف",
             quantity: "الكمية",
             item_total: "إجمالي السلعة",
-            login_required: "يرجى تسجيل الدخول لاستخدام هذه الميزة."
+            login_required: "يرجى تسجيل الدخول لاستخدام هذه الميزة.",
         }
     };
 
     // Data for dynamic dropdowns
     const wilayas = {
-        "Adrar": ["Adrar", "Charouine", "Tamest", "Reggane", "Aoulef", "Fenoughil", "Timimoun", "Talmine", "Bordj Badji Mokhtar", "In Salah"], "Chlef": ["Chlef", "Ténès", "Ouled Farès", "El Marsa", "Abou El Hassan", "Oued Fodda", "Beni Haoua", "El Karimia", "Taougrite", "Harchoun"], "Laghouat": ["Aïn Madhi", "Aflou", "El Ghicha", "El Houaita", "El Assafia", "Ksar El Hirane", "Laghouat", "Taougrite", "Sidi Makhlouf", "Ouled Farès"], "Oum El Bouaghi": ["Aïn Beïda", "Aïn Fekroun", "Aïn Babouche", "Aïn M'lila", "Dhalaâ", "F'kirina", "Oum El Bouaghi", "Sidi R'ghiss", "Souk Naamane", "El Fedjoudj"], "Batna": ["Aïn Touta", "Arris", "Barika", "Batna", "El Madher", "Menaa", "Merouana", "Ras El Aioun", "Timgad", "Ouled Si Slimane"], "Béjaïa": ["Aïn El Kebira", "Akbou", "Béjaïa", "El Kseur", "Sidi Aïch", "Tichy", "Toudja", "Aokas", "Ighil Ali", "Darguina"], "Biskra": ["Biskra", "El Kantara", "Sidi Okba", "Ourlal", "Zeribet El Oued", "Tolga", "Sidi Khaled", "Djemorah", "M'chouneche", "El Outaya"], "Béchar": ["Béchar", "Abadla", "Beni Ounif", "Lahmar", "Tabelbala", "Kenadsa", "Igli", "Taghit", "Mechraâ Houari Boumediene", "Ouled Khoudir"], "Blida": ["Blida", "Boufarik", "Chebli", "Oued El Alleug", "Larbaâ", "Meftah", "Soumaâ", "Bougara", "Mouzaia", "Chréa"], "Bouira": ["Bouira", "Lakhdaria", "Sour El Ghozlane", "Ahnif", "Bir Ghbalou", "Haïzer", "M'chedallah", "El Hachimia", "Sidi Aïssa", "Taghzout"], "Tamanrasset": ["Tamanrasset", "Abalessa", "Idles", "In Amguel", "Tazrouk", "Tin Zaouatine", "In Guezzam", "Djanet", "Bordj Omar Driss", "Illizi"], "Tébessa": ["Tébessa", "Bir El Ater", "Cheria", "El Aouinet", "El Kouif", "El Ma Labiod", "Morsott", "Ouenza", "Bir Mokkadem", "Hammamet"], "Tlemcen": ["Tlemcen", "Ghazaouet", "Maghnia", "Remchi", "Sebdou", "Sidi Djillali", "Hennaya", "Nedroma", "Marsa Ben M'Hidi", "Beni Snous"], "Tiaret": ["Tiaret", "Aïn Deheb", "Frenda", "Ksar Chellala", "Mahdia", "Rahouia", "Sougueur", "Dahmouni", "Sidi Ali Mellal", "Medroussa"], "Tizi Ouzou": ["Tizi Ouzou", "Aïn El Hammam", "Azazga", "Bouzeguène", "Draâ Ben Khedda", "Ouacif", "Larbaâ Nath Irathen", "Tigzirt", "Tizi Gheniff", "Maâtkas"], "Alger": ["Alger", "Bab El Oued", "Baraki", "Bir Mourad Raïs", "Birkhadem", "Bologhine", "Bordj El Kiffan", "Hussein Dey", "Hydra", "Dar El Beïda"], "Djelfa": ["Djelfa", "Aïn Oussera", "Messaad", "Hassi Bahbah", "Had Sahary", "Guettara", "El Idrissia", "Dar Chioukh", "Zaccar", "Faidh El Botma"], "Jijel": ["Jijel", "Taher", "El Milia", "Chekfa", "Ziamamansouria", "Texenna", "Djemaa Beni Habibi", "Sidi Maarouf", "Settara", "Kaous"], "Sétif": ["Sétif", "Aïn Oulmane", "El Eulma", "Bousselam", "Beni Ouartilane", "Bougaâ", "Salah Bey", "Hammamlou", "Guenzet", "Maouaklane"], "Saïda": ["Saïda", "Aïn El Hadjar", "Sidi Boubkeur", "Youb", "El Hassasna", "Tircine", "Maamora", "Ouled Brahim", "Aïn Sekhouna", "Moulay Larbi"], "Skikda": ["Skikda", "Aïn Bouziane", "Azzaba", "El Harrouch", "Collo", "Filfila", "Ramdane Djamel", "Salah Bouchaour", "Zerdaza", "Beni Oulbane"], "Sidi Bel Abbès": ["Sidi Bel Abbès", "Sfisef", "Telagh", "Ras El Ma", "Tessala", "Aïn El Berd", "Boukhanafis", "Ben Badis", "Sidi Chaib", "Moulay Slissen"], "Annaba": ["Annaba", "El Hadjar", "Berrahal", "El Bouni", "Seraïdi", "Chetaïbi", "Oued El Aneb", "Aïn El Berda", "Trézel", "Sidi Amar"], "Guelma": ["Guelma", "Héliopolis", "Oued Zenati", "Bouchegouf", "Ain Reggada", "Tamlouka", "Dkhila", "Bou Hachana", "Belkheir", "Bordj Sabath"], "Constantine": ["Constantine", "El Khroub", "Hamma Bouziane", "Aïn Smara", "Didouche Mourad", "Zighoud Youcef", "Messaoud Boudjriou", "Beni Hamidane", "Ibn Ziad", "Oued El Hadjar"], "Médéa": ["Médéa", "Berrouaghia", "Chahbounia", "Tablat", "Aïn Boucif", "Beni Slimane", "El Azizia", "Si Mahdjoub", "Ouzera", "Ksar Boukhari"], "Mostaganem": ["Mostaganem", "Hassi Mameche", "Aïn Tédelès", "Sidi Ali", "Bouguirat", "Achaacha", "Khadra", "Oued El Kheir", "Mazagran", "Foran"], "M'Sila": ["M'Sila", "Bou Saâda", "Aïn El Melh", "Sidi Aïssa", "Magra", "M'Cif", "Hammam Dhalaâ", "Ouled Derradj", "Ben Srour", "Ouanougha"], "Mascara": ["Mascara", "Ghriss", "Tighennif", "Sig", "Bou Hanifia", "Oued Taria", "Hachem", "Mohammadia", "El Bordj", "Aïn Fares"], "Ouargla": ["Ouargla", "Hassi Messaoud", "Rouissat", "N'Goussa", "Sidi Khouiled", "Blidet Amor", "El Borma", "Tebesbest", "Zaouia El Abidia", "Hassi Ben Abdallah"], "Oran": ["Oran", "Arzew", "Bir El Djir", "Es Senia", "Boutlélis", "Hassi Bounif", "Oued Tlélat", "Sidi Chami", "Gdyel", "Aïn El Turk"], "El Bayadh": ["El Bayadh", "Bougtob", "Chellala", "Breïna", "Rogassa", "Brezina", "Boussemghoun", "El Kheiter", "Kraïr", "Ghassoul"], "Illizi": ["Illizi", "Djanet", "Bordj El Houasse", "Tamanrasset", "In Salah", "Abalessa", "Tazrouk", "Idles", "In Amguel", "Tin Zaouatine"], "Bordj Bou Arréridj": ["Bordj Bou Arréridj", "Ras El Oued", "Mansoura", "Tassameurt", "El Achir", "Medjana", "Bordj Ghedir", "Hammam El Biban", "L'Hassaneia", "Ghassira"], "Boumerdès": ["Boumerdès", "Dellys", "Boudouaou", "Isser", "Béni Amrane", "Naciria", "Corso", "Zemmouri", "Réghaïa", "Tidjelabine"], "El Tarf": ["El Tarf", "Ben M'Hidi", "Besbes", "Drea", "El Kala", "Bougous", "Raml Souk", "Sidi Khelil", "Oued Zitoun", "Aïn Kerma"], "Tindouf": ["Tindouf", "Oum El Assel"], "Tissemsilt": ["Tissemsilt", "Bordj Bounaama", "Lardjem", "Théniet El Had", "Ammi Moussa", "Sidi Boutouchent", "Layoune", "Lazharia", "Bougara", "Bordj Emir Khaled"], "El Oued": ["El Oued", "Guemar", "Hassi Khalifa", "Robbah", "Debila", "Bayadha", "Magrane", "Nakhla", "Kouinine", "El Ogla"], "Khenchela": ["Khenchela", "Aïn Touila", "Bab El Ain", "Kais", "Yabous", "Chechar", "M'Sara", "Ouled Rechache", "Taouzianat", "Remila"], "Souk Ahras": ["Souk Ahras", "Heddada", "M'daourouch", "Mechrouha", "Ouled Driss", "Taoura", "Zaarouria", "Ouillen", "Sidi Fredj", "Tiffech"], "Tipaza": ["Tipaza", "Cherchell", "Koléa", "Fouka", "Hadjout", "Sidi Rached", "Menaceur", "Bou Ismaïl", "Khemis Miliana", "Aïn Tagourait"], "Mila": ["Mila", "Bouhatem", "Ferdjioua", "Grarem Gouga", "Tadjenanet", "Sidi Merouane", "Oued Endja", "Teleghma", "Chigara", "Rouached"], "Aïn Defla": ["Aïn Defla", "Khemis Miliana", "El Attaf", "Aïn Torki", "Djelida", "Rouina", "Hammam Righa", "Miliana", "Boumedfaa", "Aïn Soltane"], "Naâma": ["Naâma", "Mécheria", "Aïn Sefra", "Moghrar", "Tiout", "Sfissifa", "Makman Ben Amer", "Asla", "Kasdir", "El Biod"], "Aïn Témouchent": ["Aïn Témouchent", "Hammam Bou Hadjar", "El Malah", "Béni Saf", "Aghlal", "Chaabat El Ham", "Oued Berkeche", "Aoubellil", "Bouzedjar", "Tamesna"], "Ghardaïa": ["Ghardaïa", "El Guerrara", "Berriane", "Dhayet Bendhahoua", "Metlili", "Zelfana", "Bounoura", "El Atteuf", "Guerrara", "Dra' El Mizan"], "Relizane": ["Relizane", "Oued Rhiou", "Zemmoura", "Sidi M'Hamed Ben Ali", "El H'madna", "Ammi Moussa", "Mazouna", "Mendes", "Ain Tarek", "Oued El Djemaa"], "El M'ghair": ["El M'ghair", "Sidi Amrane", "Djamaa", "Oum Toub", "M'Rara", "Oued Allenda", "Sidi Khelil", "Oued R'hiou", "Sidi Yahia", "Bouchakroun"], "El Meniaa": ["El Meniaa", "Hassi Gara", "Mansourah", "Dhiafat", "El Guerrara", "Tadjmout", "El Hachane", "El Oued", "Chabet El Ami", "Ouled Gacem"]
+        "Adrar": ["Adrar", "Charouine", "Tamest", "Reggane", "Aoulef", "Fenoughil", "Timimoun", "Talmine", "Bordj Badji Mokhtar", "In Salah"], 
+        "Chlef": ["Chlef", "Ténès", "Ouled Farès", "El Marsa", "Abou El Hassan", "Oued Fodda", "Beni Haoua", "El Karimia", "Taougrite", "Harchoun"], 
+        // CONTEXT: Added "Hassi R'Mel" to the communes of Laghouat.
+        "Laghouat": ["Aïn Madhi", "Aflou", "El Ghicha", "El Houaita", "El Assafia", "Ksar El Hirane", "Laghouat", "Taougrite", "Sidi Makhlouf", "Ouled Farès", "Hassi R'Mel"], 
+        "Oum El Bouaghi": ["Aïn Beïda", "Aïn Fekroun", "Aïn Babouche", "Aïn M'lila", "Dhalaâ", "F'kirina", "Oum El Bouaghi", "Sidi R'ghiss", "Souk Naamane", "El Fedjoudj"], 
+        "Batna": ["Aïn Touta", "Arris", "Barika", "Batna", "El Madher", "Menaa", "Merouana", "Ras El Aioun", "Timgad", "Ouled Si Slimane"], 
+        "Béjaïa": ["Aïn El Kebira", "Akbou", "Béjaïa", "El Kseur", "Sidi Aïch", "Tichy", "Toudja", "Aokas", "Ighil Ali", "Darguina"], 
+        "Biskra": ["Biskra", "El Kantara", "Sidi Okba", "Ourlal", "Zeribet El Oued", "Tolga", "Sidi Khaled", "Djemorah", "M'chouneche", "El Outaya"], 
+        "Béchar": ["Béchar", "Abadla", "Beni Ounif", "Lahmar", "Tabelbala", "Kenadsa", "Igli", "Taghit", "Mechraâ Houari Boumediene", "Ouled Khoudir"], 
+        "Blida": ["Blida", "Boufarik", "Chebli", "Oued El Alleug", "Larbaâ", "Meftah", "Soumaâ", "Bougara", "Mouzaia", "Chréa"], 
+        "Bouira": ["Bouira", "Lakhdaria", "Sour El Ghozlane", "Ahnif", "Bir Ghbalou", "Haïzer", "M'chedallah", "El Hachimia", "Sidi Aïssa", "Taghzout"], 
+        "Tamanrasset": ["Tamanrasset", "Abalessa", "Idles", "In Amguel", "Tazrouk", "Tin Zaouatine", "In Guezzam", "Djanet", "Bordj Omar Driss", "Illizi"], 
+        "Tébessa": ["Tébessa", "Bir El Ater", "Cheria", "El Aouinet", "El Kouif", "El Ma Labiod", "Morsott", "Ouenza", "Bir Mokkadem", "Hammamet"], 
+        "Tlemcen": ["Tlemcen", "Ghazaouet", "Maghnia", "Remchi", "Sebdou", "Sidi Djillali", "Hennaya", "Nedroma", "Marsa Ben M'Hidi", "Beni Snous"], 
+        "Tiaret": ["Tiaret", "Aïn Deheb", "Frenda", "Ksar Chellala", "Mahdia", "Rahouia", "Sougueur", "Dahmouni", "Sidi Ali Mellal", "Medroussa"], 
+        "Tizi Ouzou": ["Tizi Ouzou", "Aïn El Hammam", "Azazga", "Bouzeguène", "Draâ Ben Khedda", "Ouacif", "Larbaâ Nath Irathen", "Tigzirt", "Tizi Gheniff", "Maâtkas"], 
+        "Alger": ["Alger", "Bab El Oued", "Baraki", "Bir Mourad Raïs", "Birkhadem", "Bologhine", "Bordj El Kiffan", "Hussein Dey", "Hydra", "Dar El Beïda"], 
+        "Djelfa": ["Djelfa", "Aïn Oussera", "Messaad", "Hassi Bahbah", "Had Sahary", "Guettara", "El Idrissia", "Dar Chioukh", "Zaccar", "Faidh El Botma"], 
+        "Jijel": ["Jijel", "Taher", "El Milia", "Chekfa", "Ziamamansouria", "Texenna", "Djemaa Beni Habibi", "Sidi Maarouf", "Settara", "Kaous"], 
+        "Sétif": ["Sétif", "Aïn Oulmane", "El Eulma", "Bousselam", "Beni Ouartilane", "Bougaâ", "Salah Bey", "Hammamlou", "Guenzet", "Maouaklane"], 
+        "Saïda": ["Saïda", "Aïn El Hadjar", "Sidi Boubkeur", "Youb", "El Hassasna", "Tircine", "Maamora", "Ouled Brahim", "Aïn Sekhouna", "Moulay Larbi"], 
+        "Skikda": ["Skikda", "Aïn Bouziane", "Azzaba", "El Harrouch", "Collo", "Filfila", "Ramdane Djamel", "Salah Bouchaour", "Zerdaza", "Beni Oulbane"], 
+        "Sidi Bel Abbès": ["Sidi Bel Abbès", "Sfisef", "Telagh", "Ras El Ma", "Tessala", "Aïn El Berd", "Boukhanafis", "Ben Badis", "Sidi Chaib", "Moulay Slissen"], 
+        "Annaba": ["Annaba", "El Hadjar", "Berrahal", "El Bouni", "Seraïdi", "Chetaïbi", "Oued El Aneb", "Aïn El Berda", "Trézel", "Sidi Amar"], 
+        "Guelma": ["Guelma", "Héliopolis", "Oued Zenati", "Bouchegouf", "Ain Reggada", "Tamlouka", "Dkhila", "Bou Hachana", "Belkheir", "Bordj Sabath"], 
+        "Constantine": ["Constantine", "El Khroub", "Hamma Bouziane", "Aïn Smara", "Didouche Mourad", "Zighoud Youcef", "Messaoud Boudjriou", "Beni Hamidane", "Ibn Ziad", "Oued El Hadjar"], 
+        "Médéa": ["Médéa", "Berrouaghia", "Chahbounia", "Tablat", "Aïn Boucif", "Beni Slimane", "El Azizia", "Si Mahdjoub", "Ouzera", "Ksar Boukhari"], 
+        "Mostaganem": ["Mostaganem", "Hassi Mameche", "Aïn Tédelès", "Sidi Ali", "Bouguirat", "Achaacha", "Khadra", "Oued El Kheir", "Mazagran", "Foran"], 
+        "M'Sila": ["M'Sila", "Bou Saâda", "Aïn El Melh", "Sidi Aïssa", "Magra", "M'Cif", "Hammam Dhalaâ", "Ouled Derradj", "Ben Srour", "Ouanougha"], 
+        "Mascara": ["Mascara", "Ghriss", "Tighennif", "Sig", "Bou Hanifia", "Oued Taria", "Hachem", "Mohammadia", "El Bordj", "Aïn Fares"], 
+        "Ouargla": ["Ouargla", "Hassi Messaoud", "Rouissat", "N'Goussa", "Sidi Khouiled", "Blidet Amor", "El Borma", "Tebesbest", "Zaouia El Abidia", "Hassi Ben Abdallah"], 
+        "Oran": ["Oran", "Arzew", "Bir El Djir", "Es Senia", "Boutlélis", "Hassi Bounif", "Oued Tlélat", "Sidi Chami", "Gdyel", "Aïn El Turk"], 
+        "El Bayadh": ["El Bayadh", "Bougtob", "Chellala", "Breïna", "Rogassa", "Brezina", "Boussemghoun", "El Kheiter", "Kraïr", "Ghassoul"], 
+        "Illizi": ["Illizi", "Djanet", "Bordj El Houasse", "Tamanrasset", "In Salah", "Abalessa", "Tazrouk", "Idles", "In Amguel", "Tin Zaouatine"], 
+        "Bordj Bou Arréridj": ["Bordj Bou Arréridj", "Ras El Oued", "Mansoura", "Tassameurt", "El Achir", "Medjana", "Bordj Ghedir", "Hammam El Biban", "L'Hassaneia", "Ghassira"], 
+        "Boumerdès": ["Boumerdès", "Dellys", "Boudouaou", "Isser", "Béni Amrane", "Naciria", "Corso", "Zemmouri", "Réghaïa", "Tidjelabine"], 
+        "El Tarf": ["El Tarf", "Ben M'Hidi", "Besbes", "Drea", "El Kala", "Bougous", "Raml Souk", "Sidi Khelil", "Oued Zitoun", "Aïn Kerma"], 
+        "Tindouf": ["Tindouf", "Oum El Assel"], "Tissemsilt": ["Tissemsilt", "Bordj Bounaama", "Lardjem", "Théniet El Had", "Ammi Moussa", "Sidi Boutouchent", "Layoune", "Lazharia", "Bougara", "Bordj Emir Khaled"], 
+        "El Oued": ["El Oued", "Guemar", "Hassi Khalifa", "Robbah", "Debila", "Bayadha", "Magrane", "Nakhla", "Kouinine", "El Ogla"], 
+        "Khenchela": ["Khenchela", "Aïn Touila", "Bab El Ain", "Kais", "Yabous", "Chechar", "M'Sara", "Ouled Rechache", "Taouzianat", "Remila"], 
+        "Souk Ahras": ["Souk Ahras", "Heddada", "M'daourouch", "Mechrouha", "Ouled Driss", "Taoura", "Zaarouria", "Ouillen", "Sidi Fredj", "Tiffech"], 
+        "Tipaza": ["Tipaza", "Cherchell", "Koléa", "Fouka", "Hadjout", "Sidi Rached", "Menaceur", "Bou Ismaïl", "Khemis Miliana", "Aïn Tagourait"], 
+        "Mila": ["Mila", "Bouhatem", "Ferdjioua", "Grarem Gouga", "Tadjenanet", "Sidi Merouane", "Oued Endja", "Teleghma", "Chigara", "Rouached"], 
+        "Aïn Defla": ["Aïn Defla", "Khemis Miliana", "El Attaf", "Aïn Torki", "Djelida", "Rouina", "Hammam Righa", "Miliana", "Boumedfaa", "Aïn Soltane"], 
+        "Naâma": ["Naâma", "Mécheria", "Aïn Sefra", "Moghrar", "Tiout", "Sfissifa", "Makman Ben Amer", "Asla", "Kasdir", "El Biod"], 
+        "Aïn Témouchent": ["Aïn Témouchent", "Hammam Bou Hadjar", "El Malah", "Béni Saf", "Aghlal", "Chaabat El Ham", "Oued Berkeche", "Aoubellil", "Bouzedjar", "Tamesna"], 
+        "Ghardaïa": ["Ghardaïa", "El Guerrara", "Berriane", "Dhayet Bendhahoua", "Metlili", "Zelfana", "Bounoura", "El Atteuf", "Guerrara", "Dra' El Mizan"], 
+        "Relizane": ["Relizane", "Oued Rhiou", "Zemmoura", "Sidi M'Hamed Ben Ali", "El H'madna", "Ammi Moussa", "Mazouna", "Mendes", "Ain Tarek", "Oued El Djemaa"], 
+        "El M'ghair": ["El M'ghair", "Sidi Amrane", "Djamaa", "Oum Toub", "M'Rara", "Oued Allenda", "Sidi Khelil", "Oued R'hiou", "Sidi Yahia", "Bouchakroun"], 
+        "El Meniaa": ["El Meniaa", "Hassi Gara", "Mansourah", "Dhiafat", "El Guerrara", "Tadjmout", "El Hachane", "El Oued", "Chabet El Ami", "Ouled Gacem"]
     };
     const car_data = {
         "Toyota": ["Yaris", "Corolla", "Camry", "Land Cruiser", "Hilux"], "Peugeot": ["208", "308", "301", "2008", "3008", "508"], "Volkswagen": ["Golf", "Polo", "Passat", "Tiguan", "Touareg", "Jetta"], "Renault": ["Clio", "Megane", "Captur", "Duster", "Symbol"], "Hyundai": ["i10", "i20", "Accent", "Tucson", "Santa Fe"], "Nissan": ["Micra", "Sentra", "Qashqai", "X-Trail", "Juke"], "Fiat": ["Panda", "500", "Tipo", "Punto"], "Citroën": ["C3", "C4", "Berlingo", "C-Elysée"], "Kia": ["Picanto", "Rio", "Sportage", "Sorento"], "Mercedes-Benz": ["A-Class", "C-Class", "E-Class", "GLA", "GLC"]
@@ -1222,6 +1272,17 @@
         populateSelect(brandFilter, Object.keys(car_data), "all_brands", currentLang);
         populateSelect(yearFilter, years, "all_years", currentLang);
         populateSelect(wilayaFilter, Object.keys(wilayas), "all_wilayas", currentLang);
+        
+        // CONTEXT: Set default location filters to Laghouat and Hassi R'Mel.
+        if (wilayaFilter) {
+            wilayaFilter.value = 'Laghouat';
+            // Manually trigger change to populate communes
+            wilayaFilter.dispatchEvent(new Event('change'));
+        }
+        if (communeFilter) {
+            communeFilter.value = "Hassi R'Mel";
+        }
+
 
         const filterAndSearch = () => {
             renderListings();
@@ -1289,8 +1350,7 @@
         if (!listingsSection) return;
         listingsSection.innerHTML = `<p class="col-span-full text-center py-6 text-gray-600" data-i18n-key="loading">Chargement...</p>`;
         try {
-            // FIXED: Updated collection path to match security rules
-            const q = query(collection(db, "artifacts", appId, "public", "data", "products"));
+            const q = query(collection(db, "products"));
             const querySnapshot = await getDocs(q);
             allProducts = querySnapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }));
             const filtered = filterProducts(allProducts);
@@ -1575,8 +1635,7 @@
     };
 
     const addReview = async (productId, review) => {
-        // FIXED: Updated collection path to match security rules
-        const reviewRef = collection(db, `artifacts/${appId}/public/data/products/${productId}/reviews`);
+        const reviewRef = collection(db, `products/${productId}/reviews`);
         return await addDoc(reviewRef, review);
     };
     
@@ -1584,8 +1643,7 @@
         const { reviewsContainer } = elements;
         if (!reviewsContainer) return;
         reviewsContainer.innerHTML = '<p class="text-gray-500">Chargement des avis...</p>';
-        // FIXED: Updated collection path to match security rules
-        const reviewsRef = collection(db, `artifacts/${appId}/public/data/products/${productId}/reviews`);
+        const reviewsRef = collection(db, `products/${productId}/reviews`);
         const q = query(reviewsRef);
         onSnapshot(q, (querySnapshot) => {
             reviewsContainer.innerHTML = '';
@@ -1612,13 +1670,17 @@
     
     const insertDemoListingsOnce = async () => {
         if (localStorage.getItem("demoListingsInserted")) return;
+        
+        // CONTEXT: Create a timestamp for August 25, 2025.
+        const demoTimestamp = new Date('2025-08-25T16:37:00');
+
         const demoListings = [
-            { title: "Disque de frein avant Toyota Yaris 2015", brand: "Toyota", model: "Yaris", year: "2015", wilaya: "Alger", commune: "Bab El Oued", condition: "used", price: 12000, description: "Disque en bon état, peu utilisé.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fbrake_disc_toyota_yaris.jpg?alt=media" },
-            { title: "Pneu Michelin 205/55 R16 neuf", brand: "Toyota", model: "Corolla", year: "2020", wilaya: "Oran", commune: "Es Senia", condition: "new", price: 8000, description: "Pneu de haute qualité, jamais monté.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fmichelin_tire.jpg?alt=media" },
-            { title: "Batterie 12V pour Peugeot 308", brand: "Peugeot", model: "308", year: "2017", wilaya: "Constantine", commune: "El Khroub", condition: "used", price: 9000, description: "Batterie d'occasion, testée OK.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fbattery_peugeot_308.jpg?alt=media" }
+            { title: "Disque de frein avant Toyota Yaris 2015", brand: "Toyota", model: "Yaris", year: "2015", wilaya: "Alger", commune: "Bab El Oued", condition: "used", price: 12000, description: "Disque en bon état, peu utilisé.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fbrake_disc_toyota_yaris.jpg?alt=media", timestamp: demoTimestamp },
+            { title: "Pneu Michelin 205/55 R16 neuf", brand: "Toyota", model: "Corolla", year: "2020", wilaya: "Oran", commune: "Es Senia", condition: "new", price: 8000, description: "Pneu de haute qualité, jamais monté.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fmichelin_tire.jpg?alt=media", timestamp: demoTimestamp },
+            { title: "Batterie 12V pour Peugeot 308", brand: "Peugeot", model: "308", year: "2017", wilaya: "Constantine", commune: "El Khroub", condition: "used", price: 9000, description: "Batterie d'occasion, testée OK.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fbattery_peugeot_308.jpg?alt=media", timestamp: demoTimestamp }
         ];
         for (const listing of demoListings) {
-            const collectionRef = collection(db, "artifacts", appId, "public", "data", "products");
+            const collectionRef = collection(db, "products");
             const q = query(collectionRef, where("title", "==", listing.title));
             const querySnapshot = await getDocs(q);
             if (querySnapshot.empty) {
@@ -1724,8 +1786,7 @@
                 const newProduct = {
                     title: formData.get('title'), brand: formData.get('brand'), model: formData.get('model'), year: formData.get('year'), wilaya: formData.get('wilaya'), commune: formData.get('commune'), condition: formData.get('condition'), price: parseInt(formData.get('price')), description: formData.get('description'), imageUrl: imageUrl, timestamp: new Date()
                 };
-                // FIXED: Updated collection path to match security rules
-                await addDoc(collection(db, "artifacts", appId, "public", "data", "products"), newProduct);
+                await addDoc(collection(db, "products"), newProduct);
                 showMessage("Annonce soumise avec succès!", 4000, 'success');
                 e.target.reset();
                 elements.postProductModal.classList.add('hidden');
@@ -1823,7 +1884,6 @@
                 userCart = (userDoc.exists() && userDoc.data().cart) ? userDoc.data().cart : {};
                 updateCartDisplay();
             } else {
-                // FIXED: Removed console.log for anonymous user state
                 authLinksContainer.innerHTML = `
                     <button
                         id="login-btn"
