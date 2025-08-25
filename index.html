@@ -1,203 +1,152 @@
 <!DOCTYPE html>
-<html lang="fr" class="scroll-smooth">
+<html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Piecety - Marché des Pièces Auto en Algérie</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Piecety - Auto Parts Marketplace</title>
 
-    <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect fill='%23007acc' width='64' height='64'/><text x='32' y='42' font-size='32' text-anchor='middle' fill='white'>🚗</text></svg>">
+  <!-- Favicon (embedded data URI to avoid mixed content) -->
+  <link rel="icon" 
+        href="data:image/svg+xml;utf8,
+        <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>
+          <rect fill='%23007acc' width='64' height='64'/>
+          <text x='32' y='42' font-size='32' text-anchor='middle' fill='white'>🚗</text>
+        </svg>">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Use the CSS file you created in dist/ -->
+  <link rel="stylesheet" href="dist/styles.css">
 
-    <link rel="stylesheet" href="/dist/styles.css">
-
-    <style>
-        /* Base styles and custom utilities */
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: #f7fafc; 
-        }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #555; }
-        .message-box {
-            position: fixed; top: 20px; right: 20px; z-index: 1000;
-            padding: 1rem; border-radius: 0.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
-            transition: all 0.5s ease-in-out; opacity: 0; transform: translateX(100%);
-            max-width: 300px; word-wrap: break-word;
-        }
-        .message-box.show { opacity: 1; transform: translateX(0); }
-        .category-card:hover .category-icon { transform: scale(1.1); }
-        .modal-bg { background-color: rgba(0,0,0,0.4); }
-        /* RTL-specific styles */
-        body[dir="rtl"] .logo { text-align: right; }
-        body[dir="rtl"] .flex-1.mx-4.sm\:mx-8 { margin-right: 0.5rem; margin-left: 0.5rem; }
-        body[dir="rtl"] .fa-search { right: 3px; left: auto; }
-    </style>
+  <!-- FontAwesome icons -->
+  <link rel="stylesheet" 
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body class="flex flex-col min-h-screen text-gray-800">
 
+<!-- Notification box -->
 <div id="message-box" class="message-box bg-white text-gray-800"></div>
 
-<header class="bg-white shadow-sm sticky top-0 z-50" role="banner">
-    <div class="container mx-auto p-4 flex items-center justify-between">
-        <a href="#" id="home-link" class="text-3xl font-bold text-blue-600 logo">Piecety</a>
-        <div class="flex-1 mx-4 sm:mx-8">
-            <div class="relative">
-                <input id="search-input" type="text" placeholder="Rechercher une pièce..." class="w-full p-3 pl-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 shadow-inner" aria-label="Rechercher une pièce" />
-                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-            </div>
-        </div>
-        <nav class="hidden md:flex items-center space-x-6" role="navigation" aria-label="Main navigation">
-            <div class="relative group">
-                <button id="lang-dropdown-btn" aria-haspopup="true" aria-expanded="false" class="flex items-center space-x-1 font-medium text-gray-600 hover:text-blue-600 transition-colors duration-200">
-                    <span id="current-lang" class="lang-text">FR</span>
-                    <i class="fas fa-chevron-down text-xs"></i>
-                </button>
-                <div id="lang-dropdown" class="absolute right-0 mt-2 w-28 bg-white rounded-lg shadow-lg py-1 hidden transition-all duration-300 z-10" role="menu" aria-label="Select Language">
-                    <button class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 lang-btn" data-lang="fr" role="menuitem">Français</button>
-                    <button class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 lang-btn" data-lang="en" role="menuitem">English</button>
-                    <button class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 lang-btn" data-lang="ar" role="menuitem">العربية</button>
-                </div>
-            </div>
-            <a href="#" class="text-gray-600 hover:text-blue-600 font-medium transition-colors duration-200" data-i18n-key="sell" id="sell-link">Vendre</a>
-            <button id="cart-btn" class="relative p-2 text-gray-600 hover:text-blue-600 focus:outline-none">
-                <i class="fas fa-shopping-cart text-xl"></i>
-                <span id="cart-count" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full hidden">0</span>
-            </button>
-            <div id="auth-links" class="flex items-center space-x-4">
-                <button id="login-btn" class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full font-semibold transition-colors duration-200 shadow-md" data-i18n-key="connect">Se connecter</button>
-            </div>
-        </nav>
-        <button id="mobile-menu-btn" class="md:hidden p-2 text-gray-600 hover:text-blue-600 focus:outline-none" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
-            <i class="fas fa-bars text-xl"></i>
-        </button>
+<!-- HEADER -->
+<header class="bg-white shadow-sm sticky top-0 z-50">
+  <div class="container p-4 flex items-center justify-between">
+    <a href="#" id="home-link" class="text-3xl font-bold text-blue-600">Piecety</a>
+
+    <div class="flex-1 mx-4">
+      <div class="relative">
+        <input id="search-input" type="text" placeholder="Search for a part..."
+               class="w-full p-3 pl-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 shadow-inner"/>
+        <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+      </div>
     </div>
+
+    <nav class="hidden md:flex items-center space-x-6">
+      <a href="#" id="sell-link" class="text-gray-600 hover:text-blue-600 font-medium">Sell</a>
+      <button id="cart-btn" class="relative p-2 text-gray-600 hover:text-blue-600">
+        <i class="fas fa-shopping-cart text-xl"></i>
+        <span id="cart-count" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full hidden">0</span>
+      </button>
+      <button id="login-btn" class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full font-semibold">Login</button>
+    </nav>
+
+    <!-- Mobile menu button -->
+    <button id="mobile-menu-btn" class="md:hidden p-2 text-gray-600 hover:text-blue-600">
+      <i class="fas fa-bars text-xl"></i>
+    </button>
+  </div>
 </header>
 
-<div id="mobile-menu" class="fixed inset-0 bg-white z-40 hidden flex-col p-6 space-y-6 md:hidden" role="dialog" aria-modal="true" aria-labelledby="mobile-menu-label">
-    <div class="flex justify-between items-center">
-        <h2 id="mobile-menu-label" class="text-2xl font-bold text-blue-600" data-i18n-key="menu">Menu</h2>
-        <button id="mobile-menu-close-btn" class="text-gray-600 hover:text-blue-600" aria-label="Fermer menu"><i class="fas fa-times text-xl"></i></button>
-    </div>
-    <a href="#" class="text-xl font-medium text-gray-800 hover:text-blue-600" data-i18n-key="sell" id="sell-link-mobile">Vendre</a>
-    <button id="post-product-btn-mobile" class="text-xl font-medium text-gray-800 hover:text-blue-600 text-left" data-i18n-key="connect">Se connecter</button>
-    <div class="pt-4 border-t border-gray-200">
-        <h3 class="text-lg font-semibold text-gray-600" data-i18n-key="language">Langue</h3>
-        <div class="flex space-x-4 mt-2">
-            <button class="p-2 border rounded-md text-sm font-medium lang-btn" data-lang="fr">Français</button>
-            <button class="p-2 border rounded-md text-sm font-medium lang-btn" data-lang="en">English</button>
-            <button class="p-2 border rounded-md text-sm font-medium lang-btn" data-lang="ar">العربية</button>
-        </div>
-    </div>
+<!-- MOBILE MENU -->
+<div id="mobile-menu" class="fixed inset-0 bg-white z-40 hidden flex-col p-6 space-y-6 md:hidden">
+  <div class="flex justify-between items-center">
+    <h2 class="text-2xl font-bold text-blue-600">Menu</h2>
+    <button id="mobile-menu-close-btn" class="text-gray-600 hover:text-blue-600">
+      <i class="fas fa-times text-xl"></i>
+    </button>
+  </div>
+  <a href="#" id="sell-link-mobile" class="text-xl font-medium text-gray-800 hover:text-blue-600">Sell</a>
+  <button id="post-product-btn-mobile" class="text-xl font-medium text-gray-800 hover:text-blue-600 text-left">Login</button>
 </div>
 
-<main id="app-container" class="flex-1 container mx-auto p-4 md:p-8" role="main" aria-live="polite"></main>
+<!-- MAIN CONTENT -->
+<main id="app-container" class="flex-1 container p-4">
+  <!-- Products / views will be rendered here by JS -->
+</main>
 
-<footer class="bg-gray-800 text-white p-6 md:p-8 mt-auto text-center">
-    <p class="text-sm font-light" data-i18n-key="footer_text">&copy; <span id="current-year"></span> Piecety - Marché des Pièces Auto en Algérie. Tous droits réservés.</p>
+<!-- FOOTER -->
+<footer class="bg-gray-800 text-white p-6 text-center mt-auto">
+  <p class="text-sm">&copy; <span id="current-year"></span> Piecety - Auto Parts Marketplace. All rights reserved.</p>
 </footer>
 
-<div id="post-product-modal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-    </div>
-<div id="auth-modal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
-    </div>
-<template id="home-view-template">
-    </template>
-<template id="product-detail-view-template">
-    </template>
-<template id="cart-view-template">
-    </template>
-<template id="user-profile-view-template">
-    </template>
-
-
+<!-- FIREBASE + APP SCRIPT -->
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-    import {
-        getFirestore, collection, addDoc, query, onSnapshot, where,
-        getDocs, doc, setDoc, getDoc
-    } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-storage.js";
-    import { getAuth, signInWithPopup, signOut, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+  import {
+    getFirestore, collection, getDocs
+  } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+    from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
 
-    /* --- Firebase Configuration --- */
-    const appId = 'piecety-app-b39c4';
-    const firebaseConfig = {
-        apiKey: "AIzaSyBIptEskV2soajxRYPDfwYFYyz9pWQvZL0",
-        authDomain: "piecety-app-b39c4.firebaseapp.com",
-        projectId: "piecety-app-b39c4",
-        storageBucket: "piecety-app-b39c4.appspot.com",
-        messagingSenderId: "265795860915",
-        appId: "1:265795860915:web:aa10241788cce42f6373c6"
-    };
+  // Firebase config (from your project)
+  const firebaseConfig = {
+    apiKey: "AIzaSyBIptEskV2soajxRYPDfwYFYyz9pWQvZL0",
+    authDomain: "piecety-app-b39c4.firebaseapp.com",
+    projectId: "piecety-app-b39c4",
+    storageBucket: "piecety-app-b39c4.appspot.com",
+    messagingSenderId: "265795860915",
+    appId: "1:265795860915:web:aa10241788cce42f6373c6"
+  };
 
-    // Initialize Firebase ONCE
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const storage = getStorage(app);
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
+  // Init Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
 
-    /* --- Global State --- */
-    let currentUser = null;
-    let currentLang = localStorage.getItem("piecety_lang") || "fr";
-    let currentView = 'home';
-    let allProducts = [];
-    let userCart = {};
+  // DOM elements
+  const appContainer = document.getElementById("app-container");
+  const loginBtn = document.getElementById("login-btn");
+  const cartCount = document.getElementById("cart-count");
 
-    /* --- DOM References & App Logic --- */
-    // All original functions (showMessage, renderView, translations, etc.) go here.
-    // The key correction is within the renderListings function.
+  // Display products
+  async function renderProducts() {
+    appContainer.innerHTML = "<p>Loading products...</p>";
+    const snapshot = await getDocs(collection(db, "products"));
+    let html = "<div class='grid grid-cols-1 md:grid-cols-3 gap-4'>";
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      html += `
+        <div class="border rounded-lg p-4 shadow-sm">
+          <h3 class="font-semibold text-lg">${data.name || "Unnamed"}</h3>
+          <p class="text-gray-600">${data.price || "0"} DZD</p>
+        </div>
+      `;
+    });
+    html += "</div>";
+    appContainer.innerHTML = html;
+  }
 
-    const renderListings = async () => {
-        // This targets the listings section once the home template is rendered
-        const listingsSection = document.querySelector('#app-container #listings-section');
-        if (!listingsSection) return;
-        
-        listingsSection.innerHTML = `<p class="col-span-full text-center py-6 text-gray-600">Chargement...</p>`;
-        
-        try {
-            const q = collection(db, "products");
-            const querySnapshot = await getDocs(q);
+  // Auth logic
+  loginBtn.addEventListener("click", async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      alert("Logged in as " + result.user.displayName);
+    } catch (err) {
+      console.error(err);
+      alert("Login failed");
+    }
+  });
 
-            // CORRECTED: Use 'docSnap' which is the variable in the map scope
-            allProducts = querySnapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }));
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      loginBtn.textContent = "Logout";
+      loginBtn.onclick = () => signOut(auth);
+    } else {
+      loginBtn.textContent = "Login";
+    }
+  });
 
-            // Remainder of your display logic follows
-            // displayProducts(allProducts);
-
-        } catch (err) {
-            listingsSection.innerHTML = `<p class="col-span-full text-center py-6 text-red-600">Erreur de chargement des annonces.</p>`;
-            console.error("Failed to render listings:", err);
-        }
-    };
-    
-    // ... (rest of your original, now corrected, JavaScript functions) ...
-
-    /* --- App Initialization --- */
-    const bootApp = () => {
-        // Set current year in footer
-        const yearSpan = document.getElementById('current-year');
-        if (yearSpan) {
-            yearSpan.textContent = new Date().getFullYear();
-        }
-
-        // All original setup logic (event listeners, auth state observer, initial render)
-        // setupEventListeners();
-        // onAuthStateChanged(auth, user => { ... });
-        // renderView('home');
-    };
-
-    // Start the application after the DOM is fully loaded
-    window.addEventListener('DOMContentLoaded', bootApp);
-
+  // Initialize
+  renderProducts();
+  document.getElementById("current-year").textContent = new Date().getFullYear();
 </script>
 
 </body>
