@@ -1,153 +1,436 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="fr" class="scroll-smooth">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Piecety - Auto Parts Marketplace</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Piecety - Marché des Pièces Auto en Algérie</title>
 
-  <!-- Favicon (embedded data URI to avoid mixed content) -->
-  <link rel="icon" 
-        href="data:image/svg+xml;utf8,
-        <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>
-          <rect fill='%23007acc' width='64' height='64'/>
-          <text x='32' y='42' font-size='32' text-anchor='middle' fill='white'>🚗</text>
-        </svg>">
+    <!-- 1. FAVICON & FONTS -->
+    <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect fill='%230D6EFD' width='64' height='64' rx='8'/><text x='50%' y='55%' font-size='32' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'>P</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" xintegrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-  <!-- Use the CSS file you created in dist/ -->
-  <link rel="stylesheet" href="dist/styles.css">
+    <!-- 2. STYLESHEETS -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- FontAwesome icons -->
-  <link rel="stylesheet" 
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            color: #212529;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #e9ecef; }
+        ::-webkit-scrollbar-thumb { background: #adb5bd; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #495057; }
+        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        #notification-toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(200%);
+            transition: transform 0.5s ease-in-out;
+            z-index: 100;
+        }
+        #notification-toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #09f;
+            animation: spin 1s ease infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
-<body class="flex flex-col min-h-screen text-gray-800">
 
-<!-- Notification box -->
-<div id="message-box" class="message-box bg-white text-gray-800"></div>
+<body class="flex flex-col min-h-screen">
 
-<!-- HEADER -->
-<header class="bg-white shadow-sm sticky top-0 z-50">
-  <div class="container p-4 flex items-center justify-between">
-    <a href="#" id="home-link" class="text-3xl font-bold text-blue-600">Piecety</a>
+    <!-- HEADER -->
+    <header class="bg-white shadow-sm sticky top-0 z-50 w-full" role="banner">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <a href="#" id="home-link" class="text-3xl font-extrabold text-blue-600">Piecety</a>
+            
+            <div class="flex-1 max-w-xl mx-4 hidden sm:block">
+                <div class="relative">
+                    <input id="search-input" type="text" placeholder="Rechercher une pièce, une marque..." class="w-full p-3 pl-10 rounded-full border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300" aria-label="Rechercher une pièce" />
+                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                </div>
+            </div>
 
-    <div class="flex-1 mx-4">
-      <div class="relative">
-        <input id="search-input" type="text" placeholder="Search for a part..."
-               class="w-full p-3 pl-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 shadow-inner"/>
-        <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-      </div>
+            <nav class="hidden md:flex items-center space-x-4" role="navigation">
+                 <button id="ai-diagnostic-btn" class="flex items-center space-x-2 bg-gray-100 text-gray-700 px-5 py-2 rounded-full font-semibold hover:bg-gray-200 transition-colors duration-200 shadow-sm">
+                    <i class="fas fa-magic-sparkles text-blue-500"></i>
+                    <span>Diagnostic IA</span>
+                </button>
+                <button id="sell-btn" class="flex items-center space-x-2 bg-blue-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-sm">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Vendre</span>
+                </button>
+                <div id="auth-links" class="flex items-center space-x-4">
+                    <button id="login-btn" class="text-gray-700 font-semibold hover:text-blue-600">Se connecter</button>
+                </div>
+            </nav>
+
+            <button id="mobile-menu-btn" class="md:hidden p-2 text-gray-600 hover:text-blue-600 focus:outline-none" aria-label="Ouvrir le menu" aria-expanded="false">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- MOBILE MENU -->
+    <div id="mobile-menu" class="fixed inset-0 bg-white z-40 hidden flex-col p-6 space-y-6 md:hidden" role="dialog" aria-modal="true">
+        <div class="flex justify-between items-center">
+            <h2 class="text-2xl font-bold text-blue-600">Menu</h2>
+            <button id="mobile-menu-close-btn" class="text-gray-600 hover:text-blue-600" aria-label="Fermer le menu"><i class="fas fa-times text-2xl"></i></button>
+        </div>
+         <div class="pt-4 border-t border-gray-200">
+             <button id="mobile-ai-diagnostic-btn" class="w-full text-left text-xl font-medium text-gray-800 hover:text-blue-600 py-2 flex items-center space-x-3">
+                <i class="fas fa-magic-sparkles text-blue-500"></i>
+                <span>Diagnostic IA</span>
+             </button>
+        </div>
+        <div id="mobile-auth-links" class="pt-4 border-t border-gray-200">
+             <!-- Mobile auth links populated by JS -->
+        </div>
     </div>
 
-    <nav class="hidden md:flex items-center space-x-6">
-      <a href="#" id="sell-link" class="text-gray-600 hover:text-blue-600 font-medium">Sell</a>
-      <button id="cart-btn" class="relative p-2 text-gray-600 hover:text-blue-600">
-        <i class="fas fa-shopping-cart text-xl"></i>
-        <span id="cart-count" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full hidden">0</span>
-      </button>
-      <button id="login-btn" class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full font-semibold">Login</button>
-    </nav>
+    <!-- MAIN CONTENT AREA -->
+    <main id="app-container" class="flex-1 container mx-auto p-4 md:p-8" role="main"></main>
 
-    <!-- Mobile menu button -->
-    <button id="mobile-menu-btn" class="md:hidden p-2 text-gray-600 hover:text-blue-600">
-      <i class="fas fa-bars text-xl"></i>
-    </button>
-  </div>
-</header>
-
-<!-- MOBILE MENU -->
-<div id="mobile-menu" class="fixed inset-0 bg-white z-40 hidden flex-col p-6 space-y-6 md:hidden">
-  <div class="flex justify-between items-center">
-    <h2 class="text-2xl font-bold text-blue-600">Menu</h2>
-    <button id="mobile-menu-close-btn" class="text-gray-600 hover:text-blue-600">
-      <i class="fas fa-times text-xl"></i>
-    </button>
-  </div>
-  <a href="#" id="sell-link-mobile" class="text-xl font-medium text-gray-800 hover:text-blue-600">Sell</a>
-  <button id="post-product-btn-mobile" class="text-xl font-medium text-gray-800 hover:text-blue-600 text-left">Login</button>
-</div>
-
-<!-- MAIN CONTENT -->
-<main id="app-container" class="flex-1 container p-4">
-  <!-- Products / views will be rendered here by JS -->
-</main>
-
-<!-- FOOTER -->
-<footer class="bg-gray-800 text-white p-6 text-center mt-auto">
-  <p class="text-sm">&copy; <span id="current-year"></span> Piecety - Auto Parts Marketplace. All rights reserved.</p>
-</footer>
-
-<!-- FIREBASE + APP SCRIPT -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-  import {
-    getFirestore, collection, getDocs
-  } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
-  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
-    from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
-
-  // Firebase config (from your project)
-  const firebaseConfig = {
-    apiKey: "AIzaSyBIptEskV2soajxRYPDfwYFYyz9pWQvZL0",
-    authDomain: "piecety-app-b39c4.firebaseapp.com",
-    projectId: "piecety-app-b39c4",
-    storageBucket: "piecety-app-b39c4.appspot.com",
-    messagingSenderId: "265795860915",
-    appId: "1:265795860915:web:aa10241788cce42f6373c6"
-  };
-
-  // Init Firebase
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const auth = getAuth(app);
-  const provider = new GoogleAuthProvider();
-
-  // DOM elements
-  const appContainer = document.getElementById("app-container");
-  const loginBtn = document.getElementById("login-btn");
-  const cartCount = document.getElementById("cart-count");
-
-  // Display products
-  async function renderProducts() {
-    appContainer.innerHTML = "<p>Loading products...</p>";
-    const snapshot = await getDocs(collection(db, "products"));
-    let html = "<div class='grid grid-cols-1 md:grid-cols-3 gap-4'>";
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      html += `
-        <div class="border rounded-lg p-4 shadow-sm">
-          <h3 class="font-semibold text-lg">${data.name || "Unnamed"}</h3>
-          <p class="text-gray-600">${data.price || "0"} DZD</p>
+    <!-- FOOTER -->
+    <footer class="bg-gray-800 text-white mt-auto">
+        <div class="container mx-auto p-8 text-center">
+            <p class="text-gray-400">&copy; <span id="current-year"></span> Piecety - Le marché des pièces auto en Algérie. Tous droits réservés.</p>
         </div>
-      `;
-    });
-    html += "</div>";
-    appContainer.innerHTML = html;
-  }
+    </footer>
 
-  // Auth logic
-  loginBtn.addEventListener("click", async () => {
-    try {
-      const result = await signInWithPopup(auth, provider);
-      alert("Logged in as " + result.user.displayName);
-    } catch (err) {
-      console.error(err);
-      alert("Login failed");
-    }
-  });
+    <!-- MODALS & TEMPLATES -->
 
-  onAuthStateChanged(auth, user => {
-    if (user) {
-      loginBtn.textContent = "Logout";
-      loginBtn.onclick = () => signOut(auth);
-    } else {
-      loginBtn.textContent = "Login";
-    }
-  });
+    <!-- AI Diagnostic Modal -->
+    <div id="ai-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden p-4" role="dialog" aria-modal="true">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl p-8 fade-in flex flex-col max-h-[90vh]">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold flex items-center"><i class="fas fa-magic-sparkles text-blue-500 mr-3"></i>Assistant Diagnostic IA</h3>
+                <button id="ai-modal-close-btn" class="text-gray-400 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+            <p class="text-gray-600 mb-6">Décrivez le problème de votre véhicule (ex: "ma voiture fait un bruit de cliquetis au démarrage"). L'IA vous proposera des causes possibles et les pièces à vérifier.</p>
+            <textarea id="ai-prompt-input" class="w-full p-3 border border-gray-300 rounded-lg mb-4 h-28 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Décrivez les symptômes ici..."></textarea>
+            <button id="ai-diagnose-btn" class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 font-semibold transition-colors flex items-center justify-center">
+                <span id="ai-diagnose-btn-text">Diagnostiquer le problème</span>
+            </button>
+            <div id="ai-result-container" class="mt-6 flex-1 overflow-y-auto bg-gray-50 p-4 rounded-lg border">
+                <!-- AI results will be displayed here -->
+            </div>
+        </div>
+    </div>
 
-  // Initialize
-  renderProducts();
-  document.getElementById("current-year").textContent = new Date().getFullYear();
-</script>
+    <!-- Authentication Modal -->
+    <div id="auth-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden p-4" role="dialog" aria-modal="true">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-sm p-8 text-center fade-in">
+            <h3 class="text-2xl font-bold mb-2">Bienvenue sur Piecety</h3>
+            <p class="text-gray-600 mb-6">Connectez-vous pour continuer</p>
+            <button id="google-login-btn" class="w-full flex justify-center items-center bg-white border border-gray-300 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-50 transition-colors font-semibold">
+                <i class="fab fa-google mr-3"></i> Se connecter avec Google
+            </button>
+            <button id="auth-modal-close-btn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-2xl">&times;</button>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="notification-toast" class="p-4 rounded-lg shadow-lg text-white font-semibold">
+        <span id="notification-message"></span>
+    </div>
+
+    <!-- TEMPLATES for Views -->
+    <template id="home-view-template">
+        <div class="space-y-12">
+            <section id="hero" class="text-center p-8 bg-white rounded-lg shadow-sm">
+                <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800">Le plus grand marché de pièces auto en Algérie</h1>
+                <p class="text-lg text-gray-600 mt-4 max-w-2xl mx-auto">Trouvez, vendez et achetez des pièces neuves et d'occasion près de chez vous.</p>
+            </section>
+            <section id="listings-section" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Product cards rendered here -->
+            </section>
+        </div>
+    </template>
+    
+    <template id="user-profile-template">
+         <div class="bg-white p-8 rounded-lg shadow-lg text-center">
+            <img id="profile-pic" class="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-blue-200" src="" alt="Photo de profil">
+            <h2 id="profile-name" class="text-3xl font-bold"></h2>
+            <p id="profile-email" class="text-gray-500"></p>
+        </div>
+    </template>
+
+
+    <!-- JAVASCRIPT (Main Application Logic) -->
+    <script type="module">
+        // 1. FIREBASE SETUP
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBIptEskV2soajxRYPDfwYFYyz9pWQvZL0",
+            authDomain: "piecety-app-b39c4.firebaseapp.com",
+            projectId: "piecety-app-b39c4",
+            storageBucket: "piecety-app-b39c4.appspot.com",
+            messagingSenderId: "265795860915",
+            appId: "1:265795860915:web:aa10241788cce42f6373c6"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        // 2. GLOBAL STATE & DOM REFERENCES
+        let currentUser = null;
+
+        const elements = {
+            appContainer: document.getElementById('app-container'),
+            homeLink: document.getElementById('home-link'),
+            authModal: document.getElementById('auth-modal'),
+            authModalCloseBtn: document.getElementById('auth-modal-close-btn'),
+            googleLoginBtn: document.getElementById('google-login-btn'),
+            authLinks: document.getElementById('auth-links'),
+            mobileAuthLinks: document.getElementById('mobile-auth-links'),
+            notificationToast: document.getElementById('notification-toast'),
+            notificationMessage: document.getElementById('notification-message'),
+            mobileMenu: document.getElementById('mobile-menu'),
+            mobileMenuBtn: document.getElementById('mobile-menu-btn'),
+            mobileMenuCloseBtn: document.getElementById('mobile-menu-close-btn'),
+            aiModal: document.getElementById('ai-modal'),
+            aiModalCloseBtn: document.getElementById('ai-modal-close-btn'),
+            aiDiagnosticBtn: document.getElementById('ai-diagnostic-btn'),
+            mobileAiDiagnosticBtn: document.getElementById('mobile-ai-diagnostic-btn'),
+            aiDiagnoseBtn: document.getElementById('ai-diagnose-btn'),
+            aiPromptInput: document.getElementById('ai-prompt-input'),
+            aiResultContainer: document.getElementById('ai-result-container'),
+        };
+
+        // 3. CORE FUNCTIONS
+
+        const showNotification = (message, type = 'success') => {
+            elements.notificationMessage.textContent = message;
+            const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
+            elements.notificationToast.className = `p-4 rounded-lg shadow-lg text-white font-semibold ${bgColor} show`;
+            setTimeout(() => {
+                elements.notificationToast.classList.remove('show');
+            }, 3000);
+        };
+
+        const renderView = (viewName, params = {}) => {
+            const template = document.getElementById(`${viewName}-template`);
+            if (template) {
+                elements.appContainer.innerHTML = '';
+                elements.appContainer.appendChild(template.content.cloneNode(true));
+                if (viewName === 'home') renderListings();
+                if (viewName === 'user-profile' && params.user) {
+                    document.getElementById('profile-pic').src = params.user.photoURL;
+                    document.getElementById('profile-name').textContent = params.user.displayName;
+                    document.getElementById('profile-email').textContent = params.user.email;
+                }
+            } else {
+                console.error(`Template not found: ${viewName}-template`);
+                elements.appContainer.innerHTML = `<p class="text-center text-red-500">Erreur: La vue demandée n'a pas pu être chargée.</p>`;
+            }
+        };
+
+        const renderListings = async () => {
+            const listingsSection = document.querySelector('#listings-section');
+            if (!listingsSection) return;
+            listingsSection.innerHTML = `<p class="col-span-full text-center text-gray-500">Chargement des annonces...</p>`;
+            try {
+                const querySnapshot = await getDocs(collection(db, "products"));
+                const products = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                if (products.length === 0) {
+                    listingsSection.innerHTML = `<p class="col-span-full text-center text-gray-500">Aucune annonce trouvée pour le moment.</p>`;
+                    return;
+                }
+                listingsSection.innerHTML = '';
+                products.forEach(product => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden transition-transform hover:scale-105 hover:shadow-lg cursor-pointer';
+                    card.innerHTML = `
+                        <div class="p-4">
+                            <h3 class="font-bold text-lg truncate">${product.name || 'Pièce sans nom'}</h3>
+                            <p class="text-blue-600 font-semibold mt-1">${product.price || 0} DA</p>
+                            <p class="text-sm text-gray-500 mt-2">${product.wilaya || 'Non spécifié'}</p>
+                        </div>
+                    `;
+                    listingsSection.appendChild(card);
+                });
+            } catch (err) {
+                console.error("Error fetching listings:", err);
+                listingsSection.innerHTML = `<p class="col-span-full text-center text-red-500">Erreur de chargement des annonces.</p>`;
+            }
+        };
+
+        const updateAuthUI = (user) => {
+            const loggedInDesktopHTML = `
+                <button id="profile-btn" class="flex items-center space-x-2 font-semibold text-gray-700 hover:text-blue-600">
+                    <img src="${user?.photoURL}" alt="Profil" class="w-8 h-8 rounded-full border-2 border-gray-200">
+                    <span>Profil</span>
+                </button>
+                <button id="logout-btn" class="text-gray-700 font-semibold hover:text-blue-600">Déconnexion</button>
+            `;
+            const loggedOutDesktopHTML = `<button id="login-btn" class="text-gray-700 font-semibold hover:text-blue-600">Se connecter</button>`;
+            const loggedInMobileHTML = `
+                <button id="mobile-profile-btn" class="w-full text-left text-xl font-medium text-gray-800 hover:text-blue-600 py-2">Profil</button>
+                <button id="mobile-logout-btn" class="w-full text-left text-xl font-medium text-gray-800 hover:text-blue-600 py-2">Déconnexion</button>
+            `;
+            const loggedOutMobileHTML = `<button id="mobile-login-btn" class="w-full text-left text-xl font-medium text-gray-800 hover:text-blue-600 py-2">Se connecter</button>`;
+
+            elements.authLinks.innerHTML = user ? loggedInDesktopHTML : loggedOutDesktopHTML;
+            elements.mobileAuthLinks.innerHTML = user ? loggedInMobileHTML : loggedOutMobileHTML;
+            attachAuthActionListeners(user);
+        };
+
+        const attachAuthActionListeners = (user) => {
+            if (user) {
+                document.getElementById('logout-btn')?.addEventListener('click', handleLogout);
+                document.getElementById('mobile-logout-btn')?.addEventListener('click', handleLogout);
+                document.getElementById('profile-btn')?.addEventListener('click', () => renderView('user-profile', { user }));
+                document.getElementById('mobile-profile-btn')?.addEventListener('click', () => {
+                    renderView('user-profile', { user });
+                    elements.mobileMenu.classList.add('hidden');
+                });
+            } else {
+                document.getElementById('login-btn')?.addEventListener('click', openAuthModal);
+                document.getElementById('mobile-login-btn')?.addEventListener('click', openAuthModal);
+            }
+        };
+        
+        // 4. GEMINI API FUNCTIONALITY
+        
+        const callGeminiAPI = async (prompt) => {
+            const apiKey = ""; // API key is handled by the environment
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+            
+            const fullPrompt = \`Agis comme un mécanicien automobile expert et serviable. Un utilisateur décrit un problème avec sa voiture. Ton rôle est de fournir un diagnostic clair et concis. 
+            
+            Voici le problème décrit par l'utilisateur : "\${prompt}"
+            
+            Ta réponse doit être structurée comme suit :
+            1.  **Causes Possibles :** Liste 2 à 4 causes probables, de la plus courante à la moins courante.
+            2.  **Pièces à Vérifier :** Liste les pièces spécifiques qui pourraient être défectueuses.
+            3.  **Conseil :** Donne un conseil de sécurité ou une recommandation (ex: "Il est conseillé de consulter un professionnel").
+            
+            Réponds en français.\`;
+
+            const payload = {
+                contents: [{
+                    parts: [{ text: fullPrompt }]
+                }]
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(\`API Error: \${response.statusText}\`);
+                }
+
+                const result = await response.json();
+                if (result.candidates && result.candidates.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    const htmlResult = text
+                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') 
+                        .replace(/\n/g, '<br>');
+                    elements.aiResultContainer.innerHTML = htmlResult;
+                } else {
+                    throw new Error("No content received from Gemini API.");
+                }
+            } catch (error) {
+                console.error("Gemini API call failed:", error);
+                elements.aiResultContainer.innerHTML = \`<p class="text-red-500">Désolé, une erreur est survenue lors du diagnostic. Veuillez réessayer.</p>\`;
+            }
+        };
+
+        // 5. EVENT HANDLERS
+        const openAuthModal = () => { elements.authModal.classList.remove('hidden'); elements.mobileMenu.classList.add('hidden'); };
+        const closeAuthModal = () => elements.authModal.classList.add('hidden');
+        const openAiModal = () => { elements.aiModal.classList.remove('hidden'); elements.mobileMenu.classList.add('hidden');};
+        const closeAiModal = () => elements.aiModal.classList.add('hidden');
+        
+        const handleGoogleLogin = async () => {
+            try {
+                await signInWithPopup(auth, provider);
+                closeAuthModal();
+                showNotification("Connexion réussie!", "success");
+            } catch (error) {
+                console.error("Google Sign-In Error:", error);
+                showNotification("Erreur de connexion.", "error");
+            }
+        };
+
+        const handleLogout = async () => {
+            await signOut(auth);
+            showNotification("Vous avez été déconnecté.", "success");
+            renderView('home');
+        };
+
+        const handleAiDiagnose = async () => {
+            const prompt = elements.aiPromptInput.value.trim();
+            if (!prompt) {
+                showNotification("Veuillez décrire un problème.", "error");
+                return;
+            }
+            
+            const button = elements.aiDiagnoseBtn;
+            const buttonText = button.querySelector('span');
+            button.disabled = true;
+            buttonText.textContent = 'Diagnostic en cours...';
+            elements.aiResultContainer.innerHTML = '<div class="spinner mx-auto"></div>';
+
+            await callGeminiAPI(prompt);
+
+            button.disabled = false;
+            buttonText.textContent = 'Diagnostiquer le problème';
+        };
+
+        // 6. APP INITIALIZATION
+        const bootApp = () => {
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+
+            elements.homeLink.addEventListener('click', (e) => { e.preventDefault(); renderView('home'); });
+            elements.authModalCloseBtn.addEventListener('click', closeAuthModal);
+            elements.googleLoginBtn.addEventListener('click', handleGoogleLogin);
+            elements.mobileMenuBtn.addEventListener('click', () => elements.mobileMenu.classList.remove('hidden'));
+            elements.mobileMenuCloseBtn.addEventListener('click', () => elements.mobileMenu.classList.add('hidden'));
+            elements.aiModalCloseBtn.addEventListener('click', closeAiModal);
+            elements.aiDiagnosticBtn.addEventListener('click', openAiModal);
+            elements.mobileAiDiagnosticBtn.addEventListener('click', openAiModal);
+            elements.aiDiagnoseBtn.addEventListener('click', handleAiDiagnose);
+
+            onAuthStateChanged(auth, user => {
+                currentUser = user;
+                updateAuthUI(user);
+            });
+
+            renderView('home');
+        };
+
+        document.addEventListener('DOMContentLoaded', bootApp);
+    </script>
 
 </body>
 </html>
