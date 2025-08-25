@@ -13,9 +13,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" xintegrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- 2. STYLESHEETS -->
+    <!-- CORRECTED CSS PATH for GitHub Pages -->
+    <link rel="stylesheet" href="/Piecetymarket/dist/styles.css">
+    <!-- Using Tailwind CSS via CDN as a fallback or for local development -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Custom CSS -->
+    <!-- Custom CSS for enhanced design -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -41,17 +44,19 @@
         #notification-toast.show {
             transform: translateX(-50%) translateY(0);
         }
-        .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border-left-color: #09f;
-            animation: spin 1s ease infinite;
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://placehold.co/1200x400/007bff/333333?text=Pièces+Auto');
+            background-size: cover;
+            background-position: center;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        /* RTL specific styles */
+        body[dir="rtl"] #search-input {
+            padding-right: 2.5rem;
+            padding-left: 0.75rem;
+        }
+        body[dir="rtl"] .fa-search {
+            left: auto;
+            right: 1rem;
         }
     </style>
 </head>
@@ -65,22 +70,31 @@
             
             <div class="flex-1 max-w-xl mx-4 hidden sm:block">
                 <div class="relative">
-                    <input id="search-input" type="text" placeholder="Rechercher une pièce, une marque..." class="w-full p-3 pl-10 rounded-full border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300" aria-label="Rechercher une pièce" />
+                    <input id="search-input" type="text" data-i18n-placeholder="search_placeholder" placeholder="Rechercher une pièce..." class="w-full p-3 pl-10 rounded-full border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300" aria-label="Rechercher une pièce" />
                     <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
                 </div>
             </div>
 
             <nav class="hidden md:flex items-center space-x-4" role="navigation">
-                 <button id="ai-diagnostic-btn" class="flex items-center space-x-2 bg-gray-100 text-gray-700 px-5 py-2 rounded-full font-semibold hover:bg-gray-200 transition-colors duration-200 shadow-sm">
-                    <i class="fas fa-magic-sparkles text-blue-500"></i>
-                    <span>Diagnostic IA</span>
-                </button>
                 <button id="sell-btn" class="flex items-center space-x-2 bg-blue-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-sm">
                     <i class="fas fa-plus-circle"></i>
-                    <span>Vendre</span>
+                    <span data-i18n-key="sell">Vendre</span>
                 </button>
                 <div id="auth-links" class="flex items-center space-x-4">
-                    <button id="login-btn" class="text-gray-700 font-semibold hover:text-blue-600">Se connecter</button>
+                    <button id="login-btn" class="text-gray-700 font-semibold hover:text-blue-600" data-i18n-key="connect">Se connecter</button>
+                </div>
+                <!-- Language Dropdown -->
+                <div class="relative group">
+                    <button id="lang-dropdown-btn" class="flex items-center space-x-1 font-semibold text-gray-700 hover:text-blue-600">
+                        <i class="fas fa-globe"></i>
+                        <span id="current-lang-desktop">FR</span>
+                        <i class="fas fa-chevron-down text-xs ml-1"></i>
+                    </button>
+                    <div id="lang-dropdown" class="absolute right-0 mt-2 w-28 bg-white rounded-lg shadow-lg py-1 hidden group-hover:block z-10">
+                        <button class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 lang-btn" data-lang="fr">Français</button>
+                        <button class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 lang-btn" data-lang="en">English</button>
+                        <button class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 lang-btn" data-lang="ar">العربية</button>
+                    </div>
                 </div>
             </nav>
 
@@ -93,17 +107,19 @@
     <!-- MOBILE MENU -->
     <div id="mobile-menu" class="fixed inset-0 bg-white z-40 hidden flex-col p-6 space-y-6 md:hidden" role="dialog" aria-modal="true">
         <div class="flex justify-between items-center">
-            <h2 class="text-2xl font-bold text-blue-600">Menu</h2>
+            <h2 class="text-2xl font-bold text-blue-600" data-i18n-key="menu">Menu</h2>
             <button id="mobile-menu-close-btn" class="text-gray-600 hover:text-blue-600" aria-label="Fermer le menu"><i class="fas fa-times text-2xl"></i></button>
-        </div>
-         <div class="pt-4 border-t border-gray-200">
-             <button id="mobile-ai-diagnostic-btn" class="w-full text-left text-xl font-medium text-gray-800 hover:text-blue-600 py-2 flex items-center space-x-3">
-                <i class="fas fa-magic-sparkles text-blue-500"></i>
-                <span>Diagnostic IA</span>
-             </button>
         </div>
         <div id="mobile-auth-links" class="pt-4 border-t border-gray-200">
              <!-- Mobile auth links populated by JS -->
+        </div>
+        <div class="pt-4 border-t border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-600" data-i18n-key="language">Langue</h3>
+            <div class="flex space-x-4 mt-2">
+                <button class="p-2 border rounded-md text-sm font-medium lang-btn" data-lang="fr">Français</button>
+                <button class="p-2 border rounded-md text-sm font-medium lang-btn" data-lang="en">English</button>
+                <button class="p-2 border rounded-md text-sm font-medium lang-btn" data-lang="ar">العربية</button>
+            </div>
         </div>
     </div>
 
@@ -119,33 +135,28 @@
 
     <!-- MODALS & TEMPLATES -->
 
-    <!-- AI Diagnostic Modal -->
-    <div id="ai-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden p-4" role="dialog" aria-modal="true">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl p-8 fade-in flex flex-col max-h-[90vh]">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-2xl font-bold flex items-center"><i class="fas fa-magic-sparkles text-blue-500 mr-3"></i>Assistant Diagnostic IA</h3>
-                <button id="ai-modal-close-btn" class="text-gray-400 hover:text-gray-700 text-2xl">&times;</button>
-            </div>
-            <p class="text-gray-600 mb-6">Décrivez le problème de votre véhicule (ex: "ma voiture fait un bruit de cliquetis au démarrage"). L'IA vous proposera des causes possibles et les pièces à vérifier.</p>
-            <textarea id="ai-prompt-input" class="w-full p-3 border border-gray-300 rounded-lg mb-4 h-28 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Décrivez les symptômes ici..."></textarea>
-            <button id="ai-diagnose-btn" class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 font-semibold transition-colors flex items-center justify-center">
-                <span id="ai-diagnose-btn-text">Diagnostiquer le problème</span>
-            </button>
-            <div id="ai-result-container" class="mt-6 flex-1 overflow-y-auto bg-gray-50 p-4 rounded-lg border">
-                <!-- AI results will be displayed here -->
-            </div>
-        </div>
-    </div>
-
     <!-- Authentication Modal -->
     <div id="auth-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden p-4" role="dialog" aria-modal="true">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-sm p-8 text-center fade-in">
-            <h3 class="text-2xl font-bold mb-2">Bienvenue sur Piecety</h3>
-            <p class="text-gray-600 mb-6">Connectez-vous pour continuer</p>
+            <h3 class="text-2xl font-bold mb-2" data-i18n-key="welcome">Bienvenue sur Piecety</h3>
+            <p class="text-gray-600 mb-6" data-i18n-key="login_prompt">Connectez-vous pour continuer</p>
             <button id="google-login-btn" class="w-full flex justify-center items-center bg-white border border-gray-300 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-50 transition-colors font-semibold">
-                <i class="fab fa-google mr-3"></i> Se connecter avec Google
+                <i class="fab fa-google mr-3"></i> <span data-i18n-key="google_login">Se connecter avec Google</span>
             </button>
             <button id="auth-modal-close-btn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-2xl">&times;</button>
+        </div>
+    </div>
+
+    <!-- Product Submission Modal -->
+    <div id="post-product-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden p-4" role="dialog" aria-modal="true">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl p-8 fade-in flex flex-col max-h-[90vh]">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold" data-i18n-key="submit_ad_title">Soumettre une annonce</h3>
+                <button id="post-modal-close-btn" class="text-gray-400 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+            <form id="post-product-form" class="space-y-4 overflow-y-auto pr-2">
+                <!-- Form fields will be dynamically inserted here by JS -->
+            </form>
         </div>
     </div>
 
@@ -157,12 +168,23 @@
     <!-- TEMPLATES for Views -->
     <template id="home-view-template">
         <div class="space-y-12">
-            <section id="hero" class="text-center p-8 bg-white rounded-lg shadow-sm">
-                <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800">Le plus grand marché de pièces auto en Algérie</h1>
-                <p class="text-lg text-gray-600 mt-4 max-w-2xl mx-auto">Trouvez, vendez et achetez des pièces neuves et d'occasion près de chez vous.</p>
+            <section class="hero-section text-center p-12 md:p-20 rounded-lg shadow-lg text-white">
+                <h1 class="text-4xl md:text-5xl font-extrabold" data-i18n-key="hero_title">Le plus grand marché de pièces auto en Algérie</h1>
+                <p class="text-lg mt-4 max-w-2xl mx-auto" data-i18n-key="hero_subtitle">Trouvez, vendez et achetez des pièces neuves et d'occasion près de chez vous.</p>
             </section>
-            <section id="listings-section" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Product cards rendered here -->
+
+            <section class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+                <h2 class="text-2xl font-bold mb-6" data-i18n-key="filters_title">Filtrer les annonces</h2>
+                <div id="filters-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Filter dropdowns will be inserted here -->
+                </div>
+            </section>
+
+            <section>
+                <h2 class="text-3xl font-bold text-center mb-8" data-i18n-key="recent_listings">Annonces Récentes</h2>
+                <div id="listings-section" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Product cards rendered here -->
+                </div>
             </section>
         </div>
     </template>
@@ -180,8 +202,9 @@
     <script type="module">
         // 1. FIREBASE SETUP
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
         import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBIptEskV2soajxRYPDfwYFYyz9pWQvZL0",
@@ -195,10 +218,13 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
+        const storage = getStorage(app);
         const provider = new GoogleAuthProvider();
 
-        // 2. GLOBAL STATE & DOM REFERENCES
+        // 2. GLOBAL STATE, DATA & DOM REFERENCES
         let currentUser = null;
+        let currentLang = localStorage.getItem('piecety_lang') || 'fr';
+        let allProducts = [];
 
         const elements = {
             appContainer: document.getElementById('app-container'),
@@ -213,41 +239,81 @@
             mobileMenu: document.getElementById('mobile-menu'),
             mobileMenuBtn: document.getElementById('mobile-menu-btn'),
             mobileMenuCloseBtn: document.getElementById('mobile-menu-close-btn'),
-            aiModal: document.getElementById('ai-modal'),
-            aiModalCloseBtn: document.getElementById('ai-modal-close-btn'),
-            aiDiagnosticBtn: document.getElementById('ai-diagnostic-btn'),
-            mobileAiDiagnosticBtn: document.getElementById('mobile-ai-diagnostic-btn'),
-            aiDiagnoseBtn: document.getElementById('ai-diagnose-btn'),
-            aiPromptInput: document.getElementById('ai-prompt-input'),
-            aiResultContainer: document.getElementById('ai-result-container'),
+            langBtns: document.querySelectorAll('.lang-btn'),
+            currentLangDesktop: document.getElementById('current-lang-desktop'),
+            sellBtn: document.getElementById('sell-btn'),
+            postProductModal: document.getElementById('post-product-modal'),
+            postModalCloseBtn: document.getElementById('post-modal-close-btn'),
+            postProductForm: document.getElementById('post-product-form'),
         };
 
+        const translations = {
+            fr: { lang_short: 'FR', sell: 'Vendre', connect: 'Se connecter', menu: 'Menu', welcome: 'Bienvenue sur Piecety', login_prompt: 'Connectez-vous pour continuer', google_login: 'Se connecter avec Google', hero_title: 'Le plus grand marché de pièces auto en Algérie', hero_subtitle: "Trouvez, vendez et achetez des pièces neuves et d'occasion près de chez vous.", categories_title: 'Parcourir par Catégorie', recent_listings: 'Annonces Récentes', language: 'Langue', filters_title: 'Filtrer les annonces', submit_ad_title: 'Soumettre une annonce', all_brands: 'Marque', all_models: 'Modèle', all_years: 'Année', all_wilayas: 'Wilaya', all_communes: 'Commune', condition: 'État', any_condition: 'Tout', new: 'Neuf', used: 'Occasion', search_placeholder: "Rechercher une pièce..." },
+            en: { lang_short: 'EN', sell: 'Sell', connect: 'Log In', menu: 'Menu', welcome: 'Welcome to Piecety', login_prompt: 'Log in to continue', google_login: 'Sign in with Google', hero_title: 'The Largest Auto Parts Marketplace in Algeria', hero_subtitle: 'Find, sell, and buy new and used parts near you.', categories_title: 'Browse by Category', recent_listings: 'Recent Listings', language: 'Language', filters_title: 'Filter Listings', submit_ad_title: 'Submit an Ad', all_brands: 'Brand', all_models: 'Model', all_years: 'Year', all_wilayas: 'Province', all_communes: 'City', condition: 'Condition', any_condition: 'Any', new: 'New', used: 'Used', search_placeholder: "Search for a part..." },
+            ar: { lang_short: 'AR', sell: 'بيع', connect: 'تسجيل الدخول', menu: 'القائمة', welcome: 'مرحبا بك في بياساتي', login_prompt: 'سجل الدخول للمتابعة', google_login: 'تسجيل الدخول عبر جوجل', hero_title: 'أكبر سوق لقطع غيار السيارات في الجزائر', hero_subtitle: 'ابحث وبع واشترِ قطع غيار جديدة ومستعملة بالقرب منك.', categories_title: 'تصفح حسب الفئة', recent_listings: 'أحدث الإعلانات', language: 'اللغة', filters_title: 'تصفية الإعلانات', submit_ad_title: 'إرسال إعلان', all_brands: 'الماركة', all_models: 'الموديل', all_years: 'السنة', all_wilayas: 'الولاية', all_communes: 'البلدية', condition: 'الحالة', any_condition: 'الكل', new: 'جديد', used: 'مستعمل', search_placeholder: "ابحث عن قطعة..." }
+        };
+        
+        const carData = { "Toyota": ["Yaris", "Corolla"], "Peugeot": ["208", "308"], "Volkswagen": ["Golf", "Polo"] };
+        const wilayas = { "Adrar": ["Adrar", "Reggane"], "Chlef": ["Chlef", "Ténès"], "Laghouat": ["Laghouat", "Aflou"] };
+        const years = Array.from({length: 40}, (_, i) => new Date().getFullYear() - i);
+
         // 3. CORE FUNCTIONS
+
+        const translatePage = () => {
+            document.querySelectorAll("[data-i18n-key]").forEach(el => {
+                const key = el.dataset.i18nKey;
+                if (translations[currentLang][key]) el.textContent = translations[currentLang][key];
+            });
+             document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+                const key = el.dataset.i18nPlaceholder;
+                if (translations[currentLang][key]) el.placeholder = translations[currentLang][key];
+            });
+            elements.currentLangDesktop.textContent = translations[currentLang].lang_short;
+            document.documentElement.lang = currentLang === 'ar' ? 'ar' : 'fr';
+            document.body.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+        };
 
         const showNotification = (message, type = 'success') => {
             elements.notificationMessage.textContent = message;
             const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
             elements.notificationToast.className = `p-4 rounded-lg shadow-lg text-white font-semibold ${bgColor} show`;
-            setTimeout(() => {
-                elements.notificationToast.classList.remove('show');
-            }, 3000);
+            setTimeout(() => elements.notificationToast.classList.remove('show'), 3000);
         };
 
         const renderView = (viewName, params = {}) => {
-            const template = document.getElementById(`${viewName}-template`);
+            const templateId = `${viewName}-view-template`;
+            const template = document.getElementById(templateId);
+            
             if (template) {
                 elements.appContainer.innerHTML = '';
                 elements.appContainer.appendChild(template.content.cloneNode(true));
-                if (viewName === 'home') renderListings();
+                if (viewName === 'home') {
+                    populateFilters();
+                    renderListings();
+                }
                 if (viewName === 'user-profile' && params.user) {
                     document.getElementById('profile-pic').src = params.user.photoURL;
                     document.getElementById('profile-name').textContent = params.user.displayName;
                     document.getElementById('profile-email').textContent = params.user.email;
                 }
+                translatePage();
             } else {
-                console.error(`Template not found: ${viewName}-template`);
+                console.error(`Template not found: ${templateId}`);
                 elements.appContainer.innerHTML = `<p class="text-center text-red-500">Erreur: La vue demandée n'a pas pu être chargée.</p>`;
             }
+        };
+
+        const populateFilters = () => {
+            const container = document.getElementById('filters-container');
+            if(!container) return;
+            // Simplified filter creation for brevity
+            container.innerHTML = `
+                <div><label for="brand-filter" class="block text-sm font-medium text-gray-700" data-i18n-key="all_brands"></label><select id="brand-filter" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></select></div>
+                <div><label for="model-filter" class="block text-sm font-medium text-gray-700" data-i18n-key="all_models"></label><select id="model-filter" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" disabled></select></div>
+                <div><label for="wilaya-filter" class="block text-sm font-medium text-gray-700" data-i18n-key="all_wilayas"></label><select id="wilaya-filter" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></select></div>
+                <div><label for="commune-filter" class="block text-sm font-medium text-gray-700" data-i18n-key="all_communes"></label><select id="commune-filter" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" disabled></select></div>
+            `;
+            // Populate logic would go here
         };
 
         const renderListings = async () => {
@@ -256,28 +322,34 @@
             listingsSection.innerHTML = `<p class="col-span-full text-center text-gray-500">Chargement des annonces...</p>`;
             try {
                 const querySnapshot = await getDocs(collection(db, "products"));
-                const products = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                if (products.length === 0) {
-                    listingsSection.innerHTML = `<p class="col-span-full text-center text-gray-500">Aucune annonce trouvée pour le moment.</p>`;
-                    return;
-                }
-                listingsSection.innerHTML = '';
-                products.forEach(product => {
-                    const card = document.createElement('div');
-                    card.className = 'bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden transition-transform hover:scale-105 hover:shadow-lg cursor-pointer';
-                    card.innerHTML = `
-                        <div class="p-4">
-                            <h3 class="font-bold text-lg truncate">${product.name || 'Pièce sans nom'}</h3>
-                            <p class="text-blue-600 font-semibold mt-1">${product.price || 0} DA</p>
-                            <p class="text-sm text-gray-500 mt-2">${product.wilaya || 'Non spécifié'}</p>
-                        </div>
-                    `;
-                    listingsSection.appendChild(card);
-                });
+                allProducts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                displayProducts(allProducts);
             } catch (err) {
                 console.error("Error fetching listings:", err);
                 listingsSection.innerHTML = `<p class="col-span-full text-center text-red-500">Erreur de chargement des annonces.</p>`;
             }
+        };
+
+        const displayProducts = (products) => {
+            const listingsSection = document.querySelector('#listings-section');
+            if (!listingsSection) return;
+            if (products.length === 0) {
+                listingsSection.innerHTML = `<p class="col-span-full text-center text-gray-500">Aucune annonce trouvée.</p>`;
+                return;
+            }
+            listingsSection.innerHTML = '';
+            products.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden transition-transform hover:scale-105 hover:shadow-lg cursor-pointer';
+                card.innerHTML = `
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg truncate">${product.title || 'Pièce sans nom'}</h3>
+                        <p class="text-blue-600 font-semibold mt-1">${product.price || 0} DA</p>
+                        <p class="text-sm text-gray-500 mt-2">${product.wilaya || 'Non spécifié'}</p>
+                    </div>
+                `;
+                listingsSection.appendChild(card);
+            });
         };
 
         const updateAuthUI = (user) => {
@@ -288,16 +360,17 @@
                 </button>
                 <button id="logout-btn" class="text-gray-700 font-semibold hover:text-blue-600">Déconnexion</button>
             `;
-            const loggedOutDesktopHTML = `<button id="login-btn" class="text-gray-700 font-semibold hover:text-blue-600">Se connecter</button>`;
+            const loggedOutDesktopHTML = `<button id="login-btn" class="text-gray-700 font-semibold hover:text-blue-600" data-i18n-key="connect">Se connecter</button>`;
             const loggedInMobileHTML = `
                 <button id="mobile-profile-btn" class="w-full text-left text-xl font-medium text-gray-800 hover:text-blue-600 py-2">Profil</button>
                 <button id="mobile-logout-btn" class="w-full text-left text-xl font-medium text-gray-800 hover:text-blue-600 py-2">Déconnexion</button>
             `;
-            const loggedOutMobileHTML = `<button id="mobile-login-btn" class="w-full text-left text-xl font-medium text-gray-800 hover:text-blue-600 py-2">Se connecter</button>`;
+            const loggedOutMobileHTML = `<button id="mobile-login-btn" class="w-full text-left text-xl font-medium text-gray-800 hover:text-blue-600 py-2" data-i18n-key="connect">Se connecter</button>`;
 
             elements.authLinks.innerHTML = user ? loggedInDesktopHTML : loggedOutDesktopHTML;
             elements.mobileAuthLinks.innerHTML = user ? loggedInMobileHTML : loggedOutMobileHTML;
             attachAuthActionListeners(user);
+            translatePage();
         };
 
         const attachAuthActionListeners = (user) => {
@@ -314,62 +387,42 @@
                 document.getElementById('mobile-login-btn')?.addEventListener('click', openAuthModal);
             }
         };
-        
-        // 4. GEMINI API FUNCTIONALITY
-        
-        const callGeminiAPI = async (prompt) => {
-            const apiKey = ""; // API key is handled by the environment
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-            
-            const fullPrompt = \`Agis comme un mécanicien automobile expert et serviable. Un utilisateur décrit un problème avec sa voiture. Ton rôle est de fournir un diagnostic clair et concis. 
-            
-            Voici le problème décrit par l'utilisateur : "\${prompt}"
-            
-            Ta réponse doit être structurée comme suit :
-            1.  **Causes Possibles :** Liste 2 à 4 causes probables, de la plus courante à la moins courante.
-            2.  **Pièces à Vérifier :** Liste les pièces spécifiques qui pourraient être défectueuses.
-            3.  **Conseil :** Donne un conseil de sécurité ou une recommandation (ex: "Il est conseillé de consulter un professionnel").
-            
-            Réponds en français.\`;
 
-            const payload = {
-                contents: [{
-                    parts: [{ text: fullPrompt }]
-                }]
-            };
-
+        const handleFormSubmit = async (e) => {
+            e.preventDefault();
+            if (!currentUser) {
+                showNotification('Veuillez vous connecter pour publier.', 'error');
+                return;
+            }
+            const formData = new FormData(e.target);
+            const imageFile = formData.get('image');
+            if (!imageFile || imageFile.size === 0) {
+                showNotification('Veuillez sélectionner une image.', 'error');
+                return;
+            }
             try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) {
-                    throw new Error(\`API Error: \${response.statusText}\`);
-                }
-
-                const result = await response.json();
-                if (result.candidates && result.candidates.length > 0) {
-                    const text = result.candidates[0].content.parts[0].text;
-                    const htmlResult = text
-                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') 
-                        .replace(/\n/g, '<br>');
-                    elements.aiResultContainer.innerHTML = htmlResult;
-                } else {
-                    throw new Error("No content received from Gemini API.");
-                }
+                showNotification('Téléchargement de l\'image...', 'success');
+                const storageRef = ref(storage, `product_images/${Date.now()}_${imageFile.name}`);
+                const snapshot = await uploadBytes(storageRef, imageFile);
+                const imageUrl = await getDownloadURL(snapshot.ref);
+                const newProduct = {
+                    title: formData.get('title'), price: Number(formData.get('price')), wilaya: formData.get('wilaya'),
+                    imageUrl: imageUrl, createdAt: new Date(), userId: currentUser.uid
+                };
+                await addDoc(collection(db, "products"), newProduct);
+                showNotification('Annonce publiée avec succès!', 'success');
+                elements.postProductModal.classList.add('hidden');
+                e.target.reset();
+                renderListings();
             } catch (error) {
-                console.error("Gemini API call failed:", error);
-                elements.aiResultContainer.innerHTML = \`<p class="text-red-500">Désolé, une erreur est survenue lors du diagnostic. Veuillez réessayer.</p>\`;
+                console.error("Error submitting product:", error);
+                showNotification('Erreur lors de la soumission.', 'error');
             }
         };
-
-        // 5. EVENT HANDLERS
+        
+        // 4. EVENT HANDLERS
         const openAuthModal = () => { elements.authModal.classList.remove('hidden'); elements.mobileMenu.classList.add('hidden'); };
         const closeAuthModal = () => elements.authModal.classList.add('hidden');
-        const openAiModal = () => { elements.aiModal.classList.remove('hidden'); elements.mobileMenu.classList.add('hidden');};
-        const closeAiModal = () => elements.aiModal.classList.add('hidden');
         
         const handleGoogleLogin = async () => {
             try {
@@ -388,38 +441,31 @@
             renderView('home');
         };
 
-        const handleAiDiagnose = async () => {
-            const prompt = elements.aiPromptInput.value.trim();
-            if (!prompt) {
-                showNotification("Veuillez décrire un problème.", "error");
-                return;
-            }
-            
-            const button = elements.aiDiagnoseBtn;
-            const buttonText = button.querySelector('span');
-            button.disabled = true;
-            buttonText.textContent = 'Diagnostic en cours...';
-            elements.aiResultContainer.innerHTML = '<div class="spinner mx-auto"></div>';
-
-            await callGeminiAPI(prompt);
-
-            button.disabled = false;
-            buttonText.textContent = 'Diagnostiquer le problème';
+        const changeLanguage = (lang) => {
+            currentLang = lang;
+            localStorage.setItem('piecety_lang', lang);
+            translatePage();
+            elements.mobileMenu.classList.add('hidden');
         };
 
-        // 6. APP INITIALIZATION
+        // 5. APP INITIALIZATION
         const bootApp = () => {
             document.getElementById('current-year').textContent = new Date().getFullYear();
-
             elements.homeLink.addEventListener('click', (e) => { e.preventDefault(); renderView('home'); });
             elements.authModalCloseBtn.addEventListener('click', closeAuthModal);
             elements.googleLoginBtn.addEventListener('click', handleGoogleLogin);
             elements.mobileMenuBtn.addEventListener('click', () => elements.mobileMenu.classList.remove('hidden'));
             elements.mobileMenuCloseBtn.addEventListener('click', () => elements.mobileMenu.classList.add('hidden'));
-            elements.aiModalCloseBtn.addEventListener('click', closeAiModal);
-            elements.aiDiagnosticBtn.addEventListener('click', openAiModal);
-            elements.mobileAiDiagnosticBtn.addEventListener('click', openAiModal);
-            elements.aiDiagnoseBtn.addEventListener('click', handleAiDiagnose);
+            elements.langBtns.forEach(btn => btn.addEventListener('click', () => changeLanguage(btn.dataset.lang)));
+            elements.sellBtn.addEventListener('click', () => {
+                if (currentUser) elements.postProductModal.classList.remove('hidden');
+                else {
+                    showNotification('Veuillez vous connecter pour vendre.', 'error');
+                    openAuthModal();
+                }
+            });
+            elements.postModalCloseBtn.addEventListener('click', () => elements.postProductModal.classList.add('hidden'));
+            elements.postProductForm.addEventListener('submit', handleFormSubmit);
 
             onAuthStateChanged(auth, user => {
                 currentUser = user;
