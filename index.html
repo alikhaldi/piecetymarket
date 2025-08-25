@@ -10,7 +10,7 @@
             href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
             rel="stylesheet"
     />
-    <script src="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -1053,7 +1053,6 @@
     const wilayas = {
         "Adrar": ["Adrar", "Charouine", "Tamest", "Reggane", "Aoulef", "Fenoughil", "Timimoun", "Talmine", "Bordj Badji Mokhtar", "In Salah"], 
         "Chlef": ["Chlef", "Ténès", "Ouled Farès", "El Marsa", "Abou El Hassan", "Oued Fodda", "Beni Haoua", "El Karimia", "Taougrite", "Harchoun"], 
-        // CONTEXT: Added "Hassi R'Mel" to the communes of Laghouat.
         "Laghouat": ["Aïn Madhi", "Aflou", "El Ghicha", "El Houaita", "El Assafia", "Ksar El Hirane", "Laghouat", "Taougrite", "Sidi Makhlouf", "Ouled Farès", "Hassi R'Mel"], 
         "Oum El Bouaghi": ["Aïn Beïda", "Aïn Fekroun", "Aïn Babouche", "Aïn M'lila", "Dhalaâ", "F'kirina", "Oum El Bouaghi", "Sidi R'ghiss", "Souk Naamane", "El Fedjoudj"], 
         "Batna": ["Aïn Touta", "Arris", "Barika", "Batna", "El Madher", "Menaa", "Merouana", "Ras El Aioun", "Timgad", "Ouled Si Slimane"], 
@@ -1175,6 +1174,9 @@
             if (translations[lang][key]) {
                 if ((el.tagName === 'INPUT' && (el.type === 'text' || el.type === 'search')) || el.tagName === 'TEXTAREA') {
                     el.placeholder = translations[lang][key];
+                } else if (el.tagName === 'SPAN' && el.parentElement.tagName === 'P') {
+                    // Handle footer specifically to not overwrite the main copyright text
+                    if(key === 'footer_location_text') el.innerHTML = translations[lang][key];
                 } else {
                     el.innerHTML = translations[lang][key];
                 }
@@ -1277,12 +1279,11 @@
         if (wilayaFilter) {
             wilayaFilter.value = 'Laghouat';
             // Manually trigger change to populate communes
-            wilayaFilter.dispatchEvent(new Event('change'));
+            wilayaFilter.dispatchEvent(new Event('change', { bubbles: true }));
         }
         if (communeFilter) {
             communeFilter.value = "Hassi R'Mel";
         }
-
 
         const filterAndSearch = () => {
             renderListings();
@@ -1299,12 +1300,11 @@
                 if (modelFilterContainer) modelFilterContainer.classList.add("hidden");
                 if (modelFilter) modelFilter.disabled = true;
             }
-            filterAndSearch();
         });
         if (wilayaFilter) wilayaFilter.addEventListener('change', (e) => {
             const val = e.target.value;
             if (val) {
-                populateSelect(communeFilter, wilayas[val], "all_communes", currentLang);
+                populateSelect(communeFilter, wilayas[val] || [], "all_communes", currentLang);
                 if (communeContainer) communeContainer.classList.remove("hidden");
                 if (communeFilter) communeFilter.disabled = false;
             } else {
@@ -1312,7 +1312,6 @@
                 if (communeContainer) communeContainer.classList.add("hidden");
                 if (communeFilter) communeFilter.disabled = true;
             }
-            filterAndSearch();
         });
         if (filterApplyBtn) filterApplyBtn.addEventListener('click', filterAndSearch);
         if (searchInput) searchInput.addEventListener('input', filterAndSearch);
@@ -1671,8 +1670,8 @@
     const insertDemoListingsOnce = async () => {
         if (localStorage.getItem("demoListingsInserted")) return;
         
-        // CONTEXT: Create a timestamp for August 25, 2025.
-        const demoTimestamp = new Date('2025-08-25T16:37:00');
+        // CONTEXT: Create a timestamp for August 25, 2025 at 17:25 CET.
+        const demoTimestamp = new Date('2025-08-25T17:25:49');
 
         const demoListings = [
             { title: "Disque de frein avant Toyota Yaris 2015", brand: "Toyota", model: "Yaris", year: "2015", wilaya: "Alger", commune: "Bab El Oued", condition: "used", price: 12000, description: "Disque en bon état, peu utilisé.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fbrake_disc_toyota_yaris.jpg?alt=media", timestamp: demoTimestamp },
@@ -1843,7 +1842,7 @@
         if (postProductWilayaSelect) postProductWilayaSelect.addEventListener('change', (e) => {
             const val = e.target.value;
             if (val) {
-                populateSelect(postProductCommuneSelect, wilayas[val], "select_commune", currentLang);
+                populateSelect(postProductCommuneSelect, wilayas[val] || [], "select_commune", currentLang);
                 postProductCommuneSelect.disabled = false;
             } else {
                 postProductCommuneSelect.innerHTML = `<option value="" data-i18n-key="select_commune">${translations[currentLang]["select_commune"]}</option>`;
