@@ -1141,6 +1141,7 @@
         cartItemsContainer: null, cartTotalSpan: null, checkoutBtn: null, backFromCartBtn: null,
         postProductBrandSelect: document.getElementById('product-brand'),
         postProductModelSelect: document.getElementById('product-model'),
+        // FIXED: Added missing reference for postProductYearSelect
         postProductYearSelect: document.getElementById('product-year'),
         postProductWilayaSelect: document.getElementById('product-wilaya'),
         postProductCommuneSelect: document.getElementById('product-commune')
@@ -1175,7 +1176,6 @@
                 if ((el.tagName === 'INPUT' && (el.type === 'text' || el.type === 'search')) || el.tagName === 'TEXTAREA') {
                     el.placeholder = translations[lang][key];
                 } else if (el.tagName === 'SPAN' && el.parentElement.tagName === 'P') {
-                    // Handle footer specifically to not overwrite the main copyright text
                     if(key === 'footer_location_text') el.innerHTML = translations[lang][key];
                 } else {
                     el.innerHTML = translations[lang][key];
@@ -1275,10 +1275,8 @@
         populateSelect(yearFilter, years, "all_years", currentLang);
         populateSelect(wilayaFilter, Object.keys(wilayas), "all_wilayas", currentLang);
         
-        // CONTEXT: Set default location filters to Laghouat and Hassi R'Mel.
         if (wilayaFilter) {
             wilayaFilter.value = 'Laghouat';
-            // Manually trigger change to populate communes
             wilayaFilter.dispatchEvent(new Event('change', { bubbles: true }));
         }
         if (communeFilter) {
@@ -1349,7 +1347,8 @@
         if (!listingsSection) return;
         listingsSection.innerHTML = `<p class="col-span-full text-center py-6 text-gray-600" data-i18n-key="loading">Chargement...</p>`;
         try {
-            const q = query(collection(db, "products"));
+            // FIXED: Using correct, structured path for Firestore collection
+            const q = query(collection(db, "artifacts", appId, "public", "data", "products"));
             const querySnapshot = await getDocs(q);
             allProducts = querySnapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }));
             const filtered = filterProducts(allProducts);
@@ -1357,7 +1356,7 @@
             translatePage(currentLang);
         } catch (err) {
             listingsSection.innerHTML = `<p class="col-span-full text-center py-6 text-red-600">Erreur de chargement des annonces. Vérifiez vos règles de sécurité Firestore.</p>`;
-            console.error(err);
+            console.error("Firebase Permission Error in renderListings:", err);
         }
     };
 
@@ -1634,7 +1633,8 @@
     };
 
     const addReview = async (productId, review) => {
-        const reviewRef = collection(db, `products/${productId}/reviews`);
+        // FIXED: Using correct, structured path for Firestore collection
+        const reviewRef = collection(db, "artifacts", appId, "public", "data", "products", productId, "reviews");
         return await addDoc(reviewRef, review);
     };
     
@@ -1642,7 +1642,8 @@
         const { reviewsContainer } = elements;
         if (!reviewsContainer) return;
         reviewsContainer.innerHTML = '<p class="text-gray-500">Chargement des avis...</p>';
-        const reviewsRef = collection(db, `products/${productId}/reviews`);
+        // FIXED: Using correct, structured path for Firestore collection
+        const reviewsRef = collection(db, "artifacts", appId, "public", "data", "products", productId, "reviews");
         const q = query(reviewsRef);
         onSnapshot(q, (querySnapshot) => {
             reviewsContainer.innerHTML = '';
@@ -1670,8 +1671,7 @@
     const insertDemoListingsOnce = async () => {
         if (localStorage.getItem("demoListingsInserted")) return;
         
-        // CONTEXT: Create a timestamp for August 25, 2025 at 17:25 CET.
-        const demoTimestamp = new Date('2025-08-25T17:25:49');
+        const demoTimestamp = new Date('2025-08-25T17:36:29');
 
         const demoListings = [
             { title: "Disque de frein avant Toyota Yaris 2015", brand: "Toyota", model: "Yaris", year: "2015", wilaya: "Alger", commune: "Bab El Oued", condition: "used", price: 12000, description: "Disque en bon état, peu utilisé.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fbrake_disc_toyota_yaris.jpg?alt=media", timestamp: demoTimestamp },
@@ -1679,7 +1679,8 @@
             { title: "Batterie 12V pour Peugeot 308", brand: "Peugeot", model: "308", year: "2017", wilaya: "Constantine", commune: "El Khroub", condition: "used", price: 9000, description: "Batterie d'occasion, testée OK.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fbattery_peugeot_308.jpg?alt=media", timestamp: demoTimestamp }
         ];
         for (const listing of demoListings) {
-            const collectionRef = collection(db, "products");
+            // FIXED: Using correct, structured path for Firestore collection
+            const collectionRef = collection(db, "artifacts", appId, "public", "data", "products");
             const q = query(collectionRef, where("title", "==", listing.title));
             const querySnapshot = await getDocs(q);
             if (querySnapshot.empty) {
@@ -1715,7 +1716,7 @@
     
     // Event listeners setup
     const setupEventListeners = () => {
-        const { langDropdownBtn, langDropdown, langBtns, mobileMenuBtn, mobileMenu, mobileMenuCloseBtn, modalCloseBtn, postProductForm, loginBtn, homeLink, sellLink, sellLinkMobile, cartBtn, postProductBrandSelect, postProductModelSelect, postProductWilayaSelect, postProductCommuneSelect } = elements;
+        const { langDropdownBtn, langDropdown, langBtns, mobileMenuBtn, mobileMenu, mobileMenuCloseBtn, modalCloseBtn, postProductForm, loginBtn, homeLink, sellLink, sellLinkMobile, cartBtn, postProductBrandSelect, postProductModelSelect, postProductYearSelect, postProductWilayaSelect, postProductCommuneSelect } = elements;
         
         if (langDropdownBtn) {
             langDropdownBtn.addEventListener('click', () => {
@@ -1785,7 +1786,8 @@
                 const newProduct = {
                     title: formData.get('title'), brand: formData.get('brand'), model: formData.get('model'), year: formData.get('year'), wilaya: formData.get('wilaya'), commune: formData.get('commune'), condition: formData.get('condition'), price: parseInt(formData.get('price')), description: formData.get('description'), imageUrl: imageUrl, timestamp: new Date()
                 };
-                await addDoc(collection(db, "products"), newProduct);
+                // FIXED: Using correct, structured path for Firestore collection
+                await addDoc(collection(db, "artifacts", appId, "public", "data", "products"), newProduct);
                 showMessage("Annonce soumise avec succès!", 4000, 'success');
                 e.target.reset();
                 elements.postProductModal.classList.add('hidden');
