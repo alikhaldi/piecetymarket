@@ -63,10 +63,6 @@
         .category-card:hover .category-icon {
             transform: scale(1.1);
         }
-        .modal-bg {
-            background-color: rgba(0, 0, 0, 0.4);
-            transition: opacity 0.3s ease;
-        }
         /* RTL-specific styles */
         body[dir="rtl"] .logo {
             text-align: right;
@@ -1671,7 +1667,7 @@
     const insertDemoListingsOnce = async () => {
         if (localStorage.getItem("demoListingsInserted")) return;
         
-        const demoTimestamp = new Date('2025-08-25T17:36:29');
+        const demoTimestamp = new Date('2025-08-25T17:46:04');
 
         const demoListings = [
             { title: "Disque de frein avant Toyota Yaris 2015", brand: "Toyota", model: "Yaris", year: "2015", wilaya: "Alger", commune: "Bab El Oued", condition: "used", price: 12000, description: "Disque en bon état, peu utilisé.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fbrake_disc_toyota_yaris.jpg?alt=media", timestamp: demoTimestamp },
