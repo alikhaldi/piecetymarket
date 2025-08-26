@@ -838,7 +838,7 @@
         <div id="dashboard-content">
             <h3 class="text-xl font-semibold mb-4 border-b pb-2">Mes Annonces</h3>
             <div id="my-listings-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -855,7 +855,7 @@
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
                     <i class="far fa-star"></i>
-                    <span class="text-gray-600 ml-2 text-sm">(12 avis)</span>
+                    <span class="text-gray-600 ml-2 text-sm">(Avis bientôt disponibles)</span>
                 </div>
             </div>
         </div>
@@ -863,7 +863,7 @@
         <div class="mt-8">
             <h3 class="text-xl font-semibold mb-4 border-b pb-2">Annonces de ce vendeur</h3>
             <div id="user-products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                </div>
+            </div>
         </div>
         
         <div class="mt-8">
@@ -1111,7 +1111,7 @@
         postProductCommuneSelect: document.getElementById('product-commune')
     };
 
-    // Global functions
+    // CORE UTILITY FUNCTIONS - Defined first to prevent ReferenceErrors
     const showMessage = (msg, duration = 3500, type = "info") => {
         const { messageBox } = elements;
         if (!messageBox) return;
@@ -1124,6 +1124,20 @@
         }, duration);
     };
 
+    const updateCartDisplay = () => {
+        const { cartCountSpan } = elements;
+        const cartItemCount = Object.values(userCart).reduce((sum, item) => sum + item.quantity, 0);
+        if (cartCountSpan) {
+            if (cartItemCount > 0) {
+                cartCountSpan.textContent = cartItemCount;
+                cartCountSpan.classList.remove('hidden');
+            } else {
+                cartCountSpan.classList.add('hidden');
+            }
+        }
+    };
+
+    // APP LOGIC
     const closeMobileMenu = () => {
         const { mobileMenu, body } = elements;
         if(mobileMenu) mobileMenu.classList.add('hidden');
@@ -1213,7 +1227,6 @@
                 appContainer.appendChild(document.getElementById('cart-view-template').content.cloneNode(true));
                 renderCartPage();
                 break;
-            // FEATURE: Add cases for new dashboard and profile views
             case 'dashboard':
                 appContainer.appendChild(document.getElementById('dashboard-view-template').content.cloneNode(true));
                 renderDashboardPage();
@@ -1392,7 +1405,6 @@
         document.getElementById('product-wilaya-detail').textContent = product.wilaya;
         document.getElementById('product-commune-detail').textContent = product.commune || "-";
         
-        // FEATURE: Link to seller's profile
         const sellerLink = document.getElementById('seller-profile-link');
         sellerLink.textContent = product.sellerName || 'Vendeur Anonyme';
         sellerLink.addEventListener('click', (e) => {
@@ -1412,7 +1424,6 @@
             });
         }
         
-        // FEATURE: Logic for "Contact Seller" button
         const contactBtn = document.getElementById('contact-seller-btn');
         if (currentUser) {
             contactBtn.disabled = false;
@@ -1490,7 +1501,6 @@
         translatePage(currentLang);
     };
 
-    // FEATURE: Function to render the new Seller Dashboard page
     const renderDashboardPage = async () => {
         if (!currentUser) {
             showMessage(translations[currentLang].login_required, 4000, 'error');
@@ -1533,14 +1543,13 @@
                 if (confirm("Êtes-vous sûr de vouloir supprimer cette annonce?")) {
                     await deleteDoc(doc(db, "products", productId));
                     showMessage("Annonce supprimée avec succès.", 3000, "success");
-                    renderView('dashboard'); // Refresh the dashboard view
+                    renderView('dashboard'); 
                 }
             });
             grid.appendChild(card);
         });
     };
 
-    // FEATURE: Function to render the new User Profile page
     const renderProfilePage = async (data) => {
         if (!data || !data.userId) {
             renderView('home');
@@ -1548,7 +1557,6 @@
         }
 
         document.getElementById('profile-name').textContent = data.userName || "Vendeur";
-        // Here you would fetch and display the user's average rating in the future.
 
         const grid = document.getElementById('user-products-grid');
         grid.innerHTML = `<p class="col-span-full text-center py-6 text-gray-600">Chargement des annonces...</p>`;
@@ -1557,15 +1565,64 @@
         const querySnapshot = await getDocs(q);
         const userProducts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-        displayProducts(userProducts, grid); // Reuse the displayProducts function
-        // Here you would fetch and display the seller's reviews in the future.
+        displayProducts(userProducts, grid);
     };
 
+    const addToCart = async (product) => {
+        if (!currentUser) return;
+        const userDocRef = doc(db, 'users', currentUser.uid);
+        
+        userCart[product.id] = {
+            productId: product.id,
+            quantity: (userCart[product.id]?.quantity || 0) + 1
+        };
+        try {
+            await setDoc(userDocRef, { cart: userCart }, { merge: true });
+            showMessage(`${product.title} ajouté au panier.`, 3000, 'success');
+            updateCartDisplay();
+        } catch (error) {
+            showMessage("Erreur lors de l'ajout au panier.", 3000, 'error');
+            console.error("Error adding to cart: ", error);
+        }
+    };
+
+    const updateCartItem = async (productId, quantity) => {
+        if (!currentUser) return;
+        const userDocRef = doc(db, 'users', currentUser.uid);
+        userCart[productId].quantity = parseInt(quantity);
+        if (userCart[productId].quantity <= 0) {
+            delete userCart[productId];
+        }
+        try {
+            await setDoc(userDocRef, { cart: userCart }, { merge: true });
+            renderView('cart');
+            updateCartDisplay();
+        } catch(error) {
+            console.error(error);
+        }
+    };
+    
+    const removeFromCart = async (productId) => {
+        if (!currentUser) return;
+        const userDocRef = doc(db, 'users', currentUser.uid);
+        delete userCart[productId];
+        try {
+            await setDoc(userDocRef, { cart: userCart }, { merge: true });
+            renderView('cart');
+            updateCartDisplay();
+        } catch(error) {
+            console.error(error);
+        }
+    };
+    
+    const checkout = async () => {
+        showMessage("La page de paiement sera bientôt disponible!", 3000, "info");
+    };
 
     const insertDemoListingsOnce = async () => {
         if (localStorage.getItem("demoListingsInserted")) return;
         
-        const demoTimestamp = new Date('2025-08-26T08:46:44');
+        const demoTimestamp = new Date('2025-08-26T09:18:00');
 
         const demoListings = [
             { title: "Disque de frein avant Toyota Yaris 2015", brand: "Toyota", model: "Yaris", year: "2015", wilaya: "Alger", commune: "Bab El Oued", condition: "used", price: 12000, description: "Disque en bon état, peu utilisé.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fbrake_disc_toyota_yaris.jpg?alt=media", timestamp: demoTimestamp, sellerUid: 'demo_seller_1', sellerName: 'Garage El Bahdja' },
@@ -1604,7 +1661,6 @@
     const setupEventListeners = () => {
         const { langDropdownBtn, langDropdown, langBtns, mobileMenuBtn, mobileMenu, mobileMenuCloseBtn, modalCloseBtn, postProductForm, loginBtn, homeLink, cartBtn, postProductBrandSelect, postProductModelSelect, postProductYearSelect, postProductWilayaSelect, postProductCommuneSelect } = elements;
         
-        // This function is now dynamically populated based on login state
         const setupMobileNav = () => {
             const { mobileNavLinks } = elements;
             if (!mobileNavLinks) return;
@@ -1625,7 +1681,7 @@
             }
             translatePage(currentLang);
         };
-        setupMobileNav(); // Call it once on initial setup
+        setupMobileNav();
 
         if (langDropdownBtn) {
             langDropdownBtn.addEventListener('click', () => {
@@ -1653,7 +1709,7 @@
         }
         
         if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', () => {
-            setupMobileNav(); // Re-run setup on open to ensure it's up to date
+            setupMobileNav(); 
             mobileMenu.classList.remove('hidden');
             document.body.classList.add('overflow-hidden');
             mobileMenuBtn.setAttribute('aria-expanded', 'true');
@@ -1689,7 +1745,6 @@
                 const imageUrl = "https://placehold.co/600x400/E2E8F0/4A5568?text=Pas+d'image";
                 const newProduct = {
                     title: formData.get('title'), brand: formData.get('brand'), model: formData.get('model'), year: formData.get('year'), wilaya: formData.get('wilaya'), commune: formData.get('commune'), condition: formData.get('condition'), price: parseInt(formData.get('price')), description: formData.get('description'), imageUrl: imageUrl, timestamp: new Date(), 
-                    // FEATURE: Add seller info to the product
                     sellerUid: currentUser.uid,
                     sellerName: currentUser.displayName
                 };
