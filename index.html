@@ -8,7 +8,6 @@
     
     <!-- PWA & SEO -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚗</text></svg>">
-    <!-- FIX: Path adjusted to be relative to the index.html file's location. -->
     <link rel="manifest" href="manifest.json">
     
     <!-- Fonts -->
@@ -27,51 +26,8 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-    <style>
-        body {
-            font-family: 'Inter', 'Noto Sans Arabic', sans-serif;
-            background-color: #f7fafc;
-        }
-        .dark body {
-            background-color: #111827;
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        .dark ::-webkit-scrollbar-track { background: #2d3748; }
-        ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #555; }
-
-        /* Focus visible for accessibility */
-        :focus-visible {
-            outline: 2px solid #2563eb;
-            outline-offset: 2px;
-            border-radius: 4px;
-        }
-
-        /* Modal transitions */
-        .modal {
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-
-        /* Category Card Hover Effect */
-        .category-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-        }
-        .dark .category-card:hover {
-             box-shadow: 0 10px 15px rgba(255, 255, 255, 0.1);
-        }
-        .category-card:hover .category-icon {
-            transform: scale(1.1);
-            background-color: #dbeafe; /* bg-blue-100 */
-        }
-        .dark .category-card:hover .category-icon {
-             background-color: #374151; /* dark:bg-gray-700 */
-        }
-
-    </style>
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body class="flex flex-col min-h-screen text-gray-800 dark:text-gray-200">
 
@@ -1533,7 +1489,7 @@
         renderView('home');
 
         // PWA Service Worker Registration
-        // FIX: Changed registration to point to an external sw.js file in the /main/ directory.
+        // FIX: Changed registration to point to an external sw.js file.
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js')
             .then(reg => console.log('Service worker registered successfully.'))
