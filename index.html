@@ -449,33 +449,6 @@
                     ></textarea>
                 </div>
 
-                <div>
-                    <label for="product-image" class="block font-medium mb-1" data-i18n-key="image_label">
-                        Image <span class="text-red-500">*</span>
-                    </label>
-                    <input
-                            type="file"
-                            id="product-image"
-                            name="image"
-                            accept="image/*"
-                            required
-                            aria-describedby="image-error"
-                            class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
-                                   file:rounded-md file:border-0
-                                   file:text-sm file:font-semibold
-                                   file:bg-blue-50 file:text-blue-700
-                                   hover:file:bg-blue-100
-                                   "
-                    />
-                    <p
-                            id="image-error"
-                            class="text-red-600 text-sm mt-1 hidden"
-                            aria-live="assertive"
-                    >
-                        Veuillez choisir une image.
-                    </p>
-                </div>
-
                 <div class="text-center">
                     <button
                             type="submit"
@@ -1139,7 +1112,6 @@
         cartItemsContainer: null, cartTotalSpan: null, checkoutBtn: null, backFromCartBtn: null,
         postProductBrandSelect: document.getElementById('product-brand'),
         postProductModelSelect: document.getElementById('product-model'),
-        // FIXED: Added missing reference for postProductYearSelect to solve the ReferenceError
         postProductYearSelect: document.getElementById('product-year'),
         postProductWilayaSelect: document.getElementById('product-wilaya'),
         postProductCommuneSelect: document.getElementById('product-commune')
@@ -1345,8 +1317,7 @@
         if (!listingsSection) return;
         listingsSection.innerHTML = `<p class="col-span-full text-center py-6 text-gray-600" data-i18n-key="loading">Chargement...</p>`;
         try {
-            // FIXED: Using correct, structured path for Firestore collection to solve FirebaseError
-            const q = query(collection(db, "artifacts", appId, "public", "data", "products"));
+            const q = query(collection(db, "products"));
             const querySnapshot = await getDocs(q);
             allProducts = querySnapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }));
             const filtered = filterProducts(allProducts);
@@ -1631,8 +1602,7 @@
     };
 
     const addReview = async (productId, review) => {
-        // FIXED: Using correct, structured path for Firestore collection to solve FirebaseError
-        const reviewRef = collection(db, "artifacts", appId, "public", "data", "products", productId, "reviews");
+        const reviewRef = collection(db, `products/${productId}/reviews`);
         return await addDoc(reviewRef, review);
     };
     
@@ -1640,8 +1610,7 @@
         const { reviewsContainer } = elements;
         if (!reviewsContainer) return;
         reviewsContainer.innerHTML = '<p class="text-gray-500">Chargement des avis...</p>';
-        // FIXED: Using correct, structured path for Firestore collection to solve FirebaseError
-        const reviewsRef = collection(db, "artifacts", appId, "public", "data", "products", productId, "reviews");
+        const reviewsRef = collection(db, `products/${productId}/reviews`);
         const q = query(reviewsRef);
         onSnapshot(q, (querySnapshot) => {
             reviewsContainer.innerHTML = '';
@@ -1669,7 +1638,7 @@
     const insertDemoListingsOnce = async () => {
         if (localStorage.getItem("demoListingsInserted")) return;
         
-        const demoTimestamp = new Date('2025-08-26T07:45:43');
+        const demoTimestamp = new Date('2025-08-26T07:54:31');
 
         const demoListings = [
             { title: "Disque de frein avant Toyota Yaris 2015", brand: "Toyota", model: "Yaris", year: "2015", wilaya: "Alger", commune: "Bab El Oued", condition: "used", price: 12000, description: "Disque en bon état, peu utilisé.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fbrake_disc_toyota_yaris.jpg?alt=media", timestamp: demoTimestamp },
@@ -1677,8 +1646,7 @@
             { title: "Batterie 12V pour Peugeot 308", brand: "Peugeot", model: "308", year: "2017", wilaya: "Constantine", commune: "El Khroub", condition: "used", price: 9000, description: "Batterie d'occasion, testée OK.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fbattery_peugeot_308.jpg?alt=media", timestamp: demoTimestamp }
         ];
         for (const listing of demoListings) {
-            // FIXED: Using correct, structured path for Firestore collection to solve FirebaseError
-            const collectionRef = collection(db, "artifacts", appId, "public", "data", "products");
+            const collectionRef = collection(db, "products");
             const q = query(collectionRef, where("title", "==", listing.title));
             const querySnapshot = await getDocs(q);
             if (querySnapshot.empty) {
@@ -1688,19 +1656,14 @@
         localStorage.setItem("demoListingsInserted", "true");
     };
 
-    const uploadImage = async (file) => {
-        const timestamp = Date.now();
-        const storageRef = ref(storage, `product_images/${timestamp}_${file.name}`);
-        const snapshot = await uploadBytes(storageRef, file);
-        return await getDownloadURL(snapshot.ref);
-    };
+    // REMOVED: uploadImage function is no longer needed.
 
     const validatePostForm = (form) => {
         let isValid = true;
         const requiredInputs = form.querySelectorAll('[required]');
         requiredInputs.forEach(input => {
             const errorEl = document.getElementById(input.id + "-error");
-            if (input.value.trim() === '' || (input.type === 'file' && input.files.length === 0)) {
+            if (input.value.trim() === '') { // REMOVED file check
                 if(errorEl) errorEl.classList.remove("hidden");
                 input.setAttribute("aria-invalid", "true");
                 isValid = false;
@@ -1777,15 +1740,14 @@
             btnSpinner.classList.remove('hidden');
 
             const formData = new FormData(e.target);
-            const imageFile = formData.get('image');
             
             try {
-                const imageUrl = await uploadImage(imageFile);
+                // CHANGED: Assign a default placeholder image instead of uploading.
+                const imageUrl = "https://placehold.co/600x400/E2E8F0/4A5568?text=Pas+d'image";
                 const newProduct = {
                     title: formData.get('title'), brand: formData.get('brand'), model: formData.get('model'), year: formData.get('year'), wilaya: formData.get('wilaya'), commune: formData.get('commune'), condition: formData.get('condition'), price: parseInt(formData.get('price')), description: formData.get('description'), imageUrl: imageUrl, timestamp: new Date()
                 };
-                // FIXED: Using correct, structured path for Firestore collection
-                await addDoc(collection(db, "artifacts", appId, "public", "data", "products"), newProduct);
+                await addDoc(collection(db, "products"), newProduct);
                 showMessage("Annonce soumise avec succès!", 4000, 'success');
                 e.target.reset();
                 elements.postProductModal.classList.add('hidden');
