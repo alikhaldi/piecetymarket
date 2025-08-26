@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <meta name="description" content="Marché des pièces auto en Algérie" />
+    <meta name="description" content="Piecety - Votre marché fiable pour les pièces auto en Algérie" />
     <title>Piecety - Marché des Pièces Auto en Algérie</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <!-- Replace with local Tailwind CSS in production: https://tailwindcss.com/docs/installation -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="manifest" href="/manifest.json" />
@@ -85,6 +86,15 @@
         }
         .hero-section {
             background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"%3E%3Cpath d="M11 18c3.5 0 6.5 4 6.5 9 0 5-3 9-6.5 9s-6.5-4-6.5-9c0-5 3-9 6.5-9zm40 40c3.5 0 6.5 4 6.5 9 0 5-3 9-6.5 9s-6.5-4-6.5-9c0-5 3-9 6.5-9zm40-40c3.5 0 6.5 4 6.5 9 0 5-3 9-6.5 9s-6.5-4-6.5-9c0-5 3-9 6.5-9z" fill="%23ffffff" opacity="0.1"/%3E%3C/svg%3E');
+            position: relative;
+        }
+        .hero-search {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 500px;
         }
         [role="button"], button, a, input, select, textarea {
             focus-visible: outline-none;
@@ -102,9 +112,16 @@
         }
         .icon-btn {
             padding: 0.75rem;
+            min-width: 44px;
+            min-height: 44px;
         }
         img {
             background: url('https://placehold.co/20x20/E2E8F0/4A5568?text=...') center/cover;
+        }
+        .category-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
     </style>
 </head>
@@ -140,7 +157,7 @@
                     <span id="cart-count" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full hidden">0</span>
                 </button>
                 <div id="auth-links" class="flex items-center space-x-4">
-                    <button id="login-btn" class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full font-semibold transition-colors duration-200 shadow-md" data-i18n-key="connect">Se connecter</button>
+                    <button id="login-btn" class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full font-semibold transition-colors duration-200 shadow-md icon-btn" data-i18n-key="connect">Se connecter</button>
                 </div>
             </nav>
             <button id="mobile-menu-btn" class="md:hidden icon-btn text-gray-600 hover:text-blue-600 focus:outline-none" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
@@ -159,10 +176,10 @@
         <div class="pt-4 border-t border-gray-200">
             <h3 class="text-lg font-semibold text-gray-600" data-i18n-key="language">Langue</h3>
             <div class="flex space-x-4 mt-2">
-                <button class="p-2 border rounded-md text-sm font-medium lang-btn" data-lang="fr">Français</button>
-                <button class="p-2 border rounded-md text-sm font-medium lang-btn" data-lang="en">English</button>
-                <button class="p-2 border rounded-md text-sm font-medium lang-btn" data-lang="ar">العربية</button>
-                <button id="mobile-dark-mode-toggle" class="p-2 border rounded-md text-sm font-medium">Dark Mode</button>
+                <button class="p-2 border rounded-md text-sm font-medium lang-btn icon-btn" data-lang="fr">Français</button>
+                <button class="p-2 border rounded-md text-sm font-medium lang-btn icon-btn" data-lang="en">English</button>
+                <button class="p-2 border rounded-md text-sm font-medium lang-btn icon-btn" data-lang="ar">العربية</button>
+                <button id="mobile-dark-mode-toggle" class="p-2 border rounded-md text-sm font-medium icon-btn">Dark Mode</button>
             </div>
         </div>
     </div>
@@ -175,8 +192,20 @@
                     <input type="range" id="filter-price" min="0" max="100000" value="100000" class="w-full" />
                     <span id="filter-price-value" class="text-sm text-gray-600">0 - 100,000 DA</span>
                 </div>
+                <div>
+                    <label for="filter-category" class="block font-medium mb-1" data-i18n-key="category_label">Catégorie</label>
+                    <select id="filter-category" class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="" data-i18n-key="select_category">Toutes les catégories</option>
+                        <option value="engine" data-i18n-key="category_engine">Moteur</option>
+                        <option value="brakes" data-i18n-key="category_brakes">Freins</option>
+                        <option value="fuel_system" data-i18n-key="category_fuel_system">Système de carburant</option>
+                        <option value="cooling" data-i18n-key="category_cooling">Refroidissement</option>
+                        <option value="tires" data-i18n-key="category_tires">Pneus & Jantes</option>
+                        <option value="electrical" data-i18n-key="category_electrical">Électrique</option>
+                    </select>
+                </div>
             </div>
-            <button id="filter-toggle-mobile" class="md:hidden mt-4 px-4 py-2 bg-blue-600 text-white rounded-full font-semibold" data-i18n-key="filters">Filtres</button>
+            <button id="filter-toggle-mobile" class="md:hidden mt-4 px-4 py-2 bg-blue-600 text-white rounded-full font-semibold icon-btn" data-i18n-key="filters">Filtres</button>
         </aside>
         <div id="content-container" class="md:w-3/4 md:pl-4"></div>
     </main>
@@ -186,9 +215,9 @@
             <span class="text-xs" data-i18n-key="footer_location_text">Fièrement au service de Hassi R'Mel et de toute l'Algérie.</span>
         </p>
         <div class="mt-4 flex justify-center space-x-4">
-            <a href="https://facebook.com" target="_blank" class="text-white hover:text-blue-400" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-            <a href="https://instagram.com" target="_blank" class="text-white hover:text-blue-400" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-            <a href="#contact" class="text-white hover:text-blue-400" data-i18n-key="contact_us" aria-label="Contactez-nous">Contactez-nous</a>
+            <a href="https://facebook.com" target="_blank" class="text-white hover:text-blue-400 icon-btn" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://instagram.com" target="_blank" class="text-white hover:text-blue-400 icon-btn" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#contact" class="text-white hover:text-blue-400 icon-btn" data-i18n-key="contact_us" aria-label="Contactez-nous">Contactez-nous</a>
         </div>
     </footer>
     <div id="post-product-modal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden p-4 modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
@@ -266,7 +295,7 @@
                         <textarea id="product-description" name="description" rows="3" placeholder="Informations supplémentaires..." class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none product-description"></textarea>
                     </div>
                     <div class="text-center">
-                        <button type="submit" id="submit-ad-btn" class="mt-4 px-6 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md flex items-center justify-center disabled:bg-blue-400 disabled:cursor-not-allowed" data-i18n-key="submit_ad_btn_text">
+                        <button type="submit" id="submit-ad-btn" class="mt-4 px-6 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md flex items-center justify-center disabled:bg-blue-400 disabled:cursor-not-allowed icon-btn" data-i18n-key="submit_ad_btn_text">
                             <span class="btn-text">Soumettre</span>
                             <svg class="animate-spin ml-3 h-5 w-5 text-white hidden btn-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -286,7 +315,7 @@
             <h3 id="auth-modal-title" class="text-2xl font-bold mb-6 text-center" data-i18n-key="connect">Se connecter</h3>
             <div class="space-y-4">
                 <p class="text-center text-gray-600" data-i18n-key="login_text">Connectez-vous pour accéder à toutes les fonctionnalités.</p>
-                <button id="google-login-btn" class="w-full flex items-center justify-center px-4 py-3 bg-white border border-gray-300 rounded-full text-gray-700 font-semibold hover:bg-gray-100 transition-colors duration-200 shadow-sm">
+                <button id="google-login-btn" class="w-full flex items-center justify-center px-4 py-3 bg-white border border-gray-300 rounded-full text-gray-700 font-semibold hover:bg-gray-100 transition-colors duration-200 shadow-sm icon-btn">
                     <i class="fab fa-google text-xl mr-2"></i>
                     <span data-i18n-key="google_login">Se connecter avec Google</span>
                 </button>
@@ -305,6 +334,18 @@
                     <input type="range" id="filter-price-mobile" min="0" max="100000" value="100000" class="w-full" />
                     <span id="filter-price-value-mobile" class="text-sm text-gray-600">0 - 100,000 DA</span>
                 </div>
+                <div>
+                    <label for="filter-category-mobile" class="block font-medium mb-1" data-i18n-key="category_label">Catégorie</label>
+                    <select id="filter-category-mobile" class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="" data-i18n-key="select_category">Toutes les catégories</option>
+                        <option value="engine" data-i18n-key="category_engine">Moteur</option>
+                        <option value="brakes" data-i18n-key="category_brakes">Freins</option>
+                        <option value="fuel_system" data-i18n-key="category_fuel_system">Système de carburant</option>
+                        <option value="cooling" data-i18n-key="category_cooling">Refroidissement</option>
+                        <option value="tires" data-i18n-key="category_tires">Pneus & Jantes</option>
+                        <option value="electrical" data-i18n-key="category_electrical">Électrique</option>
+                    </select>
+                </div>
             </div>
         </div>
     </div>
@@ -312,10 +353,14 @@
         <section class="text-center py-8 md:py-24 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl shadow-lg mb-8 md:mb-12 h-48 md:h-64 hero-section">
             <h1 class="text-2xl sm:text-3xl md:text-5xl font-extrabold mb-4" data-i18n-key="hero_title">Trouvez la bonne pièce pour votre voiture</h1>
             <p class="text-base sm:text-lg md:text-xl font-light mb-8" data-i18n-key="hero_subtitle">Le marché algérien des pièces automobiles le plus fiable.</p>
+            <div class="hero-search relative hidden md:block">
+                <input id="hero-search-input" type="text" placeholder="Rechercher une pièce..." class="w-full p-3 pl-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 shadow-inner" aria-label="Rechercher une pièce" />
+                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            </div>
         </section>
         <section class="mb-8 md:mb-12" aria-label="Catégories de pièces">
-            <h2 class="text-2xl md:text-3xl font-bold mb-6 text-center" data-i18n-key="categories_title">Catégories de Pièces</h2>
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+            <h2 class="text-2xl md:text-4xl font-bold mb-6 text-center" data-i18n-key="categories_title">Catégories de Pièces</h2>
+            <div class="category-row grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
                 <a href="#" class="bg-white rounded-xl shadow-md p-4 text-center category-card">
                     <div class="p-4 rounded-full bg-blue-100 text-blue-600 mx-auto w-16 h-16 flex items-center justify-center mb-2 transition-transform duration-300 category-icon">
                         <i class="fas fa-cogs text-3xl"></i>
@@ -355,19 +400,27 @@
             </div>
         </section>
     </template>
-    <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
     <script>
+        // Firebase configuration (replace with your actual config)
         const firebaseConfig = {
-            // Your Firebase config here
+            apiKey: "YOUR_API_KEY",
+            authDomain: "piecety-app-b39c4.firebaseapp.com",
+            projectId: "piecety-app-b39c4",
+            storageBucket: "piecety-app-b39c4.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
         };
         const app = firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
+        db.enablePersistence().catch(err => console.error("Offline persistence error:", err));
         const provider = new firebase.auth.GoogleAuthProvider();
         let currentUser = null;
         let userCart = {};
+        let userFavorites = [];
         let currentLang = localStorage.getItem('piecety_lang') || 'fr';
         let currentView = 'home';
         let allProducts = [];
@@ -419,7 +472,13 @@
                 item_total: "Total de l'article",
                 remove: "Supprimer",
                 loading_text: "Envoi...",
-                contact_us: "Contactez-nous"
+                contact_us: "Contactez-nous",
+                add_to_cart: "Ajouter au panier",
+                contact_seller: "Contacter le vendeur",
+                clear_cart: "Vider le panier",
+                checkout: "Paiement",
+                no_products: "Aucune annonce disponible.",
+                image_load_error: "Impossible de charger l'image."
             },
             en: {
                 hero_title: "Find the right part for your car",
@@ -467,7 +526,13 @@
                 item_total: "Item Total",
                 remove: "Remove",
                 loading_text: "Submitting...",
-                contact_us: "Contact Us"
+                contact_us: "Contact Us",
+                add_to_cart: "Add to Cart",
+                contact_seller: "Contact Seller",
+                clear_cart: "Clear Cart",
+                checkout: "Checkout",
+                no_products: "No listings available.",
+                image_load_error: "Unable to load image."
             },
             ar: {
                 hero_title: "ابحث عن القطعة المناسبة لسيارتك",
@@ -515,7 +580,13 @@
                 item_total: "إجمالي العنصر",
                 remove: "إزالة",
                 loading_text: "جارٍ الإرسال...",
-                contact_us: "اتصل بنا"
+                contact_us: "اتصل بنا",
+                add_to_cart: "إضافة إلى السلة",
+                contact_seller: "الاتصال بالبائع",
+                clear_cart: "إفراغ السلة",
+                checkout: "الدفع",
+                no_products: "لا توجد إعلانات متاحة.",
+                image_load_error: "غير قادر على تحميل الصورة."
             }
         };
         const car_data = {
@@ -555,12 +626,20 @@
             postProductCommuneSelect: document.getElementById('product-commune'),
             filterToggleMobile: document.getElementById('filter-toggle-mobile'),
             filterModal: document.getElementById('filter-modal'),
-            filterModalCloseBtn: document.getElementById('filter-modal-close-btn')
+            filterModalCloseBtn: document.getElementById('filter-modal-close-btn'),
+            filterPrice: document.getElementById('filter-price'),
+            filterPriceValue: document.getElementById('filter-price-value'),
+            filterPriceMobile: document.getElementById('filter-price-mobile'),
+            filterPriceValueMobile: document.getElementById('filter-price-value-mobile'),
+            filterCategory: document.getElementById('filter-category'),
+            filterCategoryMobile: document.getElementById('filter-category-mobile'),
+            searchInput: document.getElementById('search-input'),
+            heroSearchInput: document.getElementById('hero-search-input')
         };
         const showMessage = (msg, duration = 3500, type = "info", errorCode = null) => {
             if (!elements.messageBox) return;
             let displayMsg = msg;
-            if (errorCode === 'ERR_TUNNEL_CONNECTION_FAILED') {
+            if (errorCode) {
                 displayMsg = translations[currentLang].image_load_error || "Impossible de charger l'image.";
             }
             elements.messageBox.textContent = displayMsg;
@@ -577,6 +656,9 @@
             document.documentElement.lang = lang;
             document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
             elements.searchInput.placeholder = translations[lang].search_placeholder || "Rechercher une pièce...";
+            if (elements.heroSearchInput) {
+                elements.heroSearchInput.placeholder = translations[lang].search_placeholder || "Rechercher une pièce...";
+            }
         };
         const populateSelect = (select, options, defaultKey, lang) => {
             if (!select) return;
@@ -598,6 +680,12 @@
         const closeAuthModal = () => {
             elements.authModal.classList.add('hidden');
         };
+        const openFilterModal = () => {
+            elements.filterModal.classList.remove('hidden');
+        };
+        const closeFilterModal = () => {
+            elements.filterModal.classList.add('hidden');
+        };
         const postProductBtnClick = () => {
             if (!currentUser || currentUser.isAnonymous) {
                 showMessage(translations[currentLang].login_required, 4000, 'error');
@@ -616,24 +704,63 @@
                 cartCountEl.classList.add('hidden');
             }
         };
+        const debounce = (func, wait) => {
+            let timeout;
+            return (...args) => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        };
+        const updateURLParams = () => {
+            const params = new URLSearchParams();
+            if (elements.filterPrice.value !== '100000') {
+                params.set('price', elements.filterPrice.value);
+            }
+            if (elements.filterCategory.value) {
+                params.set('category', elements.filterCategory.value);
+            }
+            if (elements.searchInput.value) {
+                params.set('search', elements.searchInput.value);
+            }
+            window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
+        };
+        const applyFilters = () => {
+            const maxPrice = parseInt(elements.filterPrice.value);
+            const category = elements.filterCategory.value;
+            const search = elements.searchInput.value.toLowerCase();
+            const filteredProducts = allProducts.filter(product => {
+                return (!search || product.title.toLowerCase().includes(search)) &&
+                       (!category || product.category === category) &&
+                       (product.price <= maxPrice);
+            });
+            const grid = document.getElementById('listings-grid');
+            if (grid) {
+                displayProducts(filteredProducts, grid);
+            }
+        };
         const renderView = async (view, data) => {
             const container = document.getElementById('content-container');
             if (!container) return;
             currentView = view;
             document.title = `Piecety - ${view.charAt(0).toUpperCase() + view.slice(1)}`;
             container.innerHTML = '';
-            if (view === 'home') {
-                const template = document.getElementById('home-view-template').content.cloneNode(true);
-                container.appendChild(template);
-                await renderListings();
-            } else if (view === 'cart') {
-                await renderCartPage();
-            } else if (view === 'dashboard') {
-                await renderDashboardPage();
-            } else if (view === 'profile') {
-                await renderProfilePage(data);
-            } else if (view === 'product') {
-                await renderProductPage(data);
+            try {
+                if (view === 'home') {
+                    const template = document.getElementById('home-view-template').content.cloneNode(true);
+                    container.appendChild(template);
+                    await renderListings();
+                } else if (view === 'cart') {
+                    await renderCartPage();
+                } else if (view === 'dashboard') {
+                    await renderDashboardPage();
+                } else if (view === 'profile') {
+                    await renderProfilePage(data);
+                } else if (view === 'product') {
+                    await renderProductPage(data);
+                }
+            } catch (error) {
+                showMessage("Erreur lors du rendu de la page.", 3000, 'error');
+                console.error("Render error:", error);
             }
             translatePage(currentLang);
         };
@@ -644,12 +771,13 @@
             const container = document.getElementById('content-container');
             container.appendChild(grid);
             try {
-                const querySnapshot = await db.collection('products').get();
-                allProducts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                displayProducts(allProducts, grid);
+                db.collection('products').onSnapshot(snapshot => {
+                    allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    applyFilters();
+                });
             } catch (error) {
                 showMessage("Erreur lors du chargement des annonces.", 3000, 'error');
-                console.error("Error fetching listings: ", error);
+                console.error("Error fetching listings:", error);
             }
         };
         const displayProducts = (products, grid) => {
@@ -659,12 +787,12 @@
                 return;
             }
             products.forEach(item => {
+                const conditionBadge = item.condition === 'new' ? `<span class="absolute top-2 right-2 bg-green-100 text-green-800 px-2 py-1 rounded">${translations[currentLang].new}</span>` : `<span class="absolute top-2 right-2 bg-yellow-100 text-yellow-800 px-2 py-1 rounded">${translations[currentLang].used}</span>`;
                 const card = document.createElement('div');
                 card.className = 'bg-white rounded-lg shadow-md overflow-hidden flex flex-col min-h-[200px]';
-                const conditionBadge = item.condition === 'new' ? `<span class="absolute top-2 right-2 bg-green-100 text-green-800 px-2 py-1 rounded">${translations[currentLang].new}</span>` : `<span class="absolute top-2 right-2 bg-yellow-100 text-yellow-800 px-2 py-1 rounded">${translations[currentLang].used}</span>`;
                 card.innerHTML = `
                     <div class="relative">
-                        <img src="${item.imageUrl}" alt="${item.title}" class="w-full h-48 object-cover" loading="lazy" onerror="this.src='https://placehold.co/300x200/E2E8F0/4A5568?text=Image+Indisponible';" />
+                        <img src="${item.imageUrl}" alt="${item.title}" class="w-full h-48 object-cover" loading="lazy" srcset="${item.imageUrl} 600w, ${item.imageUrl.replace('600x400', '300x200')} 300w" sizes="(max-width: 600px) 300px, 600px" onerror="this.src='https://placehold.co/300x200/E2E8F0/4A5568?text=Image+Indisponible';" />
                         ${conditionBadge}
                     </div>
                     <div class="p-4 flex-1 flex flex-col">
@@ -694,14 +822,14 @@
             });
             translatePage(currentLang);
         };
-        const renderProductPage = (product) => {
+        const renderProductPage = async (product) => {
             if (!product) return;
             const container = document.getElementById('content-container');
             container.innerHTML = `
                 <div class="bg-white rounded-lg shadow-md p-6">
-                    <button id="back-to-listings-btn" class="mb-4 text-blue-600 hover:text-blue-800 flex items-center"><i class="fas fa-arrow-left mr-2"></i> Retour</button>
+                    <button id="back-to-listings-btn" class="mb-4 text-blue-600 hover:text-blue-800 flex items-center icon-btn"><i class="fas fa-arrow-left mr-2"></i> Retour</button>
                     <div class="flex flex-col md:flex-row gap-6">
-                        <img id="product-image-detail" src="${product.imageUrl}" alt="${product.title}" class="w-full md:w-1/2 h-64 object-cover rounded-lg" loading="lazy" onerror="this.src='https://placehold.co/600x400/E2E8F0/4A5568?text=Image+Indisponible';" />
+                        <img id="product-image-detail" src="${product.imageUrl}" alt="${product.title}" class="w-full md:w-1/2 h-64 object-cover rounded-lg" loading="lazy" srcset="${product.imageUrl} 600w, ${product.imageUrl.replace('600x400', '300x200')} 300w" sizes="(max-width: 600px) 300px, 600px" onerror="this.src='https://placehold.co/600x400/E2E8F0/4A5568?text=Image+Indisponible';" />
                         <div class="flex-1">
                             <h2 id="product-title-detail" class="text-2xl font-bold mb-2">${product.title}</h2>
                             <p id="product-price-detail" class="text-blue-600 font-bold text-xl mb-4">${product.price.toLocaleString()} DA</p>
@@ -713,32 +841,37 @@
                             <p><strong>${translations[currentLang].commune_label}:</strong> <span id="product-commune-detail">${product.commune || "-"}</span></p>
                             <p><strong>Vendeur:</strong> <a href="#" id="seller-profile-link" class="text-blue-600 hover:underline">${product.sellerName || 'Vendeur Anonyme'}</a></p>
                             <div class="mt-4 flex space-x-4">
-                                <button id="add-to-cart-btn" class="px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700">${translations[currentLang].add_to_cart}</button>
-                                <button id="contact-seller-btn" class="px-4 py-2 bg-gray-600 text-white rounded-full hover:bg-gray-700" disabled>${translations[currentLang].contact_seller}</button>
+                                <button id="add-to-cart-btn" class="px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 icon-btn">${translations[currentLang].add_to_cart}</button>
+                                <button id="contact-seller-btn" class="px-4 py-2 bg-gray-600 text-white rounded-full hover:bg-gray-700 icon-btn" disabled>${translations[currentLang].contact_seller}</button>
                             </div>
                         </div>
                     </div>
                 </div>
             `;
-            document.getElementById('seller-profile-link').addEventListener('click', (e) => {
-                e.preventDefault();
-                renderView('profile', { userId: product.sellerUid, userName: product.sellerName });
-            });
-            document.getElementById('back-to-listings-btn').addEventListener('click', () => renderView('home'));
-            document.getElementById('add-to-cart-btn').addEventListener('click', () => {
-                if (!currentUser || currentUser.isAnonymous) {
-                    showMessage(translations[currentLang].login_required, 4000, 'error');
-                    openAuthModal();
-                    return;
-                }
-                addToCart(product);
-            });
-            const contactBtn = document.getElementById('contact-seller-btn');
-            if (currentUser) {
-                contactBtn.disabled = false;
-                contactBtn.addEventListener('click', () => {
-                    showMessage("La messagerie directe sera bientôt disponible!", 3000, "info");
+            try {
+                document.getElementById('seller-profile-link').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    renderView('profile', { userId: product.sellerUid, userName: product.sellerName });
                 });
+                document.getElementById('back-to-listings-btn').addEventListener('click', () => renderView('home'));
+                document.getElementById('add-to-cart-btn').addEventListener('click', () => {
+                    if (!currentUser || currentUser.isAnonymous) {
+                        showMessage(translations[currentLang].login_required, 4000, 'error');
+                        openAuthModal();
+                        return;
+                    }
+                    addToCart(product);
+                });
+                const contactBtn = document.getElementById('contact-seller-btn');
+                if (currentUser) {
+                    contactBtn.disabled = false;
+                    contactBtn.addEventListener('click', () => {
+                        showMessage("La messagerie directe sera bientôt disponible!", 3000, "info");
+                    });
+                }
+            } catch (error) {
+                showMessage("Erreur lors du rendu du produit.", 3000, 'error');
+                console.error("Product page error:", error);
             }
             translatePage(currentLang);
         };
@@ -746,14 +879,14 @@
             const container = document.getElementById('content-container');
             container.innerHTML = `
                 <div class="bg-white rounded-lg shadow-md p-6">
-                    <button id="back-from-cart-btn" class="mb-4 text-blue-600 hover:text-blue-800 flex items-center"><i class="fas fa-arrow-left mr-2"></i> Retour</button>
+                    <button id="back-from-cart-btn" class="mb-4 text-blue-600 hover:text-blue-800 flex items-center icon-btn"><i class="fas fa-arrow-left mr-2"></i> Retour</button>
                     <h2 class="text-2xl font-bold mb-6">${translations[currentLang].cart}</h2>
                     <div id="cart-items-container" class="space-y-4"></div>
                     <div class="mt-6 flex justify-between items-center">
                         <p class="text-lg font-bold"><span data-i18n-key="total">${translations[currentLang].total}</span>: <span id="cart-total-price">0 DA</span></p>
                         <div class="flex space-x-4">
-                            <button id="clear-cart-btn" class="px-4 py-2 bg-red-600 text-white rounded-full hover:bg-red-700">${translations[currentLang].clear_cart}</button>
-                            <button id="checkout-btn" class="px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700" disabled>${translations[currentLang].checkout}</button>
+                            <button id="clear-cart-btn" class="px-4 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 icon-btn">${translations[currentLang].clear_cart}</button>
+                            <button id="checkout-btn" class="px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 icon-btn" disabled>${translations[currentLang].checkout}</button>
                         </div>
                     </div>
                 </div>
@@ -766,64 +899,73 @@
             if (!cartContainer) return;
             cartContainer.innerHTML = '';
             if (totalSpan) totalSpan.textContent = "0 DA";
-            if (checkoutBtn) {
-                checkoutBtn.addEventListener('click', () => showMessage("La page de paiement sera bientôt disponible!", 3000, "info"));
-            }
-            if (clearCartBtn) {
-                clearCartBtn.addEventListener('click', async () => {
-                    if (!currentUser) return;
-                    userCart = {};
-                    await db.doc(`users/${currentUser.uid}`).set({ cart: userCart }, { merge: true });
-                    showMessage("Panier vidé!", 3000, "success");
-                    renderView('cart');
+            try {
+                if (checkoutBtn) {
+                    checkoutBtn.addEventListener('click', () => showMessage("La page de paiement sera bientôt disponible!", 3000, "info"));
+                }
+                if (clearCartBtn) {
+                    clearCartBtn.addEventListener('click', async () => {
+                        if (!currentUser) return;
+                        userCart = {};
+                        await db.doc(`users/${currentUser.uid}`).set({ cart: userCart }, { merge: true });
+                        showMessage("Panier vidé!", 3000, "success");
+                        renderView('cart');
+                    });
+                }
+                if (backBtn) backBtn.addEventListener('click', () => renderView('home'));
+                if (!currentUser || Object.keys(userCart).length === 0) {
+                    cartContainer.innerHTML = `<p class="text-center text-gray-500">${translations[currentLang].your_cart_is_empty}</p>`;
+                    if (checkoutBtn) checkoutBtn.disabled = true;
+                    return;
+                }
+                let total = 0;
+                const productIds = Object.keys(userCart);
+                const productsInCart = allProducts.filter(p => p && productIds.includes(p.id));
+                productsInCart.forEach(product => {
+                    if (!product) return;
+                    const item = userCart[product.id];
+                    const itemTotal = product.price * item.quantity;
+                    total += itemTotal;
+                    const cartItemEl = document.createElement('div');
+                    cartItemEl.className = 'flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 p-4 border-b border-gray-200';
+                    cartItemEl.innerHTML = `
+                        <img src="${product.imageUrl}" alt="${product.title}" class="w-24 h-24 object-cover rounded-lg" loading="lazy" srcset="${product.imageUrl} 600w, ${product.imageUrl.replace('600x400', '300x200')} 300w" sizes="(max-width: 600px) 300px, 600px" onerror="this.src='https://placehold.co/300x200/E2E8F0/4A5568?text=Image+Indisponible';" />
+                        <div class="flex-1">
+                            <h4 class="font-semibold">${product.title}</h4>
+                            <p class="text-gray-500">${product.price.toLocaleString()} DA</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span data-i18n-key="quantity">${translations[currentLang].quantity}:</span>
+                            <input type="number" min="1" max="10" value="${item.quantity}" class="w-16 text-center border rounded-md text-lg" data-product-id="${product.id}">
+                        </div>
+                        <p class="font-semibold"><span data-i18n-key="item_total">${translations[currentLang].item_total}</span>: ${itemTotal.toLocaleString()} DA</p>
+                        <button class="text-red-500 hover:text-red-700 remove-from-cart-btn icon-btn" data-product-id="${product.id}">
+                            <i class="fas fa-trash"></i> <span data-i18n-key="remove">${translations[currentLang].remove}</span>
+                        </button>
+                    `;
+                    cartContainer.appendChild(cartItemEl);
                 });
-            }
-            if (backBtn) backBtn.addEventListener('click', () => renderView('home'));
-            if (!currentUser || Object.keys(userCart).length === 0) {
-                cartContainer.innerHTML = `<p class="text-center text-gray-500">${translations[currentLang].your_cart_is_empty}</p>`;
-                if (checkoutBtn) checkoutBtn.disabled = true;
-                return;
-            }
-            let total = 0;
-            const productIds = Object.keys(userCart);
-            const productsInCart = allProducts.filter(p => p && productIds.includes(p.id));
-            productsInCart.forEach(product => {
-                if (!product) return;
-                const item = userCart[product.id];
-                const itemTotal = product.price * item.quantity;
-                total += itemTotal;
-                const cartItemEl = document.createElement('div');
-                cartItemEl.className = 'flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 p-4 border-b border-gray-200';
-                cartItemEl.innerHTML = `
-                    <img src="${product.imageUrl}" alt="${product.title}" class="w-24 h-24 object-cover rounded-lg" loading="lazy" onerror="this.src='https://placehold.co/300x200/E2E8F0/4A5568?text=Image+Indisponible';" />
-                    <div class="flex-1">
-                        <h4 class="font-semibold">${product.title}</h4>
-                        <p class="text-gray-500">${product.price.toLocaleString()} DA</p>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <span data-i18n-key="quantity">${translations[currentLang].quantity}:</span>
-                        <input type="number" min="1" value="${item.quantity}" class="w-16 text-center border rounded-md text-lg" data-product-id="${product.id}">
-                    </div>
-                    <p class="font-semibold"><span data-i18n-key="item_total">${translations[currentLang].item_total}</span>: ${itemTotal.toLocaleString()} DA</p>
-                    <button class="text-red-500 hover:text-red-700 remove-from-cart-btn icon-btn" data-product-id="${product.id}">
-                        <i class="fas fa-trash"></i> <span data-i18n-key="remove">${translations[currentLang].remove}</span>
-                    </button>
-                `;
-                cartContainer.appendChild(cartItemEl);
-            });
-            cartContainer.querySelectorAll('input[type="number"]').forEach(input => {
-                input.addEventListener('change', (e) => {
-                    updateCartItem(e.target.dataset.productId, e.target.value);
+                cartContainer.querySelectorAll('input[type="number"]').forEach(input => {
+                    input.addEventListener('change', (e) => {
+                        let value = parseInt(e.target.value);
+                        if (value > 10) value = 10;
+                        if (value < 1) value = 1;
+                        e.target.value = value;
+                        updateCartItem(e.target.dataset.productId, value);
+                    });
                 });
-            });
-            cartContainer.querySelectorAll('.remove-from-cart-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    removeFromCart(e.currentTarget.dataset.productId);
+                cartContainer.querySelectorAll('.remove-from-cart-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        removeFromCart(e.currentTarget.dataset.productId);
+                    });
                 });
-            });
-            if (totalSpan) totalSpan.textContent = `${total.toLocaleString()} DA`;
-            if (checkoutBtn && total > 0) {
-                checkoutBtn.disabled = false;
+                if (totalSpan) totalSpan.textContent = `${total.toLocaleString()} DA`;
+                if (checkoutBtn && total > 0) {
+                    checkoutBtn.disabled = false;
+                }
+            } catch (error) {
+                showMessage("Erreur lors du rendu du panier.", 3000, 'error');
+                console.error("Cart page error:", error);
             }
             translatePage(currentLang);
         };
@@ -843,48 +985,53 @@
             const grid = document.getElementById('my-listings-grid');
             grid.innerHTML = `<p class="col-span-full text-center py-6 text-gray-600">Chargement de vos annonces...</p>`;
             try {
-                const q = db.collection("products").where("sellerUid", "==", currentUser.uid);
-                const querySnapshot = await q.get();
-                const userProducts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                grid.innerHTML = "";
-                if (userProducts.length === 0) {
-                    grid.innerHTML = `<p class="col-span-full text-center py-6 text-gray-500">Vous n'avez aucune annonce active.</p>`;
-                    return;
-                }
-                userProducts.forEach(item => {
-                    const conditionBadge = item.condition === 'new' ? `<span class="absolute top-2 right-2 bg-green-100 text-green-800 px-2 py-1 rounded">${translations[currentLang].new}</span>` : `<span class="absolute top-2 right-2 bg-yellow-100 text-yellow-800 px-2 py-1 rounded">${translations[currentLang].used}</span>`;
-                    const card = document.createElement('div');
-                    card.className = "bg-white rounded-lg shadow-md overflow-hidden flex flex-col min-h-[200px]";
-                    card.innerHTML = `
-                        <div class="relative">
-                            <img src="${item.imageUrl}" alt="${item.title}" class="w-full h-40 object-cover" loading="lazy" onerror="this.src='https://placehold.co/300x200/E2E8F0/4A5568?text=Image+Indisponible';" />
-                            ${conditionBadge}
-                        </div>
-                        <div class="p-4 flex-1 flex flex-col">
-                            <h4 class="font-semibold">${item.title}</h4>
-                            <p class="text-gray-600 font-bold mt-2">${item.price.toLocaleString()} DA</p>
-                            <div class="mt-4 pt-4 border-t flex space-x-2 text-sm">
-                                <button class="flex-1 bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 edit-btn">Modifier</button>
-                                <button class="flex-1 bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 sold-btn">Vendu</button>
-                                <button class="flex-1 bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 delete-btn" data-id="${item.id}">Supprimer</button>
+                db.collection("products").where("sellerUid", "==", currentUser.uid).onSnapshot(snapshot => {
+                    const userProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    grid.innerHTML = "";
+                    if (userProducts.length === 0) {
+                        grid.innerHTML = `<p class="col-span-full text-center py-6 text-gray-500">Vous n'avez aucune annonce active.</p>`;
+                        return;
+                    }
+                    userProducts.forEach(item => {
+                        const conditionBadge = item.condition === 'new' ? `<span class="absolute top-2 right-2 bg-green-100 text-green-800 px-2 py-1 rounded">${translations[currentLang].new}</span>` : `<span class="absolute top-2 right-2 bg-yellow-100 text-yellow-800 px-2 py-1 rounded">${translations[currentLang].used}</span>`;
+                        const card = document.createElement('div');
+                        card.className = "bg-white rounded-lg shadow-md overflow-hidden flex flex-col min-h-[200px]";
+                        card.innerHTML = `
+                            <div class="relative">
+                                <img src="${item.imageUrl}" alt="${item.title}" class="w-full h-40 object-cover" loading="lazy" srcset="${item.imageUrl} 600w, ${item.imageUrl.replace('600x400', '300x200')} 300w" sizes="(max-width: 600px) 300px, 600px" onerror="this.src='https://placehold.co/300x200/E2E8F0/4A5568?text=Image+Indisponible';" />
+                                ${conditionBadge}
                             </div>
-                        </div>
-                    `;
-                    card.querySelector('.edit-btn').addEventListener('click', () => showMessage("La modification sera bientôt disponible.", 3000, "info"));
-                    card.querySelector('.sold-btn').addEventListener('click', () => showMessage("Le marquage 'vendu' sera bientôt disponible.", 3000, "info"));
-                    card.querySelector('.delete-btn').addEventListener('click', async (e) => {
-                        const productId = e.currentTarget.dataset.id;
-                        if (confirm("Êtes-vous sûr de vouloir supprimer cette annonce?")) {
-                            await db.doc(`products/${productId}`).delete();
-                            showMessage("Annonce supprimée avec succès.", 3000, "success");
-                            renderView('dashboard');
-                        }
+                            <div class="p-4 flex-1 flex flex-col">
+                                <h4 class="font-semibold">${item.title}</h4>
+                                <p class="text-gray-600 font-bold mt-2">${item.price.toLocaleString()} DA</p>
+                                <div class="mt-4 pt-4 border-t flex space-x-2 text-sm">
+                                    <button class="flex-1 bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 edit-btn icon-btn">Modifier</button>
+                                    <button class="flex-1 bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 sold-btn icon-btn">Vendu</button>
+                                    <button class="flex-1 bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 delete-btn icon-btn" data-id="${item.id}">Supprimer</button>
+                                </div>
+                            </div>
+                        `;
+                        card.querySelector('.edit-btn').addEventListener('click', () => showMessage("La modification sera bientôt disponible.", 3000, "info"));
+                        card.querySelector('.sold-btn').addEventListener('click', () => showMessage("Le marquage 'vendu' sera bientôt disponible.", 3000, "info"));
+                        card.querySelector('.delete-btn').addEventListener('click', async (e) => {
+                            const productId = e.currentTarget.dataset.id;
+                            if (confirm("Êtes-vous sûr de vouloir supprimer cette annonce?")) {
+                                try {
+                                    await db.doc(`products/${productId}`).delete();
+                                    showMessage("Annonce supprimée avec succès.", 3000, "success");
+                                    renderView('dashboard');
+                                } catch (error) {
+                                    showMessage("Erreur lors de la suppression.", 3000, 'error');
+                                    console.error("Delete error:", error);
+                                }
+                            }
+                        });
+                        grid.appendChild(card);
                     });
-                    grid.appendChild(card);
                 });
             } catch (error) {
                 showMessage("Erreur lors du chargement des annonces.", 3000, 'error');
-                console.error("Error fetching dashboard: ", error);
+                console.error("Dashboard error:", error);
             }
         };
         const renderProfilePage = async (data) => {
@@ -897,258 +1044,16 @@
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <h2 class="text-2xl font-bold mb-6"><span id="profile-name">${data.userName || "Vendeur"}</span></h2>
                     <textarea id="profile-bio" class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 product-description" placeholder="Ajouter une bio..."></textarea>
-                    <button id="save-bio-btn" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700">Enregistrer la bio</button>
+                    <button id="save-bio-btn" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 icon-btn">Enregistrer la bio</button>
                     <div id="user-products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-6"></div>
                 </div>
             `;
             const grid = document.getElementById('user-products-grid');
             grid.innerHTML = `<p class="col-span-full text-center py-6 text-gray-600">Chargement des annonces...</p>`;
             try {
-                const q = db.collection("products").where("sellerUid", "==", data.userId);
-                const querySnapshot = await q.get();
-                const userProducts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                displayProducts(userProducts, grid);
-                document.getElementById('save-bio-btn').addEventListener('click', async () => {
-                    const bio = document.getElementById('profile-bio').value;
-                    await db.doc(`users/${data.userId}`).set({ bio }, { merge: true });
-                    showMessage("Bio enregistrée!", 3000, "success");
-                });
-            } catch (error) {
-                showMessage("Erreur lors du chargement du profil.", 3000, 'error');
-                console.error("Error fetching profile: ", error);
-            }
-        };
-        const addToCart = async (product) => {
-            if (!currentUser) return;
-            try {
-                userCart[product.id] = {
-                    productId: product.id,
-                    quantity: (userCart[product.id]?.quantity || 0) + 1
-                };
-                await db.doc(`users/${currentUser.uid}`).set({ cart: userCart }, { merge: true });
-                showMessage(`${product.title} ajouté au panier.`, 3000, 'success');
-                updateCartDisplay();
-            } catch (error) {
-                showMessage("Erreur lors de l'ajout au panier.", 3000, 'error');
-                console.error("Error adding to cart: ", error);
-            }
-        };
-        const updateCartItem = async (productId, quantity) => {
-            if (!currentUser) return;
-            try {
-                userCart[productId].quantity = parseInt(quantity);
-                if (userCart[productId].quantity <= 0) {
-                    delete userCart[productId];
+                const userDoc = await db.doc(`users/${data.userId}`).get();
+                if (userDoc.exists && userDoc.data().bio) {
+                    document.getElementById('profile-bio').value = userDoc.data().bio;
                 }
-                await db.doc(`users/${currentUser.uid}`).set({ cart: userCart }, { merge: true });
-                renderView('cart');
-                updateCartDisplay();
-            } catch (error) {
-                showMessage("Erreur lors de la mise à jour du panier.", 3000, 'error');
-                console.error("Error updating cart: ", error);
-            }
-        };
-        const addToFavorites = async (productId) => {
-            if (!currentUser) return;
-            try {
-                const userDocRef = db.doc(`users/${currentUser.uid}`);
-                const userDoc = await userDocRef.get();
-                const favorites = userDoc.exists() && userDoc.data().favorites ? userDoc.data().favorites : [];
-                if (!favorites.includes(productId)) {
-                    favorites.push(productId);
-                    await userDocRef.set({ favorites }, { merge: true });
-                    showMessage("Ajouté aux favoris!", 3000, 'success');
-                } else {
-                    showMessage("Déjà dans les favoris.", 3000, 'info');
-                }
-            } catch (error) {
-                showMessage("Erreur lors de l'ajout aux favoris.", 3000, 'error');
-                console.error("Error adding to favorites: ", error);
-            }
-        };
-        const removeFromCart = async (productId) => {
-            if (!currentUser) return;
-            try {
-                delete userCart[productId];
-                await db.doc(`users/${currentUser.uid}`).set({ cart: userCart }, { merge: true });
-                renderView('cart');
-                updateCartDisplay();
-            } catch (error) {
-                showMessage("Erreur lors de la suppression du panier.", 3000, 'error');
-                console.error("Error removing from cart: ", error);
-            }
-        };
-        const insertDemoListingsOnce = async () => {
-            if (localStorage.getItem("demoListingsInserted")) return;
-            const demoTimestamp = new Date('2025-08-26T09:30:36');
-            const demoListings = [
-                { title: "Disque de frein avant Toyota Yaris 2015", category: "brakes", brand: "Toyota", model: "Yaris", year: "2015", wilaya: "Alger", commune: "Bab El Oued", condition: "used", price: 12000, description: "Disque en bon état, peu utilisé.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fbrake_disc_toyota_yaris.jpg?alt=media", timestamp: demoTimestamp, sellerUid: 'demo_seller_1', sellerName: 'Garage El Bahdja' },
-                { title: "Pneu Michelin 205/55 R16 neuf", category: "tires", brand: "Toyota", model: "Corolla", year: "2020", wilaya: "Oran", commune: "Es Senia", condition: "new", price: 8000, description: "Pneu de haute qualité, jamais monté.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fmichelin_tire.jpg?alt=media", timestamp: demoTimestamp, sellerUid: 'demo_seller_2', sellerName: 'Oran Pneus' },
-                { title: "Batterie 12V pour Peugeot 308", category: "electrical", brand: "Peugeot", model: "308", year: "2017", wilaya: "Constantine", commune: "El Khroub", condition: "used", price: 9000, description: "Batterie d'occasion, testée OK.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fbattery_peugeot_308.jpg?alt=media", timestamp: demoTimestamp, sellerUid: 'demo_seller_1', sellerName: 'Garage El Bahdja' }
-            ];
-            for (const listing of demoListings) {
-                const collectionRef = db.collection("products");
-                const q = collectionRef.where("title", "==", listing.title);
-                const querySnapshot = await q.get();
-                if (querySnapshot.empty) {
-                    await collectionRef.add(listing);
-                }
-            }
-            localStorage.setItem("demoListingsInserted", "true");
-        };
-        const validatePostForm = (form) => {
-            let isValid = true;
-            const requiredInputs = form.querySelectorAll('[required]');
-            requiredInputs.forEach(input => {
-                const errorEl = document.getElementById(`${input.id}-error`);
-                if (input.value.trim() === '') {
-                    if (errorEl) errorEl.classList.remove("hidden");
-                    input.setAttribute("aria-invalid", "true");
-                    isValid = false;
-                } else {
-                    if (errorEl) errorEl.classList.add("hidden");
-                    input.removeAttribute("aria-invalid");
-                }
-            });
-            return isValid;
-        };
-        const debounce = (func, wait) => {
-            let timeout;
-            return (...args) => {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => func.apply(this, args), wait);
-            };
-        };
-        const setupEventListeners = () => {
-            const setupMobileNav = () => {
-                if (!elements.mobileNavLinks) return;
-                if (currentUser) {
-                    elements.mobileNavLinks.innerHTML = `
-                        <a href="#" class="text-xl font-medium text-gray-800 hover:text-blue-600" data-i18n-key="dashboard_link_mobile" id="dashboard-link-mobile">Mon Tableau de Bord</a>
-                        <a href="#" class="text-xl font-medium text-gray-800 hover:text-blue-600" data-i18n-key="sell" id="sell-link-mobile">Vendre</a>
-                    `;
-                    document.getElementById('dashboard-link-mobile').addEventListener('click', (e) => {
-                        e.preventDefault();
-                        renderView('dashboard');
-                        closeMobileMenu();
-                    });
-                    document.getElementById('sell-link-mobile').addEventListener('click', (e) => {
-                        e.preventDefault();
-                        postProductBtnClick();
-                        closeMobileMenu();
-                    });
-                } else {
-                    elements.mobileNavLinks.innerHTML = `
-                        <a href="#" class="text-xl font-medium text-gray-800 hover:text-blue-600" data-i18n-key="sell" id="sell-link-mobile">Vendre</a>
-                        <button id="post-product-btn-mobile" class="text-xl font-medium text-gray-800 hover:text-blue-600 text-left" data-i18n-key="connect">Se connecter</button>
-                    `;
-                    document.getElementById('sell-link-mobile').addEventListener('click', (e) => {
-                        e.preventDefault();
-                        postProductBtnClick();
-                        closeMobileMenu();
-                    });
-                    document.getElementById('post-product-btn-mobile').addEventListener('click', () => {
-                        openAuthModal();
-                        closeMobileMenu();
-                    });
-                }
-                translatePage(currentLang);
-            };
-            setupMobileNav();
-            if (elements.langDropdownBtn) {
-                elements.langDropdownBtn.addEventListener('click', () => {
-                    elements.langDropdown.classList.toggle('hidden');
-                    elements.langDropdownBtn.setAttribute('aria-expanded', !elements.langDropdown.classList.contains('hidden'));
-                });
-                window.addEventListener('click', (e) => {
-                    if (!elements.langDropdown.contains(e.target) && !elements.langDropdownBtn.contains(e.target)) {
-                        elements.langDropdown.classList.add('hidden');
-                        elements.langDropdownBtn.setAttribute('aria-expanded', 'false');
-                    }
-                });
-            }
-            if (elements.langBtns) {
-                elements.langBtns.forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        currentLang = e.target.dataset.lang;
-                        localStorage.setItem('piecety_lang', currentLang);
-                        translatePage(currentLang);
-                        closeMobileMenu();
-                        renderView(currentView);
-                    });
-                });
-            }
-            if (elements.mobileMenuBtn) {
-                elements.mobileMenuBtn.addEventListener('click', () => {
-                    setupMobileNav();
-                    elements.mobileMenu.classList.remove('hidden');
-                    document.body.classList.add('overflow-hidden');
-                    elements.mobileMenuBtn.setAttribute('aria-expanded', 'true');
-                });
-            }
-            if (elements.mobileMenuCloseBtn) {
-                elements.mobileMenuCloseBtn.addEventListener('click', () => {
-                    closeMobileMenu();
-                    elements.mobileMenuBtn.setAttribute('aria-expanded', 'false');
-                });
-            }
-            if (elements.modalCloseBtn) {
-                elements.modalCloseBtn.addEventListener('click', () => {
-                    elements.postProductModal.classList.add('hidden');
-                });
-            }
-            if (elements.postProductForm) {
-                elements.postProductForm.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    if (!validatePostForm(e.target)) {
-                        showMessage("Veuillez remplir tous les champs obligatoires.", 3000, 'error');
-                        return;
-                    }
-                    const submitBtn = e.target.querySelector('#submit-ad-btn');
-                    const btnText = submitBtn.querySelector('.btn-text');
-                    const btnSpinner = submitBtn.querySelector('.btn-spinner');
-                    submitBtn.disabled = true;
-                    btnText.textContent = translations[currentLang].loading_text || "Envoi...";
-                    btnSpinner.classList.remove('hidden');
-                    const formData = new FormData(e.target);
-                    try {
-                        const imageUrl = "https://placehold.co/600x400/E2E8F0/4A5568?text=Pas+d'image";
-                        const newProduct = {
-                            title: formData.get('title'),
-                            category: formData.get('category'),
-                            brand: formData.get('brand'),
-                            model: formData.get('model'),
-                            year: formData.get('year'),
-                            wilaya: formData.get('wilaya'),
-                            commune: formData.get('commune'),
-                            condition: formData.get('condition'),
-                            price: parseInt(formData.get('price')),
-                            description: formData.get('description'),
-                            imageUrl: imageUrl,
-                            timestamp: new Date(),
-                            sellerUid: currentUser.uid,
-                            sellerName: currentUser.displayName
-                        };
-                        await db.collection("products").add(newProduct);
-                        showMessage("Annonce soumise avec succès!", 4000, 'success');
-                        e.target.reset();
-                        elements.postProductModal.classList.add('hidden');
-                        renderListings();
-                    } catch (error) {
-                        showMessage("Erreur lors de la soumission de l'annonce.", 4000, 'error');
-                        console.error("Error submitting form: ", error);
-                    } finally {
-                        submitBtn.disabled = false;
-                        btnText.textContent = translations[currentLang].submit_ad_btn_text || "Soumettre";
-                        btnSpinner.classList.add('hidden');
-                    }
-                });
-            }
-            if (elements.sellLink) {
-                elements.sellLink.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    postProductBtnClick();
-                });
-            }
-            if (elements.loginBtn) {
-                elements.loginBtn.addEventListener('click', open
+                db.collection("products").where("sellerUid", "==", data.userId).onSnapshot(snapshot => {
+                    const userProducts = snapshot.docs.map
