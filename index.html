@@ -8,9 +8,8 @@
     
     <!-- PWA & SEO -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚗</text></svg>">
-    <!-- FIX: Replaced the broken data: URL with a link to an external manifest.json file. -->
-    <!-- This requires you to have a 'manifest.json' file in the same directory as this HTML file. -->
-    <link rel="manifest" href="/manifest.json">
+    <!-- FIX: Path adjusted to point to the /main/ directory as requested. -->
+    <link rel="manifest" href="./main/manifest.json">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -1536,9 +1535,9 @@
         renderView('home');
 
         // PWA Service Worker Registration
-        // FIX: Changed registration to point to an external /sw.js file.
+        // FIX: Changed registration to point to an external /main/sw.js file as requested.
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js')
+            navigator.serviceWorker.register('./main/sw.js')
             .then(reg => console.log('Service worker registered successfully.'))
             .catch(err => console.error('Service worker registration failed:', err));
         }
