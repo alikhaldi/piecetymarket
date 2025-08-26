@@ -1,14 +1,19 @@
 {
   "name": "Piecety",
   "short_name": "Piecety",
-  "start_url": "/",
+  "start_url": "/Piecetymarket/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#2563eb",
+  "theme_color": "#007acc",
   "icons": [
     {
-      "src": "/icons/car.png",
+      "src": "/Piecetymarket/icons/car.png",
       "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/Piecetymarket/icons/car.png",
+      "sizes": "512x512",
       "type": "image/png"
     }
   ]
