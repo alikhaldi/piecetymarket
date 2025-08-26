@@ -1393,9 +1393,12 @@
     const renderProductPage = (product) => {
         if (!product) return;
         
-        elements.addToCartBtn = document.getElementById('add-to-cart-btn');
-        document.getElementById('product-image-detail').src = product.imageUrl;
-        document.getElementById('product-image-detail').alt = product.title;
+        const imgDetail = document.getElementById('product-image-detail');
+        if (imgDetail) {
+            imgDetail.src = product.imageUrl;
+            imgDetail.alt = product.title;
+        }
+
         document.getElementById('product-title-detail').textContent = product.title;
         document.getElementById('product-price-detail').textContent = `${product.price.toLocaleString()} DA`;
         document.getElementById('product-description-detail').textContent = product.description;
@@ -1413,16 +1416,14 @@
         });
 
         document.getElementById('back-to-listings-btn').addEventListener('click', () => renderView('home'));
-        if (elements.addToCartBtn) {
-            elements.addToCartBtn.addEventListener('click', () => {
-                if (!currentUser || currentUser.isAnonymous) {
-                    showMessage(translations[currentLang].login_required, 4000, 'error');
-                    openAuthModal();
-                    return;
-                }
-                addToCart(product);
-            });
-        }
+        document.getElementById('add-to-cart-btn').addEventListener('click', () => {
+            if (!currentUser || currentUser.isAnonymous) {
+                showMessage(translations[currentLang].login_required, 4000, 'error');
+                openAuthModal();
+                return;
+            }
+            addToCart(product);
+        });
         
         const contactBtn = document.getElementById('contact-seller-btn');
         if (currentUser) {
@@ -1436,31 +1437,33 @@
     };
     
     const renderCartPage = async () => {
-        elements.cartItemsContainer = document.getElementById('cart-items-container');
-        elements.cartTotalSpan = document.getElementById('cart-total-price');
-        elements.checkoutBtn = document.getElementById('checkout-btn');
-        elements.backFromCartBtn = document.getElementById('back-from-cart-btn');
+        const container = document.getElementById('cart-items-container');
+        const totalSpan = document.getElementById('cart-total-price');
+        const checkoutBtn = document.getElementById('checkout-btn');
+        const backBtn = document.getElementById('back-from-cart-btn');
 
-        if (!elements.cartItemsContainer) return;
-        elements.cartItemsContainer.innerHTML = '';
-        if (elements.cartTotalSpan) elements.cartTotalSpan.textContent = "0 DA";
+        if (!container) return;
+        container.innerHTML = '';
+        if (totalSpan) totalSpan.textContent = "0 DA";
         
-        if (elements.checkoutBtn) {
-            elements.checkoutBtn.disabled = true;
-            elements.checkoutBtn.addEventListener('click', () => showMessage("La page de paiement sera bientôt disponible!", 3000, "info"));
+        if (checkoutBtn) {
+            checkoutBtn.disabled = true;
+            checkoutBtn.addEventListener('click', () => showMessage("La page de paiement sera bientôt disponible!", 3000, "info"));
         }
         
-        if (elements.backFromCartBtn) elements.backFromCartBtn.addEventListener('click', () => renderView('home'));
+        if (backBtn) backBtn.addEventListener('click', () => renderView('home'));
         if (!currentUser || Object.keys(userCart).length === 0) {
-            elements.cartItemsContainer.innerHTML = `<p class="text-center text-gray-500">${translations[currentLang].your_cart_is_empty}</p>`;
-            if (elements.checkoutBtn) elements.checkoutBtn.disabled = true;
+            container.innerHTML = `<p class="text-center text-gray-500">${translations[currentLang].your_cart_is_empty}</p>`;
+            if (checkoutBtn) checkoutBtn.disabled = true;
             return;
         }
 
         let total = 0;
         const productIds = Object.keys(userCart);
-        const productsInCart = allProducts.filter(p => productIds.includes(p.id));
+        const productsInCart = allProducts.filter(p => p && productIds.includes(p.id));
+        
         productsInCart.forEach(product => {
+            if (!product) return; // Robustness check
             const item = userCart[product.id];
             const itemTotal = product.price * item.quantity;
             total += itemTotal;
@@ -1481,22 +1484,22 @@
                     <i class="fas fa-trash"></i> <span data-i18n-key="remove">${translations[currentLang].remove}</span>
                 </button>
             `;
-            elements.cartItemsContainer.appendChild(cartItemEl);
+            container.appendChild(cartItemEl);
         });
 
-        elements.cartItemsContainer.querySelectorAll('input[type="number"]').forEach(input => {
+        container.querySelectorAll('input[type="number"]').forEach(input => {
             input.addEventListener('change', (e) => {
                 updateCartItem(e.target.dataset.productId, e.target.value);
             });
         });
-        elements.cartItemsContainer.querySelectorAll('.remove-from-cart-btn').forEach(btn => {
+        container.querySelectorAll('.remove-from-cart-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 removeFromCart(e.currentTarget.dataset.productId);
             });
         });
-        if (elements.cartTotalSpan) elements.cartTotalSpan.textContent = `${total.toLocaleString()} DA`;
-        if (elements.checkoutBtn && total > 0) {
-            elements.checkoutBtn.disabled = false;
+        if (totalSpan) totalSpan.textContent = `${total.toLocaleString()} DA`;
+        if (checkoutBtn && total > 0) {
+            checkoutBtn.disabled = false;
         }
         translatePage(currentLang);
     };
@@ -1622,7 +1625,7 @@
     const insertDemoListingsOnce = async () => {
         if (localStorage.getItem("demoListingsInserted")) return;
         
-        const demoTimestamp = new Date('2025-08-26T09:18:00');
+        const demoTimestamp = new Date('2025-08-26T09:30:36');
 
         const demoListings = [
             { title: "Disque de frein avant Toyota Yaris 2015", brand: "Toyota", model: "Yaris", year: "2015", wilaya: "Alger", commune: "Bab El Oued", condition: "used", price: 12000, description: "Disque en bon état, peu utilisé.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fbrake_disc_toyota_yaris.jpg?alt=media", timestamp: demoTimestamp, sellerUid: 'demo_seller_1', sellerName: 'Garage El Bahdja' },
