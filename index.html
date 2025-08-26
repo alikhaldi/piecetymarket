@@ -208,20 +208,8 @@
             <i class="fas fa-times text-xl"></i>
         </button>
     </div>
-    <a
-            href="#"
-            class="text-xl font-medium text-gray-800 hover:text-blue-600"
-            data-i18n-key="sell"
-            id="sell-link-mobile"
-    >Vendre</a
-    >
-    <button
-            id="post-product-btn-mobile"
-            class="text-xl font-medium text-gray-800 hover:text-blue-600 text-left"
-            data-i18n-key="connect"
-    >
-        Se connecter
-    </button>
+    <div id="mobile-nav-links" class="flex flex-col space-y-6">
+    </div>
 
     <div class="pt-4 border-t border-gray-200">
         <h3 class="text-lg font-semibold text-gray-600" data-i18n-key="language">
@@ -637,7 +625,7 @@
             class="bg-white rounded-xl shadow-lg p-6 md:p-8 mb-12"
             aria-label="Filtrer les annonces"
     >
-        <h2 class="text-2xl font-bold mb-6" data-i18n-key="filters_title">
+        <h2 class="text-2xl md:text-3xl font-bold mb-6" data-i18n-key="filters_title">
             Filtrer les annonces
         </h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -777,68 +765,48 @@
 
     <section
             id="listings-section"
-            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-            aria-live="polite"
-            aria-label="Liste des annonces"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
     >
         </section>
 </template>
 
 <template id="product-detail-view-template">
-    <div id="product-detail" class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+    <div id="product-detail" class="bg-white rounded-xl shadow-lg p-4 sm:p-6 md:p-8">
         <button id="back-to-listings-btn" class="mb-4 text-blue-600 hover:text-blue-800 font-semibold flex items-center">
             <i class="fas fa-arrow-left mr-2"></i>
             <span data-i18n-key="back_to_listings">Retour aux annonces</span>
         </button>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <img id="product-image-detail" src="" alt="" class="w-full h-96 object-cover rounded-lg shadow-md" />
+            <img id="product-image-detail" src="" alt="" class="w-full h-80 md:h-96 object-cover rounded-lg shadow-md" />
             <div>
-                <h2 id="product-title-detail" class="text-3xl font-bold mb-2"></h2>
+                <h2 id="product-title-detail" class="text-2xl md:text-3xl font-bold mb-2"></h2>
                 <p id="product-price-detail" class="text-blue-600 font-bold text-2xl mb-4"></p>
-                <p id="product-description-detail" class="text-gray-700 mb-6"></p>
 
-                <div class="space-y-2 text-gray-700 text-sm mb-6">
+                <div class="space-y-2 text-gray-700 text-sm mb-6 border-t border-b py-4">
                     <p><strong><span data-i18n-key="brand_label">Marque</span>:</strong> <span id="product-brand-detail"></span></p>
                     <p><strong><span data-i18n-key="model_label">Modèle</span>:</strong> <span id="product-model-detail"></span></p>
                     <p><strong><span data-i18n-key="year_label">Année</span>:</strong> <span id="product-year-detail"></span></p>
                     <p><strong><span data-i18n-key="wilaya_label">Wilaya</span>:</strong> <span id="product-wilaya-detail"></span></p>
                     <p><strong><span data-i18n-key="commune_label">Commune</span>:</strong> <span id="product-commune-detail"></span></p>
+                    <p>
+                        <strong>Vendu par:</strong> 
+                        <a href="#" id="seller-profile-link" class="text-blue-600 hover:underline"></a>
+                    </p>
                 </div>
 
-                <button id="add-to-cart-btn" class="w-full px-6 py-3 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition-colors duration-200 shadow-md">
-                    <i class="fas fa-cart-plus mr-2"></i>
-                    <span data-i18n-key="add_to_cart">Ajouter au panier</span>
-                </button>
+                <p id="product-description-detail" class="text-gray-700 mb-6"></p>
+
+                <div class="flex flex-col space-y-3">
+                     <button id="add-to-cart-btn" class="w-full px-6 py-3 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition-colors duration-200 shadow-md">
+                        <i class="fas fa-cart-plus mr-2"></i>
+                        <span data-i18n-key="add_to_cart">Ajouter au panier</span>
+                    </button>
+                    <button id="contact-seller-btn" class="w-full px-6 py-3 bg-gray-600 text-white rounded-full font-semibold hover:bg-gray-700 transition-colors duration-200 shadow-md disabled:bg-gray-300 disabled:cursor-not-allowed">
+                        <i class="fas fa-comments mr-2"></i>
+                        <span>Contacter le vendeur</span>
+                    </button>
+                </div>
             </div>
-        </div>
-
-        <div class="mt-12">
-            <h3 class="text-2xl font-bold mb-4" data-i18n-key="reviews_title">Avis des utilisateurs</h3>
-            <div id="reviews-container" class="space-y-4">
-                </div>
-        </div>
-
-        <div class="mt-8" id="add-review-section">
-            <h4 class="text-xl font-bold mb-2" data-i18n-key="add_review_title">Ajouter votre avis</h4>
-            <form id="add-review-form" class="space-y-4">
-                <div>
-                    <label for="review-rating" class="block text-sm font-medium text-gray-700">Note</label>
-                    <select id="review-rating" name="rating" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                        <option value="5">5 Étoiles</option>
-                        <option value="4">4 Étoiles</option>
-                        <option value="3">3 Étoiles</option>
-                        <option value="2">2 Étoiles</option>
-                        <option value="1">1 Étoile</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="review-comment" class="block text-sm font-medium text-gray-700">Commentaire</label>
-                    <textarea id="review-comment" name="comment" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
-                </div>
-                <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                    <span data-i18n-key="submit_review">Soumettre l'avis</span>
-                </button>
-            </form>
         </div>
     </div>
 </template>
@@ -864,11 +832,46 @@
     </div>
 </template>
 
-<template id="user-profile-view-template">
+<template id="dashboard-view-template">
     <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
-        <h2 class="text-2xl md:text-3xl font-bold mb-6" data-i18n-key="profile_title">Mon profil</h2>
-        <div id="profile-details" class="space-y-4">
+        <h2 class="text-2xl md:text-3xl font-bold mb-6">Mon Tableau de Bord</h2>
+        <div id="dashboard-content">
+            <h3 class="text-xl font-semibold mb-4 border-b pb-2">Mes Annonces</h3>
+            <div id="my-listings-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                </div>
+        </div>
+    </div>
+</template>
+
+<template id="profile-view-template">
+    <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+        <div class="flex flex-col md:flex-row items-center md:items-start text-center md:text-left">
+            <i class="fas fa-user-circle text-6xl md:text-8xl text-gray-300 md:mr-6 mb-4 md:mb-0"></i>
+            <div>
+                <h2 id="profile-name" class="text-2xl md:text-3xl font-bold">Nom du vendeur</h2>
+                <div id="profile-rating" class="flex items-center justify-center md:justify-start text-yellow-500 mt-2">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <span class="text-gray-600 ml-2 text-sm">(12 avis)</span>
+                </div>
             </div>
+        </div>
+        
+        <div class="mt-8">
+            <h3 class="text-xl font-semibold mb-4 border-b pb-2">Annonces de ce vendeur</h3>
+            <div id="user-products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                </div>
+        </div>
+        
+        <div class="mt-8">
+            <h3 class="text-xl font-semibold mb-4 border-b pb-2">Avis des acheteurs</h3>
+            <div id="user-reviews-list" class="space-y-4">
+                <p class="text-gray-500">La fonctionnalité d'avis sera bientôt disponible.</p>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -885,13 +888,8 @@
         doc,
         setDoc,
         getDoc,
+        deleteDoc
     } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
-    import {
-        getStorage,
-        ref,
-        uploadBytes,
-        getDownloadURL,
-    } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-storage.js";
     import { getAuth, signInWithPopup, signOut, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 
     // Global state variables
@@ -913,7 +911,6 @@
     };
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    const storage = getStorage(app);
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
 
@@ -942,15 +939,14 @@
             image_label: "Image", submit_ad_btn_text: "Soumettre", loading_text: "Envoi...",
             login_text: "Connectez-vous pour accéder à toutes les fonctionnalités.", google_login: "Se connecter avec Google",
             back_to_listings: "Retour aux annonces", add_to_cart: "Ajouter au panier",
-            reviews_title: "Avis des utilisateurs", add_review_title: "Ajouter votre avis", submit_review: "Soumettre l'avis",
             cart_title: "Mon panier", cart_total: "Total", checkout_btn: "Passer à la caisse",
             no_listings: "Aucune annonce trouvée.",
-            profile_title: "Mon profil",
             your_cart_is_empty: "Votre panier est vide.",
             remove: "Supprimer",
             quantity: "Quantité",
             item_total: "Total de l'article",
             login_required: "Veuillez vous connecter pour utiliser cette fonctionnalité.",
+            dashboard_link_mobile: "Mon Tableau de Bord",
         },
         en: {
             fr_short: "FR", en_short: "EN", ar_short: "AR",
@@ -975,15 +971,14 @@
             image_label: "Image", submit_ad_btn_text: "Submit", loading_text: "Submitting...",
             login_text: "Log in to access all features.", google_login: "Sign in with Google",
             back_to_listings: "Back to listings", add_to_cart: "Add to cart",
-            reviews_title: "User Reviews", add_review_title: "Add your review", submit_review: "Submit Review",
             cart_title: "My Cart", cart_total: "Total", checkout_btn: "Proceed to Checkout",
             no_listings: "No listings found.",
-            profile_title: "My Profile",
             your_cart_is_empty: "Your cart is empty.",
             remove: "Remove",
             quantity: "Quantity",
             item_total: "Item Total",
             login_required: "Please log in to use this feature.",
+            dashboard_link_mobile: "My Dashboard",
         },
         ar: {
             fr_short: "FR", en_short: "EN", ar_short: "AR",
@@ -1008,15 +1003,14 @@
             image_label: "الصورة", submit_ad_btn_text: "إرسال", loading_text: "جار الإرسال...",
             login_text: "تسجيل الدخول للوصول إلى جميع الميزات.", google_login: "تسجيل الدخول باستخدام Google",
             back_to_listings: "العودة إلى الإعلانات", add_to_cart: "أضف إلى السلة",
-            reviews_title: "آراء المستخدمين", add_review_title: "أضف رأيك", submit_review: "إرسال الرأي",
             cart_title: "سلة التسوق", cart_total: "الإجمالي", checkout_btn: "الدفع",
             no_listings: "لم يتم العثور على إعلانات.",
-            profile_title: "ملفي الشخصي",
             your_cart_is_empty: "سلة التسوق فارغة.",
             remove: "حذف",
             quantity: "الكمية",
             item_total: "إجمالي السلعة",
             login_required: "يرجى تسجيل الدخول لاستخدام هذه الميزة.",
+            dashboard_link_mobile: "لوحة التحكم",
         }
     };
 
@@ -1097,6 +1091,7 @@
         mobileMenuBtn: document.getElementById("mobile-menu-btn"),
         mobileMenu: document.getElementById("mobile-menu"),
         mobileMenuCloseBtn: document.getElementById("mobile-menu-close-btn"),
+        mobileNavLinks: document.getElementById("mobile-nav-links"),
         authModal: document.getElementById("auth-modal"),
         authModalCloseBtn: document.getElementById("auth-modal-close-btn"),
         googleLoginBtn: document.getElementById("google-login-btn"),
@@ -1105,10 +1100,9 @@
         authLinksContainer: document.getElementById("auth-links"),
         homeLink: document.getElementById("home-link"),
         sellLink: document.getElementById("sell-link"),
-        sellLinkMobile: document.getElementById("sell-link-mobile"),
         loginBtn: document.getElementById('login-btn'),
         brandFilter: null, modelFilter: null, yearFilter: null, wilayaFilter: null, communeFilter: null, conditionFilter: null, modelFilterContainer: null, communeContainer: null, filterApplyBtn: null, filterResetBtn: null,
-        backToListingsBtn: null, addToCartBtn: null, reviewsContainer: null, addReviewSection: null, addReviewForm: null,
+        backToListingsBtn: null, addToCartBtn: null,
         cartItemsContainer: null, cartTotalSpan: null, checkoutBtn: null, backFromCartBtn: null,
         postProductBrandSelect: document.getElementById('product-brand'),
         postProductModelSelect: document.getElementById('product-model'),
@@ -1219,6 +1213,15 @@
                 appContainer.appendChild(document.getElementById('cart-view-template').content.cloneNode(true));
                 renderCartPage();
                 break;
+            // FEATURE: Add cases for new dashboard and profile views
+            case 'dashboard':
+                appContainer.appendChild(document.getElementById('dashboard-view-template').content.cloneNode(true));
+                renderDashboardPage();
+                break;
+            case 'profile':
+                appContainer.appendChild(document.getElementById('profile-view-template').content.cloneNode(true));
+                renderProfilePage(data);
+                break;
             default:
                 renderView('home');
                 break;
@@ -1321,7 +1324,7 @@
             const querySnapshot = await getDocs(q);
             allProducts = querySnapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }));
             const filtered = filterProducts(allProducts);
-            displayProducts(filtered);
+            displayProducts(filtered, listingsSection);
             translatePage(currentLang);
         } catch (err) {
             listingsSection.innerHTML = `<p class="col-span-full text-center py-6 text-red-600">Erreur de chargement des annonces. Vérifiez vos règles de sécurité Firestore.</p>`;
@@ -1352,12 +1355,11 @@
         });
     };
 
-    const displayProducts = (products) => {
-        const listingsSection = document.getElementById('listings-section');
-        if (!listingsSection) return;
-        listingsSection.innerHTML = "";
+    const displayProducts = (products, container) => {
+        if (!container) return;
+        container.innerHTML = "";
         if (products.length === 0) {
-            listingsSection.innerHTML = `<p class="col-span-full text-center py-6 text-gray-600" data-i18n-key="no_listings">Aucune annonce trouvée.</p>`;
+            container.innerHTML = `<p class="col-span-full text-center py-6 text-gray-600" data-i18n-key="no_listings">Aucune annonce trouvée.</p>`;
             return;
         }
         products.forEach(item => {
@@ -1368,27 +1370,17 @@
                 <img src="${item.imageUrl}" alt="${item.title}" class="w-full h-48 object-cover" loading="lazy" />
                 <div class="p-4 flex-1 flex flex-col">
                     <h3 class="font-semibold text-lg mb-1">${item.title}</h3>
-                    <p class="text-gray-600 flex-grow text-sm mb-2">${item.description || ''}</p>
-                    <ul class="text-gray-700 text-sm space-y-1 mb-3">
-                        <li><strong>${translations[currentLang]["brand_label"]}:</strong> ${item.brand}</li>
-                        <li><strong>${translations[currentLang]["model_label"]}:</strong> ${item.model || "-"}</li>
-                    </ul>
-                    <p class="text-blue-600 font-bold text-lg">${item.price.toLocaleString()} DA</p>
+                    <p class="text-blue-600 font-bold text-lg mt-auto pt-2">${item.price.toLocaleString()} DA</p>
                 </div>
             `;
-            listingsSection.appendChild(card);
+            container.appendChild(card);
         });
     };
 
     const renderProductPage = (product) => {
         if (!product) return;
         
-        elements.backToListingsBtn = document.getElementById('back-to-listings-btn');
         elements.addToCartBtn = document.getElementById('add-to-cart-btn');
-        elements.reviewsContainer = document.getElementById('reviews-container');
-        elements.addReviewSection = document.getElementById('add-review-section');
-        elements.addReviewForm = document.getElementById('add-review-form');
-
         document.getElementById('product-image-detail').src = product.imageUrl;
         document.getElementById('product-image-detail').alt = product.title;
         document.getElementById('product-title-detail').textContent = product.title;
@@ -1400,7 +1392,15 @@
         document.getElementById('product-wilaya-detail').textContent = product.wilaya;
         document.getElementById('product-commune-detail').textContent = product.commune || "-";
         
-        if (elements.backToListingsBtn) elements.backToListingsBtn.addEventListener('click', () => renderView('home'));
+        // FEATURE: Link to seller's profile
+        const sellerLink = document.getElementById('seller-profile-link');
+        sellerLink.textContent = product.sellerName || 'Vendeur Anonyme';
+        sellerLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            renderView('profile', { userId: product.sellerUid, userName: product.sellerName });
+        });
+
+        document.getElementById('back-to-listings-btn').addEventListener('click', () => renderView('home'));
         if (elements.addToCartBtn) {
             elements.addToCartBtn.addEventListener('click', () => {
                 if (!currentUser || currentUser.isAnonymous) {
@@ -1412,37 +1412,15 @@
             });
         }
         
-        if (!currentUser || currentUser.isAnonymous) {
-            if (elements.addReviewSection) {
-                elements.addReviewSection.innerHTML = `<p class="text-center text-gray-500">${translations[currentLang].login_required}</p>`;
-                if (elements.reviewsContainer) elements.reviewsContainer.innerHTML = '';
-            }
-        } else {
-            if (elements.addReviewForm) elements.addReviewForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const rating = e.target.querySelector('#review-rating').value;
-                const comment = e.target.querySelector('#review-comment').value.trim();
-                if (comment === '') {
-                    showMessage("Veuillez entrer un commentaire.", 3000, 'error');
-                    return;
-                }
-                try {
-                    await addReview(product.id, {
-                        uid: currentUser.uid,
-                        username: currentUser.displayName || currentUser.email,
-                        rating: parseInt(rating),
-                        comment: comment,
-                        timestamp: new Date()
-                    });
-                    showMessage("Avis soumis avec succès!", 3000, 'success');
-                    elements.addReviewForm.reset();
-                    fetchReviews(product.id);
-                } catch (error) {
-                    showMessage("Erreur lors de l'envoi de l'avis.", 3000, 'error');
-                    console.error("Error adding review: ", error);
-                }
+        // FEATURE: Logic for "Contact Seller" button
+        const contactBtn = document.getElementById('contact-seller-btn');
+        if (currentUser) {
+            contactBtn.disabled = false;
+            contactBtn.addEventListener('click', () => {
+                showMessage("La messagerie directe sera bientôt disponible!", 3000, "info");
             });
-            fetchReviews(product.id);
+        } else {
+            contactBtn.disabled = true;
         }
     };
     
@@ -1458,7 +1436,7 @@
         
         if (elements.checkoutBtn) {
             elements.checkoutBtn.disabled = true;
-            elements.checkoutBtn.addEventListener('click', checkout);
+            elements.checkoutBtn.addEventListener('click', () => showMessage("La page de paiement sera bientôt disponible!", 3000, "info"));
         }
         
         if (elements.backFromCartBtn) elements.backFromCartBtn.addEventListener('click', () => renderView('home'));
@@ -1512,138 +1490,87 @@
         translatePage(currentLang);
     };
 
-    const updateCartDisplay = () => {
-        const { cartCountSpan } = elements;
-        const cartItemCount = Object.values(userCart).reduce((sum, item) => sum + item.quantity, 0);
-        if (cartCountSpan) {
-            if (cartItemCount > 0) {
-                cartCountSpan.textContent = cartItemCount;
-                cartCountSpan.classList.remove('hidden');
-            } else {
-                cartCountSpan.classList.add('hidden');
-            }
-        }
-    };
-
-    const addToCart = async (product) => {
-        if (!currentUser) return;
-        const userDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid);
-        
-        userCart[product.id] = {
-            productId: product.id,
-            quantity: (userCart[product.id]?.quantity || 0) + 1
-        };
-        try {
-            await setDoc(userDocRef, { cart: userCart }, { merge: true });
-            showMessage(`${product.title} ajouté au panier.`, 3000, 'success');
-            updateCartDisplay();
-        } catch (error) {
-            showMessage("Erreur lors de l'ajout au panier.", 3000, 'error');
-            console.error("Error adding to cart: ", error);
-        }
-    };
-
-    const updateCartItem = async (productId, quantity) => {
-        if (!currentUser) return;
-        const userDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid);
-        userCart[productId].quantity = parseInt(quantity);
-        if (userCart[productId].quantity <= 0) {
-            delete userCart[productId];
-        }
-        try {
-            await setDoc(userDocRef, { cart: userCart }, { merge: true });
-            renderView('cart');
-            updateCartDisplay();
-        } catch(error) {
-            console.error(error);
-        }
-    };
-    
-    const removeFromCart = async (productId) => {
-        if (!currentUser) return;
-        const userDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid);
-        delete userCart[productId];
-        try {
-            await setDoc(userDocRef, { cart: userCart }, { merge: true });
-            renderView('cart');
-            updateCartDisplay();
-        } catch(error) {
-            console.error(error);
-        }
-    };
-    
-    const checkout = async () => {
-        if (!currentUser || currentUser.isAnonymous) {
+    // FEATURE: Function to render the new Seller Dashboard page
+    const renderDashboardPage = async () => {
+        if (!currentUser) {
             showMessage(translations[currentLang].login_required, 4000, 'error');
-            openAuthModal();
+            renderView('home');
             return;
         }
-        const order = {
-            userId: currentUser.uid,
-            items: userCart,
-            total: Object.values(userCart).reduce((sum, item) => {
-                const product = allProducts.find(p => p.id === item.productId);
-                return sum + (product ? product.price * item.quantity : 0);
-            }, 0),
-            timestamp: new Date()
-        };
-        try {
-            await addDoc(collection(db, `artifacts/${appId}/users/${currentUser.uid}/orders`), order);
-            showMessage("Commande soumise avec succès! (Le paiement n'est pas encore implémenté)", 5000, 'success');
-            userCart = {};
-            const userDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid);
-            await setDoc(userDocRef, { cart: userCart }, { merge: true });
-            renderView('home');
-            updateCartDisplay();
-        } catch (error) {
-            showMessage("Erreur lors de la soumission de la commande.", 4000, 'error');
-            console.error("Error submitting order: ", error);
-        }
-    };
+        
+        const grid = document.getElementById('my-listings-grid');
+        grid.innerHTML = `<p class="col-span-full text-center py-6 text-gray-600">Chargement de vos annonces...</p>`;
+        
+        const q = query(collection(db, "products"), where("sellerUid", "==", currentUser.uid));
+        const querySnapshot = await getDocs(q);
+        const userProducts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-    const addReview = async (productId, review) => {
-        const reviewRef = collection(db, `products/${productId}/reviews`);
-        return await addDoc(reviewRef, review);
-    };
-    
-    const fetchReviews = async (productId) => {
-        const { reviewsContainer } = elements;
-        if (!reviewsContainer) return;
-        reviewsContainer.innerHTML = '<p class="text-gray-500">Chargement des avis...</p>';
-        const reviewsRef = collection(db, `products/${productId}/reviews`);
-        const q = query(reviewsRef);
-        onSnapshot(q, (querySnapshot) => {
-            reviewsContainer.innerHTML = '';
-            if (querySnapshot.empty) {
-                reviewsContainer.innerHTML = '<p class="text-gray-500">Aucun avis pour le moment.</p>';
-                return;
-            }
-            querySnapshot.forEach(doc => {
-                const review = doc.data();
-                const reviewEl = document.createElement('div');
-                reviewEl.className = 'p-4 bg-gray-50 rounded-lg';
-                reviewEl.innerHTML = `
-                    <p class="font-semibold">${review.username}</p>
-                    <p class="text-yellow-500">${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</p>
-                    <p class="text-gray-700 mt-1">${review.comment}</p>
-                `;
-                reviewsContainer.appendChild(reviewEl);
+        grid.innerHTML = "";
+        if (userProducts.length === 0) {
+            grid.innerHTML = `<p class="col-span-full text-center py-6 text-gray-500">Vous n'avez aucune annonce active.</p>`;
+            return;
+        }
+
+        userProducts.forEach(item => {
+            const card = document.createElement('div');
+            card.className = "bg-white rounded-lg shadow-md overflow-hidden flex flex-col";
+            card.innerHTML = `
+                <img src="${item.imageUrl}" alt="${item.title}" class="w-full h-40 object-cover">
+                <div class="p-4 flex-1 flex flex-col">
+                    <h4 class="font-semibold">${item.title}</h4>
+                    <p class="text-gray-600 font-bold mt-2">${item.price.toLocaleString()} DA</p>
+                    <div class="mt-4 pt-4 border-t flex space-x-2 text-sm">
+                        <button class="flex-1 bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 edit-btn">Modifier</button>
+                        <button class="flex-1 bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 sold-btn">Vendu</button>
+                        <button class="flex-1 bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 delete-btn" data-id="${item.id}">Supprimer</button>
+                    </div>
+                </div>
+            `;
+            card.querySelector('.edit-btn').addEventListener('click', () => showMessage("La modification sera bientôt disponible.", 3000, "info"));
+            card.querySelector('.sold-btn').addEventListener('click', () => showMessage("Le marquage 'vendu' sera bientôt disponible.", 3000, "info"));
+            card.querySelector('.delete-btn').addEventListener('click', async (e) => {
+                const productId = e.currentTarget.dataset.id;
+                if (confirm("Êtes-vous sûr de vouloir supprimer cette annonce?")) {
+                    await deleteDoc(doc(db, "products", productId));
+                    showMessage("Annonce supprimée avec succès.", 3000, "success");
+                    renderView('dashboard'); // Refresh the dashboard view
+                }
             });
-        }, (error) => {
-            reviewsContainer.innerHTML = '<p class="text-red-500">Erreur lors du chargement des avis.</p>';
-            console.error("Error fetching reviews: ", error);
+            grid.appendChild(card);
         });
     };
-    
+
+    // FEATURE: Function to render the new User Profile page
+    const renderProfilePage = async (data) => {
+        if (!data || !data.userId) {
+            renderView('home');
+            return;
+        }
+
+        document.getElementById('profile-name').textContent = data.userName || "Vendeur";
+        // Here you would fetch and display the user's average rating in the future.
+
+        const grid = document.getElementById('user-products-grid');
+        grid.innerHTML = `<p class="col-span-full text-center py-6 text-gray-600">Chargement des annonces...</p>`;
+        
+        const q = query(collection(db, "products"), where("sellerUid", "==", data.userId));
+        const querySnapshot = await getDocs(q);
+        const userProducts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+        displayProducts(userProducts, grid); // Reuse the displayProducts function
+        // Here you would fetch and display the seller's reviews in the future.
+    };
+
+
     const insertDemoListingsOnce = async () => {
         if (localStorage.getItem("demoListingsInserted")) return;
         
-        const demoTimestamp = new Date('2025-08-26T07:54:31');
+        const demoTimestamp = new Date('2025-08-26T08:46:44');
 
         const demoListings = [
-            { title: "Disque de frein avant Toyota Yaris 2015", brand: "Toyota", model: "Yaris", year: "2015", wilaya: "Alger", commune: "Bab El Oued", condition: "used", price: 12000, description: "Disque en bon état, peu utilisé.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fbrake_disc_toyota_yaris.jpg?alt=media", timestamp: demoTimestamp },
-            { title: "Pneu Michelin 205/55 R16 neuf", brand: "Toyota", model: "Corolla", year: "2020", wilaya: "Oran", commune: "Es Senia", condition: "new", price: 8000, description: "Pneu de haute qualité, jamais monté.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fmichelin_tire.jpg?alt=media", timestamp: demoTimestamp },
-            { title: "Batterie 12V pour Peugeot 308", brand: "Peugeot", model: "308", year: "2017", wilaya: "Constantine", commune: "El Khroub", condition: "used", price: 9000, description: "Batterie d'occasion, testée OK.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fbattery_peugeot_308.jpg?alt=media", timestamp: demoTimestamp }
+            { title: "Disque de frein avant Toyota Yaris 2015", brand: "Toyota", model: "Yaris", year: "2015", wilaya: "Alger", commune: "Bab El Oued", condition: "used", price: 12000, description: "Disque en bon état, peu utilisé.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fbrake_disc_toyota_yaris.jpg?alt=media", timestamp: demoTimestamp, sellerUid: 'demo_seller_1', sellerName: 'Garage El Bahdja' },
+            { title: "Pneu Michelin 205/55 R16 neuf", brand: "Toyota", model: "Corolla", year: "2020", wilaya: "Oran", commune: "Es Senia", condition: "new", price: 8000, description: "Pneu de haute qualité, jamais monté.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fmichelin_tire.jpg?alt=media", timestamp: demoTimestamp, sellerUid: 'demo_seller_2', sellerName: 'Oran Pneus' },
+            { title: "Batterie 12V pour Peugeot 308", brand: "Peugeot", model: "308", year: "2017", wilaya: "Constantine", commune: "El Khroub", condition: "used", price: 9000, description: "Batterie d'occasion, testée OK.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fbattery_peugeot_308.jpg?alt=media", timestamp: demoTimestamp, sellerUid: 'demo_seller_1', sellerName: 'Garage El Bahdja' }
         ];
         for (const listing of demoListings) {
             const collectionRef = collection(db, "products");
@@ -1656,14 +1583,12 @@
         localStorage.setItem("demoListingsInserted", "true");
     };
 
-    // REMOVED: uploadImage function is no longer needed.
-
     const validatePostForm = (form) => {
         let isValid = true;
         const requiredInputs = form.querySelectorAll('[required]');
         requiredInputs.forEach(input => {
             const errorEl = document.getElementById(input.id + "-error");
-            if (input.value.trim() === '') { // REMOVED file check
+            if (input.value.trim() === '') {
                 if(errorEl) errorEl.classList.remove("hidden");
                 input.setAttribute("aria-invalid", "true");
                 isValid = false;
@@ -1677,8 +1602,31 @@
     
     // Event listeners setup
     const setupEventListeners = () => {
-        const { langDropdownBtn, langDropdown, langBtns, mobileMenuBtn, mobileMenu, mobileMenuCloseBtn, modalCloseBtn, postProductForm, loginBtn, homeLink, sellLink, sellLinkMobile, cartBtn, postProductBrandSelect, postProductModelSelect, postProductYearSelect, postProductWilayaSelect, postProductCommuneSelect } = elements;
+        const { langDropdownBtn, langDropdown, langBtns, mobileMenuBtn, mobileMenu, mobileMenuCloseBtn, modalCloseBtn, postProductForm, loginBtn, homeLink, cartBtn, postProductBrandSelect, postProductModelSelect, postProductYearSelect, postProductWilayaSelect, postProductCommuneSelect } = elements;
         
+        // This function is now dynamically populated based on login state
+        const setupMobileNav = () => {
+            const { mobileNavLinks } = elements;
+            if (!mobileNavLinks) return;
+            if(currentUser) {
+                mobileNavLinks.innerHTML = `
+                    <a href="#" class="text-xl font-medium text-gray-800 hover:text-blue-600" data-i18n-key="dashboard_link_mobile" id="dashboard-link-mobile">Mon Tableau de Bord</a>
+                    <a href="#" class="text-xl font-medium text-gray-800 hover:text-blue-600" data-i18n-key="sell" id="sell-link-mobile">Vendre</a>
+                `;
+                document.getElementById('dashboard-link-mobile').addEventListener('click', (e) => { e.preventDefault(); renderView('dashboard'); closeMobileMenu(); });
+                document.getElementById('sell-link-mobile').addEventListener('click', (e) => { e.preventDefault(); postProductBtnClick(); closeMobileMenu(); });
+            } else {
+                mobileNavLinks.innerHTML = `
+                    <a href="#" class="text-xl font-medium text-gray-800 hover:text-blue-600" data-i18n-key="sell" id="sell-link-mobile">Vendre</a>
+                    <button id="post-product-btn-mobile" class="text-xl font-medium text-gray-800 hover:text-blue-600 text-left" data-i18n-key="connect">Se connecter</button>
+                `;
+                document.getElementById('sell-link-mobile').addEventListener('click', (e) => { e.preventDefault(); postProductBtnClick(); closeMobileMenu(); });
+                document.getElementById('post-product-btn-mobile').addEventListener('click', () => { openAuthModal(); closeMobileMenu(); });
+            }
+            translatePage(currentLang);
+        };
+        setupMobileNav(); // Call it once on initial setup
+
         if (langDropdownBtn) {
             langDropdownBtn.addEventListener('click', () => {
                 langDropdown.classList.toggle('hidden');
@@ -1705,6 +1653,7 @@
         }
         
         if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', () => {
+            setupMobileNav(); // Re-run setup on open to ensure it's up to date
             mobileMenu.classList.remove('hidden');
             document.body.classList.add('overflow-hidden');
             mobileMenuBtn.setAttribute('aria-expanded', 'true');
@@ -1721,11 +1670,6 @@
 
         if (postProductForm) postProductForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            if (!currentUser) {
-                showMessage(translations[currentLang].login_required, 4000, 'error');
-                openAuthModal();
-                return;
-            }
             if (!validatePostForm(e.target)) {
                 showMessage("Veuillez remplir tous les champs obligatoires.", 3000, 'error');
                 return;
@@ -1742,10 +1686,12 @@
             const formData = new FormData(e.target);
             
             try {
-                // CHANGED: Assign a default placeholder image instead of uploading.
                 const imageUrl = "https://placehold.co/600x400/E2E8F0/4A5568?text=Pas+d'image";
                 const newProduct = {
-                    title: formData.get('title'), brand: formData.get('brand'), model: formData.get('model'), year: formData.get('year'), wilaya: formData.get('wilaya'), commune: formData.get('commune'), condition: formData.get('condition'), price: parseInt(formData.get('price')), description: formData.get('description'), imageUrl: imageUrl, timestamp: new Date()
+                    title: formData.get('title'), brand: formData.get('brand'), model: formData.get('model'), year: formData.get('year'), wilaya: formData.get('wilaya'), commune: formData.get('commune'), condition: formData.get('condition'), price: parseInt(formData.get('price')), description: formData.get('description'), imageUrl: imageUrl, timestamp: new Date(), 
+                    // FEATURE: Add seller info to the product
+                    sellerUid: currentUser.uid,
+                    sellerName: currentUser.displayName
                 };
                 await addDoc(collection(db, "products"), newProduct);
                 showMessage("Annonce soumise avec succès!", 4000, 'success');
@@ -1762,6 +1708,7 @@
             }
         });
         
+        if (elements.sellLink) elements.sellLink.addEventListener('click', (e) => { e.preventDefault(); postProductBtnClick(); });
         if (loginBtn) loginBtn.addEventListener('click', openAuthModal);
         if (elements.authModalCloseBtn) elements.authModalCloseBtn.addEventListener('click', closeAuthModal);
         if (elements.googleLoginBtn) elements.googleLoginBtn.addEventListener('click', () => {
@@ -1776,8 +1723,6 @@
         });
 
         if (homeLink) homeLink.addEventListener('click', (e) => { e.preventDefault(); renderView('home'); });
-        if (sellLink) sellLink.addEventListener('click', (e) => { e.preventDefault(); postProductBtnClick(); });
-        if (sellLinkMobile) sellLinkMobile.addEventListener('click', postProductBtnClick);
         if (cartBtn) cartBtn.addEventListener('click', () => {
             if (!currentUser) {
                 showMessage(translations[currentLang].login_required, 4000, 'error');
@@ -1815,7 +1760,6 @@
     
     // Main app bootstrapper
     const bootApp = () => {
-        const { authLinksContainer } = elements;
         translatePage(currentLang);
         renderView('home');
         document.getElementById('current-year').textContent = currentYear;
@@ -1824,15 +1768,15 @@
         onAuthStateChanged(auth, async (user) => {
             currentUser = user;
             if (user) {
-                console.log("User logged in:", user.uid);
-                authLinksContainer.innerHTML = `
-                    <button id="profile-btn" class="p-2 text-gray-600 hover:text-blue-600 focus:outline-none">
+                elements.authLinksContainer.innerHTML = `
+                    <button id="profile-btn" class="p-2 text-gray-600 hover:text-blue-600 focus:outline-none" aria-label="Mon Tableau de Bord">
                         <i class="fas fa-user-circle text-2xl"></i>
                     </button>
                     <button id="signout-btn" class="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-full font-semibold transition-colors duration-200 shadow-md">
                         Déconnexion
                     </button>
                 `;
+                document.getElementById('profile-btn').addEventListener('click', () => renderView('dashboard'));
                 document.getElementById('signout-btn').addEventListener('click', () => {
                     signOut(auth).then(() => {
                         showMessage("Déconnexion réussie.", 3000, 'info');
@@ -1840,12 +1784,20 @@
                     });
                 });
                 
-                const userDocRef = doc(db, 'artifacts', appId, 'users', user.uid);
+                const userDocRef = doc(db, 'users', user.uid);
                 const userDoc = await getDoc(userDocRef);
+                if (!userDoc.exists()) {
+                    await setDoc(userDocRef, {
+                        uid: user.uid,
+                        displayName: user.displayName,
+                        email: user.email,
+                        createdAt: new Date(),
+                    });
+                }
                 userCart = (userDoc.exists() && userDoc.data().cart) ? userDoc.data().cart : {};
                 updateCartDisplay();
             } else {
-                authLinksContainer.innerHTML = `
+                elements.authLinksContainer.innerHTML = `
                     <button
                         id="login-btn"
                         class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full font-semibold transition-colors duration-200 shadow-md"
