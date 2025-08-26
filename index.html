@@ -256,7 +256,7 @@
         role="main"
         aria-live="polite"
 >
-    </main>
+</main>
 
 <footer class="bg-gray-800 text-white p-6 md:p-8 mt-auto text-center">
     <p class="text-sm font-light">
@@ -268,228 +268,230 @@
 
 <div
         id="post-product-modal"
-        class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden"
+        class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden p-4"
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
 >
     <div
-            class="bg-white rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 relative"
+            class="bg-white rounded-lg shadow-lg max-w-2xl w-full max-h-full flex flex-col"
     >
-        <button
-                id="modal-close-btn"
-                class="absolute top-4 right-4 text-gray-600 hover:text-red-600 focus:outline-none"
-                aria-label="Fermer le formulaire"
-        >
-            <i class="fas fa-times text-2xl"></i>
-        </button>
-        <h3
-                id="modal-title"
-                class="text-2xl font-bold mb-6 text-center"
-                data-i18n-key="submit_ad"
-        >
-            Soumettre une annonce rapide
-        </h3>
-        <form id="post-product-form" class="space-y-4" novalidate>
-            <div>
-                <label for="product-title" class="block font-medium mb-1" data-i18n-key="ad_title_label">
-                    Titre de la pièce <span class="text-red-500">*</span>
-                </label>
-                <input
-                        type="text"
-                        id="product-title"
-                        name="title"
-                        required
-                        placeholder="Ex: Disque de frein avant"
-                        class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        aria-describedby="title-error"
-                />
-                <p
-                        id="title-error"
-                        class="text-red-600 text-sm mt-1 hidden"
-                        aria-live="assertive"
-                >
-                    Veuillez entrer un titre valide.
-                </p>
-            </div>
+        <div class="overflow-y-auto p-6 relative">
+            <button
+                    id="modal-close-btn"
+                    class="absolute top-4 right-4 text-gray-600 hover:text-red-600 focus:outline-none"
+                    aria-label="Fermer le formulaire"
+            >
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+            <h3
+                    id="modal-title"
+                    class="text-2xl font-bold mb-6 text-center"
+                    data-i18n-key="submit_ad"
+            >
+                Soumettre une annonce rapide
+            </h3>
+            <form id="post-product-form" class="space-y-4" novalidate>
+                <div>
+                    <label for="product-title" class="block font-medium mb-1" data-i18n-key="ad_title_label">
+                        Titre de la pièce <span class="text-red-500">*</span>
+                    </label>
+                    <input
+                            type="text"
+                            id="product-title"
+                            name="title"
+                            required
+                            placeholder="Ex: Disque de frein avant"
+                            class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            aria-describedby="title-error"
+                    />
+                    <p
+                            id="title-error"
+                            class="text-red-600 text-sm mt-1 hidden"
+                            aria-live="assertive"
+                    >
+                        Veuillez entrer un titre valide.
+                    </p>
+                </div>
 
-            <div>
-                <label for="product-brand" class="block font-medium mb-1" data-i18n-key="brand_label">
-                    Marque <span class="text-red-500">*</span>
-                </label>
-                <select
-                        id="product-brand"
-                        name="brand"
-                        required
-                        class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        aria-describedby="brand-error"
-                >
-                    <option value="" data-i18n-key="select_brand">Sélectionnez une marque</option>
+                <div>
+                    <label for="product-brand" class="block font-medium mb-1" data-i18n-key="brand_label">
+                        Marque <span class="text-red-500">*</span>
+                    </label>
+                    <select
+                            id="product-brand"
+                            name="brand"
+                            required
+                            class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            aria-describedby="brand-error"
+                    >
+                        <option value="" data-i18n-key="select_brand">Sélectionnez une marque</option>
+                        </select>
+                    <p
+                            id="brand-error"
+                            class="text-red-600 text-sm mt-1 hidden"
+                            aria-live="assertive"
+                    >
+                        Veuillez sélectionner une marque.
+                    </p>
+                </div>
+
+                <div>
+                    <label for="product-model" class="block font-medium mb-1" data-i18n-key="model_label">
+                        Modèle
+                    </label>
+                    <select
+                            id="product-model"
+                            name="model"
+                            class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            disabled
+                    >
+                        <option value="" data-i18n-key="select_model">Sélectionnez un modèle</option>
+                        </select>
+                </div>
+
+                <div>
+                    <label for="product-year" class="block font-medium mb-1" data-i18n-key="year_label">
+                        Année
+                    </label>
+                    <select
+                            id="product-year"
+                            name="year"
+                            class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                        <option value="" data-i18n-key="select_year">Sélectionnez une année</option>
+                        </select>
+                </div>
+
+                <div>
+                    <label for="product-wilaya" class="block font-medium mb-1" data-i18n-key="wilaya_label">
+                        Wilaya <span class="text-red-500">*</span>
+                    </label>
+                    <select
+                            id="product-wilaya"
+                            name="wilaya"
+                            required
+                            class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            aria-describedby="wilaya-error"
+                    >
+                        <option value="" data-i18n-key="select_wilaya">Sélectionnez une wilaya</option>
+                        </select>
+                    <p
+                            id="wilaya-error"
+                            class="text-red-600 text-sm mt-1 hidden"
+                            aria-live="assertive"
+                    >
+                        Veuillez sélectionner une wilaya.
+                    </p>
+                </div>
+
+                <div>
+                    <label for="product-commune" class="block font-medium mb-1" data-i18n-key="commune_label">
+                        Commune
+                    </label>
+                    <select
+                            id="product-commune"
+                            name="commune"
+                            class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            disabled
+                    >
+                        <option value="" data-i18n-key="select_commune">Sélectionnez une commune</option>
+                        </select>
+                </div>
+
+                <div>
+                    <label for="product-condition" class="block font-medium mb-1" data-i18n-key="condition_label">
+                        État
+                    </label>
+                    <select
+                            id="product-condition"
+                            name="condition"
+                            class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                        <option value="new" data-i18n-key="new">Neuf</option>
+                        <option value="used" data-i18n-key="used">Occasion</option>
                     </select>
-                <p
-                        id="brand-error"
-                        class="text-red-600 text-sm mt-1 hidden"
-                        aria-live="assertive"
-                >
-                    Veuillez sélectionner une marque.
-                </p>
-            </div>
+                </div>
 
-            <div>
-                <label for="product-model" class="block font-medium mb-1" data-i18n-key="model_label">
-                    Modèle
-                </label>
-                <select
-                        id="product-model"
-                        name="model"
-                        class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        disabled
-                >
-                    <option value="" data-i18n-key="select_model">Sélectionnez un modèle</option>
-                    </select>
-            </div>
+                <div>
+                    <label for="product-price" class="block font-medium mb-1" data-i18n-key="price_label">
+                        Prix (DA) <span class="text-red-500">*</span>
+                    </label>
+                    <input
+                            type="number"
+                            id="product-price"
+                            name="price"
+                            min="0"
+                            required
+                            placeholder="Ex: 15000"
+                            class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            aria-describedby="price-error"
+                    />
+                    <p
+                            id="price-error"
+                            class="text-red-600 text-sm mt-1 hidden"
+                            aria-live="assertive"
+                    >
+                        Veuillez entrer un prix valide.
+                    </p>
+                </div>
 
-            <div>
-                <label for="product-year" class="block font-medium mb-1" data-i18n-key="year_label">
-                    Année
-                </label>
-                <select
-                        id="product-year"
-                        name="year"
-                        class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                    <option value="" data-i18n-key="select_year">Sélectionnez une année</option>
-                    </select>
-            </div>
+                <div>
+                    <label for="product-description" class="block font-medium mb-1" data-i18n-key="description_label">
+                        Description
+                    </label>
+                    <textarea
+                            id="product-description"
+                            name="description"
+                            rows="3"
+                            placeholder="Informations supplémentaires..."
+                            class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                    ></textarea>
+                </div>
 
-            <div>
-                <label for="product-wilaya" class="block font-medium mb-1" data-i18n-key="wilaya_label">
-                    Wilaya <span class="text-red-500">*</span>
-                </label>
-                <select
-                        id="product-wilaya"
-                        name="wilaya"
-                        required
-                        class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        aria-describedby="wilaya-error"
-                >
-                    <option value="" data-i18n-key="select_wilaya">Sélectionnez une wilaya</option>
-                    </select>
-                <p
-                        id="wilaya-error"
-                        class="text-red-600 text-sm mt-1 hidden"
-                        aria-live="assertive"
-                >
-                    Veuillez sélectionner une wilaya.
-                </p>
-            </div>
+                <div>
+                    <label for="product-image" class="block font-medium mb-1" data-i18n-key="image_label">
+                        Image <span class="text-red-500">*</span>
+                    </label>
+                    <input
+                            type="file"
+                            id="product-image"
+                            name="image"
+                            accept="image/*"
+                            required
+                            aria-describedby="image-error"
+                            class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
+                                   file:rounded-md file:border-0
+                                   file:text-sm file:font-semibold
+                                   file:bg-blue-50 file:text-blue-700
+                                   hover:file:bg-blue-100
+                                   "
+                    />
+                    <p
+                            id="image-error"
+                            class="text-red-600 text-sm mt-1 hidden"
+                            aria-live="assertive"
+                    >
+                        Veuillez choisir une image.
+                    </p>
+                </div>
 
-            <div>
-                <label for="product-commune" class="block font-medium mb-1" data-i18n-key="commune_label">
-                    Commune
-                </label>
-                <select
-                        id="product-commune"
-                        name="commune"
-                        class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        disabled
-                >
-                    <option value="" data-i18n-key="select_commune">Sélectionnez une commune</option>
-                    </select>
-            </div>
-
-            <div>
-                <label for="product-condition" class="block font-medium mb-1" data-i18n-key="condition_label">
-                    État
-                </label>
-                <select
-                        id="product-condition"
-                        name="condition"
-                        class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                    <option value="new" data-i18n-key="new">Neuf</option>
-                    <option value="used" data-i18n-key="used">Occasion</option>
-                </select>
-            </div>
-
-            <div>
-                <label for="product-price" class="block font-medium mb-1" data-i18n-key="price_label">
-                    Prix (DA) <span class="text-red-500">*</span>
-                </label>
-                <input
-                        type="number"
-                        id="product-price"
-                        name="price"
-                        min="0"
-                        required
-                        placeholder="Ex: 15000"
-                        class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        aria-describedby="price-error"
-                />
-                <p
-                        id="price-error"
-                        class="text-red-600 text-sm mt-1 hidden"
-                        aria-live="assertive"
-                >
-                    Veuillez entrer un prix valide.
-                </p>
-            </div>
-
-            <div>
-                <label for="product-description" class="block font-medium mb-1" data-i18n-key="description_label">
-                    Description
-                </label>
-                <textarea
-                        id="product-description"
-                        name="description"
-                        rows="3"
-                        placeholder="Informations supplémentaires..."
-                        class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-                ></textarea>
-            </div>
-
-            <div>
-                <label for="product-image" class="block font-medium mb-1" data-i18n-key="image_label">
-                    Image <span class="text-red-500">*</span>
-                </label>
-                <input
-                        type="file"
-                        id="product-image"
-                        name="image"
-                        accept="image/*"
-                        required
-                        aria-describedby="image-error"
-                        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
-                               file:rounded-md file:border-0
-                               file:text-sm file:font-semibold
-                               file:bg-blue-50 file:text-blue-700
-                               hover:file:bg-blue-100
-                               "
-                />
-                <p
-                        id="image-error"
-                        class="text-red-600 text-sm mt-1 hidden"
-                        aria-live="assertive"
-                >
-                    Veuillez choisir une image.
-                </p>
-            </div>
-
-            <div class="text-center">
-                <button
-                        type="submit"
-                        id="submit-ad-btn"
-                        class="mt-4 px-6 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md flex items-center justify-center disabled:bg-blue-400 disabled:cursor-not-allowed"
-                        data-i18n-key="submit_ad_btn_text"
-                >
-                    <span class="btn-text">Soumettre</span>
-                    <svg class="animate-spin ml-3 h-5 w-5 text-white hidden btn-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                </button>
-            </div>
-        </form>
+                <div class="text-center">
+                    <button
+                            type="submit"
+                            id="submit-ad-btn"
+                            class="mt-4 px-6 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md flex items-center justify-center disabled:bg-blue-400 disabled:cursor-not-allowed"
+                            data-i18n-key="submit_ad_btn_text"
+                    >
+                        <span class="btn-text">Soumettre</span>
+                        <svg class="animate-spin ml-3 h-5 w-5 text-white hidden btn-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -1137,7 +1139,7 @@
         cartItemsContainer: null, cartTotalSpan: null, checkoutBtn: null, backFromCartBtn: null,
         postProductBrandSelect: document.getElementById('product-brand'),
         postProductModelSelect: document.getElementById('product-model'),
-        // FIXED: Added missing reference for postProductYearSelect
+        // FIXED: Added missing reference for postProductYearSelect to solve the ReferenceError
         postProductYearSelect: document.getElementById('product-year'),
         postProductWilayaSelect: document.getElementById('product-wilaya'),
         postProductCommuneSelect: document.getElementById('product-commune')
@@ -1343,7 +1345,7 @@
         if (!listingsSection) return;
         listingsSection.innerHTML = `<p class="col-span-full text-center py-6 text-gray-600" data-i18n-key="loading">Chargement...</p>`;
         try {
-            // FIXED: Using correct, structured path for Firestore collection
+            // FIXED: Using correct, structured path for Firestore collection to solve FirebaseError
             const q = query(collection(db, "artifacts", appId, "public", "data", "products"));
             const querySnapshot = await getDocs(q);
             allProducts = querySnapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }));
@@ -1629,7 +1631,7 @@
     };
 
     const addReview = async (productId, review) => {
-        // FIXED: Using correct, structured path for Firestore collection
+        // FIXED: Using correct, structured path for Firestore collection to solve FirebaseError
         const reviewRef = collection(db, "artifacts", appId, "public", "data", "products", productId, "reviews");
         return await addDoc(reviewRef, review);
     };
@@ -1638,7 +1640,7 @@
         const { reviewsContainer } = elements;
         if (!reviewsContainer) return;
         reviewsContainer.innerHTML = '<p class="text-gray-500">Chargement des avis...</p>';
-        // FIXED: Using correct, structured path for Firestore collection
+        // FIXED: Using correct, structured path for Firestore collection to solve FirebaseError
         const reviewsRef = collection(db, "artifacts", appId, "public", "data", "products", productId, "reviews");
         const q = query(reviewsRef);
         onSnapshot(q, (querySnapshot) => {
@@ -1667,7 +1669,7 @@
     const insertDemoListingsOnce = async () => {
         if (localStorage.getItem("demoListingsInserted")) return;
         
-        const demoTimestamp = new Date('2025-08-25T17:46:04');
+        const demoTimestamp = new Date('2025-08-26T07:45:43');
 
         const demoListings = [
             { title: "Disque de frein avant Toyota Yaris 2015", brand: "Toyota", model: "Yaris", year: "2015", wilaya: "Alger", commune: "Bab El Oued", condition: "used", price: 12000, description: "Disque en bon état, peu utilisé.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fbrake_disc_toyota_yaris.jpg?alt=media", timestamp: demoTimestamp },
@@ -1675,7 +1677,7 @@
             { title: "Batterie 12V pour Peugeot 308", brand: "Peugeot", model: "308", year: "2017", wilaya: "Constantine", commune: "El Khroub", condition: "used", price: 9000, description: "Batterie d'occasion, testée OK.", imageUrl: "https://firebasestorage.googleapis.com/v0/b/piecety-app-b39c4.appspot.com/o/demo%2Fbattery_peugeot_308.jpg?alt=media", timestamp: demoTimestamp }
         ];
         for (const listing of demoListings) {
-            // FIXED: Using correct, structured path for Firestore collection
+            // FIXED: Using correct, structured path for Firestore collection to solve FirebaseError
             const collectionRef = collection(db, "artifacts", appId, "public", "data", "products");
             const q = query(collectionRef, where("title", "==", listing.title));
             const querySnapshot = await getDocs(q);
