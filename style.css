@@ -1,0 +1,62 @@
+/* General Body Styles */
+body {
+    font-family: 'Inter', 'Noto Sans Arabic', sans-serif;
+    background-color: #f7fafc;
+}
+
+.dark body {
+    background-color: #111827;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.dark ::-webkit-scrollbar-track {
+    background: #2d3748;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Focus visible for accessibility */
+:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* Modal transitions */
+.modal {
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Category Card Hover Effect */
+.category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.dark .category-card:hover {
+    box-shadow: 0 10px 15px rgba(255, 255, 255, 0.1);
+}
+
+.category-card:hover .category-icon {
+    transform: scale(1.1);
+    background-color: #dbeafe; /* bg-blue-100 */
+}
+
+.dark .category-card:hover .category-icon {
+    background-color: #374151; /* dark:bg-gray-700 */
+}
