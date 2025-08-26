@@ -1,0 +1,23 @@
+{
+    "name": "Piecety - Marché des Pièces Auto",
+    "short_name": "Piecety",
+    "description": "Le marché algérien des pièces automobiles le plus fiable.",
+    "start_url": "/index.html",
+    "display": "standalone",
+    "background_color": "#f7fafc",
+    "theme_color": "#2563eb",
+    "icons": [
+        {
+            "src": "/car.svg",
+            "sizes": "192x192",
+            "type": "image/svg+xml"
+        },
+        {
+            "src": "/car-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "lang": "fr",
+    "dir": "ltr"
+}
