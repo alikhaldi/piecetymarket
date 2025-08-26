@@ -6,13 +6,20 @@
     <title>Piecety - Marché des Pièces Auto en Algérie</title>
     <meta name="description" content="Le marché algérien des pièces automobiles le plus fiable. Trouvez la bonne pièce pour votre voiture à Hassi R'Mel et dans toute l'Algérie.">
     
+    <!-- PWA & SEO -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚗</text></svg>">
-    <link rel="manifest" href="data:application/manifest+json,{&quot;name&quot;:&quot;Piecety&quot;,&quot;short_name&quot;:&quot;Piecety&quot;,&quot;start_url&quot;:&quot;/&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;#ffffff&quot;,&quot;theme_color&quot;:&quot;#2563eb&quot;,&quot;icons&quot;:[{&quot;src&quot;:&quot;data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚗</text></svg>&quot;,&quot;sizes&quot;:&quot;192x192&quot;,&quot;type&quot;:&quot;image/svg+xml&quot;}]}">
+    <!-- FIX: Replaced the broken data: URL with a link to an external manifest.json file. -->
+    <!-- You should create a 'manifest.json' file in the root of your project. -->
+    <link rel="manifest" href="/manifest.json">
     
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet" />
     
+    <!-- Tailwind CSS -->
+    <!-- NOTE: The Tailwind Play CDN is used here for simplicity in a single-file setup. -->
+    <!-- For production, it's recommended to build a static CSS file. See: https://tailwindcss.com/docs/installation -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -20,6 +27,7 @@
         }
     </script>
 
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
     <style>
@@ -151,6 +159,7 @@
     <p class="text-xs mt-2 text-gray-400"><a href="#" class="hover:underline">Contact Us</a> | <a href="#" class="hover:underline">Terms of Service</a></p>
 </footer>
 
+<!-- Modals -->
 <div id="post-product-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 invisible opacity-0" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] flex flex-col">
         <div class="overflow-y-auto p-6 relative">
@@ -159,7 +168,8 @@
             </button>
             <h3 id="modal-title" class="text-2xl font-bold mb-6 text-center" data-i18n-key="submit_ad">Soumettre une annonce rapide</h3>
             <form id="post-product-form" class="space-y-4" novalidate>
-                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                 <!-- Title, Brand, Model, Year -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="product-title" class="block font-medium mb-1" data-i18n-key="ad_title_label">Titre de la pièce <span class="text-red-500">*</span></label>
                         <input type="text" id="product-title" name="title" required placeholder="Ex: Disque de frein avant" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-describedby="title-error" />
@@ -185,6 +195,7 @@
                         </select>
                     </div>
                 </div>
+                <!-- Wilaya, Commune -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="product-wilaya" class="block font-medium mb-1" data-i18n-key="wilaya_label">Wilaya <span class="text-red-500">*</span></label>
@@ -200,7 +211,8 @@
                         </select>
                     </div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Category, Condition, Price -->
+                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label for="product-category" class="block font-medium mb-1" data-i18n-key="category_label">Catégorie <span class="text-red-500">*</span></label>
                         <select id="product-category" name="category" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-describedby="category-error">
@@ -221,10 +233,12 @@
                         <p id="price-error" class="text-red-500 text-sm mt-1 hidden" aria-live="assertive">Veuillez entrer un prix valide.</p>
                     </div>
                 </div>
+                <!-- Description -->
                 <div>
                     <label for="product-description" class="block font-medium mb-1" data-i18n-key="description_label">Description</label>
                     <textarea id="product-description" name="description" rows="3" placeholder="Informations supplémentaires..." class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
                 </div>
+                <!-- Submit Button -->
                 <div class="text-center">
                     <button type="submit" id="submit-ad-btn" class="mt-4 px-8 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md flex items-center justify-center disabled:bg-blue-400 disabled:cursor-not-allowed">
                         <span class="btn-text" data-i18n-key="submit_ad_btn_text">Soumettre</span>
@@ -254,6 +268,7 @@
     </div>
 </div>
 
+<!-- View Templates -->
 <template id="home-view-template">
     <section class="text-center py-12 md:py-20 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl shadow-lg mb-8 md:mb-12">
         <h1 class="text-3xl md:text-5xl font-extrabold mb-4" data-i18n-key="hero_title">Trouvez la bonne pièce pour votre voiture</h1>
@@ -266,10 +281,12 @@
     </section>
 
     <div class="flex flex-col md:flex-row gap-8">
+        <!-- Filters -->
         <aside id="filters-sidebar" class="w-full md:w-1/4 lg:w-1/5 md:block hidden">
              <div id="filters-content" class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 space-y-6"></div>
         </aside>
 
+        <!-- Listings -->
         <section class="w-full md:w-3/4 lg:w-4/5">
              <div class="flex justify-between items-center mb-6">
                 <button id="show-filters-btn" class="md:hidden w-full px-6 py-3 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-md font-semibold hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200 shadow-md" data-i18n-key="show_filters">
@@ -283,42 +300,49 @@
 
 <template id="filters-template">
     <h2 class="text-2xl font-bold" data-i18n-key="filters_title">Filtrer les annonces</h2>
+    <!-- Brand -->
     <div>
         <label for="brand-filter" class="block text-sm font-medium" data-i18n-key="all_brands">Toutes les marques</label>
         <select id="brand-filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
             <option value="" data-i18n-key="all_brands">Toutes les marques</option>
         </select>
     </div>
+    <!-- Model -->
     <div id="model-filter-container" class="hidden">
         <label for="model-filter" class="block text-sm font-medium" data-i18n-key="all_models">Tous les modèles</label>
         <select id="model-filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
             <option value="" data-i18n-key="all_models">Tous les modèles</option>
         </select>
     </div>
+    <!-- Year -->
     <div>
         <label for="year-filter" class="block text-sm font-medium" data-i18n-key="all_years">Toutes années</label>
         <select id="year-filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
             <option value="" data-i18n-key="all_years">Toutes années</option>
         </select>
     </div>
+    <!-- Wilaya -->
     <div>
         <label for="wilaya-filter" class="block text-sm font-medium" data-i18n-key="all_wilayas">Toutes wilayas</label>
         <select id="wilaya-filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
             <option value="" data-i18n-key="all_wilayas">Toutes wilayas</option>
         </select>
     </div>
+    <!-- Commune -->
     <div id="commune-filter-container" class="hidden">
         <label for="commune-filter" class="block text-sm font-medium" data-i18n-key="all_communes">Toutes communes</label>
         <select id="commune-filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
             <option value="" data-i18n-key="all_communes">Toutes communes</option>
         </select>
     </div>
+    <!-- Category -->
     <div>
         <label for="category-filter" class="block text-sm font-medium" data-i18n-key="all_categories">Toutes catégories</label>
         <select id="category-filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
              <option value="" data-i18n-key="all_categories">Toutes catégories</option>
         </select>
     </div>
+    <!-- Condition -->
     <div>
         <label for="condition-filter" class="block text-sm font-medium" data-i18n-key="condition">État</label>
         <select id="condition-filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
@@ -327,6 +351,7 @@
             <option value="used" data-i18n-key="used">Occasion</option>
         </select>
     </div>
+    <!-- Price Range -->
     <div>
         <label for="price-range-filter" class="block text-sm font-medium" data-i18n-key="price_range">Gamme de prix</label>
         <input type="range" id="price-range-filter" min="0" max="100000" step="1000" class="w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer">
@@ -692,8 +717,10 @@
         messageBox.classList.add(...colors.split(' '));
 
         // Show
-        messageBox.classList.remove('opacity-0', 'translate-x-full');
-        messageBox.classList.add('opacity-100', 'translate-x-0');
+        requestAnimationFrame(() => {
+            messageBox.classList.remove('opacity-0', 'translate-x-full');
+            messageBox.classList.add('opacity-100', 'translate-x-0');
+        });
 
         setTimeout(() => {
             messageBox.classList.remove('opacity-100', 'translate-x-0');
@@ -867,6 +894,7 @@
         // Populate categories
         const categoriesGrid = document.getElementById('categories-grid');
         if (categoriesGrid) {
+            categoriesGrid.innerHTML = ''; // Clear previous
             for (const key in categories) {
                 const cat = categories[key];
                 const card = document.createElement('a');
@@ -880,15 +908,23 @@
                 `;
                 card.addEventListener('click', (e) => {
                     e.preventDefault();
-                    renderView('home');
-                    setTimeout(() => { // wait for view to render
-                        const catFilter = document.getElementById('category-filter');
-                        if(catFilter) {
-                           catFilter.value = key;
-                           updateURLWithFilters();
-                           renderListings();
-                        }
-                    }, 100);
+                    const catFilter = document.getElementById('category-filter');
+                    if(catFilter) {
+                       catFilter.value = key;
+                       updateURLWithFilters();
+                       renderListings();
+                    } else {
+                        // If filters not on page, navigate and then filter
+                        renderView('home');
+                        setTimeout(() => { 
+                            const newCatFilter = document.getElementById('category-filter');
+                            if(newCatFilter) {
+                                newCatFilter.value = key;
+                                updateURLWithFilters();
+                                renderListings();
+                            }
+                        }, 100);
+                    }
                 });
                 categoriesGrid.appendChild(card);
             }
@@ -906,7 +942,11 @@
         const showFiltersBtn = document.getElementById('show-filters-btn');
         if (showFiltersBtn) {
             showFiltersBtn.addEventListener('click', () => {
+                const existingModal = document.getElementById('mobile-filters-modal');
+                if(existingModal) existingModal.remove();
+
                 const filtersModal = document.createElement('div');
+                filtersModal.id = 'mobile-filters-modal';
                 filtersModal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end';
                 filtersModal.innerHTML = `
                     <div class="w-4/5 max-w-sm h-full bg-white dark:bg-gray-800 shadow-xl p-6 overflow-y-auto space-y-6">
@@ -999,7 +1039,7 @@
         }
 
         if (resetBtn) resetBtn.addEventListener('click', () => {
-            const formElements = container.querySelectorAll('select, input');
+            const formElements = container.querySelectorAll('select, input[type="range"]');
             formElements.forEach(el => {
                 if(el.type !== 'range') el.value = '';
                 else el.value = el.max / 2;
@@ -1039,7 +1079,7 @@
         const category = params.get('category');
         const condition = params.get('condition');
         const price = params.get('price');
-        const searchTerm = params.get('search')?.toLowerCase();
+        const searchTerm = DOMElements.searchInput.value.toLowerCase();
 
         return products.filter(p => {
             if (brand && p.brand.toLowerCase() !== brand) return false;
@@ -1089,20 +1129,172 @@
     };
 
     const renderProductPage = (product) => {
-        // ... implementation
+        if (!product) { renderView('home'); return; }
+        
+        document.getElementById('product-image-detail').src = product.imageUrl;
+        document.getElementById('product-image-detail').alt = product.title;
+        document.getElementById('product-title-detail').textContent = product.title;
+        document.getElementById('product-price-detail').textContent = `${product.price.toLocaleString()} DA`;
+        document.getElementById('product-description-detail').textContent = product.description || "Aucune description fournie.";
+        document.getElementById('product-brand-detail').textContent = product.brand;
+        document.getElementById('product-model-detail').textContent = product.model || "-";
+        document.getElementById('product-year-detail').textContent = product.year || "-";
+        document.getElementById('product-wilaya-detail').textContent = product.wilaya;
+        document.getElementById('product-commune-detail').textContent = product.commune || "-";
+        
+        const sellerLink = document.getElementById('seller-profile-link');
+        sellerLink.textContent = product.sellerName || 'Vendeur Anonyme';
+        sellerLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            renderView('profile', { userId: product.sellerUid, userName: product.sellerName });
+        });
+
+        document.getElementById('back-to-listings-btn').addEventListener('click', () => renderView('home'));
+        document.getElementById('add-to-cart-btn').addEventListener('click', () => {
+            if (!currentUser) {
+                showMessage(translations[currentLang].login_required, 4000, 'error');
+                DOMElements.authModal.classList.remove('invisible', 'opacity-0');
+                return;
+            }
+            addToCart(product);
+        });
+        
+        const contactBtn = document.getElementById('contact-seller-btn');
+        contactBtn.disabled = !currentUser || currentUser.uid === product.sellerUid;
+        contactBtn.addEventListener('click', () => {
+             showMessage("La messagerie directe sera bientôt disponible!", 3000, "info");
+        });
     };
 
-    const renderCartPage = () => {
-        // ... implementation
-        document.getElementById('clear-cart-btn')?.addEventListener('click', clearCart);
+    const renderCartPage = async () => {
+        const container = document.getElementById('cart-items-container');
+        const totalSpan = document.getElementById('cart-total-price');
+        const checkoutBtn = document.getElementById('checkout-btn');
+        const backBtn = document.getElementById('back-from-cart-btn');
+        const clearCartBtn = document.getElementById('clear-cart-btn');
+
+        if (!container || !totalSpan || !checkoutBtn || !backBtn || !clearCartBtn) return;
+        
+        container.innerHTML = '';
+        totalSpan.textContent = "0 DA";
+        checkoutBtn.disabled = true;
+        
+        checkoutBtn.addEventListener('click', () => showMessage("La page de paiement sera bientôt disponible!", 3000, "info"));
+        backBtn.addEventListener('click', () => renderView('home'));
+        clearCartBtn.addEventListener('click', clearCart);
+
+        if (!currentUser || Object.keys(userCart).length === 0) {
+            container.innerHTML = `<p class="text-center text-gray-500">${translations[currentLang].your_cart_is_empty}</p>`;
+            clearCartBtn.disabled = true;
+            return;
+        }
+
+        clearCartBtn.disabled = false;
+        let total = 0;
+        const productIds = Object.keys(userCart);
+        
+        // Fetch product details for items in cart
+        const productsInCart = allProducts.filter(p => productIds.includes(p.id));
+
+        productsInCart.forEach(product => {
+            const item = userCart[product.id];
+            const itemTotal = product.price * item.quantity;
+            total += itemTotal;
+            const cartItemEl = document.createElement('div');
+            cartItemEl.className = 'flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 p-4 border-b border-gray-200 dark:border-gray-700';
+            cartItemEl.innerHTML = `
+                <img src="${product.imageUrl}" alt="${product.title}" class="w-24 h-24 object-cover rounded-lg">
+                <div class="flex-1">
+                    <h4 class="font-semibold">${product.title}</h4>
+                    <p class="text-gray-500">${product.price.toLocaleString()} DA</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span data-i18n-key="quantity">${translations[currentLang].quantity}:</span>
+                    <input type="number" min="1" value="${item.quantity}" class="w-16 text-center border rounded-md dark:bg-gray-700 dark:border-gray-600" data-product-id="${product.id}">
+                </div>
+                <p class="font-semibold"><span data-i18n-key="item_total">${translations[currentLang].item_total}</span>: ${itemTotal.toLocaleString()} DA</p>
+                <button class="p-3 text-red-500 hover:text-red-700 remove-from-cart-btn" data-product-id="${product.id}">
+                    <i class="fas fa-trash"></i> <span class="sr-only" data-i18n-key="remove">${translations[currentLang].remove}</span>
+                </button>
+            `;
+            container.appendChild(cartItemEl);
+        });
+
+        container.querySelectorAll('input[type="number"]').forEach(input => {
+            input.addEventListener('change', (e) => updateCartItem(e.target.dataset.productId, e.target.value));
+        });
+        container.querySelectorAll('.remove-from-cart-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => removeFromCart(e.currentTarget.dataset.productId));
+        });
+        
+        totalSpan.textContent = `${total.toLocaleString()} DA`;
+        if (total > 0) checkoutBtn.disabled = false;
+        translatePage(currentLang);
     };
     
     const renderDashboardPage = async () => {
-        // ... implementation
+        if (!currentUser) {
+            showMessage(translations[currentLang].login_required, 4000, 'error');
+            renderView('home');
+            return;
+        }
+        
+        const grid = document.getElementById('my-listings-grid');
+        grid.innerHTML = `<p class="col-span-full text-center py-6 text-gray-600">Chargement de vos annonces...</p>`;
+        
+        const q = query(collection(db, "products"), where("sellerUid", "==", currentUser.uid));
+        const querySnapshot = await getDocs(q);
+        const userProducts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+        grid.innerHTML = "";
+        if (userProducts.length === 0) {
+            grid.innerHTML = `<p class="col-span-full text-center py-6 text-gray-500">Vous n'avez aucune annonce active.</p>`;
+            return;
+        }
+
+        userProducts.forEach(item => {
+            const card = document.createElement('div');
+            card.className = "bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex flex-col";
+            card.innerHTML = `
+                <img src="${item.imageUrl}" alt="${item.title}" class="w-full h-40 object-cover">
+                <div class="p-4 flex-1 flex flex-col">
+                    <h4 class="font-semibold">${item.title}</h4>
+                    <p class="text-gray-600 dark:text-gray-300 font-bold mt-2">${item.price.toLocaleString()} DA</p>
+                    <div class="mt-4 pt-4 border-t dark:border-gray-700 flex space-x-2 text-sm">
+                        <button class="flex-1 bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 edit-btn">Modifier</button>
+                        <button class="flex-1 bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 delete-btn" data-id="${item.id}">Supprimer</button>
+                    </div>
+                </div>
+            `;
+            card.querySelector('.edit-btn').addEventListener('click', () => showMessage("La modification sera bientôt disponible.", 3000, "info"));
+            card.querySelector('.delete-btn').addEventListener('click', async (e) => {
+                const productId = e.currentTarget.dataset.id;
+                if (confirm("Êtes-vous sûr de vouloir supprimer cette annonce?")) {
+                    await deleteDoc(doc(db, "products", productId));
+                    showMessage("Annonce supprimée avec succès.", 3000, "success");
+                    renderView('dashboard'); 
+                }
+            });
+            grid.appendChild(card);
+        });
     };
     
     const renderProfilePage = async (data) => {
-         // ... implementation
+         if (!data || !data.userId) {
+            renderView('home');
+            return;
+        }
+
+        document.getElementById('profile-name').textContent = data.userName || "Vendeur";
+
+        const grid = document.getElementById('user-products-grid');
+        grid.innerHTML = `<p class="col-span-full text-center py-6 text-gray-600">Chargement des annonces...</p>`;
+        
+        const q = query(collection(db, "products"), where("sellerUid", "==", data.userId));
+        const querySnapshot = await getDocs(q);
+        const userProducts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+        displayProducts(userProducts, grid);
     };
 
 
@@ -1110,6 +1302,7 @@
     const toggleFavorite = async (productId) => {
         if (!currentUser) {
             showMessage(translations[currentLang].login_required, 3000, 'error');
+            DOMElements.authModal.classList.remove('invisible', 'opacity-0');
             return;
         }
         const userDocRef = doc(db, 'users', currentUser.uid);
@@ -1119,7 +1312,6 @@
 
         try {
             await setDoc(userDocRef, { favorites: newFavorites }, { merge: true });
-            // No need to update local state `userFavorites`, onSnapshot will do it.
             showMessage(translations[currentLang][newFavorites.includes(productId) ? 'favorite_added' : 'favorite_removed'], 2000, 'success');
         } catch (error) {
             console.error("Error updating favorites:", error);
@@ -1131,7 +1323,6 @@
         const userDocRef = doc(db, 'users', currentUser.uid);
         try {
             await setDoc(userDocRef, { cart: {} }, { merge: true });
-            // `onAuthStateChanged` will update the local cart state
             renderView('cart');
             showMessage("Panier vidé avec succès.", 2000, 'success');
         } catch (error) {
@@ -1140,17 +1331,138 @@
     };
 
     const addToCart = async (product) => {
-        // ... implementation
+        if (!currentUser) return;
+        const userDocRef = doc(db, 'users', currentUser.uid);
+        
+        const updatedCart = { ...userCart };
+        updatedCart[product.id] = {
+            productId: product.id,
+            quantity: (updatedCart[product.id]?.quantity || 0) + 1
+        };
+
+        try {
+            await setDoc(userDocRef, { cart: updatedCart }, { merge: true });
+            showMessage(`${product.title} ajouté au panier.`, 3000, 'success');
+        } catch (error) {
+            showMessage("Erreur lors de l'ajout au panier.", 3000, 'error');
+            console.error("Error adding to cart: ", error);
+        }
+    };
+    
+    const updateCartItem = async (productId, quantity) => {
+        if (!currentUser) return;
+        const userDocRef = doc(db, 'users', currentUser.uid);
+        const updatedCart = { ...userCart };
+        const newQuantity = parseInt(quantity);
+        if (newQuantity > 0) {
+            updatedCart[productId].quantity = newQuantity;
+        } else {
+            delete updatedCart[productId];
+        }
+        try {
+            await setDoc(userDocRef, { cart: updatedCart }, { merge: true });
+            renderCartPage();
+        } catch(error) {
+            console.error(error);
+        }
+    };
+    
+    const removeFromCart = async (productId) => {
+        if (!currentUser) return;
+        const userDocRef = doc(db, 'users', currentUser.uid);
+        const updatedCart = { ...userCart };
+        delete updatedCart[productId];
+        try {
+            await setDoc(userDocRef, { cart: updatedCart }, { merge: true });
+            renderCartPage();
+        } catch(error) {
+            console.error(error);
+        }
+    };
+
+    const validatePostForm = (form) => {
+        let isValid = true;
+        const requiredInputs = form.querySelectorAll('[required]');
+        requiredInputs.forEach(input => {
+            const errorEl = document.getElementById(input.id + "-error");
+            if (input.value.trim() === '') {
+                if(errorEl) errorEl.classList.remove("hidden");
+                input.setAttribute("aria-invalid", "true");
+                isValid = false;
+            } else {
+                if(errorEl) errorEl.classList.add("hidden");
+                input.removeAttribute("aria-invalid");
+            }
+        });
+        return isValid;
     };
 
     // SETUP & INITIALIZATION
     const setupEventListeners = () => {
-        // ... all event listeners
         DOMElements.darkModeToggle?.addEventListener('click', () => {
             const isDark = DOMElements.html.classList.contains('dark');
             setDarkMode(!isDark);
         });
         
+        DOMElements.langDropdownBtn?.addEventListener('click', () => DOMElements.langDropdown.classList.toggle('hidden'));
+        
+        DOMElements.langBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                currentLang = e.target.dataset.lang;
+                localStorage.setItem('piecety_lang', currentLang);
+                translatePage(currentLang);
+                DOMElements.mobileMenu.classList.add('hidden');
+                DOMElements.body.classList.remove('overflow-hidden');
+            });
+        });
+
+        DOMElements.mobileMenuBtn?.addEventListener('click', () => {
+            DOMElements.mobileMenu.classList.remove('hidden');
+            DOMElements.body.classList.add('overflow-hidden');
+        });
+        DOMElements.mobileMenuCloseBtn?.addEventListener('click', () => {
+            DOMElements.mobileMenu.classList.add('hidden');
+            DOMElements.body.classList.remove('overflow-hidden');
+        });
+        
+        DOMElements.sellLink?.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (!currentUser) {
+                showMessage(translations[currentLang].login_required, 3000, 'error');
+                DOMElements.authModal.classList.remove('invisible', 'opacity-0');
+            } else {
+                DOMElements.postProductModal.classList.remove('invisible', 'opacity-0');
+            }
+        });
+
+        DOMElements.modalCloseBtn?.addEventListener('click', () => DOMElements.postProductModal.classList.add('invisible', 'opacity-0'));
+        DOMElements.authModalCloseBtn?.addEventListener('click', () => DOMElements.authModal.classList.add('invisible', 'opacity-0'));
+
+        DOMElements.googleLoginBtn?.addEventListener('click', () => {
+            signInWithPopup(auth, provider).then((result) => {
+                showMessage(`Bienvenue, ${result.user.displayName}!`, 3000, 'success');
+                DOMElements.authModal.classList.add('invisible', 'opacity-0');
+            }).catch((error) => {
+                console.error("Google sign-in error: ", error);
+                showMessage("Erreur de connexion avec Google.", 3000, 'error');
+            });
+        });
+
+        DOMElements.homeLink?.addEventListener('click', (e) => { e.preventDefault(); renderView('home'); });
+        DOMElements.cartBtn?.addEventListener('click', () => {
+            if (!currentUser) {
+                showMessage(translations[currentLang].login_required, 4000, 'error');
+                DOMElements.authModal.classList.remove('invisible', 'opacity-0');
+            } else {
+                renderView('cart');
+            }
+        });
+        
+        populateSelect(DOMElements.postProductBrandSelect, Object.keys(car_data), "select_brand", currentLang);
+        populateSelect(DOMElements.postProductYearSelect, years, "select_year", currentLang);
+        populateSelect(DOMElements.postProductWilayaSelect, Object.keys(wilayas), "select_wilaya", currentLang);
+        populateSelect(DOMElements.postProductCategorySelect, categories, "select_category", currentLang, true);
+
         DOMElements.postProductBrandSelect?.addEventListener('change', e => {
             const val = e.target.value;
             if (val && car_data[val]) {
@@ -1172,6 +1484,45 @@
                 DOMElements.postProductCommuneSelect.disabled = true;
             }
         });
+        
+        DOMElements.postProductForm?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!validatePostForm(e.target)) {
+                showMessage("Veuillez remplir tous les champs obligatoires.", 3000, 'error');
+                return;
+            }
+
+            const submitBtn = e.target.querySelector('#submit-ad-btn');
+            const btnText = submitBtn.querySelector('.btn-text');
+            const btnSpinner = submitBtn.querySelector('.btn-spinner');
+            
+            submitBtn.disabled = true;
+            btnText.textContent = translations[currentLang].loading_text || "Envoi...";
+            btnSpinner.classList.remove('hidden');
+
+            const formData = new FormData(e.target);
+            
+            try {
+                // FIX: Replaced failing placeholder with a reliable SVG data URL
+                const imageUrl = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400' width='600' height='400'%3E%3Crect width='600' height='400' fill='%23E2E8F0'/%3E%3Ctext x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='30' fill='%234A5568'%3EImage Bient%C3%B4t Disponible%3C/text%3E%3C/svg%3E";
+                const newProduct = {
+                    title: formData.get('title'), brand: formData.get('brand'), model: formData.get('model'), year: formData.get('year'), wilaya: formData.get('wilaya'), commune: formData.get('commune'), category: formData.get('category'), condition: formData.get('condition'), price: parseInt(formData.get('price')), description: formData.get('description'), imageUrl: imageUrl, timestamp: new Date(), 
+                    sellerUid: currentUser.uid,
+                    sellerName: currentUser.displayName
+                };
+                await addDoc(collection(db, "products"), newProduct);
+                showMessage("Annonce soumise avec succès!", 4000, 'success');
+                e.target.reset();
+                DOMElements.postProductModal.classList.add('invisible', 'opacity-0');
+            } catch (error) {
+                showMessage("Erreur lors de la soumission de l'annonce.", 4000, 'error');
+                console.error("Error submitting form: ", error);
+            } finally {
+                submitBtn.disabled = false;
+                btnText.textContent = translations[currentLang].submit_ad_btn_text || "Soumettre";
+                btnSpinner.classList.add('hidden');
+            }
+        });
     };
 
     const bootApp = () => {
@@ -1179,20 +1530,17 @@
         const isDarkMode = localStorage.getItem('piecety_dark_mode') === 'true';
         setDarkMode(isDarkMode);
 
-        document.getElementById('current-year').textContent = currentYear;
+        document.getElementById('current-year').textContent = new Date().getFullYear();
         translatePage(currentLang);
         setupEventListeners();
         renderView('home');
 
         // PWA Service Worker Registration
+        // FIX: Changed registration to point to an external /sw.js file.
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('data:application/javascript,' +
-                'const CACHE_NAME = "piecety-cache-v1";' +
-                'const urlsToCache = ["/", "https://cdn.tailwindcss.com", "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"];' +
-                'self.addEventListener("install", e => e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(urlsToCache))));' +
-                'self.addEventListener("fetch", e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))));'
-            ).then(() => console.log('Service worker registered.'))
-             .catch(err => console.error('Service worker registration failed:', err));
+            navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('Service worker registered successfully.'))
+            .catch(err => console.error('Service worker registration failed:', err));
         }
 
         onAuthStateChanged(auth, async (user) => {
@@ -1224,7 +1572,10 @@
                         userCart = userDoc.data().cart || {};
                         userFavorites = userDoc.data().favorites || [];
                         updateCartDisplay();
-                        if(currentView === 'home') renderListings(); // Re-render to update favorite icons
+                        if(currentView === 'home' || currentView === 'profile' || currentView === 'dashboard') {
+                           const listingsSection = document.getElementById('listings-section') || document.getElementById('user-products-grid') || document.getElementById('my-listings-grid');
+                           if(listingsSection) displayProducts(filterProducts(allProducts), listingsSection);
+                        }
                     }
                 });
 
@@ -1236,7 +1587,10 @@
                 userCart = {};
                 userFavorites = [];
                 updateCartDisplay();
-                if(currentView === 'home') renderListings();
+                if(currentView === 'home') {
+                    const listingsSection = document.getElementById('listings-section');
+                    if(listingsSection) displayProducts(filterProducts(allProducts), listingsSection);
+                }
             }
             translatePage(currentLang);
         });
