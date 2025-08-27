@@ -2,6 +2,7 @@
 body {
     font-family: 'Inter', 'Noto Sans Arabic', sans-serif;
     background-color: #f7fafc;
+    font-size: 1rem; /* Use relative units */
 }
 
 .dark body {
@@ -59,4 +60,61 @@ body {
 
 .dark .category-card:hover .category-icon {
     background-color: #374151; /* dark:bg-gray-700 */
+}
+
+/* Mobile menu improvements */
+#mobile-menu {
+    overflow-y: auto;
+}
+
+/* Better touch targets for mobile */
+@media (max-width: 768px) {
+    header button, header a {
+        min-height: 44px;
+        min-width: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* Improve mobile form elements */
+    input, select, textarea {
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+    
+    /* Better grid for mobile */
+    #dynamic-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+    
+    .category-card {
+        padding: 12px 8px;
+    }
+    
+    .category-icon {
+        width: 48px;
+        height: 48px;
+    }
+}
+
+/* RTL support for Arabic */
+.rtl {
+    text-align: right;
+}
+.rtl .fa-search {
+    right: 12px;
+    left: auto;
+}
+
+/* Improve modal for mobile */
+@media (max-width: 640px) {
+    .modal > div {
+        width: 95%;
+        margin: 0 auto;
+    }
+    
+    #post-product-modal .grid {
+        grid-template-columns: 1fr;
+    }
 }
