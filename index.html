@@ -264,43 +264,43 @@
     <h2 class="text-2xl font-bold mb-4" data-i18n-key="filters_title">Filtrer les annonces</h2>
     <div>
         <label for="brand-filter" class="block text-sm font-medium" data-i18n-key="brand_label">Marque</label>
-        <select id="brand-filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
+        <select id="brand-filter" class="filter mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
             <option value="" data-i18n-key="all_brands">Toutes les marques</option>
         </select>
     </div>
     <div id="model-filter-container" class="hidden">
         <label for="model-filter" class="block text-sm font-medium" data-i18n-key="model_label">Modèle</label>
-        <select id="model-filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
+        <select id="model-filter" class="filter mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
             <option value="" data-i18n-key="all_models">Tous les modèles</option>
         </select>
     </div>
     <div>
         <label for="year-filter" class="block text-sm font-medium" data-i18n-key="year_label">Année</label>
-        <select id="year-filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
+        <select id="year-filter" class="filter mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
             <option value="" data-i18n-key="all_years">Toutes années</option>
         </select>
     </div>
     <div>
         <label for="wilaya-filter" class="block text-sm font-medium" data-i18n-key="wilaya_label">Wilaya</label>
-        <select id="wilaya-filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
+        <select id="wilaya-filter" class="filter mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
             <option value="" data-i18n-key="all_wilayas">Toutes wilayas</option>
         </select>
     </div>
     <div id="commune-filter-container" class="hidden">
         <label for="commune-filter" class="block text-sm font-medium" data-i18n-key="commune_label">Commune</label>
-        <select id="commune-filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
+        <select id="commune-filter" class="filter mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
             <option value="" data-i18n-key="all_communes">Toutes communes</option>
         </select>
     </div>
     <div>
         <label for="category-filter" class="block text-sm font-medium" data-i18n-key="category_label">Catégorie</label>
-        <select id="category-filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
+        <select id="category-filter" class="filter mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
              <option value="" data-i18n-key="all_categories">Toutes catégories</option>
         </select>
     </div>
     <div>
         <label for="condition-filter" class="block text-sm font-medium" data-i18n-key="condition_label">État</label>
-        <select id="condition-filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
+        <select id="condition-filter" class="filter mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
             <option value="" data-i18n-key="any_condition">Tout</option>
             <option value="new" data-i18n-key="new">Neuf</option>
             <option value="used" data-i18n-key="used">Occasion</option>
@@ -308,7 +308,7 @@
     </div>
     <div>
         <label for="price-range-filter" class="block text-sm font-medium" data-i18n-key="price_range">Gamme de prix</label>
-        <input type="range" id="price-range-filter" min="0" max="100000" step="1000" class="w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer">
+        <input type="range" id="price-range-filter" min="0" max="100000" step="1000" class="filter w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer">
         <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
             <span>0 DA</span>
             <span id="price-range-value">50000 DA</span>
@@ -1049,69 +1049,79 @@
         const brandFilter = container.querySelector('#brand-filter');
         const modelFilterContainer = container.querySelector('#model-filter-container');
         const modelFilter = container.querySelector('#model-filter');
-        const yearFilter = container.querySelector('#year-filter');
         const wilayaFilter = container.querySelector('#wilaya-filter');
         const communeFilterContainer = container.querySelector('#commune-filter-container');
         const communeFilter = container.querySelector('#commune-filter');
-        const categoryFilter = container.querySelector('#category-filter');
-        const conditionFilter = container.querySelector('#condition-filter');
         const priceFilter = container.querySelector('#price-range-filter');
         const priceValue = container.querySelector('#price-range-value');
         const resetBtn = container.querySelector('#filter-reset-btn');
 
-        populateSelect(brandFilter, car_data, 'all_brands', currentLang);
-        populateSelect(yearFilter, years, 'all_years', currentLang);
-        populateSelect(wilayaFilter, wilayas, 'all_wilayas', currentLang);
-        populateSelect(categoryFilter, categories, 'all_categories', currentLang, true);
+        // Populate dropdowns that don't depend on other filters
+        populateSelect(container.querySelector('#brand-filter'), car_data, 'all_brands', currentLang);
+        populateSelect(container.querySelector('#year-filter'), years, 'all_years', currentLang);
+        populateSelect(container.querySelector('#wilaya-filter'), wilayas, 'all_wilayas', currentLang);
+        populateSelect(container.querySelector('#category-filter'), categories, 'all_categories', currentLang, true);
 
-        brandFilter.addEventListener('change', () => {
-            const selectedBrand = brandFilter.value;
-            if (selectedBrand && car_data[selectedBrand]) {
-                populateSelect(modelFilter, car_data[selectedBrand], 'all_models', currentLang);
-                modelFilterContainer.classList.remove('hidden');
-            } else {
-                modelFilterContainer.classList.add('hidden');
-            }
-        });
-
-        wilayaFilter.addEventListener('change', () => {
-            const selectedWilaya = wilayaFilter.value;
-            if (selectedWilaya && wilayas[selectedWilaya]) {
-                populateSelect(communeFilter, wilayas[selectedWilaya], 'all_communes', currentLang);
-                communeFilterContainer.classList.remove('hidden');
-            } else {
-                communeFilterContainer.classList.add('hidden');
-            }
-        });
-
-        priceFilter.addEventListener('input', () => {
-            priceValue.textContent = `${Number(priceFilter.value).toLocaleString()} DA`;
-        });
-        
-        const applyFilters = () => {
-            updateURLWithFilters({
-                category: categoryFilter.value,
-                brand: brandFilter.value,
-                model: modelFilter.value,
-                year: yearFilter.value,
-                wilaya: wilayaFilter.value,
-                commune: communeFilter.value,
-                condition: conditionFilter.value,
-                price: priceFilter.value === priceFilter.max ? '' : priceFilter.value,
-                search: DOMElements.searchInput.value
-            }, true);
-        };
-        
-        [categoryFilter, brandFilter, modelFilter, yearFilter, wilayaFilter, communeFilter, conditionFilter, priceFilter]
-            .filter(el => el != null) // This is the FIX
-            .forEach(el => {
-                el.addEventListener('change', debounce(applyFilters, 300));
+        const debouncedApplyFilters = debounce(() => {
+            const params = {};
+            container.querySelectorAll('.filter').forEach(el => {
+                const key = el.id.replace('-filter', '');
+                if(el.value) {
+                    if (el.type === 'range' && el.value === el.max) return;
+                    params[key] = el.value;
+                }
             });
+            params.search = DOMElements.searchInput.value;
+            updateURLWithFilters(params, true);
+        }, 300);
+
+        // --- Specific Listeners for filters with side-effects ---
+        if (brandFilter) {
+            brandFilter.addEventListener('change', () => {
+                const selectedBrand = brandFilter.value;
+                if (selectedBrand && car_data[selectedBrand]) {
+                    populateSelect(modelFilter, car_data[selectedBrand], 'all_models', currentLang);
+                    modelFilterContainer.classList.remove('hidden');
+                } else {
+                    modelFilterContainer.classList.add('hidden');
+                }
+                debouncedApplyFilters();
+            });
+        }
         
-        resetBtn.addEventListener('click', () => {
-            window.history.pushState({}, '', window.location.pathname);
-            renderView('home');
+        if (wilayaFilter) {
+            wilayaFilter.addEventListener('change', () => {
+                const selectedWilaya = wilayaFilter.value;
+                if (selectedWilaya && wilayas[selectedWilaya]) {
+                    populateSelect(communeFilter, wilayas[selectedWilaya], 'all_communes', currentLang);
+                    communeFilterContainer.classList.remove('hidden');
+                } else {
+                    communeFilterContainer.classList.add('hidden');
+                }
+                debouncedApplyFilters();
+            });
+        }
+
+        if (priceFilter) {
+            priceFilter.addEventListener('input', () => {
+                if(priceValue) priceValue.textContent = `${Number(priceFilter.value).toLocaleString()} DA`;
+            });
+            priceFilter.addEventListener('change', debouncedApplyFilters);
+        }
+        
+        // --- General Listener for all other simple filters ---
+        container.querySelectorAll('.filter').forEach(el => {
+            if (el.id !== 'brand-filter' && el.id !== 'wilaya-filter' && el.id !== 'price-range-filter') {
+                el.addEventListener('change', debouncedApplyFilters);
+            }
         });
+        
+        if (resetBtn) {
+            resetBtn.addEventListener('click', () => {
+                window.history.pushState({}, '', window.location.pathname);
+                renderView('home');
+            });
+        }
     };
 
     const renderListings = () => {
@@ -1169,7 +1179,7 @@
                 <div class="p-4">
                     <h3 class="font-bold text-lg truncate">${product.title}</h3>
                     <p class="text-blue-600 dark:text-blue-400 font-semibold text-xl my-2">${product.price.toLocaleString()} DA</p>
-                    <p class="text-sm text-gray-500 dark:text-gray-400"><i class="fas fa-map-marker-alt mr-1"></i> ${product.wilaya}, ${product.commune}</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400"><i class="fas fa-map-marker-alt mr-1"></i> ${product.wilaya}, ${product.commune || ''}</p>
                 </div>
             `;
             card.addEventListener('click', () => renderView('product', product));
@@ -1527,16 +1537,19 @@
         });
 
         searchInput.addEventListener('input', debounce(() => {
-            updateURLWithFilters({ search: searchInput.value }, true);
+            const params = { search: searchInput.value };
+            updateURLWithFilters(params, true);
         }, 500));
         
         mobileFiltersCloseBtn.addEventListener('click', () => mobileFiltersModal.classList.add('translate-x-full'));
         mobileApplyFiltersBtn.addEventListener('click', () => {
-            const filterElements = DOMElements.mobileFiltersContent.querySelectorAll('select, input[type="range"]');
             const params = {};
-            filterElements.forEach(el => {
+            DOMElements.mobileFiltersContent.querySelectorAll('.filter').forEach(el => {
                 const key = el.id.replace('-filter', '');
-                if(el.value) params[key] = el.value;
+                 if(el.value) {
+                    if (el.type === 'range' && el.value === el.max) return;
+                    params[key] = el.value;
+                }
             });
             params.search = searchInput.value;
             updateURLWithFilters(params, true);
