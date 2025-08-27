@@ -418,10 +418,41 @@
     </div>
 </template>
 
+<template id="inbox-view-template">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 md:p-8">
+        <h2 class="text-2xl md:text-3xl font-bold mb-6">My Messages</h2>
+        <div id="conversations-list" class="space-y-4">
+            <p id="inbox-loading" class="text-center text-gray-500">Loading conversations...</p>
+        </div>
+    </div>
+</template>
+
+<template id="chat-view-template">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 md:p-6 h-[75vh] flex flex-col">
+        <div class="flex items-center border-b dark:border-gray-700 pb-4 mb-4">
+            <button id="back-to-inbox-btn" class="mr-4 text-blue-600 dark:text-blue-400">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2 id="chat-with-name" class="text-xl font-bold">Chat</h2>
+        </div>
+        
+        <div id="messages-container" class="flex-1 overflow-y-auto space-y-4 p-2 flex flex-col">
+            </div>
+
+        <form id="send-message-form" class="mt-4 flex gap-4 border-t dark:border-gray-700 pt-4">
+            <input type="text" id="message-input" placeholder="Type a message..." class="flex-1 p-3 rounded-full border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            <button type="submit" class="bg-blue-600 text-white rounded-full w-12 h-12 flex-shrink-0 flex items-center justify-center">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </form>
+    </div>
+</template>
+
+
 <script type="module">
     // Firebase Imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, query, onSnapshot, where, getDocs, doc, setDoc, getDoc, deleteDoc, writeBatch, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, query, onSnapshot, where, getDocs, doc, setDoc, getDoc, deleteDoc, writeBatch, serverTimestamp, orderBy } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
     import { getAuth, signInWithPopup, signOut, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 
     // Global state variables
@@ -799,6 +830,7 @@
 
     const populateSelect = (selectEl, options, defaultLabelKey, lang, valueAsKey = false) => {
         if (!selectEl) return;
+        const currentValue = selectEl.value;
         selectEl.innerHTML = "";
         const defaultText = translations[lang][defaultLabelKey] || defaultLabelKey;
         const defaultOption = document.createElement('option');
@@ -819,6 +851,7 @@
             }
             selectEl.appendChild(option);
         });
+        selectEl.value = currentValue;
     };
     
     const applyAndRenderFilters = () => {
@@ -836,11 +869,10 @@
 
         // Update URL state without a full page reload
         const newUrl = new URL(window.location);
+        newUrl.search = ''; // Clear existing params
         Object.keys(params).forEach(key => {
             if (params[key]) {
                 newUrl.searchParams.set(key, params[key]);
-            } else {
-                newUrl.searchParams.delete(key);
             }
         });
         window.history.replaceState({path: newUrl.href}, '', newUrl.href);
@@ -849,6 +881,7 @@
         const filtered = filterProducts(allProducts);
         displayProducts(filtered, document.getElementById('listings-section'));
     };
+
 
     const applyFiltersFromURL = (container = document) => {
         const params = new URLSearchParams(window.location.search);
@@ -904,6 +937,14 @@
                 DOMElements.appContainer.appendChild(document.getElementById('profile-view-template').content.cloneNode(true));
                 renderProfilePage(data);
                 break;
+            case 'inbox':
+                DOMElements.appContainer.appendChild(document.getElementById('inbox-view-template').content.cloneNode(true));
+                renderInboxPage();
+                break;
+            case 'chat':
+                DOMElements.appContainer.appendChild(document.getElementById('chat-view-template').content.cloneNode(true));
+                renderChatPage(data);
+                break;
             default:
                 renderView('home');
                 break;
@@ -957,7 +998,7 @@
         let html = `<a href="#" class="hover:underline home-crumb">Home</a>`;
         if (category) {
             const categoryName = categories[category] ? categories[category][currentLang] : category;
-            html += ` <span class="mx-2">/</span> <a href="?category=${category}" class="hover:underline category-crumb">${categoryName}</a>`;
+            html += ` <span class="mx-2">/</span> <a href="#" class="hover:underline category-crumb" data-category="${category}">${categoryName}</a>`;
         }
         if (brand) {
             html += ` <span class="mx-2">/</span> <span class="font-semibold">${brand}</span>`;
@@ -972,10 +1013,8 @@
         breadcrumbNav.querySelector('.category-crumb')?.addEventListener('click', (e) => {
             e.preventDefault();
             const newUrl = new URL(window.location);
-            newUrl.searchParams.set('category', category);
-            newUrl.searchParams.delete('brand');
-            newUrl.searchParams.delete('model');
-            newUrl.searchParams.delete('year');
+            newUrl.searchParams.forEach((_, key) => newUrl.searchParams.delete(key));
+            newUrl.searchParams.set('category', e.target.dataset.category);
             window.history.pushState({path: newUrl.href}, '', newUrl.href);
             renderHomePage();
         });
@@ -1002,6 +1041,7 @@
             card.addEventListener('click', (e) => {
                 e.preventDefault();
                 const newUrl = new URL(window.location);
+                newUrl.searchParams.forEach((_, key) => newUrl.searchParams.delete(key));
                 newUrl.searchParams.set('category', key);
                 window.history.pushState({path: newUrl.href}, '', newUrl.href);
                 renderHomePage();
@@ -1031,7 +1071,6 @@
             card.addEventListener('click', (e) => {
                 e.preventDefault();
                 const newUrl = new URL(window.location);
-                newUrl.searchParams.set('category', category);
                 newUrl.searchParams.set('brand', brandName);
                 window.history.pushState({path: newUrl.href}, '', newUrl.href);
                 renderHomePage();
@@ -1053,8 +1092,11 @@
             card.className = "bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 text-center category-card font-semibold";
             card.textContent = year;
             card.addEventListener('click', () => {
-                const yearFilter = document.getElementById('year-filter');
-                if(yearFilter) yearFilter.value = year;
+                const yearFilterDesktop = document.querySelector('#filters-content #year-filter');
+                const yearFilterMobile = document.querySelector('#mobile-filters-content #year-filter');
+                if(yearFilterDesktop) yearFilterDesktop.value = year;
+                if(yearFilterMobile) yearFilterMobile.value = year;
+                
                 applyAndRenderFilters();
                 document.getElementById('listings-section').scrollIntoView({ behavior: 'smooth' });
             });
@@ -1065,7 +1107,6 @@
     const setupFilterListeners = (container = document) => {
         const debouncedApplyAndRender = debounce(applyAndRenderFilters, 300);
 
-        // --- Specific Listeners for filters with special logic ---
         const brandFilter = container.querySelector('#brand-filter');
         if(brandFilter) {
             brandFilter.addEventListener('change', () => {
@@ -1109,7 +1150,6 @@
             priceFilter.addEventListener('change', debouncedApplyAndRender);
         }
 
-        // --- General Listener for all other simple filters ---
         container.querySelectorAll('.filter').forEach(el => {
             if (el.id !== 'brand-filter' && el.id !== 'wilaya-filter' && el.id !== 'price-range-filter') {
                 el.addEventListener('change', debouncedApplyAndRender);
@@ -1124,7 +1164,6 @@
             });
         }
 
-        // --- Populate dropdowns ---
         populateSelect(brandFilter, car_data, 'all_brands', currentLang);
         populateSelect(container.querySelector('#year-filter'), years, 'all_years', currentLang);
         populateSelect(wilayaFilter, wilayas, 'all_wilayas', currentLang);
@@ -1142,7 +1181,7 @@
             querySnapshot.forEach((doc) => {
                 allProducts.push({ id: doc.id, ...doc.data() });
             });
-            applyAndRenderFilters(); // Use the new function to filter and display
+            applyAndRenderFilters(); 
         }, (error) => {
             console.error("Error fetching products:", error);
             if(listingsSection) listingsSection.innerHTML = `<p class="col-span-full text-center text-red-500">Error loading products.</p>`;
@@ -1220,9 +1259,7 @@
         });
         document.getElementById('add-to-cart-btn').addEventListener('click', () => addToCart(product));
         document.getElementById('contact-seller-btn').addEventListener('click', () => {
-            if (!currentUser) { showMessage('login_required', 3000, 'error'); return; }
-            if (currentUser.uid === product.sellerId) { showMessage("Can't contact yourself.", 3000, 'error'); return; }
-            showMessage("Chat feature coming soon!", 3000, 'info');
+            startOrOpenChat(product.sellerId, product.sellerName);
         });
     };
 
@@ -1334,6 +1371,121 @@
         displayProducts(userProducts, grid);
     };
 
+    const startOrOpenChat = async (sellerId, sellerName) => {
+        if (!currentUser) {
+            showMessage('login_required', 3000, 'error');
+            return;
+        }
+        if (currentUser.uid === sellerId) {
+            showMessage("You cannot message yourself.", 3000, 'error');
+            return;
+        }
+
+        const chatId = [currentUser.uid, sellerId].sort().join('_');
+        const chatRef = doc(db, "chats", chatId);
+        
+        try {
+            const chatSnap = await getDoc(chatRef);
+            if (!chatSnap.exists()) {
+                await setDoc(chatRef, {
+                    participants: [currentUser.uid, sellerId],
+                    participantNames: [currentUser.displayName, sellerName],
+                    lastMessage: "Chat started.",
+                    lastMessageTimestamp: serverTimestamp()
+                });
+            }
+            renderView('chat', { chatId, otherUserName: sellerName });
+        } catch (error) {
+            console.error("Error starting chat:", error);
+            showMessage("Could not open chat.", 3000, 'error');
+        }
+    };
+
+    const renderInboxPage = () => {
+        if (!currentUser) {
+            renderView('home');
+            return;
+        }
+        const listContainer = document.getElementById('conversations-list');
+        const q = query(
+            collection(db, "chats"), 
+            where("participants", "array-contains", currentUser.uid),
+            orderBy("lastMessageTimestamp", "desc")
+        );
+
+        onSnapshot(q, (snapshot) => {
+            if (snapshot.empty) {
+                listContainer.innerHTML = `<p class="text-center text-gray-500">You have no messages.</p>`;
+                return;
+            }
+            listContainer.innerHTML = '';
+            snapshot.forEach(doc => {
+                const chat = doc.data();
+                const otherUserIndex = chat.participants.indexOf(currentUser.uid) === 0 ? 1 : 0;
+                const otherUserName = chat.participantNames[otherUserIndex];
+                
+                const convoEl = document.createElement('div');
+                convoEl.className = 'p-4 bg-gray-50 dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600';
+                convoEl.innerHTML = `
+                    <h4 class="font-bold">${otherUserName}</h4>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 truncate">${chat.lastMessage}</p>
+                `;
+                convoEl.addEventListener('click', () => renderView('chat', { chatId: doc.id, otherUserName }));
+                listContainer.appendChild(convoEl);
+            });
+        });
+    };
+
+    const renderChatPage = (chatData) => {
+        if (!currentUser || !chatData) {
+            renderView('home');
+            return;
+        }
+        
+        const { chatId, otherUserName } = chatData;
+        document.getElementById('chat-with-name').textContent = `Chat with ${otherUserName}`;
+        document.getElementById('back-to-inbox-btn').addEventListener('click', () => renderView('inbox'));
+
+        const messagesContainer = document.getElementById('messages-container');
+        const messageForm = document.getElementById('send-message-form');
+        const messageInput = document.getElementById('message-input');
+        
+        const messagesRef = collection(db, "chats", chatId, "messages");
+        const q = query(messagesRef, orderBy("timestamp"));
+
+        onSnapshot(q, (snapshot) => {
+            messagesContainer.innerHTML = '';
+            snapshot.forEach(doc => {
+                const msg = doc.data();
+                const msgEl = document.createElement('div');
+                const isMe = msg.senderId === currentUser.uid;
+                
+                msgEl.className = `p-3 rounded-lg max-w-xs ${isMe ? 'bg-blue-500 text-white self-end' : 'bg-gray-200 dark:bg-gray-600 self-start'}`;
+                msgEl.textContent = msg.text;
+                messagesContainer.appendChild(msgEl);
+            });
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        });
+
+        messageForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const text = messageInput.value.trim();
+            if (text) {
+                messageInput.value = '';
+                await addDoc(messagesRef, {
+                    senderId: currentUser.uid,
+                    text: text,
+                    timestamp: serverTimestamp()
+                });
+                const chatRef = doc(db, "chats", chatId);
+                await setDoc(chatRef, { 
+                    lastMessage: text, 
+                    lastMessageTimestamp: serverTimestamp() 
+                }, { merge: true });
+            }
+        });
+    };
+
     // USER ACTIONS
     const handleSignOut = () => {
         signOut(auth).catch(error => console.error("Sign out error", error));
@@ -1431,12 +1583,14 @@
                     </button>
                     <div id="user-menu-dropdown" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-lg shadow-lg py-1 hidden z-20">
                         <a href="#" id="dashboard-link" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-600" data-i18n-key="dashboard">${translations[currentLang].dashboard}</a>
+                        <a href="#" id="messages-link" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-600">Messages</a>
                         <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-600" data-i18n-key="logout">${translations[currentLang].logout}</button>
                     </div>
                 </div>`;
             authLinksContainer.innerHTML = userMenuHTML;
 
             mobileNavLinks.innerHTML += `<a href="#" id="mobile-dashboard-link" class="text-lg" data-i18n-key="dashboard">${translations[currentLang].dashboard}</a>`;
+            mobileNavLinks.innerHTML += `<a href="#" id="mobile-messages-link" class="text-lg">Messages</a>`;
             mobileNavLinks.innerHTML += `<button id="mobile-logout-btn" class="text-lg text-left" data-i18n-key="logout">${translations[currentLang].logout}</button>`;
 
             document.getElementById('user-menu-btn').addEventListener('click', () => {
@@ -1448,11 +1602,21 @@
                 document.getElementById('user-menu-dropdown').classList.add('hidden');
                 renderView('dashboard');
             });
+            document.getElementById('messages-link').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('user-menu-dropdown').classList.add('hidden');
+                renderView('inbox');
+            });
             document.getElementById('mobile-logout-btn').addEventListener('click', handleSignOut);
             document.getElementById('mobile-dashboard-link').addEventListener('click', (e) => {
                 e.preventDefault();
                 DOMElements.mobileMenu.classList.add('hidden');
                 renderView('dashboard');
+            });
+            document.getElementById('mobile-messages-link').addEventListener('click', (e) => {
+                e.preventDefault();
+                DOMElements.mobileMenu.classList.add('hidden');
+                renderView('inbox');
             });
 
         } else {
@@ -1619,7 +1783,6 @@
         });
         
         window.addEventListener('popstate', () => {
-            // Re-render home and apply filters from URL when using back/forward buttons
             renderView('home'); 
         });
         renderView('home');
