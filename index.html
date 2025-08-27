@@ -7,25 +7,20 @@
     <meta name="description" content="Achetez et vendez des pièces automobiles en Algérie avec Piecety, le marché fiable pour les pièces neuves et d'occasion.">
     <meta name="keywords" content="pièces auto, Algérie, marché automobile, Piecety, Hassi R'Mel">
 
-    <!-- Open Graph / Facebook -->
     <meta property="og:title" content="Piecety - Marché des Pièces Auto en Algérie">
     <meta property="og:description" content="Trouvez des pièces auto neuves et d'occasion en Algérie sur Piecety.">
     <meta property="og:image" content="./icons/car-512.png">
     <meta property="og:url" content="https://alikhaldi.github.io/Piecetymarket/">
     
-    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     
-    <!-- PWA & SEO -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚗</text></svg>">
     <link rel="manifest" href="manifest.json">
     
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet" />
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -33,10 +28,8 @@
         }
     </script>
 
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-    <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="style.css" />
 </head>
 <body class="flex flex-col min-h-screen text-gray-800 dark:text-gray-200">
@@ -46,7 +39,7 @@
 <header class="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-50" role="banner">
     <div class="container mx-auto p-4 flex items-center justify-between">
         <a href="#" id="home-link" class="text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400 logo transition-transform hover:scale-105 flex items-center">
-            <svg class="h-8 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M21.92,7.62A1,1,0,0,0,21,7H18.32a3,3,0,0,0-5.64,0H3a1,1,0,0,0-1,1V17a1,1,0,0,0,1,1H4.2a3,3,0,0,0,5.6,0H16.2a3,3,0,0,0,5.6,0H23a1,1,0,0,0,1-1V8.62A1,1,0,0,0,21.92,7.62ZM6,15a1,1,0,1,1,1-1A1,1,0,0,1,6,15Zm12,0a1,1,0,1,1,1-1A1,1,0,0,1,18,15Z"></path></svg>
+            <svg class="h-8 mr-2" xmlns="http://www.w.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M21.92,7.62A1,1,0,0,0,21,7H18.32a3,3,0,0,0-5.64,0H3a1,1,0,0,0-1,1V17a1,1,0,0,0,1,1H4.2a3,3,0,0,0,5.6,0H16.2a3,3,0,0,0,5.6,0H23a1,1,0,0,0,1-1V8.62A1,1,0,0,0,21.92,7.62ZM6,15a1,1,0,1,1,1-1A1,1,0,0,1,6,15Zm12,0a1,1,0,1,1,1-1A1,1,0,0,1,18,15Z"></path></svg>
             Piecety
         </a>
 
@@ -107,6 +100,20 @@
     </div>
 </div>
 
+<div id="mobile-filters-modal" class="fixed top-0 right-0 h-full w-full max-w-md bg-white dark:bg-gray-900 z-[60] shadow-xl p-6 transform translate-x-full md:hidden">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold" data-i18n-key="filters_title">Filtrer les annonces</h2>
+        <button id="mobile-filters-close-btn" class="p-2" aria-label="Close filters">
+            <i class="fas fa-times text-2xl"></i>
+        </button>
+    </div>
+    <div id="mobile-filters-content" class="h-[calc(100%-100px)] overflow-y-auto"></div>
+    <div class="absolute bottom-0 left-0 w-full p-4 bg-white dark:bg-gray-900 border-t dark:border-gray-700">
+        <button id="mobile-apply-filters-btn" class="w-full px-6 py-3 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md" data-i18n-key="apply_filters">Appliquer les filtres</button>
+    </div>
+</div>
+
+
 <main id="app-container" class="flex-1 container mx-auto p-4 md:p-8" role="main" aria-live="polite"></main>
 
 <footer class="bg-gray-800 dark:bg-gray-900 text-white p-6 md:p-8 mt-auto text-center">
@@ -122,7 +129,6 @@
     <p class="text-xs mt-2 text-gray-400"><a href="#" class="hover:underline">Contact Us</a> | <a href="#" class="hover:underline">Terms of Service</a></p>
 </footer>
 
-<!-- Modals -->
 <div id="post-product-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 invisible opacity-0" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] flex flex-col">
         <div class="overflow-y-auto p-6 relative">
@@ -131,8 +137,7 @@
             </button>
             <h3 id="modal-title" class="text-2xl font-bold mb-6 text-center" data-i18n-key="submit_ad">Soumettre une annonce rapide</h3>
             <form id="post-product-form" class="space-y-4" novalidate>
-                 <!-- Title, Brand, Model, Year -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="product-title" class="block font-medium mb-1" data-i18n-key="ad_title_label">Titre de la pièce <span class="text-red-500">*</span></label>
                         <input type="text" id="product-title" name="title" required placeholder="Ex: Disque de frein avant" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-describedby="title-error" />
@@ -158,7 +163,6 @@
                         </select>
                     </div>
                 </div>
-                <!-- Wilaya, Commune -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="product-wilaya" class="block font-medium mb-1" data-i18n-key="wilaya_label">Wilaya <span class="text-red-500">*</span></label>
@@ -174,8 +178,7 @@
                         </select>
                     </div>
                 </div>
-                <!-- Category, Condition, Price -->
-                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label for="product-category" class="block font-medium mb-1" data-i18n-key="category_label">Catégorie <span class="text-red-500">*</span></label>
                         <select id="product-category" name="category" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-describedby="category-error">
@@ -196,12 +199,10 @@
                         <p id="price-error" class="text-red-500 text-sm mt-1 hidden" role="alert" aria-live="assertive">Veuillez entrer un prix valide.</p>
                     </div>
                 </div>
-                <!-- Description -->
                 <div>
                     <label for="product-description" class="block font-medium mb-1" data-i18n-key="description_label">Description</label>
                     <textarea id="product-description" name="description" rows="3" placeholder="Informations supplémentaires..." class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
                 </div>
-                <!-- Submit Button -->
                 <div class="text-center">
                     <button type="submit" id="submit-ad-btn" class="mt-4 px-8 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md flex items-center justify-center disabled:bg-blue-400 disabled:cursor-not-allowed">
                         <span class="btn-text" data-i18n-key="submit_ad_btn_text">Soumettre</span>
@@ -231,7 +232,6 @@
     </div>
 </div>
 
-<!-- View Templates -->
 <template id="home-view-template">
     <section class="text-center py-12 md:py-20 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl shadow-lg mb-8 md:mb-12">
         <h1 class="text-3xl md:text-5xl font-extrabold mb-4" data-i18n-key="hero_title">Trouvez la bonne pièce pour votre voiture</h1>
@@ -245,12 +245,10 @@
     </section>
 
     <div class="flex flex-col md:flex-row gap-8">
-        <!-- Filters -->
         <aside id="filters-sidebar" class="w-full md:w-1/4 lg:w-1/5 md:block hidden">
              <div id="filters-content" class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 space-y-6"></div>
         </aside>
 
-        <!-- Listings -->
         <section class="w-full md:w-3/4 lg:w-4/5">
              <div class="flex justify-between items-center mb-6">
                 <button id="show-filters-btn" class="md:hidden w-full px-6 py-3 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-md font-semibold hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200 shadow-md" data-i18n-key="show_filters">
@@ -263,64 +261,51 @@
 </template>
 
 <template id="filters-template">
-    <div class="flex justify-between items-center mb-4">
-        <h2 class="text-2xl font-bold" data-i18n-key="filters_title">Filtrer les annonces</h2>
-        <button id="close-filters-btn" class="md:hidden text-gray-600 dark:text-gray-300">
-            <i class="fas fa-times text-xl"></i>
-        </button>
-    </div>
-    <!-- Brand -->
+    <h2 class="text-2xl font-bold mb-4" data-i18n-key="filters_title">Filtrer les annonces</h2>
     <div>
-        <label for="brand-filter" class="block text-sm font-medium" data-i18n-key="all_brands">Toutes les marques</label>
+        <label for="brand-filter" class="block text-sm font-medium" data-i18n-key="brand_label">Marque</label>
         <select id="brand-filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
             <option value="" data-i18n-key="all_brands">Toutes les marques</option>
         </select>
     </div>
-    <!-- Model -->
     <div id="model-filter-container" class="hidden">
-        <label for="model-filter" class="block text-sm font-medium" data-i18n-key="all_models">Tous les modèles</label>
+        <label for="model-filter" class="block text-sm font-medium" data-i18n-key="model_label">Modèle</label>
         <select id="model-filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
             <option value="" data-i18n-key="all_models">Tous les modèles</option>
         </select>
     </div>
-    <!-- Year -->
     <div>
-        <label for="year-filter" class="block text-sm font-medium" data-i18n-key="all_years">Toutes années</label>
+        <label for="year-filter" class="block text-sm font-medium" data-i18n-key="year_label">Année</label>
         <select id="year-filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
             <option value="" data-i18n-key="all_years">Toutes années</option>
         </select>
     </div>
-    <!-- Wilaya -->
     <div>
-        <label for="wilaya-filter" class="block text-sm font-medium" data-i18n-key="all_wilayas">Toutes wilayas</label>
+        <label for="wilaya-filter" class="block text-sm font-medium" data-i18n-key="wilaya_label">Wilaya</label>
         <select id="wilaya-filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
             <option value="" data-i18n-key="all_wilayas">Toutes wilayas</option>
         </select>
     </div>
-    <!-- Commune -->
     <div id="commune-filter-container" class="hidden">
-        <label for="commune-filter" class="block text-sm font-medium" data-i18n-key="all_communes">Toutes communes</label>
+        <label for="commune-filter" class="block text-sm font-medium" data-i18n-key="commune_label">Commune</label>
         <select id="commune-filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
             <option value="" data-i18n-key="all_communes">Toutes communes</option>
         </select>
     </div>
-    <!-- Category -->
     <div>
-        <label for="category-filter" class="block text-sm font-medium" data-i18n-key="all_categories">Toutes catégories</label>
+        <label for="category-filter" class="block text-sm font-medium" data-i18n-key="category_label">Catégorie</label>
         <select id="category-filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
              <option value="" data-i18n-key="all_categories">Toutes catégories</option>
         </select>
     </div>
-    <!-- Condition -->
     <div>
-        <label for="condition-filter" class="block text-sm font-medium" data-i18n-key="condition">État</label>
+        <label for="condition-filter" class="block text-sm font-medium" data-i18n-key="condition_label">État</label>
         <select id="condition-filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
             <option value="" data-i18n-key="any_condition">Tout</option>
             <option value="new" data-i18n-key="new">Neuf</option>
             <option value="used" data-i18n-key="used">Occasion</option>
         </select>
     </div>
-    <!-- Price Range -->
     <div>
         <label for="price-range-filter" class="block text-sm font-medium" data-i18n-key="price_range">Gamme de prix</label>
         <input type="range" id="price-range-filter" min="0" max="100000" step="1000" class="w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer">
@@ -434,9 +419,18 @@
 </template>
 
 <script type="module">
+    // Note for developers using this in an Android WebView:
+    // Ensure the following settings are enabled for full functionality.
+    // WebSettings ws = webView.getSettings();
+    // ws.setJavaScriptEnabled(true);
+    // ws.setDomStorageEnabled(true); // Important for localStorage
+    // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+    //   webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
+    // }
+
     // Firebase Imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, query, onSnapshot, where, getDocs, doc, setDoc, getDoc, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, query, onSnapshot, where, getDocs, doc, setDoc, getDoc, deleteDoc, writeBatch, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
     import { getAuth, signInWithPopup, signOut, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 
     // Global state variables
@@ -446,7 +440,7 @@
     let allProducts = [];
     let userCart = {};
     let userFavorites = [];
-    let productsUnsubscribe = null;
+    let productsUnsubscribe = null; // To detach the real-time listener
 
     // Firebase Configuration
     const firebaseConfig = {
@@ -468,7 +462,7 @@
     const translations = {
         fr: {
             fr_short: "FR", en_short: "EN", ar_short: "AR",
-            menu: "Menu", sell: "Vendre", connect: "Se connecter", language: "Langue",
+            menu: "Menu", sell: "Vendre", connect: "Se connecter", language: "Langue", logout: "Déconnexion", dashboard: "Tableau de Bord",
             hero_title: "Trouvez la bonne pièce pour votre voiture",
             hero_subtitle: "Le marché algérien des pièces automobiles le plus fiable.",
             categories_title: "Catégories de Pièces",
@@ -499,10 +493,12 @@
             show_filters: "Afficher les filtres", price_range: "Gamme de prix", all_categories: "Toutes catégories",
             category_label: "Catégorie", select_category: "Sélectionnez une catégorie", contact_seller: "Contacter le vendeur",
             clear_cart: "Vider le panier", favorite_added: "Ajouté aux favoris", favorite_removed: "Retiré des favoris",
+            ad_posted: "Votre annonce a été publiée avec succès !", ad_post_failed: "Échec de la publication de l'annonce.",
+            item_added_to_cart: "Article ajouté au panier!", delete_ad_confirm: "Êtes-vous sûr de vouloir supprimer cette annonce ?",
         },
         en: {
             fr_short: "FR", en_short: "EN", ar_short: "AR",
-            menu: "Menu", sell: "Sell", connect: "Log In", language: "Language",
+            menu: "Menu", sell: "Sell", connect: "Log In", language: "Language", logout: "Logout", dashboard: "Dashboard",
             hero_title: "Find the right car part for your vehicle",
             hero_subtitle: "The most trusted Algerian car parts marketplace.",
             categories_title: "Parts Categories",
@@ -533,10 +529,12 @@
             show_filters: "Show Filters", price_range: "Price Range", all_categories: "All Categories",
             category_label: "Category", select_category: "Select a category", contact_seller: "Contact Seller",
             clear_cart: "Clear Cart", favorite_added: "Added to favorites", favorite_removed: "Removed from favorites",
+            ad_posted: "Your ad has been posted successfully!", ad_post_failed: "Failed to post ad.",
+            item_added_to_cart: "Item added to cart!", delete_ad_confirm: "Are you sure you want to delete this ad?",
         },
         ar: {
             fr_short: "FR", en_short: "EN", ar_short: "AR",
-            menu: "القائمة", sell: "بيع", connect: "تسجيل الدخول", language: "اللغة",
+            menu: "القائمة", sell: "بيع", connect: "تسجيل الدخول", language: "اللغة", logout: "تسجيل الخروج", dashboard: "لوحة التحكم",
             hero_title: "ابحث عن قطعة الغيار المناسبة لسيارتك",
             hero_subtitle: "أكثر أسواق قطع غيار السيارات ثقة في الجزائر.",
             categories_title: "فئات القطع",
@@ -567,6 +565,8 @@
             show_filters: "إظهار الفلاتر", price_range: "نطاق السعر", all_categories: "جميع الفئات",
             category_label: "الفئة", select_category: "اختر فئة", contact_seller: "اتصل بالبائع",
             clear_cart: "إفراغ السلة", favorite_added: "أضيفت إلى المفضلة", favorite_removed: "أزيلت من المفضلة",
+            ad_posted: "تم نشر إعلانك بنجاح!", ad_post_failed: "فشل نشر الإعلان.",
+            item_added_to_cart: "تمت إضافة المنتج إلى السلة!", delete_ad_confirm: "هل أنت متأكد من أنك تريد حذف هذا الإعلان؟",
         }
     };
 
@@ -668,6 +668,10 @@
         mobileMenu: document.getElementById("mobile-menu"),
         mobileMenuCloseBtn: document.getElementById("mobile-menu-close-btn"),
         mobileNavLinks: document.getElementById("mobile-nav-links"),
+        mobileFiltersModal: document.getElementById("mobile-filters-modal"),
+        mobileFiltersContent: document.getElementById("mobile-filters-content"),
+        mobileFiltersCloseBtn: document.getElementById("mobile-filters-close-btn"),
+        mobileApplyFiltersBtn: document.getElementById("mobile-apply-filters-btn"),
         authModal: document.getElementById("auth-modal"),
         authModalCloseBtn: document.getElementById("auth-modal-close-btn"),
         googleLoginBtn: document.getElementById("google-login-btn"),
@@ -676,7 +680,6 @@
         authLinksContainer: document.getElementById("auth-links"),
         homeLink: document.getElementById("home-link"),
         sellLink: document.getElementById("sell-link"),
-        loginBtn: document.getElementById('login-btn'),
         darkModeToggle: document.getElementById('dark-mode-toggle'),
         postProductBrandSelect: document.getElementById('product-brand'),
         postProductModelSelect: document.getElementById('product-model'),
@@ -687,7 +690,8 @@
     };
     
     // UTILITY FUNCTIONS
-    const showMessage = (msg, duration = 3500, type = "info") => {
+    const showMessage = (msgKey, duration = 3500, type = "info") => {
+        const msg = translations[currentLang][msgKey] || msgKey;
         const { messageBox } = DOMElements;
         if (!messageBox) return;
         messageBox.textContent = msg;
@@ -699,11 +703,10 @@
         } else if (type === 'error') {
             colors = 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
         } else {
-            colors = 'bg-white text-gray-800 dark:bg-gray-700 dark:text-gray-200';
+            colors = 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
         }
         messageBox.classList.add(...colors.split(' '));
 
-        // Show
         requestAnimationFrame(() => {
             messageBox.classList.remove('opacity-0', 'translate-x-full');
             messageBox.classList.add('opacity-100', 'translate-x-0');
@@ -713,6 +716,14 @@
             messageBox.classList.remove('opacity-100', 'translate-x-0');
             messageBox.classList.add('opacity-0', 'translate-x-full');
         }, duration);
+    };
+
+    const toggleModal = (modalElement, show) => {
+        if (show) {
+            modalElement.classList.add('active');
+        } else {
+            modalElement.classList.remove('active');
+        }
     };
     
     const updateCartDisplay = () => {
@@ -740,8 +751,17 @@
     const setDarkMode = (isDark) => {
         DOMElements.html.classList.toggle('dark', isDark);
         localStorage.setItem('piecety_dark_mode', isDark);
-        const icon = document.querySelector('#dark-mode-toggle i');
+        const icon = DOMElements.darkModeToggle.querySelector('i');
         if (icon) icon.className = isDark ? 'fas fa-sun text-xl' : 'fas fa-moon text-xl';
+    };
+
+    const setLanguage = (lang) => {
+        currentLang = lang;
+        localStorage.setItem("piecety_lang", lang);
+        translatePage(lang);
+        if (currentView === 'home') {
+            renderHomePage(); // Re-render to update dynamic text like titles
+        }
     };
 
     const updateTitle = (view, data = null) => {
@@ -754,7 +774,7 @@
     };
 
     const translatePage = (lang) => {
-        const { currentLangSpan, body } = DOMElements;
+        const { currentLangSpan, body, searchInput } = DOMElements;
         if (currentLangSpan) currentLangSpan.textContent = translations[lang][lang + "_short"];
         if (body) {
             if (lang === "ar") {
@@ -765,14 +785,11 @@
                 body.classList.remove("rtl");
             }
         }
+        searchInput.placeholder = translations[lang].search_placeholder;
         document.querySelectorAll("[data-i18n-key]").forEach(el => {
             const key = el.getAttribute("data-i18n-key");
             if (translations[lang] && translations[lang][key]) {
-                if ((el.tagName === 'INPUT' && (el.type === 'text' || el.type === 'search')) || el.tagName === 'TEXTAREA') {
-                    el.placeholder = translations[lang][key];
-                } else {
-                    el.innerHTML = translations[lang][key];
-                }
+                el.innerHTML = translations[lang][key];
             }
         });
     };
@@ -786,13 +803,13 @@
         defaultOption.textContent = defaultText;
         selectEl.appendChild(defaultOption);
         
-        const optionData = Array.isArray(options) ? options : Object.keys(options);
+        const optionData = Array.isArray(options) ? options : Object.keys(options).sort();
         
         optionData.forEach(opt => {
             const option = document.createElement('option');
             if (valueAsKey) {
                 option.value = opt;
-                option.textContent = options[opt][lang];
+                option.textContent = options[opt][lang] || options[opt]['fr'];
             } else {
                 option.value = opt;
                 option.textContent = opt;
@@ -800,8 +817,8 @@
             selectEl.appendChild(option);
         });
     };
-
-    const updateURLWithFilters = (newParams = {}) => {
+    
+    const updateURLWithFilters = (newParams = {}, replace = false) => {
         const params = new URLSearchParams(window.location.search);
         Object.keys(newParams).forEach(key => {
             if (newParams[key]) {
@@ -810,57 +827,75 @@
                 params.delete(key);
             }
         });
+
+        // Clean up empty params
+        for(let [key, val] of params.entries()) {
+            if(!val) params.delete(key);
+        }
         
         const newUrl = params.toString() ? `${window.location.pathname}?${params}` : window.location.pathname;
-        window.history.pushState({path: newUrl}, '', newUrl);
+        if (replace) {
+            window.history.replaceState({path: newUrl}, '', newUrl);
+        } else {
+            window.history.pushState({path: newUrl}, '', newUrl);
+        }
         renderHomePage();
     };
 
-
-    const applyFiltersFromURL = () => {
+    const applyFiltersFromURL = (container = document) => {
         const params = new URLSearchParams(window.location.search);
         params.forEach((value, key) => {
-            const el = document.getElementById(`${key}-filter`) || (key === 'search' && DOMElements.searchInput);
+            const el = container.querySelector(`#${key}-filter`);
             if (el) {
                 el.value = value;
                 // Trigger change events to populate dependent dropdowns
                 if (key === 'brand' || key === 'wilaya') {
                      el.dispatchEvent(new Event('change'));
+                     // We need to wait for the communes/models to populate
+                     setTimeout(() => {
+                        const childKey = key === 'brand' ? 'model' : 'commune';
+                        const childVal = params.get(childKey);
+                        if (childVal) {
+                            const childEl = container.querySelector(`#${childKey}-filter`);
+                            if (childEl) childEl.value = childVal;
+                        }
+                     }, 100);
                 }
             }
         });
+        DOMElements.searchInput.value = params.get('search') || '';
     };
 
     // VIEW RENDERING
     const renderView = (viewName, data = null) => {
         if (productsUnsubscribe) {
-            productsUnsubscribe(); // Detach old listener
+            productsUnsubscribe();
             productsUnsubscribe = null;
         }
-        const { appContainer } = DOMElements;
-        if (!appContainer) return;
-        appContainer.innerHTML = '';
+        DOMElements.appContainer.innerHTML = '';
         updateTitle(viewName, data);
 
-        switch (viewName) {
+        const route = viewName.split('/')[0];
+
+        switch (route) {
             case 'home':
-                appContainer.appendChild(document.getElementById('home-view-template').content.cloneNode(true));
+                DOMElements.appContainer.appendChild(document.getElementById('home-view-template').content.cloneNode(true));
                 renderHomePage();
                 break;
-            case 'product-detail':
-                appContainer.appendChild(document.getElementById('product-detail-view-template').content.cloneNode(true));
+            case 'product':
+                DOMElements.appContainer.appendChild(document.getElementById('product-detail-view-template').content.cloneNode(true));
                 renderProductPage(data);
                 break;
             case 'cart':
-                appContainer.appendChild(document.getElementById('cart-view-template').content.cloneNode(true));
+                DOMElements.appContainer.appendChild(document.getElementById('cart-view-template').content.cloneNode(true));
                 renderCartPage();
                 break;
             case 'dashboard':
-                appContainer.appendChild(document.getElementById('dashboard-view-template').content.cloneNode(true));
+                DOMElements.appContainer.appendChild(document.getElementById('dashboard-view-template').content.cloneNode(true));
                 renderDashboardPage();
                 break;
             case 'profile':
-                appContainer.appendChild(document.getElementById('profile-view-template').content.cloneNode(true));
+                DOMElements.appContainer.appendChild(document.getElementById('profile-view-template').content.cloneNode(true));
                 renderProfilePage(data);
                 break;
             default:
@@ -868,6 +903,7 @@
                 break;
         }
         currentView = viewName;
+        window.scrollTo(0, 0);
         translatePage(currentLang);
     };
 
@@ -886,21 +922,20 @@
             renderPartCategories();
         }
         
-        // Setup filters sidebar
+        const setupFilters = (container) => {
+            container.innerHTML = document.getElementById('filters-template').content.cloneNode(true).innerHTML;
+            setupFilterListeners(container);
+            applyFiltersFromURL(container);
+        };
+
         const filtersContent = document.getElementById('filters-content');
-        if (filtersContent) {
-            filtersContent.innerHTML = document.getElementById('filters-template').content.cloneNode(true).firstElementChild.innerHTML;
-            setupFilterListeners();
-            applyFiltersFromURL();
-        }
+        if (filtersContent) setupFilters(filtersContent);
         
-        // Setup mobile filters button
-        const showFiltersBtn = document.getElementById('show-filters-btn');
-        if (showFiltersBtn) {
-            showFiltersBtn.addEventListener('click', () => {
-                // ... mobile filter logic
-            });
-        }
+        if (DOMElements.mobileFiltersContent) setupFilters(DOMElements.mobileFiltersContent);
+
+        document.getElementById('show-filters-btn')?.addEventListener('click', () => {
+            DOMElements.mobileFiltersModal.classList.remove('translate-x-full');
+        });
         
         renderListings();
     };
@@ -915,7 +950,8 @@
 
         let html = `<a href="#" class="hover:underline home-crumb">Home</a>`;
         if (category) {
-            html += ` <span class="mx-2">/</span> <a href="?category=${category}" class="hover:underline category-crumb">${categories[category][currentLang]}</a>`;
+            const categoryName = categories[category] ? categories[category][currentLang] : category;
+            html += ` <span class="mx-2">/</span> <a href="?category=${category}" class="hover:underline category-crumb">${categoryName}</a>`;
         }
         if (brand) {
             html += ` <span class="mx-2">/</span> <span class="font-semibold">${brand}</span>`;
@@ -925,11 +961,11 @@
         breadcrumbNav.querySelector('.home-crumb')?.addEventListener('click', (e) => {
             e.preventDefault();
             window.history.pushState({}, '', window.location.pathname);
-            renderHomePage();
+            renderView('home');
         });
         breadcrumbNav.querySelector('.category-crumb')?.addEventListener('click', (e) => {
             e.preventDefault();
-            updateURLWithFilters({ category: category, brand: null });
+            updateURLWithFilters({ category: category, brand: null, model: null, year: null });
         });
     };
 
@@ -1001,117 +1037,560 @@
             card.className = "bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 text-center category-card font-semibold";
             card.textContent = year;
             card.addEventListener('click', () => {
-                document.getElementById('category-filter').value = category;
-                document.getElementById('brand-filter').value = brand;
                 document.getElementById('year-filter').value = year;
-                
-                // Trigger change to update dependent dropdowns if necessary
-                document.getElementById('brand-filter').dispatchEvent(new Event('change'));
-
-                updateURLWithFilters({ category, brand, year });
+                updateURLWithFilters({ category, brand, year }, true);
                 document.getElementById('listings-section').scrollIntoView({ behavior: 'smooth' });
             });
             grid.appendChild(card);
         });
     };
 
-
     const setupFilterListeners = (container = document) => {
-        // ... (this function remains largely the same)
+        const brandFilter = container.querySelector('#brand-filter');
+        const modelFilterContainer = container.querySelector('#model-filter-container');
+        const modelFilter = container.querySelector('#model-filter');
+        const yearFilter = container.querySelector('#year-filter');
+        const wilayaFilter = container.querySelector('#wilaya-filter');
+        const communeFilterContainer = container.querySelector('#commune-filter-container');
+        const communeFilter = container.querySelector('#commune-filter');
+        const categoryFilter = container.querySelector('#category-filter');
+        const conditionFilter = container.querySelector('#condition-filter');
+        const priceFilter = container.querySelector('#price-range-filter');
+        const priceValue = container.querySelector('#price-range-value');
+        const resetBtn = container.querySelector('#filter-reset-btn');
+
+        populateSelect(brandFilter, car_data, 'all_brands', currentLang);
+        populateSelect(yearFilter, years, 'all_years', currentLang);
+        populateSelect(wilayaFilter, wilayas, 'all_wilayas', currentLang);
+        populateSelect(categoryFilter, categories, 'all_categories', currentLang, true);
+
+        brandFilter.addEventListener('change', () => {
+            const selectedBrand = brandFilter.value;
+            if (selectedBrand && car_data[selectedBrand]) {
+                populateSelect(modelFilter, car_data[selectedBrand], 'all_models', currentLang);
+                modelFilterContainer.classList.remove('hidden');
+            } else {
+                modelFilterContainer.classList.add('hidden');
+            }
+        });
+
+        wilayaFilter.addEventListener('change', () => {
+            const selectedWilaya = wilayaFilter.value;
+            if (selectedWilaya && wilayas[selectedWilaya]) {
+                populateSelect(communeFilter, wilayas[selectedWilaya], 'all_communes', currentLang);
+                communeFilterContainer.classList.remove('hidden');
+            } else {
+                communeFilterContainer.classList.add('hidden');
+            }
+        });
+
+        priceFilter.addEventListener('input', () => {
+            priceValue.textContent = `${Number(priceFilter.value).toLocaleString()} DA`;
+        });
+        
+        const applyFilters = () => {
+            updateURLWithFilters({
+                category: categoryFilter.value,
+                brand: brandFilter.value,
+                model: modelFilter.value,
+                year: yearFilter.value,
+                wilaya: wilayaFilter.value,
+                commune: communeFilter.value,
+                condition: conditionFilter.value,
+                price: priceFilter.value === priceFilter.max ? '' : priceFilter.value,
+                search: DOMElements.searchInput.value
+            }, true);
+        };
+        
+        [categoryFilter, brandFilter, modelFilter, yearFilter, wilayaFilter, communeFilter, conditionFilter, priceFilter].forEach(el => {
+            el.addEventListener('change', debounce(applyFilters, 300));
+        });
+        
+        resetBtn.addEventListener('click', () => {
+            window.history.pushState({}, '', window.location.pathname);
+            renderView('home');
+        });
     };
 
     const renderListings = () => {
-        // ... (this function remains largely the same)
+        const listingsSection = document.getElementById('listings-section');
+        if (!listingsSection) return;
+        listingsSection.innerHTML = `<div class="col-span-full text-center p-8"><i class="fas fa-spinner fa-spin text-3xl text-blue-500"></i></div>`;
+        
+        const q = query(collection(db, "products"));
+        productsUnsubscribe = onSnapshot(q, (querySnapshot) => {
+            allProducts = [];
+            querySnapshot.forEach((doc) => {
+                allProducts.push({ id: doc.id, ...doc.data() });
+            });
+            const filtered = filterProducts(allProducts);
+            displayProducts(filtered, listingsSection);
+        }, (error) => {
+            console.error("Error fetching products:", error);
+            listingsSection.innerHTML = `<p class="col-span-full text-center text-red-500">Error loading products.</p>`;
+        });
     };
     
     const filterProducts = (products) => {
         const params = new URLSearchParams(window.location.search);
-        const category = params.get('category');
-        const brand = params.get('brand')?.toLowerCase();
-        const model = params.get('model')?.toLowerCase();
-        const year = params.get('year');
-        const wilaya = params.get('wilaya')?.toLowerCase();
-        const commune = params.get('commune')?.toLowerCase();
-        const condition = params.get('condition');
-        const price = params.get('price');
-        const searchTerm = DOMElements.searchInput.value.toLowerCase();
+        const p = (key) => params.get(key)?.toLowerCase() || '';
 
-        return products.filter(p => {
-            if (category && p.category !== category) return false;
-            if (brand && p.brand.toLowerCase() !== brand) return false;
-            if (model && p.model?.toLowerCase() !== model) return false;
-            if (year && p.year?.toString() !== year) return false;
-            if (wilaya && p.wilaya.toLowerCase() !== wilaya) return false;
-            if (commune && p.commune?.toLowerCase() !== commune) return false;
-            if (condition && p.condition !== condition) return false;
-            if (price && p.price > Number(price)) return false;
-            if (searchTerm && !(p.title.toLowerCase().includes(searchTerm) || p.description?.toLowerCase().includes(searchTerm))) return false;
+        return products.filter(prod => {
+            if (p('category') && prod.category !== p('category')) return false;
+            if (p('brand') && prod.brand.toLowerCase() !== p('brand')) return false;
+            if (p('model') && prod.model?.toLowerCase() !== p('model')) return false;
+            if (p('year') && prod.year?.toString() !== p('year')) return false;
+            if (p('wilaya') && prod.wilaya.toLowerCase() !== p('wilaya')) return false;
+            if (p('commune') && prod.commune?.toLowerCase() !== p('commune')) return false;
+            if (p('condition') && prod.condition !== p('condition')) return false;
+            const maxPrice = Number(params.get('price'));
+            if (maxPrice && prod.price > maxPrice) return false;
+            
+            const searchTerm = p('search');
+            if (searchTerm && !(prod.title.toLowerCase().includes(searchTerm) || prod.description?.toLowerCase().includes(searchTerm))) return false;
+            
             return true;
         });
     };
 
     const displayProducts = (products, container) => {
-        // ... (this function remains largely the same)
+        container.innerHTML = '';
+        if (products.length === 0) {
+            container.innerHTML = `<p class="col-span-full text-center p-8 text-lg text-gray-500" data-i18n-key="no_listings">${translations[currentLang].no_listings}</p>`;
+            return;
+        }
+        products.forEach(product => {
+            const card = document.createElement('div');
+            card.className = "listing-card bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden cursor-pointer";
+            card.innerHTML = `
+                <img src="${product.imageUrl || 'https://via.placeholder.com/300x200.png?text=Piecety'}" alt="${product.title}" class="w-full h-40 object-cover">
+                <div class="p-4">
+                    <h3 class="font-bold text-lg truncate">${product.title}</h3>
+                    <p class="text-blue-600 dark:text-blue-400 font-semibold text-xl my-2">${product.price.toLocaleString()} DA</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400"><i class="fas fa-map-marker-alt mr-1"></i> ${product.wilaya}, ${product.commune}</p>
+                </div>
+            `;
+            card.addEventListener('click', () => renderView('product', product));
+            container.appendChild(card);
+        });
     };
 
-    const renderProductPage = (product) => {
-        // ... (this function remains largely the same)
+    const renderProductPage = async (product) => {
+        if (!product) { renderView('home'); return; }
+        
+        document.getElementById('product-title-detail').textContent = product.title;
+        document.getElementById('product-price-detail').textContent = `${product.price.toLocaleString()} DA`;
+        document.getElementById('product-image-detail').src = product.imageUrl || 'https://via.placeholder.com/600x400.png?text=Piecety';
+        document.getElementById('product-image-detail').alt = product.title;
+        document.getElementById('product-brand-detail').textContent = product.brand;
+        document.getElementById('product-model-detail').textContent = product.model || 'N/A';
+        document.getElementById('product-year-detail').textContent = product.year || 'N/A';
+        document.getElementById('product-wilaya-detail').textContent = product.wilaya;
+        document.getElementById('product-commune-detail').textContent = product.commune || 'N/A';
+        document.getElementById('product-description-detail').textContent = product.description || 'No description available.';
+
+        const sellerLink = document.getElementById('seller-profile-link');
+        sellerLink.textContent = product.sellerName || 'Anonymous';
+        sellerLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            renderView('profile', { userId: product.sellerId, userName: product.sellerName });
+        });
+
+        document.getElementById('back-to-listings-btn').addEventListener('click', () => renderView('home'));
+        document.getElementById('add-to-cart-btn').addEventListener('click', () => addToCart(product));
+        document.getElementById('contact-seller-btn').addEventListener('click', () => {
+            if (!currentUser) { showMessage('login_required', 3000, 'error'); return; }
+            if (currentUser.uid === product.sellerId) { showMessage("Can't contact yourself.", 3000, 'error'); return; }
+            // Placeholder for chat functionality
+            showMessage("Chat feature coming soon!", 3000, 'info');
+        });
     };
 
     const renderCartPage = async () => {
-        // ... (this function remains largely the same)
+        if (!currentUser) {
+            showMessage('login_required', 3000, 'error');
+            renderView('home');
+            return;
+        }
+        const container = document.getElementById('cart-items-container');
+        const summary = document.getElementById('cart-summary');
+        container.innerHTML = '';
+
+        const cartItems = Object.values(userCart);
+
+        if (cartItems.length === 0) {
+            container.innerHTML = `<p class="text-center p-8 text-lg text-gray-500" data-i18n-key="your_cart_is_empty">${translations[currentLang].your_cart_is_empty}</p>`;
+            summary.classList.add('hidden');
+        } else {
+            summary.classList.remove('hidden');
+            let totalPrice = 0;
+            for (const item of cartItems) {
+                const product = allProducts.find(p => p.id === item.productId);
+                if (product) {
+                    totalPrice += product.price * item.quantity;
+                    const itemEl = document.createElement('div');
+                    itemEl.className = 'flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg';
+                    itemEl.innerHTML = `
+                        <div class="flex items-center">
+                            <img src="${product.imageUrl || 'https://via.placeholder.com/100'}" alt="${product.title}" class="w-16 h-16 object-cover rounded-md mr-4">
+                            <div>
+                                <h4 class="font-semibold">${product.title}</h4>
+                                <p class="text-sm text-gray-500">${product.price.toLocaleString()} DA</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <input type="number" min="1" value="${item.quantity}" class="w-16 p-1 border rounded-md dark:bg-gray-600 quantity-input" data-id="${product.id}">
+                            <button class="text-red-500 hover:text-red-700 remove-btn" data-id="${product.id}"><i class="fas fa-trash"></i></button>
+                        </div>
+                    `;
+                    container.appendChild(itemEl);
+                }
+            }
+            document.getElementById('cart-total-price').textContent = `${totalPrice.toLocaleString()} DA`;
+        }
+
+        container.querySelectorAll('.quantity-input').forEach(input => {
+            input.addEventListener('change', (e) => updateCartItem(e.target.dataset.id, parseInt(e.target.value)));
+        });
+        container.querySelectorAll('.remove-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => removeFromCart(e.currentTarget.dataset.id));
+        });
+        document.getElementById('back-from-cart-btn').addEventListener('click', () => renderView('home'));
+        document.getElementById('clear-cart-btn').addEventListener('click', clearCart);
     };
     
     const renderDashboardPage = async () => {
-        // ... (this function remains largely the same)
+         if (!currentUser) { renderView('home'); return; }
+        const grid = document.getElementById('my-listings-grid');
+        grid.innerHTML = `<div class="col-span-full text-center p-8"><i class="fas fa-spinner fa-spin text-3xl text-blue-500"></i></div>`;
+
+        const q = query(collection(db, "products"), where("sellerId", "==", currentUser.uid));
+        const querySnapshot = await getDocs(q);
+        const userProducts = [];
+        querySnapshot.forEach(doc => userProducts.push({ id: doc.id, ...doc.data() }));
+
+        grid.innerHTML = '';
+        if (userProducts.length === 0) {
+            grid.innerHTML = `<p class="col-span-full text-center p-8 text-lg text-gray-500">You have no active listings.</p>`;
+        } else {
+            userProducts.forEach(product => {
+                const card = document.createElement('div');
+                card.className = "relative bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden";
+                card.innerHTML = `
+                    <img src="${product.imageUrl || 'https://via.placeholder.com/300x200.png?text=Piecety'}" alt="${product.title}" class="w-full h-40 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg truncate">${product.title}</h3>
+                        <p class="text-blue-600 dark:text-blue-400 font-semibold text-xl my-2">${product.price.toLocaleString()} DA</p>
+                    </div>
+                    <div class="absolute top-2 right-2 flex gap-2">
+                        <button class="delete-ad-btn bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-red-600"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+                card.querySelector('.delete-ad-btn').addEventListener('click', async () => {
+                    if (confirm(translations[currentLang].delete_ad_confirm)) {
+                        await deleteDoc(doc(db, "products", product.id));
+                        renderDashboardPage(); // Refresh
+                    }
+                });
+                grid.appendChild(card);
+            });
+        }
     };
     
     const renderProfilePage = async (data) => {
-         // ... (this function remains largely the same)
+        if (!data || !data.userId) { renderView('home'); return; }
+        document.getElementById('profile-name').textContent = data.userName || 'Seller Profile';
+        
+        const grid = document.getElementById('user-products-grid');
+        grid.innerHTML = `<div class="col-span-full text-center p-8"><i class="fas fa-spinner fa-spin text-3xl text-blue-500"></i></div>`;
+        
+        const q = query(collection(db, "products"), where("sellerId", "==", data.userId));
+        const querySnapshot = await getDocs(q);
+        const userProducts = [];
+        querySnapshot.forEach(doc => userProducts.push({ id: doc.id, ...doc.data() }));
+        
+        displayProducts(userProducts, grid);
     };
 
 
     // USER ACTIONS
-    const toggleFavorite = async (productId) => {
-        // ... (this function remains largely the same)
+    const handleSignOut = () => {
+        signOut(auth).catch(error => console.error("Sign out error", error));
     };
     
     const clearCart = async () => {
-        // ... (this function remains largely the same)
+        if (!currentUser) return;
+        const cartRef = doc(db, "carts", currentUser.uid);
+        await setDoc(cartRef, {});
+        userCart = {};
+        updateCartDisplay();
+        if(currentView === 'cart') renderCartPage();
     };
 
     const addToCart = async (product) => {
-        // ... (this function remains largely the same)
+        if (!currentUser) { showMessage('login_required', 3000, 'error'); return; }
+        const cartRef = doc(db, "carts", currentUser.uid);
+        
+        const currentQuantity = userCart[product.id] ? userCart[product.id].quantity : 0;
+        
+        userCart[product.id] = { productId: product.id, quantity: currentQuantity + 1 };
+        
+        await setDoc(cartRef, userCart);
+        updateCartDisplay();
+        showMessage('item_added_to_cart', 2000, 'success');
     };
     
     const updateCartItem = async (productId, quantity) => {
-        // ... (this function remains largely the same)
+        if (!currentUser || !userCart[productId]) return;
+        if (quantity <= 0) {
+            removeFromCart(productId);
+            return;
+        }
+        userCart[productId].quantity = quantity;
+        const cartRef = doc(db, "carts", currentUser.uid);
+        await setDoc(cartRef, userCart);
+        updateCartDisplay();
+        if (currentView === 'cart') renderCartPage();
     };
     
     const removeFromCart = async (productId) => {
-        // ... (this function remains largely the same)
+        if (!currentUser || !userCart[productId]) return;
+        delete userCart[productId];
+        const cartRef = doc(db, "carts", currentUser.uid);
+        await setDoc(cartRef, userCart);
+        updateCartDisplay();
+        if (currentView === 'cart') renderCartPage();
     };
 
     const validatePostForm = (form) => {
-        // ... (this function remains largely the same)
+        let isValid = true;
+        const requiredFields = ['title', 'brand', 'wilaya', 'category', 'price'];
+        requiredFields.forEach(fieldName => {
+            const input = form.elements[fieldName];
+            const errorEl = document.getElementById(`${fieldName}-error`);
+            if (!input.value) {
+                input.classList.add('border-red-500');
+                errorEl.classList.remove('hidden');
+                isValid = false;
+            } else {
+                input.classList.remove('border-red-500');
+                errorEl.classList.add('hidden');
+            }
+        });
+        return isValid;
     };
+    
+    const updateAuthUI = (user) => {
+        const { authLinksContainer, mobileNavLinks } = DOMElements;
+        authLinksContainer.innerHTML = '';
+        mobileNavLinks.innerHTML = '';
+        
+        // Common links for mobile
+        mobileNavLinks.innerHTML += `<a href="#" id="mobile-sell-link" class="text-lg" data-i18n-key="sell">${translations[currentLang].sell}</a>`;
+        mobileNavLinks.innerHTML += `<a href="#" id="mobile-cart-link" class="text-lg relative">
+            <span data-i18n-key="cart_title">${translations[currentLang].cart_title}</span>
+            <span id="mobile-cart-count" class="absolute top-0 ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full hidden">0</span>
+        </a>`;
+        document.getElementById('mobile-sell-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            DOMElements.mobileMenu.classList.add('hidden');
+            DOMElements.sellLink.click();
+        });
+        document.getElementById('mobile-cart-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            DOMElements.mobileMenu.classList.add('hidden');
+            DOMElements.cartBtn.click();
+        });
+
+        if (user) {
+            // Desktop UI
+            const userMenuHTML = `
+                <div class="relative" id="user-menu">
+                    <button id="user-menu-btn" class="flex items-center">
+                        <img src="${user.photoURL}" alt="User" class="w-8 h-8 rounded-full">
+                    </button>
+                    <div id="user-menu-dropdown" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-lg shadow-lg py-1 hidden z-20">
+                        <a href="#" id="dashboard-link" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-600">${translations[currentLang].dashboard}</a>
+                        <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-600">${translations[currentLang].logout}</button>
+                    </div>
+                </div>`;
+            authLinksContainer.innerHTML = userMenuHTML;
+
+            // Mobile UI
+            mobileNavLinks.innerHTML += `<a href="#" id="mobile-dashboard-link" class="text-lg">${translations[currentLang].dashboard}</a>`;
+            mobileNavLinks.innerHTML += `<button id="mobile-logout-btn" class="text-lg text-left">${translations[currentLang].logout}</button>`;
+
+            // Event listeners for new elements
+            document.getElementById('user-menu-btn').addEventListener('click', () => {
+                document.getElementById('user-menu-dropdown').classList.toggle('hidden');
+            });
+            document.getElementById('logout-btn').addEventListener('click', handleSignOut);
+            document.getElementById('dashboard-link').addEventListener('click', (e) => {
+                e.preventDefault();
+                renderView('dashboard');
+            });
+            document.getElementById('mobile-logout-btn').addEventListener('click', handleSignOut);
+            document.getElementById('mobile-dashboard-link').addEventListener('click', (e) => {
+                e.preventDefault();
+                DOMElements.mobileMenu.classList.add('hidden');
+                renderView('dashboard');
+            });
+
+        } else {
+            // Desktop UI
+            authLinksContainer.innerHTML = `<button id="login-btn" class="px-4 py-2 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors" data-i18n-key="connect">${translations[currentLang].connect}</button>`;
+            
+            // Mobile UI
+            mobileNavLinks.innerHTML += `<button id="mobile-login-btn" class="text-lg text-left" data-i18n-key="connect">${translations[currentLang].connect}</button>`;
+            
+            // Event listeners
+            document.getElementById('login-btn').addEventListener('click', () => toggleModal(DOMElements.authModal, true));
+            document.getElementById('mobile-login-btn').addEventListener('click', () => {
+                 DOMElements.mobileMenu.classList.add('hidden');
+                 toggleModal(DOMElements.authModal, true)
+            });
+        }
+    };
+
 
     // SETUP & INITIALIZATION
     const setupEventListeners = () => {
-        // ... (this function remains largely the same)
+        const { darkModeToggle, langDropdownBtn, langDropdown, langBtns, sellLink, authModal, cartBtn, homeLink, mobileMenuBtn, mobileMenu, mobileMenuCloseBtn, authModalCloseBtn, googleLoginBtn, postProductModal, modalCloseBtn, searchInput, mobileFiltersModal, mobileFiltersCloseBtn, mobileApplyFiltersBtn } = DOMElements;
+
+        darkModeToggle.addEventListener('click', () => {
+            setDarkMode(!DOMElements.html.classList.contains('dark'));
+        });
+
+        langDropdownBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            langDropdown.classList.toggle('hidden');
+        });
+
+        langBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                setLanguage(btn.getAttribute('data-lang'));
+                langDropdown.classList.add('hidden');
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        sellLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (currentUser) {
+                toggleModal(postProductModal, true);
+            } else {
+                toggleModal(authModal, true);
+            }
+        });
+
+        cartBtn.addEventListener('click', () => renderView('cart'));
+        homeLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.history.pushState({}, '', window.location.pathname);
+            renderView('home');
+        });
+
+        mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.remove('hidden'));
+        mobileMenuCloseBtn.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+
+        authModalCloseBtn.addEventListener('click', () => toggleModal(authModal, false));
+        modalCloseBtn.addEventListener('click', () => toggleModal(postProductModal, false));
+
+        googleLoginBtn.addEventListener('click', () => {
+            signInWithPopup(auth, provider).catch(error => console.error("Login error", error));
+        });
+
+        DOMElements.postProductForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!validatePostForm(e.target) || !currentUser) return;
+            
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.querySelector('.btn-text').textContent = translations[currentLang].loading_text;
+            btn.querySelector('.btn-spinner').classList.remove('hidden');
+
+            const formData = new FormData(e.target);
+            const productData = Object.fromEntries(formData.entries());
+            productData.price = Number(productData.price);
+            productData.sellerId = currentUser.uid;
+            productData.sellerName = currentUser.displayName;
+            productData.createdAt = serverTimestamp();
+
+            try {
+                await addDoc(collection(db, "products"), productData);
+                showMessage('ad_posted', 3000, 'success');
+                e.target.reset();
+                toggleModal(postProductModal, false);
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                showMessage('ad_post_failed', 3000, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.querySelector('.btn-text').textContent = translations[currentLang].submit_ad_btn_text;
+                btn.querySelector('.btn-spinner').classList.add('hidden');
+            }
+        });
+
+        searchInput.addEventListener('input', debounce(() => {
+            updateURLWithFilters({ search: searchInput.value }, true);
+        }, 500));
+        
+        // Mobile filters listeners
+        mobileFiltersCloseBtn.addEventListener('click', () => mobileFiltersModal.classList.add('translate-x-full'));
+        mobileApplyFiltersBtn.addEventListener('click', () => {
+            const filterElements = DOMElements.mobileFiltersContent.querySelectorAll('select, input[type="range"]');
+            const params = {};
+            filterElements.forEach(el => {
+                const key = el.id.replace('-filter', '');
+                if(el.value) params[key] = el.value;
+            });
+            params.search = searchInput.value;
+            updateURLWithFilters(params, true);
+            mobileFiltersModal.classList.add('translate-x-full');
+        });
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!langDropdownBtn.contains(e.target)) {
+                langDropdown.classList.add('hidden');
+            }
+            const userMenu = document.getElementById('user-menu');
+            if(userMenu && !userMenu.contains(e.target)) {
+                document.getElementById('user-menu-dropdown').classList.add('hidden');
+            }
+        });
+        
+        // Populate static form dropdowns
+        populateSelect(DOMElements.postProductBrandSelect, car_data, 'select_brand', currentLang);
+        populateSelect(DOMElements.postProductYearSelect, years, 'select_year', currentLang);
+        populateSelect(DOMElements.postProductWilayaSelect, wilayas, 'select_wilaya', currentLang);
+        populateSelect(DOMElements.postProductCategorySelect, categories, 'select_category', currentLang, true);
+        DOMElements.postProductBrandSelect.addEventListener('change', (e) => {
+             const brand = e.target.value;
+             if (brand && car_data[brand]) {
+                populateSelect(DOMElements.postProductModelSelect, car_data[brand], 'select_model', currentLang);
+                DOMElements.postProductModelSelect.disabled = false;
+             } else {
+                DOMElements.postProductModelSelect.disabled = true;
+             }
+        });
+         DOMElements.postProductWilayaSelect.addEventListener('change', (e) => {
+             const wilaya = e.target.value;
+             if (wilaya && wilayas[wilaya]) {
+                populateSelect(DOMElements.postProductCommuneSelect, wilayas[wilaya], 'select_commune', currentLang);
+                DOMElements.postProductCommuneSelect.disabled = false;
+             } else {
+                DOMElements.postProductCommuneSelect.disabled = true;
+             }
+        });
+
     };
 
     const bootApp = () => {
-        // Dark mode setup
-        const isDarkMode = localStorage.getItem('piecety_dark_mode') === 'true';
-        setDarkMode(isDarkMode);
-
+        setDarkMode(localStorage.getItem('piecety_dark_mode') === 'true');
         document.getElementById('current-year').textContent = new Date().getFullYear();
-        translatePage(currentLang);
         setupEventListeners();
-        renderView('home');
 
-        // PWA Service Worker Registration
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js')
             .then(reg => console.log('Service worker registered successfully.'))
@@ -1119,10 +1598,25 @@
         }
 
         onAuthStateChanged(auth, async (user) => {
-            // ... (this function remains largely the same)
+            currentUser = user;
+            updateAuthUI(user);
+            if (user) {
+                toggleModal(DOMElements.authModal, false);
+                const cartRef = doc(db, "carts", user.uid);
+                const cartSnap = await getDoc(cartRef);
+                if (cartSnap.exists()) {
+                    userCart = cartSnap.data();
+                } else {
+                    userCart = {};
+                }
+            } else {
+                userCart = {};
+            }
+            updateCartDisplay();
         });
         
-        window.addEventListener('popstate', renderHomePage);
+        window.addEventListener('popstate', () => renderView('home'));
+        renderView('home');
     };
 
     bootApp();
