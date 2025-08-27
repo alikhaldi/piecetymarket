@@ -420,7 +420,7 @@
 
 <template id="inbox-view-template">
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 md:p-8">
-        <h2 class="text-2xl md:text-3xl font-bold mb-6">My Messages</h2>
+        <h2 class="text-2xl md:text-3xl font-bold mb-6">Messages</h2>
         <div id="conversations-list" class="space-y-4">
             <p id="inbox-loading" class="text-center text-gray-500">Loading conversations...</p>
         </div>
@@ -452,7 +452,7 @@
 <script type="module">
     // Firebase Imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, query, onSnapshot, where, getDocs, doc, setDoc, getDoc, deleteDoc, writeBatch, serverTimestamp, orderBy } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, query, onSnapshot, where, getDocs, doc, setDoc, getDoc, deleteDoc, updateDoc, increment, writeBatch, serverTimestamp, orderBy, limit, startAfter } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
     import { getAuth, signInWithPopup, signOut, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 
     // Global state variables
@@ -462,6 +462,7 @@
     let allProducts = [];
     let userCart = {};
     let productsUnsubscribe = null;
+    let chatsUnsubscribe = null;
 
     // Firebase Configuration
     const firebaseConfig = {
@@ -867,9 +868,8 @@
         });
         params.search = DOMElements.searchInput.value;
 
-        // Update URL state without a full page reload
         const newUrl = new URL(window.location);
-        newUrl.search = ''; // Clear existing params
+        newUrl.search = '';
         Object.keys(params).forEach(key => {
             if (params[key]) {
                 newUrl.searchParams.set(key, params[key]);
@@ -877,7 +877,6 @@
         });
         window.history.replaceState({path: newUrl.href}, '', newUrl.href);
 
-        // Re-filter and display products
         const filtered = filterProducts(allProducts);
         displayProducts(filtered, document.getElementById('listings-section'));
     };
@@ -910,6 +909,10 @@
         if (productsUnsubscribe) {
             productsUnsubscribe();
             productsUnsubscribe = null;
+        }
+        if (chatsUnsubscribe) {
+            chatsUnsubscribe();
+            chatsUnsubscribe = null;
         }
         DOMElements.appContainer.innerHTML = '';
         updateTitle(viewName, data);
@@ -1278,35 +1281,45 @@
         if (cartItems.length === 0) {
             container.innerHTML = `<p class="text-center p-8 text-lg text-gray-500" data-i18n-key="your_cart_is_empty">${translations[currentLang].your_cart_is_empty}</p>`;
             summary.classList.add('hidden');
-        } else {
-            summary.classList.remove('hidden');
-            let totalPrice = 0;
-            for (const item of cartItems) {
-                const docRef = doc(db, "products", item.productId);
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    const product = { id: docSnap.id, ...docSnap.data() };
-                    totalPrice += product.price * item.quantity;
-                    const itemEl = document.createElement('div');
-                    itemEl.className = 'flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg';
-                    itemEl.innerHTML = `
-                        <div class="flex items-center">
-                            <img src="${product.imageUrl || 'https://via.placeholder.com/100'}" alt="${product.title}" class="w-16 h-16 object-cover rounded-md mr-4">
-                            <div>
-                                <h4 class="font-semibold">${product.title}</h4>
-                                <p class="text-sm text-gray-500">${product.price.toLocaleString()} DA</p>
-                            </div>
+            return;
+        } 
+        
+        summary.classList.remove('hidden');
+        const productIds = cartItems.map(item => item.productId);
+        const productsRef = collection(db, "products");
+        const q = query(productsRef, where("__name__", "in", productIds));
+        const querySnapshot = await getDocs(q);
+
+        const productsById = {};
+        querySnapshot.forEach(doc => {
+            productsById[doc.id] = { id: doc.id, ...doc.data() };
+        });
+
+        let totalPrice = 0;
+        container.innerHTML = '';
+        cartItems.forEach(item => {
+            const product = productsById[item.productId];
+            if (product) {
+                totalPrice += product.price * item.quantity;
+                const itemEl = document.createElement('div');
+                itemEl.className = 'flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg';
+                itemEl.innerHTML = `
+                    <div class="flex items-center">
+                        <img src="${product.imageUrl || 'https://via.placeholder.com/100'}" alt="${product.title}" class="w-16 h-16 object-cover rounded-md mr-4">
+                        <div>
+                            <h4 class="font-semibold">${product.title}</h4>
+                            <p class="text-sm text-gray-500">${product.price.toLocaleString()} DA</p>
                         </div>
-                        <div class="flex items-center gap-4">
-                            <input type="number" min="1" value="${item.quantity}" class="w-16 p-1 border rounded-md dark:bg-gray-600 quantity-input" data-id="${product.id}">
-                            <button class="text-red-500 hover:text-red-700 remove-btn" data-id="${product.id}"><i class="fas fa-trash"></i></button>
-                        </div>
-                    `;
-                    container.appendChild(itemEl);
-                }
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <input type="number" min="1" value="${item.quantity}" class="w-16 p-1 border rounded-md dark:bg-gray-600 quantity-input" data-id="${product.id}">
+                        <button class="text-red-500 hover:text-red-700 remove-btn" data-id="${product.id}"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+                container.appendChild(itemEl);
             }
-            document.getElementById('cart-total-price').textContent = `${totalPrice.toLocaleString()} DA`;
-        }
+        });
+        document.getElementById('cart-total-price').textContent = `${totalPrice.toLocaleString()} DA`;
 
         container.querySelectorAll('.quantity-input').forEach(input => {
             input.addEventListener('change', (e) => updateCartItem(e.target.dataset.id, parseInt(e.target.value)));
@@ -1391,7 +1404,8 @@
                     participants: [currentUser.uid, sellerId],
                     participantNames: [currentUser.displayName, sellerName],
                     lastMessage: "Chat started.",
-                    lastMessageTimestamp: serverTimestamp()
+                    lastMessageTimestamp: serverTimestamp(),
+                    unreadCount: { [currentUser.uid]: 0, [sellerId]: 0 }
                 });
             }
             renderView('chat', { chatId, otherUserName: sellerName });
@@ -1413,7 +1427,7 @@
             orderBy("lastMessageTimestamp", "desc")
         );
 
-        onSnapshot(q, (snapshot) => {
+        chatsUnsubscribe = onSnapshot(q, (snapshot) => {
             if (snapshot.empty) {
                 listContainer.innerHTML = `<p class="text-center text-gray-500">You have no messages.</p>`;
                 return;
@@ -1425,10 +1439,15 @@
                 const otherUserName = chat.participantNames[otherUserIndex];
                 
                 const convoEl = document.createElement('div');
-                convoEl.className = 'p-4 bg-gray-50 dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600';
+                convoEl.className = 'p-4 bg-gray-50 dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 flex justify-between items-center';
                 convoEl.innerHTML = `
-                    <h4 class="font-bold">${otherUserName}</h4>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 truncate">${chat.lastMessage}</p>
+                    <div>
+                        <h4 class="font-bold">${otherUserName}</h4>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 truncate">${chat.lastMessage}</p>
+                    </div>
+                    ${chat.unreadCount && chat.unreadCount[currentUser.uid] > 0 ? 
+                        `<span class="bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">${chat.unreadCount[currentUser.uid]}</span>` : ''
+                    }
                 `;
                 convoEl.addEventListener('click', () => renderView('chat', { chatId: doc.id, otherUserName }));
                 listContainer.appendChild(convoEl);
@@ -1436,13 +1455,19 @@
         });
     };
 
-    const renderChatPage = (chatData) => {
+    let firstVisibleMessage = null;
+    const renderChatPage = async (chatData) => {
         if (!currentUser || !chatData) {
             renderView('home');
             return;
         }
         
         const { chatId, otherUserName } = chatData;
+        
+        // Mark messages as read when opening the chat
+        const chatRef = doc(db, "chats", chatId);
+        await updateDoc(chatRef, { [`unreadCount.${currentUser.uid}`]: 0 });
+
         document.getElementById('chat-with-name').textContent = `Chat with ${otherUserName}`;
         document.getElementById('back-to-inbox-btn').addEventListener('click', () => renderView('inbox'));
 
@@ -1451,11 +1476,18 @@
         const messageInput = document.getElementById('message-input');
         
         const messagesRef = collection(db, "chats", chatId, "messages");
-        const q = query(messagesRef, orderBy("timestamp"));
+        const q = query(messagesRef, orderBy("timestamp", "desc"), limit(25));
 
         onSnapshot(q, (snapshot) => {
+            if (snapshot.empty) {
+                messagesContainer.innerHTML = '<p class="text-center text-gray-500">No messages yet. Say hi!</p>';
+                return;
+            }
+            
+            firstVisibleMessage = snapshot.docs[snapshot.docs.length - 1];
+
             messagesContainer.innerHTML = '';
-            snapshot.forEach(doc => {
+            snapshot.docs.reverse().forEach(doc => {
                 const msg = doc.data();
                 const msgEl = document.createElement('div');
                 const isMe = msg.senderId === currentUser.uid;
@@ -1477,14 +1509,17 @@
                     text: text,
                     timestamp: serverTimestamp()
                 });
-                const chatRef = doc(db, "chats", chatId);
-                await setDoc(chatRef, { 
+
+                const otherUserId = chatId.replace(currentUser.uid, '').replace('_', '');
+                await updateDoc(chatRef, { 
                     lastMessage: text, 
-                    lastMessageTimestamp: serverTimestamp() 
-                }, { merge: true });
+                    lastMessageTimestamp: serverTimestamp(),
+                    [`unreadCount.${otherUserId}`]: increment(1)
+                });
             }
         });
     };
+
 
     // USER ACTIONS
     const handleSignOut = () => {
@@ -1583,14 +1618,14 @@
                     </button>
                     <div id="user-menu-dropdown" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-lg shadow-lg py-1 hidden z-20">
                         <a href="#" id="dashboard-link" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-600" data-i18n-key="dashboard">${translations[currentLang].dashboard}</a>
-                        <a href="#" id="messages-link" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-600">Messages</a>
+                        <a href="#" id="messages-link" class="relative block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-600">Messages <span id="unread-badge" class="hidden absolute right-2 top-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"></span></a>
                         <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-600" data-i18n-key="logout">${translations[currentLang].logout}</button>
                     </div>
                 </div>`;
             authLinksContainer.innerHTML = userMenuHTML;
 
             mobileNavLinks.innerHTML += `<a href="#" id="mobile-dashboard-link" class="text-lg" data-i18n-key="dashboard">${translations[currentLang].dashboard}</a>`;
-            mobileNavLinks.innerHTML += `<a href="#" id="mobile-messages-link" class="text-lg">Messages</a>`;
+            mobileNavLinks.innerHTML += `<a href="#" id="mobile-messages-link" class="text-lg relative">Messages <span id="mobile-unread-badge" class="hidden absolute top-0 ml-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"></span></a>`;
             mobileNavLinks.innerHTML += `<button id="mobile-logout-btn" class="text-lg text-left" data-i18n-key="logout">${translations[currentLang].logout}</button>`;
 
             document.getElementById('user-menu-btn').addEventListener('click', () => {
@@ -1632,6 +1667,52 @@
         }
         updateCartDisplay();
     };
+
+    const listenForUnreadMessages = (user) => {
+        if (chatsUnsubscribe) chatsUnsubscribe();
+        if (!user) {
+            updateUnreadBadge(0);
+            return;
+        }
+
+        const q = query(
+            collection(db, "chats"),
+            where("participants", "array-contains", user.uid)
+        );
+
+        chatsUnsubscribe = onSnapshot(q, (snapshot) => {
+            let totalUnread = 0;
+            snapshot.forEach(doc => {
+                const chat = doc.data();
+                if (chat.unreadCount && chat.unreadCount[user.uid]) {
+                    totalUnread += chat.unreadCount[user.uid];
+                }
+            });
+            updateUnreadBadge(totalUnread);
+        });
+    };
+
+    const updateUnreadBadge = (count) => {
+        const badge = document.getElementById('unread-badge');
+        const mobileBadge = document.getElementById('mobile-unread-badge');
+        if (badge) {
+            if (count > 0) {
+                badge.textContent = count;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+        if (mobileBadge) {
+            if (count > 0) {
+                mobileBadge.textContent = count;
+                mobileBadge.classList.remove('hidden');
+            } else {
+                mobileBadge.classList.add('hidden');
+            }
+        }
+    };
+
 
     // SETUP & INITIALIZATION
     const setupEventListeners = () => {
@@ -1767,6 +1848,8 @@
         onAuthStateChanged(auth, async (user) => {
             currentUser = user;
             updateAuthUI(user);
+            listenForUnreadMessages(user);
+
             if (user) {
                 toggleModal(DOMElements.authModal, false);
                 const cartRef = doc(db, "carts", user.uid);
