@@ -1,37 +1,34 @@
+// sw.js (install + resilient caching)
 const CACHE_NAME = "piecety-cache-v1";
-// Caching only essential, stable resources.
 const urlsToCache = [
-  './',
-  './index.html',
-  './style.css',
-  'https://cdn.tailwindcss.com',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
-  'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Arabic:wght@400;700&display=swap'
+  "./",               // root of current folder
+  "./index.html",
+  "./style.css",
+  "./icons/car-192.png", // add your local icons here
+  "./icons/car-512.png"
 ];
 
 self.addEventListener("install", event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        console.log('Opened cache');
-        return cache.addAll(urlsToCache);
-      })
-      .catch(err => {
-        console.error('Failed to open cache or add URLs:', err);
-      })
-  );
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE_NAME);
+    console.log('Opened cache');
+    for (const url of urlsToCache) {
+      try {
+        // Add each URL to cache one by one
+        await cache.add(url);
+      } catch (err) {
+        // Log the error and continue with the installation
+        console.warn("SW: Failed to cache", url, err);
+      }
+    }
+  })());
 });
 
-self.addEventListener("fetch", event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        // Cache hit - return response
-        if (response) {
-          return response;
-        }
-        return fetch(event.request);
-      }
-    )
+self.addEventListener("fetch", e => {
+  e.respondWith(
+    caches.match(e.request).then(r => {
+      // Return cached response if found, otherwise fetch from network
+      return r || fetch(e.request);
+    })
   );
 });
