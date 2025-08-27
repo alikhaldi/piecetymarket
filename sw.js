@@ -4,8 +4,18 @@ const urlsToCache = [
   "./",               // root of current folder
   "./index.html",
   "./style.css",
-  "./icons/car-192.png", // add your local icons here
-  "./icons/car-512.png"
+  "./icons/car-192.png",
+  "./icons/car-512.png",
+  "./icons/toyota.png",
+  "./icons/peugeot.png",
+  "./icons/volkswagen.png",
+  "./icons/renault.png",
+  "./icons/hyundai.png",
+  "./icons/nissan.png",
+  "./icons/fiat.png",
+  "./icons/citroen.png",
+  "./icons/kia.png",
+  "./icons/mercedes.png"
 ];
 
 self.addEventListener("install", event => {
