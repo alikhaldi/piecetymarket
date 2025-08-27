@@ -42,15 +42,22 @@ body {
 .modal {
     transition: opacity 0.3s ease, visibility 0.3s ease;
 }
+.modal.active {
+    opacity: 1;
+    visibility: visible;
+}
 
 /* Category Card Hover Effect */
-.category-card:hover {
+.category-card, .listing-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.category-card:hover, .listing-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
 
-.dark .category-card:hover {
-    box-shadow: 0 10px 15px rgba(255, 255, 255, 0.1);
+.dark .category-card:hover, .dark .listing-card:hover {
+    box-shadow: 0 10px 15px rgba(255, 255, 255, 0.05);
 }
 
 .category-card:hover .category-icon {
@@ -63,16 +70,16 @@ body {
 }
 
 /* Mobile menu improvements */
-#mobile-menu {
+#mobile-menu, #mobile-filters-modal {
     overflow-y: auto;
 }
 
 /* Better touch targets for mobile */
 @media (max-width: 768px) {
-    button, a {
+    header button, header a {
         min-height: 44px;
         min-width: 44px;
-        display: flex;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
     }
@@ -96,38 +103,6 @@ body {
         width: 48px;
         height: 48px;
     }
-    
-    /* Improve mobile filters */
-    #filters-sidebar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 80%;
-        height: 100%;
-        z-index: 50;
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-    }
-    
-    #filters-sidebar.open {
-        transform: translateX(0);
-    }
-    
-    /* Overlay for filters */
-    .filters-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 40;
-        display: none;
-    }
-    
-    .filters-overlay.open {
-        display: block;
-    }
 }
 
 /* RTL support for Arabic */
@@ -137,6 +112,14 @@ body {
 .rtl .fa-search {
     right: 12px;
     left: auto;
+}
+.rtl #search-input {
+    padding-left: 0.75rem;
+    padding-right: 2.5rem;
+}
+.rtl .logo svg {
+    margin-right: 0;
+    margin-left: 0.5rem;
 }
 
 /* Improve modal for mobile */
@@ -151,9 +134,16 @@ body {
     }
 }
 
-/* Better cart display on mobile */
-@media (max-width: 768px) {
-    #cart-items-container .grid {
-        grid-template-columns: 1fr;
-    }
+/* Mobile Filters Modal */
+#mobile-filters-modal {
+    transition: transform 0.3s ease-in-out;
+}
+#mobile-filters-modal.translate-x-full {
+    transform: translateX(100%);
+}
+.rtl #mobile-filters-modal.translate-x-full {
+    transform: translateX(-100%);
+}
+.rtl #mobile-filters-modal {
+    transform: translateX(0);
 }
