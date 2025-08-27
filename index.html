@@ -2,7 +2,6 @@
 <html lang="fr" class="scroll-smooth">
 <head>
     <meta charset="UTF-8" />
-    <!-- FIX: Updated viewport to allow user scaling for better accessibility -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Piecety - Marché des Pièces Auto en Algérie</title>
     <meta name="description" content="Le marché algérien des pièces automobiles le plus fiable. Trouvez la bonne pièce pour votre voiture à Hassi R'Mel et dans toute l'Algérie.">
@@ -232,7 +231,7 @@
     <section class="mb-8 md:mb-12" aria-labelledby="categories-title-heading">
         <div id="breadcrumb-nav" class="mb-4 text-sm text-gray-500 dark:text-gray-400"></div>
         <h2 id="categories-title-heading" class="text-2xl md:text-3xl font-bold mb-6 text-center"></h2>
-        <div id="dynamic-grid" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4 md:gap-6"></div>
+        <div id="dynamic-grid" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4 md:gap-6"></div>
     </section>
 
     <div class="flex flex-col md:flex-row gap-8">
@@ -420,6 +419,15 @@
 </template>
 
 <script type="module">
+    // Note for developers using this in an Android WebView:
+    // Ensure the following settings are enabled for full functionality.
+    // WebSettings ws = webView.getSettings();
+    // ws.setJavaScriptEnabled(true);
+    // ws.setDomStorageEnabled(true); // Important for localStorage
+    // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+    //   webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
+    // }
+
     // Firebase Imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
     import { getFirestore, collection, addDoc, query, onSnapshot, where, getDocs, doc, setDoc, getDoc, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
