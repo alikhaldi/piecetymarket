@@ -1,9 +1,9 @@
-// sw.js (install + resilient caching)
-const CACHE_NAME = "piecety-cache-v1";
+const CACHE_NAME = "piecety-cache-v2"; // Incremented version
 const urlsToCache = [
-  "./",               // root of current folder
+  "./",
   "./index.html",
   "./style.css",
+  "./offline.html", // Offline fallback page
   "./icons/car-192.png",
   "./icons/car-512.png",
   "./icons/toyota.png",
@@ -18,27 +18,55 @@ const urlsToCache = [
   "./icons/mercedes.png"
 ];
 
+// More resilient installation
 self.addEventListener("install", event => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE_NAME);
     console.log('Opened cache');
     for (const url of urlsToCache) {
       try {
-        // Add each URL to cache one by one
         await cache.add(url);
       } catch (err) {
-        // Log the error and continue with the installation
         console.warn("SW: Failed to cache", url, err);
       }
     }
   })());
 });
 
-self.addEventListener("fetch", e => {
-  e.respondWith(
-    caches.match(e.request).then(r => {
-      // Return cached response if found, otherwise fetch from network
-      return r || fetch(e.request);
-    })
-  );
+// Cleanup old caches
+self.addEventListener("activate", event => {
+    const cacheWhitelist = [CACHE_NAME];
+    event.waitUntil(
+        caches.keys().then(cacheNames => {
+            return Promise.all(
+                cacheNames.map(cacheName => {
+                    if (!cacheWhitelist.includes(cacheName)) {
+                        return caches.delete(cacheName);
+                    }
+                })
+            );
+        })
+    );
+});
+
+// Stale-while-revalidate strategy
+self.addEventListener("fetch", event => {
+    event.respondWith(
+        caches.open(CACHE_NAME).then(cache => {
+            return cache.match(event.request).then(response => {
+                const fetchPromise = fetch(event.request).then(networkResponse => {
+                    // If we got a valid response, update the cache
+                    if (networkResponse && networkResponse.status === 200) {
+                        cache.put(event.request, networkResponse.clone());
+                    }
+                    return networkResponse;
+                }).catch(() => {
+                    // If the network fails, return the offline page
+                    return caches.match("./offline.html");
+                });
+                // Return the cached version first, then update in the background
+                return response || fetchPromise;
+            });
+        })
+    );
 });
