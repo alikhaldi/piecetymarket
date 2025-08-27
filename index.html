@@ -263,7 +263,12 @@
 </template>
 
 <template id="filters-template">
-    <h2 class="text-2xl font-bold" data-i18n-key="filters_title">Filtrer les annonces</h2>
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold" data-i18n-key="filters_title">Filtrer les annonces</h2>
+        <button id="close-filters-btn" class="md:hidden text-gray-600 dark:text-gray-300">
+            <i class="fas fa-times text-xl"></i>
+        </button>
+    </div>
     <!-- Brand -->
     <div>
         <label for="brand-filter" class="block text-sm font-medium" data-i18n-key="all_brands">Toutes les marques</label>
@@ -429,15 +434,6 @@
 </template>
 
 <script type="module">
-    // Note for developers using this in an Android WebView:
-    // Ensure the following settings are enabled for full functionality.
-    // WebSettings ws = webView.getSettings();
-    // ws.setJavaScriptEnabled(true);
-    // ws.setDomStorageEnabled(true); // Important for localStorage
-    // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-    //   webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
-    // }
-
     // Firebase Imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
     import { getFirestore, collection, addDoc, query, onSnapshot, where, getDocs, doc, setDoc, getDoc, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
@@ -450,7 +446,7 @@
     let allProducts = [];
     let userCart = {};
     let userFavorites = [];
-    let productsUnsubscribe = null; // To detach the real-time listener
+    let productsUnsubscribe = null;
 
     // Firebase Configuration
     const firebaseConfig = {
