@@ -39,7 +39,7 @@
 <header class="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-50" role="banner">
     <div class="container mx-auto p-4 flex items-center justify-between">
         <a href="#" id="home-link" class="text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400 logo transition-transform hover:scale-105 flex items-center">
-            <svg class="h-8 mr-2" xmlns="http://www.w.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M21.92,7.62A1,1,0,0,0,21,7H18.32a3,3,0,0,0-5.64,0H3a1,1,0,0,0-1,1V17a1,1,0,0,0,1,1H4.2a3,3,0,0,0,5.6,0H16.2a3,3,0,0,0,5.6,0H23a1,1,0,0,0,1-1V8.62A1,1,0,0,0,21.92,7.62ZM6,15a1,1,0,1,1,1-1A1,1,0,0,1,6,15Zm12,0a1,1,0,1,1,1-1A1,1,0,0,1,18,15Z"></path></svg>
+            <svg class="h-8 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M21.92,7.62A1,1,0,0,0,21,7H18.32a3,3,0,0,0-5.64,0H3a1,1,0,0,0-1,1V17a1,1,0,0,0,1,1H4.2a3,3,0,0,0,5.6,0H16.2a3,3,0,0,0,5.6,0H23a1,1,0,0,0,1-1V8.62A1,1,0,0,0,21.92,7.62ZM6,15a1,1,0,1,1,1-1A1,1,0,0,1,6,15Zm12,0a1,1,0,1,1,1-1A1,1,0,0,1,18,15Z"></path></svg>
             Piecety
         </a>
 
@@ -419,15 +419,6 @@
 </template>
 
 <script type="module">
-    // Note for developers using this in an Android WebView:
-    // Ensure the following settings are enabled for full functionality.
-    // WebSettings ws = webView.getSettings();
-    // ws.setJavaScriptEnabled(true);
-    // ws.setDomStorageEnabled(true); // Important for localStorage
-    // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-    //   webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
-    // }
-
     // Firebase Imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
     import { getFirestore, collection, addDoc, query, onSnapshot, where, getDocs, doc, setDoc, getDoc, deleteDoc, writeBatch, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
@@ -439,8 +430,7 @@
     let currentView = 'home';
     let allProducts = [];
     let userCart = {};
-    let userFavorites = [];
-    let productsUnsubscribe = null; // To detach the real-time listener
+    let productsUnsubscribe = null;
 
     // Firebase Configuration
     const firebaseConfig = {
@@ -720,23 +710,31 @@
 
     const toggleModal = (modalElement, show) => {
         if (show) {
-            modalElement.classList.add('active');
+            modalElement.classList.remove('invisible', 'opacity-0');
+            modalElement.classList.add('visible', 'opacity-100');
         } else {
-            modalElement.classList.remove('active');
+            modalElement.classList.remove('visible', 'opacity-100');
+            modalElement.classList.add('invisible', 'opacity-0');
         }
     };
     
     const updateCartDisplay = () => {
        const { cartCountSpan } = DOMElements;
+       const mobileCartCount = document.getElementById('mobile-cart-count');
        const cartItemCount = Object.values(userCart).reduce((sum, item) => sum + item.quantity, 0);
-       if (cartCountSpan) {
-           if (cartItemCount > 0) {
-               cartCountSpan.textContent = cartItemCount;
-               cartCountSpan.classList.remove('hidden');
-           } else {
-               cartCountSpan.classList.add('hidden');
+
+       const updateCount = (el) => {
+           if (el) {
+               if (cartItemCount > 0) {
+                   el.textContent = cartItemCount;
+                   el.classList.remove('hidden');
+               } else {
+                   el.classList.add('hidden');
+               }
            }
-       }
+       };
+       updateCount(cartCountSpan);
+       updateCount(mobileCartCount);
     };
 
     const debounce = (func, delay) => {
@@ -760,8 +758,9 @@
         localStorage.setItem("piecety_lang", lang);
         translatePage(lang);
         if (currentView === 'home') {
-            renderHomePage(); // Re-render to update dynamic text like titles
+            renderHomePage(); 
         }
+        updateAuthUI(currentUser);
     };
 
     const updateTitle = (view, data = null) => {
@@ -789,7 +788,11 @@
         document.querySelectorAll("[data-i18n-key]").forEach(el => {
             const key = el.getAttribute("data-i18n-key");
             if (translations[lang] && translations[lang][key]) {
-                el.innerHTML = translations[lang][key];
+                 if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                    // This handles placeholders, but we do searchInput separately for simplicity
+                } else {
+                    el.innerHTML = translations[lang][key];
+                }
             }
         });
     };
@@ -828,7 +831,6 @@
             }
         });
 
-        // Clean up empty params
         for(let [key, val] of params.entries()) {
             if(!val) params.delete(key);
         }
@@ -848,10 +850,8 @@
             const el = container.querySelector(`#${key}-filter`);
             if (el) {
                 el.value = value;
-                // Trigger change events to populate dependent dropdowns
                 if (key === 'brand' || key === 'wilaya') {
                      el.dispatchEvent(new Event('change'));
-                     // We need to wait for the communes/models to populate
                      setTimeout(() => {
                         const childKey = key === 'brand' ? 'model' : 'commune';
                         const childVal = params.get(childKey);
@@ -1102,9 +1102,11 @@
             }, true);
         };
         
-        [categoryFilter, brandFilter, modelFilter, yearFilter, wilayaFilter, communeFilter, conditionFilter, priceFilter].forEach(el => {
-            el.addEventListener('change', debounce(applyFilters, 300));
-        });
+        [categoryFilter, brandFilter, modelFilter, yearFilter, wilayaFilter, communeFilter, conditionFilter, priceFilter]
+            .filter(el => el != null) // This is the FIX
+            .forEach(el => {
+                el.addEventListener('change', debounce(applyFilters, 300));
+            });
         
         resetBtn.addEventListener('click', () => {
             window.history.pushState({}, '', window.location.pathname);
@@ -1201,7 +1203,6 @@
         document.getElementById('contact-seller-btn').addEventListener('click', () => {
             if (!currentUser) { showMessage('login_required', 3000, 'error'); return; }
             if (currentUser.uid === product.sellerId) { showMessage("Can't contact yourself.", 3000, 'error'); return; }
-            // Placeholder for chat functionality
             showMessage("Chat feature coming soon!", 3000, 'info');
         });
     };
@@ -1289,7 +1290,7 @@
                 card.querySelector('.delete-ad-btn').addEventListener('click', async () => {
                     if (confirm(translations[currentLang].delete_ad_confirm)) {
                         await deleteDoc(doc(db, "products", product.id));
-                        renderDashboardPage(); // Refresh
+                        renderDashboardPage();
                     }
                 });
                 grid.appendChild(card);
@@ -1311,7 +1312,6 @@
         
         displayProducts(userProducts, grid);
     };
-
 
     // USER ACTIONS
     const handleSignOut = () => {
@@ -1370,11 +1370,11 @@
             const errorEl = document.getElementById(`${fieldName}-error`);
             if (!input.value) {
                 input.classList.add('border-red-500');
-                errorEl.classList.remove('hidden');
+                if (errorEl) errorEl.classList.remove('hidden');
                 isValid = false;
             } else {
                 input.classList.remove('border-red-500');
-                errorEl.classList.add('hidden');
+                if (errorEl) errorEl.classList.add('hidden');
             }
         });
         return isValid;
@@ -1385,12 +1385,12 @@
         authLinksContainer.innerHTML = '';
         mobileNavLinks.innerHTML = '';
         
-        // Common links for mobile
         mobileNavLinks.innerHTML += `<a href="#" id="mobile-sell-link" class="text-lg" data-i18n-key="sell">${translations[currentLang].sell}</a>`;
         mobileNavLinks.innerHTML += `<a href="#" id="mobile-cart-link" class="text-lg relative">
             <span data-i18n-key="cart_title">${translations[currentLang].cart_title}</span>
             <span id="mobile-cart-count" class="absolute top-0 ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full hidden">0</span>
         </a>`;
+
         document.getElementById('mobile-sell-link').addEventListener('click', (e) => {
             e.preventDefault();
             DOMElements.mobileMenu.classList.add('hidden');
@@ -1403,30 +1403,28 @@
         });
 
         if (user) {
-            // Desktop UI
             const userMenuHTML = `
                 <div class="relative" id="user-menu">
                     <button id="user-menu-btn" class="flex items-center">
                         <img src="${user.photoURL}" alt="User" class="w-8 h-8 rounded-full">
                     </button>
                     <div id="user-menu-dropdown" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-lg shadow-lg py-1 hidden z-20">
-                        <a href="#" id="dashboard-link" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-600">${translations[currentLang].dashboard}</a>
-                        <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-600">${translations[currentLang].logout}</button>
+                        <a href="#" id="dashboard-link" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-600" data-i18n-key="dashboard">${translations[currentLang].dashboard}</a>
+                        <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-600" data-i18n-key="logout">${translations[currentLang].logout}</button>
                     </div>
                 </div>`;
             authLinksContainer.innerHTML = userMenuHTML;
 
-            // Mobile UI
-            mobileNavLinks.innerHTML += `<a href="#" id="mobile-dashboard-link" class="text-lg">${translations[currentLang].dashboard}</a>`;
-            mobileNavLinks.innerHTML += `<button id="mobile-logout-btn" class="text-lg text-left">${translations[currentLang].logout}</button>`;
+            mobileNavLinks.innerHTML += `<a href="#" id="mobile-dashboard-link" class="text-lg" data-i18n-key="dashboard">${translations[currentLang].dashboard}</a>`;
+            mobileNavLinks.innerHTML += `<button id="mobile-logout-btn" class="text-lg text-left" data-i18n-key="logout">${translations[currentLang].logout}</button>`;
 
-            // Event listeners for new elements
             document.getElementById('user-menu-btn').addEventListener('click', () => {
                 document.getElementById('user-menu-dropdown').classList.toggle('hidden');
             });
             document.getElementById('logout-btn').addEventListener('click', handleSignOut);
             document.getElementById('dashboard-link').addEventListener('click', (e) => {
                 e.preventDefault();
+                document.getElementById('user-menu-dropdown').classList.add('hidden');
                 renderView('dashboard');
             });
             document.getElementById('mobile-logout-btn').addEventListener('click', handleSignOut);
@@ -1437,21 +1435,18 @@
             });
 
         } else {
-            // Desktop UI
             authLinksContainer.innerHTML = `<button id="login-btn" class="px-4 py-2 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors" data-i18n-key="connect">${translations[currentLang].connect}</button>`;
             
-            // Mobile UI
             mobileNavLinks.innerHTML += `<button id="mobile-login-btn" class="text-lg text-left" data-i18n-key="connect">${translations[currentLang].connect}</button>`;
             
-            // Event listeners
             document.getElementById('login-btn').addEventListener('click', () => toggleModal(DOMElements.authModal, true));
             document.getElementById('mobile-login-btn').addEventListener('click', () => {
                  DOMElements.mobileMenu.classList.add('hidden');
                  toggleModal(DOMElements.authModal, true)
             });
         }
+        updateCartDisplay();
     };
-
 
     // SETUP & INITIALIZATION
     const setupEventListeners = () => {
@@ -1535,7 +1530,6 @@
             updateURLWithFilters({ search: searchInput.value }, true);
         }, 500));
         
-        // Mobile filters listeners
         mobileFiltersCloseBtn.addEventListener('click', () => mobileFiltersModal.classList.add('translate-x-full'));
         mobileApplyFiltersBtn.addEventListener('click', () => {
             const filterElements = DOMElements.mobileFiltersContent.querySelectorAll('select, input[type="range"]');
@@ -1549,7 +1543,6 @@
             mobileFiltersModal.classList.add('translate-x-full');
         });
 
-        // Close dropdowns when clicking outside
         document.addEventListener('click', (e) => {
             if (!langDropdownBtn.contains(e.target)) {
                 langDropdown.classList.add('hidden');
@@ -1560,7 +1553,6 @@
             }
         });
         
-        // Populate static form dropdowns
         populateSelect(DOMElements.postProductBrandSelect, car_data, 'select_brand', currentLang);
         populateSelect(DOMElements.postProductYearSelect, years, 'select_year', currentLang);
         populateSelect(DOMElements.postProductWilayaSelect, wilayas, 'select_wilaya', currentLang);
@@ -1583,7 +1575,6 @@
                 DOMElements.postProductCommuneSelect.disabled = true;
              }
         });
-
     };
 
     const bootApp = () => {
