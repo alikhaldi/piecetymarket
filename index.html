@@ -821,27 +821,33 @@
         });
     };
     
-    const updateURLWithFilters = (newParams = {}, replace = false) => {
-        const params = new URLSearchParams(window.location.search);
-        Object.keys(newParams).forEach(key => {
-            if (newParams[key]) {
-                params.set(key, newParams[key]);
-            } else {
-                params.delete(key);
+    const applyAndRenderFilters = () => {
+        const params = {};
+        const filtersContainer = document.getElementById('filters-content') || document;
+        
+        filtersContainer.querySelectorAll('.filter').forEach(el => {
+            const key = el.id.replace('-filter', '');
+            if(el.value) {
+                if (el.type === 'range' && el.value === el.max) return;
+                params[key] = el.value;
             }
         });
+        params.search = DOMElements.searchInput.value;
 
-        for(let [key, val] of params.entries()) {
-            if(!val) params.delete(key);
-        }
-        
-        const newUrl = params.toString() ? `${window.location.pathname}?${params}` : window.location.pathname;
-        if (replace) {
-            window.history.replaceState({path: newUrl}, '', newUrl);
-        } else {
-            window.history.pushState({path: newUrl}, '', newUrl);
-        }
-        renderHomePage();
+        // Update URL state without a full page reload
+        const newUrl = new URL(window.location);
+        Object.keys(params).forEach(key => {
+            if (params[key]) {
+                newUrl.searchParams.set(key, params[key]);
+            } else {
+                newUrl.searchParams.delete(key);
+            }
+        });
+        window.history.replaceState({path: newUrl.href}, '', newUrl.href);
+
+        // Re-filter and display products
+        const filtered = filterProducts(allProducts);
+        displayProducts(filtered, document.getElementById('listings-section'));
     };
 
     const applyFiltersFromURL = (container = document) => {
@@ -965,7 +971,13 @@
         });
         breadcrumbNav.querySelector('.category-crumb')?.addEventListener('click', (e) => {
             e.preventDefault();
-            updateURLWithFilters({ category: category, brand: null, model: null, year: null });
+            const newUrl = new URL(window.location);
+            newUrl.searchParams.set('category', category);
+            newUrl.searchParams.delete('brand');
+            newUrl.searchParams.delete('model');
+            newUrl.searchParams.delete('year');
+            window.history.pushState({path: newUrl.href}, '', newUrl.href);
+            renderHomePage();
         });
     };
 
@@ -989,7 +1001,10 @@
             `;
             card.addEventListener('click', (e) => {
                 e.preventDefault();
-                updateURLWithFilters({ category: key });
+                const newUrl = new URL(window.location);
+                newUrl.searchParams.set('category', key);
+                window.history.pushState({path: newUrl.href}, '', newUrl.href);
+                renderHomePage();
             });
             grid.appendChild(card);
         }
@@ -1015,7 +1030,11 @@
             `;
             card.addEventListener('click', (e) => {
                 e.preventDefault();
-                updateURLWithFilters({ category: category, brand: brandName });
+                const newUrl = new URL(window.location);
+                newUrl.searchParams.set('category', category);
+                newUrl.searchParams.set('brand', brandName);
+                window.history.pushState({path: newUrl.href}, '', newUrl.href);
+                renderHomePage();
             });
             grid.appendChild(card);
         }
@@ -1028,17 +1047,15 @@
 
         title.textContent = translations[currentLang].years_title;
         grid.innerHTML = '';
-        const params = new URLSearchParams(window.location.search);
-        const category = params.get('category');
-        const brand = params.get('brand');
-
+        
         years.forEach(year => {
             const card = document.createElement('button');
             card.className = "bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 text-center category-card font-semibold";
             card.textContent = year;
             card.addEventListener('click', () => {
-                document.getElementById('year-filter').value = year;
-                updateURLWithFilters({ category, brand, year }, true);
+                const yearFilter = document.getElementById('year-filter');
+                if(yearFilter) yearFilter.value = year;
+                applyAndRenderFilters();
                 document.getElementById('listings-section').scrollIntoView({ behavior: 'smooth' });
             });
             grid.appendChild(card);
@@ -1046,82 +1063,72 @@
     };
 
     const setupFilterListeners = (container = document) => {
+        const debouncedApplyAndRender = debounce(applyAndRenderFilters, 300);
+
+        // --- Specific Listeners for filters with special logic ---
         const brandFilter = container.querySelector('#brand-filter');
-        const modelFilterContainer = container.querySelector('#model-filter-container');
-        const modelFilter = container.querySelector('#model-filter');
-        const wilayaFilter = container.querySelector('#wilaya-filter');
-        const communeFilterContainer = container.querySelector('#commune-filter-container');
-        const communeFilter = container.querySelector('#commune-filter');
-        const priceFilter = container.querySelector('#price-range-filter');
-        const priceValue = container.querySelector('#price-range-value');
-        const resetBtn = container.querySelector('#filter-reset-btn');
-
-        // Populate dropdowns that don't depend on other filters
-        populateSelect(container.querySelector('#brand-filter'), car_data, 'all_brands', currentLang);
-        populateSelect(container.querySelector('#year-filter'), years, 'all_years', currentLang);
-        populateSelect(container.querySelector('#wilaya-filter'), wilayas, 'all_wilayas', currentLang);
-        populateSelect(container.querySelector('#category-filter'), categories, 'all_categories', currentLang, true);
-
-        const debouncedApplyFilters = debounce(() => {
-            const params = {};
-            container.querySelectorAll('.filter').forEach(el => {
-                const key = el.id.replace('-filter', '');
-                if(el.value) {
-                    if (el.type === 'range' && el.value === el.max) return;
-                    params[key] = el.value;
-                }
-            });
-            params.search = DOMElements.searchInput.value;
-            updateURLWithFilters(params, true);
-        }, 300);
-
-        // --- Specific Listeners for filters with side-effects ---
-        if (brandFilter) {
+        if(brandFilter) {
             brandFilter.addEventListener('change', () => {
+                const modelFilterContainer = container.querySelector('#model-filter-container');
+                const modelFilter = container.querySelector('#model-filter');
                 const selectedBrand = brandFilter.value;
                 if (selectedBrand && car_data[selectedBrand]) {
                     populateSelect(modelFilter, car_data[selectedBrand], 'all_models', currentLang);
                     modelFilterContainer.classList.remove('hidden');
                 } else {
                     modelFilterContainer.classList.add('hidden');
+                    if(modelFilter) modelFilter.value = '';
                 }
-                debouncedApplyFilters();
+                debouncedApplyAndRender();
             });
         }
         
-        if (wilayaFilter) {
+        const wilayaFilter = container.querySelector('#wilaya-filter');
+        if(wilayaFilter) {
             wilayaFilter.addEventListener('change', () => {
+                const communeFilterContainer = container.querySelector('#commune-filter-container');
+                const communeFilter = container.querySelector('#commune-filter');
                 const selectedWilaya = wilayaFilter.value;
                 if (selectedWilaya && wilayas[selectedWilaya]) {
                     populateSelect(communeFilter, wilayas[selectedWilaya], 'all_communes', currentLang);
                     communeFilterContainer.classList.remove('hidden');
                 } else {
                     communeFilterContainer.classList.add('hidden');
+                    if(communeFilter) communeFilter.value = '';
                 }
-                debouncedApplyFilters();
+                debouncedApplyAndRender();
             });
-        }
-
-        if (priceFilter) {
-            priceFilter.addEventListener('input', () => {
-                if(priceValue) priceValue.textContent = `${Number(priceFilter.value).toLocaleString()} DA`;
-            });
-            priceFilter.addEventListener('change', debouncedApplyFilters);
         }
         
+        const priceFilter = container.querySelector('#price-range-filter');
+        if (priceFilter) {
+            priceFilter.addEventListener('input', () => {
+                const priceValue = container.querySelector('#price-range-value');
+                if(priceValue) priceValue.textContent = `${Number(priceFilter.value).toLocaleString()} DA`;
+            });
+            priceFilter.addEventListener('change', debouncedApplyAndRender);
+        }
+
         // --- General Listener for all other simple filters ---
         container.querySelectorAll('.filter').forEach(el => {
             if (el.id !== 'brand-filter' && el.id !== 'wilaya-filter' && el.id !== 'price-range-filter') {
-                el.addEventListener('change', debouncedApplyFilters);
+                el.addEventListener('change', debouncedApplyAndRender);
             }
         });
         
+        const resetBtn = container.querySelector('#filter-reset-btn');
         if (resetBtn) {
             resetBtn.addEventListener('click', () => {
                 window.history.pushState({}, '', window.location.pathname);
                 renderView('home');
             });
         }
+
+        // --- Populate dropdowns ---
+        populateSelect(brandFilter, car_data, 'all_brands', currentLang);
+        populateSelect(container.querySelector('#year-filter'), years, 'all_years', currentLang);
+        populateSelect(wilayaFilter, wilayas, 'all_wilayas', currentLang);
+        populateSelect(container.querySelector('#category-filter'), categories, 'all_categories', currentLang, true);
     };
 
     const renderListings = () => {
@@ -1135,11 +1142,10 @@
             querySnapshot.forEach((doc) => {
                 allProducts.push({ id: doc.id, ...doc.data() });
             });
-            const filtered = filterProducts(allProducts);
-            displayProducts(filtered, listingsSection);
+            applyAndRenderFilters(); // Use the new function to filter and display
         }, (error) => {
             console.error("Error fetching products:", error);
-            listingsSection.innerHTML = `<p class="col-span-full text-center text-red-500">Error loading products.</p>`;
+            if(listingsSection) listingsSection.innerHTML = `<p class="col-span-full text-center text-red-500">Error loading products.</p>`;
         });
     };
     
@@ -1159,13 +1165,14 @@
             if (maxPrice && prod.price > maxPrice) return false;
             
             const searchTerm = p('search');
-            if (searchTerm && !(prod.title.toLowerCase().includes(searchTerm) || prod.description?.toLowerCase().includes(searchTerm))) return false;
+            if (searchTerm && !(prod.title.toLowerCase().includes(searchTerm) || (prod.description && prod.description.toLowerCase().includes(searchTerm)))) return false;
             
             return true;
         });
     };
 
     const displayProducts = (products, container) => {
+        if (!container) return;
         container.innerHTML = '';
         if (products.length === 0) {
             container.innerHTML = `<p class="col-span-full text-center p-8 text-lg text-gray-500" data-i18n-key="no_listings">${translations[currentLang].no_listings}</p>`;
@@ -1208,7 +1215,9 @@
             renderView('profile', { userId: product.sellerId, userName: product.sellerName });
         });
 
-        document.getElementById('back-to-listings-btn').addEventListener('click', () => renderView('home'));
+        document.getElementById('back-to-listings-btn').addEventListener('click', () => {
+            window.history.back();
+        });
         document.getElementById('add-to-cart-btn').addEventListener('click', () => addToCart(product));
         document.getElementById('contact-seller-btn').addEventListener('click', () => {
             if (!currentUser) { showMessage('login_required', 3000, 'error'); return; }
@@ -1236,8 +1245,10 @@
             summary.classList.remove('hidden');
             let totalPrice = 0;
             for (const item of cartItems) {
-                const product = allProducts.find(p => p.id === item.productId);
-                if (product) {
+                const docRef = doc(db, "products", item.productId);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const product = { id: docSnap.id, ...docSnap.data() };
                     totalPrice += product.price * item.quantity;
                     const itemEl = document.createElement('div');
                     itemEl.className = 'flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg';
@@ -1536,23 +1547,11 @@
             }
         });
 
-        searchInput.addEventListener('input', debounce(() => {
-            const params = { search: searchInput.value };
-            updateURLWithFilters(params, true);
-        }, 500));
+        searchInput.addEventListener('input', debounce(applyAndRenderFilters, 500));
         
         mobileFiltersCloseBtn.addEventListener('click', () => mobileFiltersModal.classList.add('translate-x-full'));
         mobileApplyFiltersBtn.addEventListener('click', () => {
-            const params = {};
-            DOMElements.mobileFiltersContent.querySelectorAll('.filter').forEach(el => {
-                const key = el.id.replace('-filter', '');
-                 if(el.value) {
-                    if (el.type === 'range' && el.value === el.max) return;
-                    params[key] = el.value;
-                }
-            });
-            params.search = searchInput.value;
-            updateURLWithFilters(params, true);
+            applyAndRenderFilters();
             mobileFiltersModal.classList.add('translate-x-full');
         });
 
@@ -1619,7 +1618,10 @@
             updateCartDisplay();
         });
         
-        window.addEventListener('popstate', () => renderView('home'));
+        window.addEventListener('popstate', () => {
+            // Re-render home and apply filters from URL when using back/forward buttons
+            renderView('home'); 
+        });
         renderView('home');
     };
 
