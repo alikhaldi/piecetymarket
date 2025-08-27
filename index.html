@@ -8,6 +8,7 @@
     
     <!-- PWA & SEO -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚗</text></svg>">
+    <!-- FIX: Path is now relative to the index.html file's location. -->
     <link rel="manifest" href="manifest.json">
     
     <!-- Fonts -->
@@ -621,16 +622,16 @@
         "Toyota": ["Yaris", "Corolla", "Camry", "Land Cruiser", "Hilux"], "Peugeot": ["208", "308", "301", "2008", "3008", "508"], "Volkswagen": ["Golf", "Polo", "Passat", "Tiguan", "Touareg", "Jetta"], "Renault": ["Clio", "Megane", "Captur", "Duster", "Symbol"], "Hyundai": ["i10", "i20", "Accent", "Tucson", "Santa Fe"], "Nissan": ["Micra", "Sentra", "Qashqai", "X-Trail", "Juke"], "Fiat": ["Panda", "500", "Tipo", "Punto"], "Citroën": ["C3", "C4", "Berlingo", "C-Elysée"], "Kia": ["Picanto", "Rio", "Sportage", "Sorento"], "Mercedes-Benz": ["A-Class", "C-Class", "E-Class", "GLA", "GLC"]
     };
      const brand_icons = {
-        "Toyota": "https://www.car-brand-names.com/wp-content/uploads/2015/05/Toyota-logo.png",
-        "Peugeot": "https://www.car-brand-names.com/wp-content/uploads/2015/05/Peugeot-logo.png",
-        "Volkswagen": "https://www.car-brand-names.com/wp-content/uploads/2015/05/Volkswagen-logo.png",
-        "Renault": "https://www.car-brand-names.com/wp-content/uploads/2015/05/Renault-logo.png",
-        "Hyundai": "https://www.car-brand-names.com/wp-content/uploads/2015/05/Hyundai-logo.png",
-        "Nissan": "https://www.car-brand-names.com/wp-content/uploads/2015/05/Nissan-logo.png",
-        "Fiat": "https://www.car-brand-names.com/wp-content/uploads/2015/05/Fiat-logo.png",
-        "Citroën": "https://www.car-brand-names.com/wp-content/uploads/2015/05/Citroen-logo.png",
-        "Kia": "https://www.car-brand-names.com/wp-content/uploads/2015/05/Kia-logo.png",
-        "Mercedes-Benz": "https://www.car-brand-names.com/wp-content/uploads/2015/05/Mercedes-Benz-logo.png"
+        "Toyota": "icons/toyota.png",
+        "Peugeot": "icons/peugeot.png",
+        "Volkswagen": "icons/volkswagen.png",
+        "Renault": "icons/renault.png",
+        "Hyundai": "icons/hyundai.png",
+        "Nissan": "icons/nissan.png",
+        "Fiat": "icons/fiat.png",
+        "Citroën": "icons/citroen.png",
+        "Kia": "icons/kia.png",
+        "Mercedes-Benz": "icons/mercedes.png"
     };
     const currentYear = new Date().getFullYear();
     const years = Array.from({length: currentYear - 1979}, (_, i) => (currentYear - i).toString());
@@ -959,7 +960,7 @@
             card.href = `?category=${category}&brand=${brandName}`;
             card.className = "bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 text-center category-card flex flex-col items-center justify-center";
             card.innerHTML = `
-                <img src="${brand_icons[brandName] || 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E❓%3C/text%3E%3C/svg%3E'}" alt="${brandName}" class="h-16 object-contain mb-2">
+                <img src="${brand_icons[brandName] || 'icons/car-192.png'}" alt="${brandName}" class="h-16 object-contain mb-2" onerror="this.onerror=null; this.src='icons/car-192.png'">
                 <h3 class="font-semibold text-sm md:text-base">${brandName}</h3>
             `;
             card.addEventListener('click', (e) => {
@@ -1114,4 +1115,3 @@
 </script>
 </body>
 </html>
-
