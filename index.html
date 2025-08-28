@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Piecety - Marché des Pièces Auto en Algérie</title>
     <meta name="description" content="Achetez et vendez des pièces automobiles en Algérie avec Piecety, le marché fiable pour les pièces neuves et d'occasion.">
-    <meta name="keywords" content="pièces auto, Algérie, marché automobile, Piecety, Hassi R'Mel">
+    <meta name="keywords" content="pièces auto, Algérie, marché automobile, Piecety">
 
     <meta property="og:title" content="Piecety - Marché des Pièces Auto en Algérie">
     <meta property="og:description" content="Trouvez des pièces auto neuves et d'occasion en Algérie sur Piecety.">
@@ -123,8 +123,7 @@
         <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter text-xl"></i></a>
     </div>
     <p class="text-sm font-light">
-        &copy; <span id="current-year"></span> Piecety - Marché des Pièces Auto en Algérie.<br>
-        <span class="text-xs" data-i18n-key="footer_location_text">Fièrement au service de Hassi R'Mel et de toute l'Algérie.</span>
+        &copy; <span id="current-year"></span> Piecety - Marché des Pièces Auto en Algérie.
     </p>
     <p class="text-xs mt-2 text-gray-400"><a href="#" class="hover:underline">Contact Us</a> | <a href="#" class="hover:underline">Terms of Service</a></p>
 </footer>
@@ -1228,7 +1227,7 @@
                 <div class="p-4">
                     <h3 class="font-bold text-lg truncate">${product.title}</h3>
                     <p class="text-blue-600 dark:text-blue-400 font-semibold text-xl my-2">${product.price.toLocaleString()} DA</p>
-                    <p class="text-sm text-gray-500 dark:text-gray-400"><i class="fas fa-map-marker-alt mr-1"></i> ${product.wilaya}, ${product.commune || ''}</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400"><i class="fas fa-map-marker-alt mr-1"></i> ${product.wilaya}${product.commune ? `, ${product.commune}` : ''}</p>
                 </div>
             `;
             card.addEventListener('click', () => renderView('product', product));
@@ -1456,6 +1455,8 @@
     };
 
     let firstVisibleMessage = null;
+    let messagesListener = null;
+
     const renderChatPage = async (chatData) => {
         if (!currentUser || !chatData) {
             renderView('home');
@@ -1464,7 +1465,6 @@
         
         const { chatId, otherUserName } = chatData;
         
-        // Mark messages as read when opening the chat
         const chatRef = doc(db, "chats", chatId);
         await updateDoc(chatRef, { [`unreadCount.${currentUser.uid}`]: 0 });
 
@@ -1478,7 +1478,9 @@
         const messagesRef = collection(db, "chats", chatId, "messages");
         const q = query(messagesRef, orderBy("timestamp", "desc"), limit(25));
 
-        onSnapshot(q, (snapshot) => {
+        if(messagesListener) messagesListener(); // Detach previous listener
+
+        messagesListener = onSnapshot(q, (snapshot) => {
             if (snapshot.empty) {
                 messagesContainer.innerHTML = '<p class="text-center text-gray-500">No messages yet. Say hi!</p>';
                 return;
@@ -1499,7 +1501,7 @@
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         });
 
-        messageForm.addEventListener('submit', async (e) => {
+        messageForm.onsubmit = async (e) => {
             e.preventDefault();
             const text = messageInput.value.trim();
             if (text) {
@@ -1517,7 +1519,7 @@
                     [`unreadCount.${otherUserId}`]: increment(1)
                 });
             }
-        });
+        };
     };
 
 
