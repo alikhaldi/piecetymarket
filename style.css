@@ -38,26 +38,24 @@ body {
     border-radius: 4px;
 }
 
+/* Improved Touch Feedback */
+button, a {
+  -webkit-tap-highlight-color: transparent;
+}
+
 /* Modal transitions */
 .modal {
     transition: opacity 0.3s ease, visibility 0.3s ease;
 }
-.modal.active {
-    opacity: 1;
-    visibility: visible;
-}
 
 /* Category Card Hover Effect */
-.category-card, .listing-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.category-card:hover, .listing-card:hover {
+.category-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
 
-.dark .category-card:hover, .dark .listing-card:hover {
-    box-shadow: 0 10px 15px rgba(255, 255, 255, 0.05);
+.dark .category-card:hover {
+    box-shadow: 0 10px 15px rgba(255, 255, 255, 0.1);
 }
 
 .category-card:hover .category-icon {
@@ -70,7 +68,7 @@ body {
 }
 
 /* Mobile menu improvements */
-#mobile-menu, #mobile-filters-modal {
+#mobile-menu {
     overflow-y: auto;
 }
 
@@ -89,10 +87,10 @@ body {
         font-size: 16px; /* Prevents zoom on iOS */
     }
     
-    /* Better grid for mobile */
+    /* Better, more responsive grid for mobile */
     #dynamic-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 12px;
     }
     
     .category-card {
@@ -105,6 +103,19 @@ body {
     }
 }
 
+/* Improve listing card on very small screens */
+@media (max-width: 480px) {
+  .listing-card {
+    flex-direction: column;
+    text-align: center;
+  }
+  .listing-card img {
+    width: 100%;
+    height: auto;
+  }
+}
+
+
 /* RTL support for Arabic */
 .rtl {
     text-align: right;
@@ -113,37 +124,10 @@ body {
     right: 12px;
     left: auto;
 }
-.rtl #search-input {
-    padding-left: 0.75rem;
-    padding-right: 2.5rem;
-}
-.rtl .logo svg {
-    margin-right: 0;
-    margin-left: 0.5rem;
-}
 
 /* Improve modal for mobile */
 @media (max-width: 640px) {
-    .modal > div {
-        width: 95%;
-        margin: 0 auto;
-    }
-    
     #post-product-modal .grid {
         grid-template-columns: 1fr;
     }
-}
-
-/* Mobile Filters Modal */
-#mobile-filters-modal {
-    transition: transform 0.3s ease-in-out;
-}
-#mobile-filters-modal.translate-x-full {
-    transform: translateX(100%);
-}
-.rtl #mobile-filters-modal.translate-x-full {
-    transform: translateX(-100%);
-}
-.rtl #mobile-filters-modal {
-    transform: translateX(0);
 }
