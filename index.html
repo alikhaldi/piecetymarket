@@ -45,7 +45,7 @@
 
         <div class="flex-1 mx-2 sm:mx-4 md:mx-8">
             <div class="relative">
-                <input id="search-input" type="text" placeholder="Rechercher..." class="w-full p-3 pl-10 rounded-full border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 shadow-inner" aria-label="Rechercher une pièce" />
+                <input id="search-input" type="text" class="w-full p-3 pl-10 rounded-full border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 shadow-inner" aria-label="Rechercher une pièce" />
                 <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
             </div>
         </div>
@@ -163,7 +163,7 @@
                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="product-title" class="block font-medium mb-1" data-i18n-key="ad_title_label">Titre de la pièce <span class="text-red-500">*</span></label>
-                        <input type="text" id="product-title" name="title" required placeholder="Ex: Disque de frein avant" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-describedby="title-error" />
+                        <input type="text" id="product-title" name="title" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-describedby="title-error" />
                         <p id="title-error" class="text-red-500 text-sm mt-1 hidden" role="alert" aria-live="assertive">Veuillez entrer un titre valide.</p>
                     </div>
                     <div>
@@ -218,13 +218,13 @@
                     </div>
                     <div>
                         <label for="product-price" class="block font-medium mb-1" data-i18n-key="price_label">Prix (DA) <span class="text-red-500">*</span></label>
-                        <input type="number" id="product-price" name="price" min="0" required placeholder="Ex: 15000" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-describedby="price-error" />
+                        <input type="number" id="product-price" name="price" min="0" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-describedby="price-error" />
                         <p id="price-error" class="text-red-500 text-sm mt-1 hidden" role="alert" aria-live="assertive">Veuillez entrer un prix valide.</p>
                     </div>
                 </div>
                 <div>
                     <label for="product-description" class="block font-medium mb-1" data-i18n-key="description_label">Description</label>
-                    <textarea id="product-description" name="description" rows="3" placeholder="Informations supplémentaires..." class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+                    <textarea id="product-description" name="description" rows="3" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
                 </div>
                 <div class="text-center">
                     <button type="submit" id="submit-ad-btn" class="mt-4 px-8 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md flex items-center justify-center disabled:bg-blue-400 disabled:cursor-not-allowed">
@@ -255,16 +255,17 @@
     </div>
 </div>
 
+<!-- View Templates -->
 <template id="home-view-template">
     <section class="text-center py-12 md:py-20 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl shadow-lg mb-8 md:mb-12">
-        <h1 class="text-3xl md:text-5xl font-extrabold mb-4" data-i18n-key="hero_title">Trouvez la bonne pièce pour votre voiture</h1>
-        <p class="text-lg md:text-xl font-light mb-8 max-w-3xl mx-auto" data-i18n-key="hero_subtitle">Le marché algérien des pièces automobiles le plus fiable.</p>
+        <h1 class="text-3xl md:text-5xl font-extrabold mb-4" data-i18n-key="hero_title"></h1>
+        <p class="text-lg md:text-xl font-light mb-8 max-w-3xl mx-auto" data-i18n-key="hero_subtitle"></p>
     </section>
 
     <section class="mb-8 md:mb-12" aria-labelledby="categories-title-heading">
         <div id="breadcrumb-nav" class="mb-4 text-sm text-gray-500 dark:text-gray-400"></div>
         <h2 id="categories-title-heading" class="text-2xl md:text-3xl font-bold mb-6 text-center"></h2>
-        <div id="dynamic-grid" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4 md:gap-6"></div>
+        <div id="dynamic-grid" class="grid gap-4 md:gap-6"></div>
     </section>
 
     <div class="flex flex-col md:flex-row gap-8">
@@ -275,7 +276,6 @@
         <section class="w-full md:w-3/4 lg:w-4/5">
              <div class="flex justify-between items-center mb-6">
                 <button id="show-filters-btn" class="md:hidden w-full px-6 py-3 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-md font-semibold hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200 shadow-md" data-i18n-key="show_filters">
-                    Afficher les filtres
                 </button>
             </div>
             <div id="listings-section" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
@@ -285,53 +285,44 @@
 </template>
 
 <template id="filters-template">
-    <h2 class="text-2xl font-bold mb-4" data-i18n-key="filters_title">Filtrer les annonces</h2>
+    <h2 class="text-2xl font-bold mb-4" data-i18n-key="filters_title"></h2>
     <div>
-        <label for="brand-filter" class="block text-sm font-medium" data-i18n-key="brand_label">Marque</label>
+        <label for="brand-filter" class="block text-sm font-medium" data-i18n-key="brand_label"></label>
         <select id="brand-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
-            <option value="" data-i18n-key="all_brands">Toutes les marques</option>
         </select>
     </div>
     <div id="model-filter-container" class="hidden">
-        <label for="model-filter" class="block text-sm font-medium" data-i18n-key="model_label">Modèle</label>
+        <label for="model-filter" class="block text-sm font-medium" data-i18n-key="model_label"></label>
         <select id="model-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
-            <option value="" data-i18n-key="all_models">Tous les modèles</option>
         </select>
     </div>
     <div>
-        <label for="year-filter" class="block text-sm font-medium" data-i18n-key="year_label">Année</label>
+        <label for="year-filter" class="block text-sm font-medium" data-i18n-key="year_label"></label>
         <select id="year-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
-            <option value="" data-i18n-key="all_years">Toutes années</option>
         </select>
     </div>
     <div>
-        <label for="wilaya-filter" class="block text-sm font-medium" data-i18n-key="wilaya_label">Wilaya</label>
+        <label for="wilaya-filter" class="block text-sm font-medium" data-i18n-key="wilaya_label"></label>
         <select id="wilaya-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
-            <option value="" data-i18n-key="all_wilayas">Toutes wilayas</option>
         </select>
     </div>
     <div id="commune-filter-container" class="hidden">
-        <label for="commune-filter" class="block text-sm font-medium" data-i18n-key="commune_label">Commune</label>
+        <label for="commune-filter" class="block text-sm font-medium" data-i18n-key="commune_label"></label>
         <select id="commune-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
-            <option value="" data-i18n-key="all_communes">Toutes communes</option>
         </select>
     </div>
     <div>
-        <label for="category-filter" class="block text-sm font-medium" data-i18n-key="category_label">Catégorie</label>
+        <label for="category-filter" class="block text-sm font-medium" data-i18n-key="category_label"></label>
         <select id="category-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
-             <option value="" data-i18n-key="all_categories">Toutes catégories</option>
         </select>
     </div>
     <div>
-        <label for="condition-filter" class="block text-sm font-medium" data-i18n-key="condition_label">État</label>
+        <label for="condition-filter" class="block text-sm font-medium" data-i18n-key="condition_label"></label>
         <select id="condition-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
-            <option value="" data-i18n-key="any_condition">Tout</option>
-            <option value="new" data-i18n-key="new">Neuf</option>
-            <option value="used" data-i18n-key="used">Occasion</option>
         </select>
     </div>
     <div>
-        <label for="price-range-filter" class="block text-sm font-medium" data-i18n-key="price_range">Gamme de prix</label>
+        <label for="price-range-filter" class="block text-sm font-medium" data-i18n-key="price_range"></label>
         <input type="range" id="price-range-filter" min="0" max="100000" step="1000" class="filter w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer">
         <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
             <span>0 DA</span>
@@ -341,7 +332,7 @@
     </div>
 
     <div class="mt-6 flex flex-col space-y-4">
-        <button id="filter-reset-btn" class="w-full px-6 py-3 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-md font-semibold hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors duration-200 shadow-md" data-i18n-key="reset">Réinitialiser</button>
+        <button id="filter-reset-btn" class="w-full px-6 py-3 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-md font-semibold hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors duration-200 shadow-md" data-i18n-key="reset"></button>
     </div>
 </template>
 
@@ -349,7 +340,7 @@
     <div id="product-detail" class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6 md:p-8">
         <button id="back-to-listings-btn" class="mb-4 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-semibold flex items-center">
             <i class="fas fa-arrow-left mr-2"></i>
-            <span data-i18n-key="back_to_listings">Retour aux annonces</span>
+            <span data-i18n-key="back_to_listings"></span>
         </button>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <img id="product-image-detail" src="" alt="" class="w-full h-80 md:h-96 object-cover rounded-lg shadow-md" />
@@ -357,22 +348,22 @@
                 <h2 id="product-title-detail" class="text-2xl md:text-3xl font-bold mb-2"></h2>
                 <p id="product-price-detail" class="text-blue-600 dark:text-blue-400 font-bold text-2xl mb-4"></p>
                 <div class="space-y-2 text-sm mb-6 border-t border-b dark:border-gray-700 py-4">
-                    <p><strong><span data-i18n-key="brand_label">Marque</span>:</strong> <span id="product-brand-detail"></span></p>
-                    <p><strong><span data-i18n-key="model_label">Modèle</span>:</strong> <span id="product-model-detail"></span></p>
-                    <p><strong><span data-i18n-key="year_label">Année</span>:</strong> <span id="product-year-detail"></span></p>
-                    <p><strong><span data-i18n-key="wilaya_label">Wilaya</span>:</strong> <span id="product-wilaya-detail"></span></p>
-                    <p><strong><span data-i18n-key="commune_label">Commune</span>:</strong> <span id="product-commune-detail"></span></p>
-                    <p><strong>Vendu par:</strong> <a href="#" id="seller-profile-link" class="text-blue-600 dark:text-blue-400 hover:underline"></a></p>
+                    <p><strong><span data-i18n-key="brand_label"></span>:</strong> <span id="product-brand-detail"></span></p>
+                    <p><strong><span data-i18n-key="model_label"></span>:</strong> <span id="product-model-detail"></span></p>
+                    <p><strong><span data-i18n-key="year_label"></span>:</strong> <span id="product-year-detail"></span></p>
+                    <p><strong><span data-i18n-key="wilaya_label"></span>:</strong> <span id="product-wilaya-detail"></span></p>
+                    <p><strong><span data-i18n-key="commune_label"></span>:</strong> <span id="product-commune-detail"></span></p>
+                    <p><strong data-i18n-key="sold_by"></strong> <a href="#" id="seller-profile-link" class="text-blue-600 dark:text-blue-400 hover:underline"></a></p>
                 </div>
                 <p id="product-description-detail" class="leading-relaxed mb-6"></p>
                 <div class="flex flex-col space-y-4">
                      <button id="add-to-cart-btn" class="w-full px-6 py-3 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition-colors duration-200 shadow-md flex items-center justify-center">
                         <i class="fas fa-cart-plus mr-2"></i>
-                        <span data-i18n-key="add_to_cart">Ajouter au panier</span>
+                        <span data-i18n-key="add_to_cart"></span>
                     </button>
                     <button id="contact-seller-btn" class="w-full px-6 py-3 bg-gray-600 text-white rounded-full font-semibold hover:bg-gray-700 transition-colors duration-200 shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center">
                         <i class="fas fa-comments mr-2"></i>
-                        <span data-i18n-key="contact_seller">Contacter le vendeur</span>
+                        <span data-i18n-key="contact_seller"></span>
                     </button>
                 </div>
             </div>
@@ -384,22 +375,21 @@
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 md:p-8">
         <button id="back-from-cart-btn" class="mb-4 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-semibold flex items-center">
             <i class="fas fa-arrow-left mr-2"></i>
-            <span data-i18n-key="back_to_listings">Retour aux annonces</span>
+            <span data-i18n-key="back_to_listings"></span>
         </button>
         <div class="flex justify-between items-center mb-6">
-             <h2 class="text-2xl md:text-3xl font-bold" data-i18n-key="cart_title">Mon panier</h2>
+             <h2 class="text-2xl md:text-3xl font-bold" data-i18n-key="cart_title"></h2>
              <button id="clear-cart-btn" class="px-4 py-2 bg-red-600 text-white text-sm rounded-md font-semibold hover:bg-red-700 transition-colors duration-200 shadow-md" data-i18n-key="clear_cart">
-                Vider le panier
             </button>
         </div>
         <div id="cart-items-container" class="space-y-4"></div>
         <div id="cart-summary" class="mt-8 pt-4 border-t border-gray-200 dark:border-gray-700">
             <p class="text-xl font-bold flex justify-between">
-                <span data-i18n-key="cart_total">Total</span>:
+                <span data-i18n-key="cart_total"></span>:
                 <span id="cart-total-price">0 DA</span>
             </p>
             <button id="checkout-btn" class="w-full mt-4 px-6 py-3 bg-green-600 text-white rounded-md font-semibold hover:bg-green-700 transition-colors duration-200 shadow-md">
-                <span data-i18n-key="checkout_btn">Passer à la caisse</span>
+                <span data-i18n-key="checkout_btn"></span>
             </button>
         </div>
     </div>
@@ -407,9 +397,9 @@
 
 <template id="dashboard-view-template">
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 md:p-8">
-        <h2 class="text-2xl md:text-3xl font-bold mb-6">Mon Tableau de Bord</h2>
+        <h2 class="text-2xl md:text-3xl font-bold mb-6" data-i18n-key="dashboard"></h2>
         <div id="dashboard-content">
-            <h3 class="text-xl font-semibold mb-4 border-b dark:border-gray-700 pb-2">Mes Annonces</h3>
+            <h3 class="text-xl font-semibold mb-4 border-b dark:border-gray-700 pb-2" data-i18n-key="my_listings"></h3>
             <div id="my-listings-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
         </div>
     </div>
@@ -420,33 +410,34 @@
         <div class="flex flex-col md:flex-row items-center md:items-start text-center md:text-left">
             <i class="fas fa-user-circle text-6xl md:text-8xl text-gray-300 md:mr-6 mb-4 md:mb-0"></i>
             <div>
-                <h2 id="profile-name" class="text-2xl md:text-3xl font-bold">Nom du vendeur</h2>
+                <h2 id="profile-name" class="text-2xl md:text-3xl font-bold"></h2>
                 <div id="profile-rating" class="flex items-center justify-center md:justify-start text-yellow-500 mt-2">
                     <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
-                    <span class="text-gray-600 dark:text-gray-400 ml-2 text-sm">(Avis bientôt disponibles)</span>
+                    <span class="text-gray-600 dark:text-gray-400 ml-2 text-sm" data-i18n-key="reviews_soon"></span>
                 </div>
             </div>
         </div>
         
         <div class="mt-8">
-            <h3 class="text-xl font-semibold mb-4 border-b dark:border-gray-700 pb-2">Annonces de ce vendeur</h3>
+            <h3 class="text-xl font-semibold mb-4 border-b dark:border-gray-700 pb-2" data-i18n-key="seller_listings"></h3>
             <div id="user-products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
         </div>
         
         <div class="mt-8">
-            <h3 class="text-xl font-semibold mb-4 border-b dark:border-gray-700 pb-2">Avis des acheteurs</h3>
+            <h3 class="text-xl font-semibold mb-4 border-b dark:border-gray-700 pb-2" data-i18n-key="buyer_reviews"></h3>
             <div id="user-reviews-list" class="space-y-4">
-                <p class="text-gray-500 dark:text-gray-400">La fonctionnalité d'avis sera bientôt disponible.</p>
+                <p class="text-gray-500 dark:text-gray-400" data-i18n-key="reviews_soon_2"></p>
             </div>
         </div>
     </div>
 </template>
 
+<!-- MESSAGING TEMPLATES -->
 <template id="inbox-view-template">
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 md:p-8">
-        <h2 class="text-2xl md:text-3xl font-bold mb-6">Messages</h2>
+        <h2 class="text-2xl md:text-3xl font-bold mb-6" data-i18n-key="messages"></h2>
         <div id="conversations-list" class="space-y-4">
-            <p id="inbox-loading" class="text-center text-gray-500">Loading conversations...</p>
+            <p id="inbox-loading" class="text-center text-gray-500" data-i18n-key="loading_convos"></p>
         </div>
     </div>
 </template>
@@ -457,14 +448,15 @@
             <button id="back-to-inbox-btn" class="mr-4 text-blue-600 dark:text-blue-400" aria-label="Back to Inbox">
                 <i class="fas fa-arrow-left"></i>
             </button>
-            <h2 id="chat-with-name" class="text-xl font-bold">Chat</h2>
+            <h2 id="chat-with-name" class="text-xl font-bold"></h2>
         </div>
         
         <div id="messages-container" class="flex-1 overflow-y-auto space-y-4 p-2 flex flex-col">
-            </div>
+            <!-- Messages will be dynamically inserted here -->
+        </div>
 
         <form id="send-message-form" class="mt-4 flex gap-4 border-t dark:border-gray-700 p-4 flex-shrink-0">
-            <input type="text" id="message-input" placeholder="Type a message..." class="flex-1 p-3 rounded-full border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            <input type="text" id="message-input" class="flex-1 p-3 rounded-full border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
             <button type="submit" class="bg-blue-600 text-white rounded-full w-12 h-12 flex-shrink-0 flex items-center justify-center" aria-label="Send Message">
                 <i class="fas fa-paper-plane"></i>
             </button>
@@ -509,6 +501,8 @@
     // Translations
     const translations = {
         fr: {
+            page_title: "Piecety - Marché des Pièces Auto en Algérie",
+            meta_description: "Achetez et vendez des pièces automobiles en Algérie avec Piecety, le marché fiable pour les pièces neuves et d'occasion.",
             fr_short: "FR", en_short: "EN", ar_short: "AR",
             menu: "Menu", sell: "Vendre", connect: "Se connecter", language: "Langue", logout: "Déconnexion", dashboard: "Tableau de Bord",
             hero_title: "Trouvez la bonne pièce pour votre voiture",
@@ -516,15 +510,11 @@
             categories_title: "Catégories de Pièces",
             brands_title: "Sélectionnez une Marque",
             years_title: "Sélectionnez une Année",
-            category_engine: "Moteur", category_brakes: "Freins", category_fuel_system: "Système de carburant",
-            category_cooling: "Refroidissement", category_tires: "Pneus & Jantes", category_electrical: "Électrique",
-            category_body: "Carrosserie", category_tools: "Outillage",
             filters_title: "Filtrer les annonces", all_brands: "Toutes les marques", all_models: "Tous les modèles",
             all_years: "Toutes années", all_wilayas: "Toutes wilayas", all_communes: "Toutes communes",
             condition: "État", any_condition: "Tout", new: "Neuf", used: "Occasion",
             apply_filters: "Appliquer les filtres", reset: "Réinitialiser",
             search_placeholder: "Rechercher une pièce...",
-            footer_location_text: "Fièrement au service de Hassi R'Mel et de toute l'Algérie.",
             submit_ad: "Soumettre une annonce rapide", ad_title_label: "Titre de la pièce", brand_label: "Marque",
             select_brand: "Sélectionnez une marque", model_label: "Modèle", select_model: "Sélectionnez un modèle",
             year_label: "Année", select_year: "Sélectionnez une année", wilaya_label: "Wilaya",
@@ -540,11 +530,15 @@
             login_required: "Veuillez vous connecter pour utiliser cette fonctionnalité.", dashboard_link_mobile: "Mon Tableau de Bord",
             show_filters: "Afficher les filtres", price_range: "Gamme de prix", all_categories: "Toutes catégories",
             category_label: "Catégorie", select_category: "Sélectionnez une catégorie", contact_seller: "Contacter le vendeur",
-            clear_cart: "Vider le panier", favorite_added: "Ajouté aux favoris", favorite_removed: "Retiré des favoris",
-            ad_posted: "Votre annonce a été publiée avec succès !", ad_post_failed: "Échec de la publication de l'annonce.",
+            clear_cart: "Vider le panier", ad_posted: "Votre annonce a été publiée avec succès !", ad_post_failed: "Échec de la publication de l'annonce.",
             item_added_to_cart: "Article ajouté au panier!", delete_ad_confirm: "Êtes-vous sûr de vouloir supprimer cette annonce ?",
+            sold_by: "Vendu par:", my_listings: "Mes Annonces", seller_listings: "Annonces de ce vendeur",
+            buyer_reviews: "Avis des acheteurs", reviews_soon: "(Avis bientôt disponibles)", reviews_soon_2: "La fonctionnalité d'avis sera bientôt disponible.",
+            messages: "Messages", loading_convos: "Chargement des conversations...", chat_with: "Chat avec"
         },
         en: {
+            page_title: "Piecety - Car Parts Marketplace in Algeria",
+            meta_description: "Buy and sell car parts in Algeria with Piecety, the reliable marketplace for new and used parts.",
             fr_short: "FR", en_short: "EN", ar_short: "AR",
             menu: "Menu", sell: "Sell", connect: "Log In", language: "Language", logout: "Logout", dashboard: "Dashboard",
             hero_title: "Find the right car part for your vehicle",
@@ -552,15 +546,11 @@
             categories_title: "Parts Categories",
             brands_title: "Select a Brand",
             years_title: "Select a Year",
-            category_engine: "Engine", category_brakes: "Brakes", category_fuel_system: "Fuel System",
-            category_cooling: "Cooling", category_tires: "Tires & Rims", category_electrical: "Electrical",
-            category_body: "Body", category_tools: "Tools",
             filters_title: "Filter Listings", all_brands: "All brands", all_models: "All models",
             all_years: "All years", all_wilayas: "All wilayas", all_communes: "All communes",
             condition: "Condition", any_condition: "Any", new: "New", used: "Used",
             apply_filters: "Apply Filters", reset: "Reset",
             search_placeholder: "Search for a part...",
-            footer_location_text: "Proudly serving Hassi R'Mel and all of Algeria.",
             submit_ad: "Submit a quick ad", ad_title_label: "Part Title", brand_label: "Brand",
             select_brand: "Select a brand", model_label: "Model", select_model: "Select a model",
             year_label: "Year", select_year: "Select a year", wilaya_label: "Wilaya",
@@ -576,11 +566,15 @@
             login_required: "Please log in to use this feature.", dashboard_link_mobile: "My Dashboard",
             show_filters: "Show Filters", price_range: "Price Range", all_categories: "All Categories",
             category_label: "Category", select_category: "Select a category", contact_seller: "Contact Seller",
-            clear_cart: "Clear Cart", favorite_added: "Added to favorites", favorite_removed: "Removed from favorites",
-            ad_posted: "Your ad has been posted successfully!", ad_post_failed: "Failed to post ad.",
+            clear_cart: "Clear Cart", ad_posted: "Your ad has been posted successfully!", ad_post_failed: "Failed to post ad.",
             item_added_to_cart: "Item added to cart!", delete_ad_confirm: "Are you sure you want to delete this ad?",
+            sold_by: "Sold by:", my_listings: "My Listings", seller_listings: "Listings from this seller",
+            buyer_reviews: "Buyer Reviews", reviews_soon: "(Reviews coming soon)", reviews_soon_2: "Review functionality will be available soon.",
+            messages: "Messages", loading_convos: "Loading conversations...", chat_with: "Chat with"
         },
         ar: {
+            page_title: "Piecety - سوق قطع غيار السيارات في الجزائر",
+            meta_description: "بيع وشراء قطع غيار السيارات في الجزائر مع Piecety، السوق الموثوق للقطع الجديدة والمستعملة.",
             fr_short: "FR", en_short: "EN", ar_short: "AR",
             menu: "القائمة", sell: "بيع", connect: "تسجيل الدخول", language: "اللغة", logout: "تسجيل الخروج", dashboard: "لوحة التحكم",
             hero_title: "ابحث عن قطعة الغيار المناسبة لسيارتك",
@@ -588,15 +582,11 @@
             categories_title: "فئات القطع",
             brands_title: "اختر ماركة",
             years_title: "اختر سنة",
-            category_engine: "محرك", category_brakes: "مكابح", category_fuel_system: "نظام الوقود",
-            category_cooling: "التبريد", category_tires: "الإطارات والعجلات", category_electrical: "كهربائي",
-            category_body: "هيكل", category_tools: "أدوات",
             filters_title: "تصفية الإعلانات", all_brands: "جميع الماركات", all_models: "جميع الموديلات",
             all_years: "جميع السنوات", all_wilayas: "جميع الولايات", all_communes: "جميع البلديات",
             condition: "الحالة", any_condition: "الكل", new: "جديد", used: "مستعمل",
             apply_filters: "تطبيق الفلاتر", reset: "إعادة تعيين",
             search_placeholder: "ابحث عن قطعة...",
-            footer_location_text: "بكل فخر في خدمة حاسي الرمل و كل الجزائر.",
             submit_ad: "إرسال إعلان سريع", ad_title_label: "عنوان القطعة", brand_label: "الماركة",
             select_brand: "اختر ماركة", model_label: "الموديل", select_model: "اختر موديل",
             year_label: "السنة", select_year: "اختر سنة", wilaya_label: "الولاية",
@@ -612,9 +602,11 @@
             login_required: "يرجى تسجيل الدخول لاستخدام هذه الميزة.", dashboard_link_mobile: "لوحة التحكم",
             show_filters: "إظهار الفلاتر", price_range: "نطاق السعر", all_categories: "جميع الفئات",
             category_label: "الفئة", select_category: "اختر فئة", contact_seller: "اتصل بالبائع",
-            clear_cart: "إفراغ السلة", favorite_added: "أضيفت إلى المفضلة", favorite_removed: "أزيلت من المفضلة",
-            ad_posted: "تم نشر إعلانك بنجاح!", ad_post_failed: "فشل نشر الإعلان.",
+            clear_cart: "إفراغ السلة", ad_posted: "تم نشر إعلانك بنجاح!", ad_post_failed: "فشل نشر الإعلان.",
             item_added_to_cart: "تمت إضافة المنتج إلى السلة!", delete_ad_confirm: "هل أنت متأكد من أنك تريد حذف هذا الإعلان؟",
+            sold_by: "البائع:", my_listings: "إعلاناتي", seller_listings: "إعلانات من هذا البائع",
+            buyer_reviews: "تقييمات المشترين", reviews_soon: "(التقييمات قريبا)", reviews_soon_2: "ميزة التقييم ستكون متاحة قريبا.",
+            messages: "الرسائل", loading_convos: "جاري تحميل المحادثات...", chat_with: "محادثة مع"
         }
     };
 
@@ -822,37 +814,46 @@
     };
 
     const updateTitle = (view, data = null) => {
-        let title = "Piecety";
-        if (view === 'product-detail' && data) title = `Piecety - ${data.title}`;
-        else if (view === 'cart') title = "Piecety - Mon Panier";
-        else if (view === 'dashboard') title = "Piecety - Mon Tableau de Bord";
-        else if (view === 'profile' && data) title = `Piecety - Profil de ${data.userName}`;
-        document.title = title;
+        let titleKey = "page_title";
+        if (view === 'cart') titleKey = "cart_title";
+        else if (view === 'dashboard') titleKey = "dashboard";
+        else if (view === 'inbox' || view === 'chat') titleKey = "messages";
+        
+        document.title = translations[currentLang][titleKey] || "Piecety";
+        document.querySelector('meta[name="description"]').setAttribute("content", translations[currentLang]["meta_description"]);
     };
 
     const translatePage = (lang) => {
-        const { currentLangSpan, body, searchInput } = DOMElements;
-        if (currentLangSpan) currentLangSpan.textContent = translations[lang][lang + "_short"];
-        if (body) {
-            if (lang === "ar") {
-                body.setAttribute("dir", "rtl");
-                body.classList.add("rtl");
-            } else {
-                body.setAttribute("dir", "ltr");
-                body.classList.remove("rtl");
-            }
+        const { html, currentLangSpan, searchInput } = DOMElements;
+        
+        // Set page direction
+        if (lang === "ar") {
+            html.setAttribute("dir", "rtl");
+            html.setAttribute("lang", "ar");
+        } else {
+            html.setAttribute("dir", "ltr");
+            html.setAttribute("lang", lang);
         }
-        searchInput.placeholder = translations[lang].search_placeholder;
+
+        // Update static text and placeholders
+        if (currentLangSpan) currentLangSpan.textContent = translations[lang][lang + "_short"];
+        
         document.querySelectorAll("[data-i18n-key]").forEach(el => {
-            const key = el.getAttribute("data-i18n-key");
+            const key = el.dataset.i18nKey;
             if (translations[lang] && translations[lang][key]) {
-                 if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-                    // This handles placeholders, but we do searchInput separately for simplicity
-                } else {
-                    el.innerHTML = translations[lang][key];
-                }
+                el.innerHTML = translations[lang][key];
             }
         });
+
+        document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+            const key = el.dataset.i18nPlaceholder;
+            if (translations[lang] && translations[lang][key]) {
+                el.placeholder = translations[lang][key];
+            }
+        });
+
+        // Manually update search input placeholder
+        searchInput.placeholder = translations[lang].search_placeholder;
     };
 
     const populateSelect = (selectEl, options, defaultLabelKey, lang, valueAsKey = false) => {
@@ -1258,7 +1259,8 @@
         if (!container) return;
         if (!append) container.innerHTML = '';
         if (docs.length === 0 && !append) {
-            container.innerHTML = `<p class="col-span-full text-center p-8 text-lg text-gray-500" data-i18n-key="no_listings">${translations[currentLang].no_listings}</p>`;
+            container.innerHTML = `<p class="col-span-full text-center p-8 text-lg text-gray-500" data-i18n-key="no_listings"></p>`;
+            translatePage(currentLang);
             return;
         }
         docs.forEach(doc => {
@@ -1321,8 +1323,9 @@
         const cartItems = Object.values(userCart);
 
         if (cartItems.length === 0) {
-            container.innerHTML = `<p class="text-center p-8 text-lg text-gray-500" data-i18n-key="your_cart_is_empty">${translations[currentLang].your_cart_is_empty}</p>`;
+            container.innerHTML = `<p class="text-center p-8 text-lg text-gray-500" data-i18n-key="your_cart_is_empty"></p>`;
             summary.classList.add('hidden');
+            translatePage(currentLang);
             return;
         } 
         
@@ -1498,7 +1501,6 @@
     };
 
     let messagesListener = null;
-    let firstVisibleMessage = null;
 
     const renderChatPage = async (chatData) => {
         if (!currentUser || !chatData) {
@@ -1511,7 +1513,7 @@
         const chatRef = doc(db, "chats", chatId);
         await updateDoc(chatRef, { [`unreadCount.${currentUser.uid}`]: 0 });
 
-        document.getElementById('chat-with-name').textContent = `Chat with ${otherUserName}`;
+        document.getElementById('chat-with-name').textContent = `${translations[currentLang].chat_with} ${otherUserName}`;
         document.getElementById('back-to-inbox-btn').addEventListener('click', () => renderView('inbox'));
 
         const messagesContainer = document.getElementById('messages-container');
@@ -1636,9 +1638,9 @@
         authLinksContainer.innerHTML = '';
         mobileNavLinks.innerHTML = '';
         
-        mobileNavLinks.innerHTML += `<a href="#" id="mobile-sell-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg" data-i18n-key="sell">${translations[currentLang].sell}</a>`;
+        mobileNavLinks.innerHTML += `<a href="#" id="mobile-sell-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg" data-i18n-key="sell"></a>`;
         mobileNavLinks.innerHTML += `<a href="#" id="mobile-cart-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg relative">
-            <span data-i18n-key="cart_title">${translations[currentLang].cart_title}</span>
+            <span data-i18n-key="cart_title"></span>
             <span id="mobile-cart-count" class="absolute top-0 ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full hidden">0</span>
         </a>`;
 
@@ -1660,16 +1662,16 @@
                         <img src="${user.photoURL}" alt="User" class="w-8 h-8 rounded-full">
                     </button>
                     <div id="user-menu-dropdown" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-lg shadow-lg py-1 hidden z-20">
-                        <a href="#" id="dashboard-link" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-600" data-i18n-key="dashboard">${translations[currentLang].dashboard}</a>
-                        <a href="#" id="messages-link" class="relative block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-600">Messages <span id="unread-badge" class="hidden absolute right-2 top-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"></span></a>
-                        <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-600" data-i18n-key="logout">${translations[currentLang].logout}</button>
+                        <a href="#" id="dashboard-link" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-600" data-i18n-key="dashboard"></a>
+                        <a href="#" id="messages-link" class="relative block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-600" data-i18n-key="messages"><span id="unread-badge" class="hidden absolute right-2 top-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"></span></a>
+                        <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-600" data-i18n-key="logout"></button>
                     </div>
                 </div>`;
             authLinksContainer.innerHTML = userMenuHTML;
 
-            mobileNavLinks.innerHTML += `<a href="#" id="mobile-dashboard-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg" data-i18n-key="dashboard">${translations[currentLang].dashboard}</a>`;
-            mobileNavLinks.innerHTML += `<a href="#" id="mobile-messages-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg relative">Messages <span id="mobile-unread-badge" class="hidden absolute top-0 ml-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"></span></a>`;
-            mobileNavLinks.innerHTML += `<button id="mobile-logout-btn" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg text-left" data-i18n-key="logout">${translations[currentLang].logout}</button>`;
+            mobileNavLinks.innerHTML += `<a href="#" id="mobile-dashboard-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg" data-i18n-key="dashboard"></a>`;
+            mobileNavLinks.innerHTML += `<a href="#" id="mobile-messages-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg relative"><span data-i18n-key="messages"></span> <span id="mobile-unread-badge" class="hidden absolute top-0 ml-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"></span></a>`;
+            mobileNavLinks.innerHTML += `<button id="mobile-logout-btn" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg text-left" data-i18n-key="logout"></button>`;
 
             document.getElementById('user-menu-btn').addEventListener('click', () => {
                 document.getElementById('user-menu-dropdown').classList.toggle('hidden');
@@ -1698,9 +1700,9 @@
             });
 
         } else {
-            authLinksContainer.innerHTML = `<button id="login-btn" class="px-4 py-2 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors" data-i18n-key="connect">${translations[currentLang].connect}</button>`;
+            authLinksContainer.innerHTML = `<button id="login-btn" class="px-4 py-2 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors" data-i18n-key="connect"></button>`;
             
-            mobileNavLinks.innerHTML += `<button id="mobile-login-btn" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg text-left" data-i18n-key="connect">${translations[currentLang].connect}</button>`;
+            mobileNavLinks.innerHTML += `<button id="mobile-login-btn" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg text-left" data-i18n-key="connect"></button>`;
             
             document.getElementById('login-btn').addEventListener('click', () => toggleModal(DOMElements.authModal, true));
             document.getElementById('mobile-login-btn').addEventListener('click', () => {
@@ -1709,6 +1711,7 @@
             });
         }
         updateCartDisplay();
+        translatePage(currentLang);
     };
 
     const listenForUnreadMessages = (user) => {
@@ -1874,6 +1877,13 @@
                 DOMElements.postProductCommuneSelect.disabled = true;
              }
         });
+
+        // Bottom Nav Listeners
+        document.getElementById('nav-home').addEventListener('click', (e) => { e.preventDefault(); renderView('home'); });
+        document.getElementById('nav-search').addEventListener('click', (e) => { e.preventDefault(); DOMElements.searchInput.focus(); });
+        document.getElementById('nav-sell').addEventListener('click', (e) => { e.preventDefault(); DOMElements.sellLink.click(); });
+        document.getElementById('nav-messages').addEventListener('click', (e) => { e.preventDefault(); renderView('inbox'); });
+        document.getElementById('nav-profile').addEventListener('click', (e) => { e.preventDefault(); if(currentUser) { renderView('dashboard'); } else { toggleModal(DOMElements.authModal, true); } });
     };
 
     const bootApp = () => {
