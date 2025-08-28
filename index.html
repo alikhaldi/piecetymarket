@@ -255,6 +255,7 @@
                 </button>
             </div>
             <div id="listings-section" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+            <div id="load-more-container" class="text-center mt-8"></div>
         </section>
     </div>
 </template>
@@ -462,6 +463,8 @@
     let userCart = {};
     let productsUnsubscribe = null;
     let chatsUnsubscribe = null;
+    let lastVisibleProduct = null;
+    let isFetching = false;
 
     // Firebase Configuration
     const firebaseConfig = {
@@ -876,8 +879,7 @@
         });
         window.history.replaceState({path: newUrl.href}, '', newUrl.href);
 
-        const filtered = filterProducts(allProducts);
-        displayProducts(filtered, document.getElementById('listings-section'));
+        renderListings();
     };
 
 
@@ -1172,54 +1174,72 @@
         populateSelect(container.querySelector('#category-filter'), categories, 'all_categories', currentLang, true);
     };
 
-    const renderListings = () => {
+    const renderListings = (loadMore = false) => {
         const listingsSection = document.getElementById('listings-section');
-        if (!listingsSection) return;
-        listingsSection.innerHTML = `<div class="col-span-full text-center p-8"><i class="fas fa-spinner fa-spin text-3xl text-blue-500"></i></div>`;
-        
-        const q = query(collection(db, "products"));
-        productsUnsubscribe = onSnapshot(q, (querySnapshot) => {
-            allProducts = [];
-            querySnapshot.forEach((doc) => {
-                allProducts.push({ id: doc.id, ...doc.data() });
-            });
-            applyAndRenderFilters(); 
-        }, (error) => {
-            console.error("Error fetching products:", error);
-            if(listingsSection) listingsSection.innerHTML = `<p class="col-span-full text-center text-red-500">Error loading products.</p>`;
-        });
-    };
-    
-    const filterProducts = (products) => {
+        const loadMoreContainer = document.getElementById('load-more-container');
+        if (!listingsSection || isFetching) return;
+
+        isFetching = true;
+        if (!loadMore) {
+            listingsSection.innerHTML = `<div class="col-span-full text-center p-8"><i class="fas fa-spinner fa-spin text-3xl text-blue-500"></i></div>`;
+            lastVisibleProduct = null; 
+        }
+        if (loadMoreContainer) loadMoreContainer.innerHTML = '';
+
         const params = new URLSearchParams(window.location.search);
-        const p = (key) => params.get(key)?.toLowerCase() || '';
+        const productsRef = collection(db, "products");
+        
+        let q = query(productsRef); // Start with a base query
 
-        return products.filter(prod => {
-            if (p('category') && prod.category !== p('category')) return false;
-            if (p('brand') && prod.brand.toLowerCase() !== p('brand')) return false;
-            if (p('model') && prod.model?.toLowerCase() !== p('model')) return false;
-            if (p('year') && prod.year?.toString() !== p('year')) return false;
-            if (p('wilaya') && prod.wilaya.toLowerCase() !== p('wilaya')) return false;
-            if (p('commune') && prod.commune?.toLowerCase() !== p('commune')) return false;
-            if (p('condition') && prod.condition !== p('condition')) return false;
-            const maxPrice = Number(params.get('price'));
-            if (maxPrice && prod.price > maxPrice) return false;
-            
-            const searchTerm = p('search');
-            if (searchTerm && !(prod.title.toLowerCase().includes(searchTerm) || (prod.description && prod.description.toLowerCase().includes(searchTerm)))) return false;
-            
-            return true;
+        // Build the query with filters
+        if (params.get('category')) q = query(q, where("category", "==", params.get('category')));
+        if (params.get('brand')) q = query(q, where("brand", "==", params.get('brand')));
+        if (params.get('year')) q = query(q, where("year", "==", params.get('year')));
+        if (params.get('wilaya')) q = query(q, where("wilaya", "==", params.get('wilaya')));
+        if (params.get('condition')) q = query(q, where("condition", "==", params.get('condition')));
+        // Add default sorting
+        q = query(q, orderBy("createdAt", "desc"));
+
+        // Add pagination
+        if (loadMore && lastVisibleProduct) {
+            q = query(q, startAfter(lastVisibleProduct));
+        }
+        q = query(q, limit(12));
+
+        getDocs(q).then(querySnapshot => {
+            if (!loadMore) listingsSection.innerHTML = '';
+
+            if (querySnapshot.empty && !loadMore) {
+                listingsSection.innerHTML = `<p class="col-span-full text-center p-8 text-lg text-gray-500" data-i18n-key="no_listings">${translations[currentLang].no_listings}</p>`;
+            } else {
+                displayProducts(querySnapshot.docs, listingsSection, loadMore);
+                lastVisibleProduct = querySnapshot.docs[querySnapshot.docs.length - 1];
+
+                if (querySnapshot.docs.length === 12 && loadMoreContainer) {
+                    const loadMoreBtn = document.createElement('button');
+                    loadMoreBtn.textContent = "Load More";
+                    loadMoreBtn.className = "px-6 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors";
+                    loadMoreBtn.onclick = () => renderListings(true);
+                    loadMoreContainer.appendChild(loadMoreBtn);
+                }
+            }
+            isFetching = false;
+        }).catch(error => {
+            console.error("Error fetching products:", error);
+            listingsSection.innerHTML = `<p class="col-span-full text-center text-red-500">Error loading products.</p>`;
+            isFetching = false;
         });
     };
 
-    const displayProducts = (products, container) => {
+    const displayProducts = (docs, container, append = false) => {
         if (!container) return;
-        container.innerHTML = '';
-        if (products.length === 0) {
+        if (!append) container.innerHTML = '';
+        if (docs.length === 0 && !append) {
             container.innerHTML = `<p class="col-span-full text-center p-8 text-lg text-gray-500" data-i18n-key="no_listings">${translations[currentLang].no_listings}</p>`;
             return;
         }
-        products.forEach(product => {
+        docs.forEach(doc => {
+            const product = { id: doc.id, ...doc.data() };
             const card = document.createElement('div');
             card.className = "listing-card bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden cursor-pointer";
             card.innerHTML = `
@@ -1273,7 +1293,7 @@
         }
         const container = document.getElementById('cart-items-container');
         const summary = document.getElementById('cart-summary');
-        container.innerHTML = '';
+        container.innerHTML = `<div class="text-center p-8"><i class="fas fa-spinner fa-spin text-3xl text-blue-500"></i></div>`;
 
         const cartItems = Object.values(userCart);
 
@@ -1380,7 +1400,7 @@
         const userProducts = [];
         querySnapshot.forEach(doc => userProducts.push({ id: doc.id, ...doc.data() }));
         
-        displayProducts(userProducts, grid);
+        displayProducts(userProducts.map(p => doc({ id: p.id, ...p })), grid);
     };
 
     const startOrOpenChat = async (sellerId, sellerName) => {
@@ -1454,7 +1474,6 @@
         });
     };
 
-    let firstVisibleMessage = null;
     let messagesListener = null;
 
     const renderChatPage = async (chatData) => {
@@ -1478,7 +1497,7 @@
         const messagesRef = collection(db, "chats", chatId, "messages");
         const q = query(messagesRef, orderBy("timestamp", "desc"), limit(25));
 
-        if(messagesListener) messagesListener(); // Detach previous listener
+        if(messagesListener) messagesListener();
 
         messagesListener = onSnapshot(q, (snapshot) => {
             if (snapshot.empty) {
@@ -1486,8 +1505,6 @@
                 return;
             }
             
-            firstVisibleMessage = snapshot.docs[snapshot.docs.length - 1];
-
             messagesContainer.innerHTML = '';
             snapshot.docs.reverse().forEach(doc => {
                 const msg = doc.data();
