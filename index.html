@@ -43,11 +43,12 @@
             Piecety
         </a>
 
-        <div class="flex-1 mx-2 sm:mx-4 md:mx-8">
+        <div class="flex-1 mx-2 sm:mx-4 md:mx-8 relative">
             <div class="relative">
-                <input id="search-input" type="text" class="w-full p-3 pl-10 rounded-full border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 shadow-inner" aria-label="Rechercher une pièce" />
+                <input id="search-input" type="text" class="w-full p-3 pl-10 rounded-full border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 shadow-inner" data-i18n-placeholder="search_placeholder" aria-label="Search for parts" />
                 <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
             </div>
+            <div id="search-suggestions" class="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-700 rounded-lg shadow-lg z-20 hidden"></div>
         </div>
 
         <nav class="hidden md:flex items-center space-x-2 lg:space-x-4" role="navigation" aria-label="Main navigation">
@@ -66,7 +67,7 @@
             <button id="dark-mode-toggle" class="p-3 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none" aria-label="Toggle Dark Mode">
                 <i class="fas fa-moon text-xl"></i>
             </button>
-            <a href="#" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors duration-200 px-3 py-2" data-i18n-key="sell" id="sell-link">Vendre</a>
+            <a href="#" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors duration-200 px-3 py-2" data-i18n-key="sell" id="sell-link"></a>
             
             <button id="cart-btn" class="relative p-3 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none" aria-label="Shopping Cart">
                 <i class="fas fa-shopping-cart text-xl"></i>
@@ -84,14 +85,14 @@
 
 <div id="mobile-menu" class="fixed inset-0 bg-white dark:bg-gray-900 z-40 hidden flex-col p-6 space-y-4 md:hidden" role="dialog" aria-modal="true" aria-labelledby="mobile-menu-label">
     <div class="flex justify-between items-center">
-        <h2 id="mobile-menu-label" class="text-2xl font-bold text-blue-600 dark:text-blue-400" data-i18n-key="menu">Menu</h2>
+        <h2 id="mobile-menu-label" class="text-2xl font-bold text-blue-600 dark:text-blue-400" data-i18n-key="menu"></h2>
         <button id="mobile-menu-close-btn" class="p-3 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400" aria-label="Close menu">
             <i class="fas fa-times text-2xl"></i>
         </button>
     </div>
     <div id="mobile-nav-links" class="flex flex-col space-y-2"></div>
     <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
-        <h3 class="text-lg font-semibold text-gray-600 dark:text-gray-300" data-i18n-key="language">Langue</h3>
+        <h3 class="text-lg font-semibold text-gray-600 dark:text-gray-300" data-i18n-key="language"></h3>
         <div class="flex space-x-4 mt-2">
             <button class="p-2 border dark:border-gray-600 rounded-md text-sm font-medium lang-btn" data-lang="fr">Français</button>
             <button class="p-2 border dark:border-gray-600 rounded-md text-sm font-medium lang-btn" data-lang="en">English</button>
@@ -102,14 +103,14 @@
 
 <div id="mobile-filters-modal" class="fixed top-0 right-0 h-full w-full max-w-md bg-white dark:bg-gray-900 z-[60] shadow-xl p-6 transform translate-x-full md:hidden">
     <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold" data-i18n-key="filters_title">Filtrer les annonces</h2>
+        <h2 class="text-2xl font-bold" data-i18n-key="filters_title"></h2>
         <button id="mobile-filters-close-btn" class="p-2" aria-label="Close filters">
             <i class="fas fa-times text-2xl"></i>
         </button>
     </div>
     <div id="mobile-filters-content" class="h-[calc(100%-100px)] overflow-y-auto"></div>
     <div class="absolute bottom-0 left-0 w-full p-4 bg-white dark:bg-gray-900 border-t dark:border-gray-700">
-        <button id="mobile-apply-filters-btn" class="w-full px-6 py-3 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md" data-i18n-key="apply_filters">Appliquer les filtres</button>
+        <button id="mobile-apply-filters-btn" class="w-full px-6 py-3 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md" data-i18n-key="apply_filters"></button>
     </div>
 </div>
 
@@ -131,24 +132,24 @@
 <nav id="bottom-nav" class="fixed bottom-0 w-full bg-white dark:bg-gray-800 shadow-lg flex justify-around py-2 md:hidden z-50 border-t dark:border-gray-700">
     <a href="#" id="nav-home" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" aria-label="Home">
         <i class="fas fa-home text-xl"></i>
-        <span class="text-xs">Home</span>
+        <span class="text-xs" data-i18n-key="nav_home"></span>
     </a>
     <a href="#" id="nav-search" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" aria-label="Search">
         <i class="fas fa-search text-xl"></i>
-        <span class="text-xs">Search</span>
+        <span class="text-xs" data-i18n-key="nav_search"></span>
     </a>
     <a href="#" id="nav-sell" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" aria-label="Sell">
         <i class="fas fa-plus-circle text-xl"></i>
-        <span class="text-xs">Sell</span>
+        <span class="text-xs" data-i18n-key="sell"></span>
     </a>
     <a href="#" id="nav-messages" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors relative" aria-label="Messages">
         <i class="fas fa-comments text-xl"></i>
-        <span class="text-xs">Messages</span>
+        <span class="text-xs" data-i18n-key="messages"></span>
         <span id="nav-unread-badge" class="hidden absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center text-[10px]"></span>
     </a>
     <a href="#" id="nav-profile" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" aria-label="Profile">
         <i class="fas fa-user-circle text-xl"></i>
-        <span class="text-xs">Profile</span>
+        <span class="text-xs" data-i18n-key="nav_profile"></span>
     </a>
 </nav>
 
@@ -158,77 +159,69 @@
             <button id="modal-close-btn" class="absolute top-4 right-4 text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 focus:outline-none" aria-label="Close form">
                 <i class="fas fa-times text-2xl"></i>
             </button>
-            <h3 id="modal-title" class="text-2xl font-bold mb-6 text-center" data-i18n-key="submit_ad">Soumettre une annonce rapide</h3>
+            <h3 id="modal-title" class="text-2xl font-bold mb-6 text-center" data-i18n-key="submit_ad"></h3>
             <form id="post-product-form" class="space-y-4" novalidate>
                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label for="product-title" class="block font-medium mb-1" data-i18n-key="ad_title_label">Titre de la pièce <span class="text-red-500">*</span></label>
-                        <input type="text" id="product-title" name="title" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-describedby="title-error" />
-                        <p id="title-error" class="text-red-500 text-sm mt-1 hidden" role="alert" aria-live="assertive">Veuillez entrer un titre valide.</p>
+                        <label for="product-title" class="block font-medium mb-1" data-i18n-key="ad_title_label"></label>
+                        <input type="text" id="product-title" name="title" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" data-i18n-placeholder="ad_title_placeholder" aria-describedby="title-error" />
+                        <p id="title-error" class="text-red-500 text-sm mt-1 hidden" role="alert" aria-live="assertive" data-i18n-key="error_valid_title"></p>
                     </div>
                     <div>
-                        <label for="product-brand" class="block font-medium mb-1" data-i18n-key="brand_label">Marque <span class="text-red-500">*</span></label>
+                        <label for="product-brand" class="block font-medium mb-1" data-i18n-key="brand_label"></label>
                         <select id="product-brand" name="brand" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-describedby="brand-error">
-                            <option value="" data-i18n-key="select_brand">Sélectionnez une marque</option>
                         </select>
-                        <p id="brand-error" class="text-red-500 text-sm mt-1 hidden" role="alert" aria-live="assertive">Veuillez sélectionner une marque.</p>
+                        <p id="brand-error" class="text-red-500 text-sm mt-1 hidden" role="alert" aria-live="assertive" data-i18n-key="error_select_brand"></p>
                     </div>
                     <div>
-                        <label for="product-model" class="block font-medium mb-1" data-i18n-key="model_label">Modèle</label>
+                        <label for="product-model" class="block font-medium mb-1" data-i18n-key="model_label"></label>
                         <select id="product-model" name="model" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" disabled>
-                            <option value="" data-i18n-key="select_model">Sélectionnez un modèle</option>
                         </select>
                     </div>
                     <div>
-                        <label for="product-year" class="block font-medium mb-1" data-i18n-key="year_label">Année</label>
+                        <label for="product-year" class="block font-medium mb-1" data-i18n-key="year_label"></label>
                         <select id="product-year" name="year" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="" data-i18n-key="select_year">Sélectionnez une année</option>
                         </select>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label for="product-wilaya" class="block font-medium mb-1" data-i18n-key="wilaya_label">Wilaya <span class="text-red-500">*</span></label>
+                        <label for="product-wilaya" class="block font-medium mb-1" data-i18n-key="wilaya_label"></label>
                         <select id="product-wilaya" name="wilaya" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-describedby="wilaya-error">
-                            <option value="" data-i18n-key="select_wilaya">Sélectionnez une wilaya</option>
                         </select>
-                        <p id="wilaya-error" class="text-red-500 text-sm mt-1 hidden" role="alert" aria-live="assertive">Veuillez sélectionner une wilaya.</p>
+                        <p id="wilaya-error" class="text-red-500 text-sm mt-1 hidden" role="alert" aria-live="assertive" data-i18n-key="error_select_wilaya"></p>
                     </div>
                     <div>
-                        <label for="product-commune" class="block font-medium mb-1" data-i18n-key="commune_label">Commune</label>
+                        <label for="product-commune" class="block font-medium mb-1" data-i18n-key="commune_label"></label>
                         <select id="product-commune" name="commune" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" disabled>
-                            <option value="" data-i18n-key="select_commune">Sélectionnez une commune</option>
                         </select>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                        <label for="product-category" class="block font-medium mb-1" data-i18n-key="category_label">Catégorie <span class="text-red-500">*</span></label>
+                        <label for="product-category" class="block font-medium mb-1" data-i18n-key="category_label"></label>
                         <select id="product-category" name="category" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-describedby="category-error">
-                             <option value="" data-i18n-key="select_category">Sélectionnez une catégorie</option>
                         </select>
-                        <p id="category-error" class="text-red-500 text-sm mt-1 hidden" role="alert" aria-live="assertive">Veuillez sélectionner une catégorie.</p>
+                        <p id="category-error" class="text-red-500 text-sm mt-1 hidden" role="alert" aria-live="assertive" data-i18n-key="error_select_category"></p>
                     </div>
                     <div>
-                        <label for="product-condition" class="block font-medium mb-1" data-i18n-key="condition_label">État</label>
+                        <label for="product-condition" class="block font-medium mb-1" data-i18n-key="condition_label"></label>
                         <select id="product-condition" name="condition" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="new" data-i18n-key="new">Neuf</option>
-                            <option value="used" data-i18n-key="used">Occasion</option>
                         </select>
                     </div>
                     <div>
-                        <label for="product-price" class="block font-medium mb-1" data-i18n-key="price_label">Prix (DA) <span class="text-red-500">*</span></label>
-                        <input type="number" id="product-price" name="price" min="0" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-describedby="price-error" />
-                        <p id="price-error" class="text-red-500 text-sm mt-1 hidden" role="alert" aria-live="assertive">Veuillez entrer un prix valide.</p>
+                        <label for="product-price" class="block font-medium mb-1" data-i18n-key="price_label"></label>
+                        <input type="number" id="product-price" name="price" min="0" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" data-i18n-placeholder="price_placeholder" aria-describedby="price-error" />
+                        <p id="price-error" class="text-red-500 text-sm mt-1 hidden" role="alert" aria-live="assertive" data-i18n-key="error_valid_price"></p>
                     </div>
                 </div>
                 <div>
-                    <label for="product-description" class="block font-medium mb-1" data-i18n-key="description_label">Description</label>
-                    <textarea id="product-description" name="description" rows="3" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+                    <label for="product-description" class="block font-medium mb-1" data-i18n-key="description_label"></label>
+                    <textarea id="product-description" name="description" rows="3" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" data-i18n-placeholder="description_placeholder"></textarea>
                 </div>
                 <div class="text-center">
                     <button type="submit" id="submit-ad-btn" class="mt-4 px-8 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md flex items-center justify-center disabled:bg-blue-400 disabled:cursor-not-allowed">
-                        <span class="btn-text" data-i18n-key="submit_ad_btn_text">Soumettre</span>
+                        <span class="btn-text" data-i18n-key="submit_ad_btn_text"></span>
                         <svg class="animate-spin ml-3 h-5 w-5 text-white hidden btn-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -244,18 +237,17 @@
         <button id="auth-modal-close-btn" class="absolute top-4 right-4 text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 focus:outline-none" aria-label="Close login form">
             <i class="fas fa-times text-2xl"></i>
         </button>
-        <h3 id="auth-modal-title" class="text-2xl font-bold mb-6 text-center" data-i18n-key="connect">Se connecter</h3>
+        <h3 id="auth-modal-title" class="text-2xl font-bold mb-6 text-center" data-i18n-key="connect"></h3>
         <div class="space-y-4">
-            <p class="text-center text-gray-600 dark:text-gray-400" data-i18n-key="login_text">Connectez-vous pour accéder à toutes les fonctionnalités.</p>
+            <p class="text-center text-gray-600 dark:text-gray-400" data-i18n-key="login_text"></p>
             <button id="google-login-btn" class="w-full flex items-center justify-center px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-full text-gray-700 dark:text-gray-200 font-semibold hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200 shadow-sm">
                 <i class="fab fa-google text-xl mr-2"></i>
-                <span data-i18n-key="google_login">Se connecter avec Google</span>
+                <span data-i18n-key="google_login"></span>
             </button>
         </div>
     </div>
 </div>
 
-<!-- View Templates -->
 <template id="home-view-template">
     <section class="text-center py-12 md:py-20 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl shadow-lg mb-8 md:mb-12">
         <h1 class="text-3xl md:text-5xl font-extrabold mb-4" data-i18n-key="hero_title"></h1>
@@ -266,6 +258,11 @@
         <div id="breadcrumb-nav" class="mb-4 text-sm text-gray-500 dark:text-gray-400"></div>
         <h2 id="categories-title-heading" class="text-2xl md:text-3xl font-bold mb-6 text-center"></h2>
         <div id="dynamic-grid" class="grid gap-4 md:gap-6"></div>
+    </section>
+    
+    <section id="recently-viewed-section" class="mb-8 md:mb-12 hidden">
+        <h2 class="text-2xl md:text-3xl font-bold mb-6" data-i18n-key="recently_viewed"></h2>
+        <div id="recently-viewed-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
     </section>
 
     <div class="flex flex-col md:flex-row gap-8">
@@ -432,7 +429,6 @@
     </div>
 </template>
 
-<!-- MESSAGING TEMPLATES -->
 <template id="inbox-view-template">
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 md:p-8">
         <h2 class="text-2xl md:text-3xl font-bold mb-6" data-i18n-key="messages"></h2>
@@ -452,11 +448,10 @@
         </div>
         
         <div id="messages-container" class="flex-1 overflow-y-auto space-y-4 p-2 flex flex-col">
-            <!-- Messages will be dynamically inserted here -->
-        </div>
+            </div>
 
         <form id="send-message-form" class="mt-4 flex gap-4 border-t dark:border-gray-700 p-4 flex-shrink-0">
-            <input type="text" id="message-input" class="flex-1 p-3 rounded-full border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            <input type="text" id="message-input" class="flex-1 p-3 rounded-full border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" required data-i18n-placeholder="type_message_placeholder">
             <button type="submit" class="bg-blue-600 text-white rounded-full w-12 h-12 flex-shrink-0 flex items-center justify-center" aria-label="Send Message">
                 <i class="fas fa-paper-plane"></i>
             </button>
@@ -475,12 +470,13 @@
     let currentUser = null;
     let currentLang = localStorage.getItem("piecety_lang") || "fr";
     let currentView = 'home';
-    let allProducts = [];
     let userCart = {};
     let productsUnsubscribe = null;
     let chatsUnsubscribe = null;
     let lastVisibleProduct = null;
     let isFetching = false;
+    let allProductsCache = []; // For search autocomplete
+    let recentlyViewed = JSON.parse(localStorage.getItem('piecety_recently_viewed')) || [];
 
     // Firebase Configuration
     const firebaseConfig = {
@@ -505,6 +501,7 @@
             meta_description: "Achetez et vendez des pièces automobiles en Algérie avec Piecety, le marché fiable pour les pièces neuves et d'occasion.",
             fr_short: "FR", en_short: "EN", ar_short: "AR",
             menu: "Menu", sell: "Vendre", connect: "Se connecter", language: "Langue", logout: "Déconnexion", dashboard: "Tableau de Bord",
+            nav_home: "Accueil", nav_search: "Recherche", nav_profile: "Profil",
             hero_title: "Trouvez la bonne pièce pour votre voiture",
             hero_subtitle: "Le marché algérien des pièces automobiles le plus fiable.",
             categories_title: "Catégories de Pièces",
@@ -515,32 +512,40 @@
             condition: "État", any_condition: "Tout", new: "Neuf", used: "Occasion",
             apply_filters: "Appliquer les filtres", reset: "Réinitialiser",
             search_placeholder: "Rechercher une pièce...",
-            submit_ad: "Soumettre une annonce rapide", ad_title_label: "Titre de la pièce", brand_label: "Marque",
-            select_brand: "Sélectionnez une marque", model_label: "Modèle", select_model: "Sélectionnez un modèle",
-            year_label: "Année", select_year: "Sélectionnez une année", wilaya_label: "Wilaya",
-            select_wilaya: "Sélectionnez une wilaya", commune_label: "Commune", select_commune: "Sélectionnez une commune",
-            condition_label: "État", price_label: "Prix (DA)", description_label: "Description",
-            image_label: "Image", submit_ad_btn_text: "Soumettre", loading_text: "Envoi...",
+            submit_ad: "Soumettre une annonce", ad_title_label: "Titre de la pièce *", ad_title_placeholder: "Ex: Disque de frein avant",
+            brand_label: "Marque *", select_brand: "Sélectionnez une marque",
+            model_label: "Modèle", select_model: "Sélectionnez un modèle",
+            year_label: "Année", select_year: "Sélectionnez une année",
+            wilaya_label: "Wilaya *", select_wilaya: "Sélectionnez une wilaya",
+            commune_label: "Commune", select_commune: "Sélectionnez une commune",
+            condition_label: "État", price_label: "Prix (DA) *", price_placeholder: "Ex: 15000",
+            description_label: "Description", description_placeholder: "Informations supplémentaires...",
+            submit_ad_btn_text: "Soumettre", loading_text: "Envoi...",
+            error_valid_title: "Veuillez entrer un titre valide.", error_select_brand: "Veuillez sélectionner une marque.",
+            error_select_wilaya: "Veuillez sélectionner une wilaya.", error_select_category: "Veuillez sélectionner une catégorie.",
+            error_valid_price: "Veuillez entrer un prix valide.",
             login_text: "Connectez-vous pour accéder à toutes les fonctionnalités.", google_login: "Se connecter avec Google",
             back_to_listings: "Retour aux annonces", add_to_cart: "Ajouter au panier",
             cart_title: "Mon panier", cart_total: "Total", checkout_btn: "Passer à la caisse",
             no_listings: "Aucune annonce trouvée.",
             your_cart_is_empty: "Votre panier est vide.",
             remove: "Supprimer", quantity: "Quantité", item_total: "Total de l'article",
-            login_required: "Veuillez vous connecter pour utiliser cette fonctionnalité.", dashboard_link_mobile: "Mon Tableau de Bord",
+            login_required: "Veuillez vous connecter pour utiliser cette fonctionnalité.",
             show_filters: "Afficher les filtres", price_range: "Gamme de prix", all_categories: "Toutes catégories",
-            category_label: "Catégorie", select_category: "Sélectionnez une catégorie", contact_seller: "Contacter le vendeur",
+            category_label: "Catégorie *", select_category: "Sélectionnez une catégorie", contact_seller: "Contacter le vendeur",
             clear_cart: "Vider le panier", ad_posted: "Votre annonce a été publiée avec succès !", ad_post_failed: "Échec de la publication de l'annonce.",
             item_added_to_cart: "Article ajouté au panier!", delete_ad_confirm: "Êtes-vous sûr de vouloir supprimer cette annonce ?",
             sold_by: "Vendu par:", my_listings: "Mes Annonces", seller_listings: "Annonces de ce vendeur",
             buyer_reviews: "Avis des acheteurs", reviews_soon: "(Avis bientôt disponibles)", reviews_soon_2: "La fonctionnalité d'avis sera bientôt disponible.",
-            messages: "Messages", loading_convos: "Chargement des conversations...", chat_with: "Chat avec"
+            messages: "Messages", loading_convos: "Chargement des conversations...", chat_with: "Chat avec", type_message_placeholder: "Écrire un message...",
+            recently_viewed: "Récemment consultés"
         },
         en: {
             page_title: "Piecety - Car Parts Marketplace in Algeria",
             meta_description: "Buy and sell car parts in Algeria with Piecety, the reliable marketplace for new and used parts.",
             fr_short: "FR", en_short: "EN", ar_short: "AR",
             menu: "Menu", sell: "Sell", connect: "Log In", language: "Language", logout: "Logout", dashboard: "Dashboard",
+            nav_home: "Home", nav_search: "Search", nav_profile: "Profile",
             hero_title: "Find the right car part for your vehicle",
             hero_subtitle: "The most trusted Algerian car parts marketplace.",
             categories_title: "Parts Categories",
@@ -551,32 +556,40 @@
             condition: "Condition", any_condition: "Any", new: "New", used: "Used",
             apply_filters: "Apply Filters", reset: "Reset",
             search_placeholder: "Search for a part...",
-            submit_ad: "Submit a quick ad", ad_title_label: "Part Title", brand_label: "Brand",
-            select_brand: "Select a brand", model_label: "Model", select_model: "Select a model",
-            year_label: "Year", select_year: "Select a year", wilaya_label: "Wilaya",
-            select_wilaya: "Select a wilaya", commune_label: "Commune", select_commune: "Select a commune",
-            condition_label: "Condition", price_label: "Price (DA)", description_label: "Description",
-            image_label: "Image", submit_ad_btn_text: "Submit", loading_text: "Submitting...",
+            submit_ad: "Submit an Ad", ad_title_label: "Part Title *", ad_title_placeholder: "e.g., Front brake disc",
+            brand_label: "Brand *", select_brand: "Select a brand",
+            model_label: "Model", select_model: "Select a model",
+            year_label: "Year", select_year: "Select a year",
+            wilaya_label: "State *", select_wilaya: "Select a state",
+            commune_label: "City", select_commune: "Select a city",
+            condition_label: "Condition", price_label: "Price (DA) *", price_placeholder: "e.g., 15000",
+            description_label: "Description", description_placeholder: "Additional information...",
+            submit_ad_btn_text: "Submit", loading_text: "Submitting...",
+            error_valid_title: "Please enter a valid title.", error_select_brand: "Please select a brand.",
+            error_select_wilaya: "Please select a state.", error_select_category: "Please select a category.",
+            error_valid_price: "Please enter a valid price.",
             login_text: "Log in to access all features.", google_login: "Sign in with Google",
             back_to_listings: "Back to listings", add_to_cart: "Add to cart",
             cart_title: "My Cart", cart_total: "Total", checkout_btn: "Proceed to Checkout",
             no_listings: "No listings found.",
             your_cart_is_empty: "Your cart is empty.",
             remove: "Remove", quantity: "Quantity", item_total: "Item Total",
-            login_required: "Please log in to use this feature.", dashboard_link_mobile: "My Dashboard",
+            login_required: "Please log in to use this feature.",
             show_filters: "Show Filters", price_range: "Price Range", all_categories: "All Categories",
-            category_label: "Category", select_category: "Select a category", contact_seller: "Contact Seller",
+            category_label: "Category *", select_category: "Select a category", contact_seller: "Contact Seller",
             clear_cart: "Clear Cart", ad_posted: "Your ad has been posted successfully!", ad_post_failed: "Failed to post ad.",
             item_added_to_cart: "Item added to cart!", delete_ad_confirm: "Are you sure you want to delete this ad?",
             sold_by: "Sold by:", my_listings: "My Listings", seller_listings: "Listings from this seller",
             buyer_reviews: "Buyer Reviews", reviews_soon: "(Reviews coming soon)", reviews_soon_2: "Review functionality will be available soon.",
-            messages: "Messages", loading_convos: "Loading conversations...", chat_with: "Chat with"
+            messages: "Messages", loading_convos: "Loading conversations...", chat_with: "Chat with", type_message_placeholder: "Type a message...",
+            recently_viewed: "Recently Viewed"
         },
         ar: {
             page_title: "Piecety - سوق قطع غيار السيارات في الجزائر",
             meta_description: "بيع وشراء قطع غيار السيارات في الجزائر مع Piecety، السوق الموثوق للقطع الجديدة والمستعملة.",
             fr_short: "FR", en_short: "EN", ar_short: "AR",
             menu: "القائمة", sell: "بيع", connect: "تسجيل الدخول", language: "اللغة", logout: "تسجيل الخروج", dashboard: "لوحة التحكم",
+            nav_home: "الرئيسية", nav_search: "بحث", nav_profile: "ملفي",
             hero_title: "ابحث عن قطعة الغيار المناسبة لسيارتك",
             hero_subtitle: "أكثر أسواق قطع غيار السيارات ثقة في الجزائر.",
             categories_title: "فئات القطع",
@@ -587,26 +600,33 @@
             condition: "الحالة", any_condition: "الكل", new: "جديد", used: "مستعمل",
             apply_filters: "تطبيق الفلاتر", reset: "إعادة تعيين",
             search_placeholder: "ابحث عن قطعة...",
-            submit_ad: "إرسال إعلان سريع", ad_title_label: "عنوان القطعة", brand_label: "الماركة",
-            select_brand: "اختر ماركة", model_label: "الموديل", select_model: "اختر موديل",
-            year_label: "السنة", select_year: "اختر سنة", wilaya_label: "الولاية",
-            select_wilaya: "اختر ولاية", commune_label: "البلدية", select_commune: "اختر بلدية",
-            condition_label: "الحالة", price_label: "السعر (دج)", description_label: "الوصف",
-            image_label: "الصورة", submit_ad_btn_text: "إرسال", loading_text: "جار الإرسال...",
+            submit_ad: "إرسال إعلان", ad_title_label: "عنوان القطعة *", ad_title_placeholder: "مثال: قرص فرامل أمامي",
+            brand_label: "الماركة *", select_brand: "اختر ماركة",
+            model_label: "الموديل", select_model: "اختر موديل",
+            year_label: "السنة", select_year: "اختر سنة",
+            wilaya_label: "الولاية *", select_wilaya: "اختر ولاية",
+            commune_label: "البلدية", select_commune: "اختر بلدية",
+            condition_label: "الحالة", price_label: "السعر (دج) *", price_placeholder: "مثال: 15000",
+            description_label: "الوصف", description_placeholder: "معلومات إضافية...",
+            submit_ad_btn_text: "إرسال", loading_text: "جار الإرسال...",
+            error_valid_title: "الرجاء إدخال عنوان صالح.", error_select_brand: "الرجاء اختيار ماركة.",
+            error_select_wilaya: "الرجاء اختيار ولاية.", error_select_category: "الرجاء اختيار فئة.",
+            error_valid_price: "الرجاء إدخال سعر صالح.",
             login_text: "تسجيل الدخول للوصول إلى جميع الميزات.", google_login: "تسجيل الدخول باستخدام Google",
             back_to_listings: "العودة إلى الإعلانات", add_to_cart: "أضف إلى السلة",
             cart_title: "سلة التسوق", cart_total: "الإجمالي", checkout_btn: "الدفع",
             no_listings: "لم يتم العثور على إعلانات.",
             your_cart_is_empty: "سلة التسوق فارغة.",
             remove: "حذف", quantity: "الكمية", item_total: "إجمالي السلعة",
-            login_required: "يرجى تسجيل الدخول لاستخدام هذه الميزة.", dashboard_link_mobile: "لوحة التحكم",
+            login_required: "يرجى تسجيل الدخول لاستخدام هذه الميزة.",
             show_filters: "إظهار الفلاتر", price_range: "نطاق السعر", all_categories: "جميع الفئات",
-            category_label: "الفئة", select_category: "اختر فئة", contact_seller: "اتصل بالبائع",
+            category_label: "الفئة *", select_category: "اختر فئة", contact_seller: "اتصل بالبائع",
             clear_cart: "إفراغ السلة", ad_posted: "تم نشر إعلانك بنجاح!", ad_post_failed: "فشل نشر الإعلان.",
             item_added_to_cart: "تمت إضافة المنتج إلى السلة!", delete_ad_confirm: "هل أنت متأكد من أنك تريد حذف هذا الإعلان؟",
             sold_by: "البائع:", my_listings: "إعلاناتي", seller_listings: "إعلانات من هذا البائع",
             buyer_reviews: "تقييمات المشترين", reviews_soon: "(التقييمات قريبا)", reviews_soon_2: "ميزة التقييم ستكون متاحة قريبا.",
-            messages: "الرسائل", loading_convos: "جاري تحميل المحادثات...", chat_with: "محادثة مع"
+            messages: "الرسائل", loading_convos: "جاري تحميل المحادثات...", chat_with: "محادثة مع", type_message_placeholder: "اكتب رسالة...",
+            recently_viewed: "شوهدت مؤخرا"
         }
     };
 
@@ -807,10 +827,11 @@
         currentLang = lang;
         localStorage.setItem("piecety_lang", lang);
         translatePage(lang);
-        if (currentView === 'home') {
-            renderHomePage(); 
+        updateTitle(currentView); // Update title after language change
+        // Re-render current view to apply language to dynamic elements
+        if (currentView) {
+            renderView(currentView);
         }
-        updateAuthUI(currentUser);
     };
 
     const updateTitle = (view, data = null) => {
@@ -824,9 +845,8 @@
     };
 
     const translatePage = (lang) => {
-        const { html, currentLangSpan, searchInput } = DOMElements;
+        const { html, currentLangSpan } = DOMElements;
         
-        // Set page direction
         if (lang === "ar") {
             html.setAttribute("dir", "rtl");
             html.setAttribute("lang", "ar");
@@ -835,7 +855,6 @@
             html.setAttribute("lang", lang);
         }
 
-        // Update static text and placeholders
         if (currentLangSpan) currentLangSpan.textContent = translations[lang][lang + "_short"];
         
         document.querySelectorAll("[data-i18n-key]").forEach(el => {
@@ -851,10 +870,8 @@
                 el.placeholder = translations[lang][key];
             }
         });
-
-        // Manually update search input placeholder
-        searchInput.placeholder = translations[lang].search_placeholder;
     };
+
 
     const populateSelect = (selectEl, options, defaultLabelKey, lang, valueAsKey = false) => {
         if (!selectEl) return;
@@ -998,6 +1015,8 @@
             renderPartCategories();
         }
         
+        renderRecentlyViewed();
+
         const setupFilters = (container) => {
             container.innerHTML = document.getElementById('filters-template').content.cloneNode(true).innerHTML;
             setupFilterListeners(container);
@@ -1216,7 +1235,6 @@
         
         let q = query(productsRef);
 
-        // Build the query with server-side filters
         if (params.get('category')) q = query(q, where("category", "==", params.get('category')));
         if (params.get('brand')) q = query(q, where("brand", "==", params.get('brand')));
         if (params.get('year')) q = query(q, where("year", "==", params.get('year')));
@@ -1234,20 +1252,21 @@
             if (!loadMore) listingsSection.innerHTML = '';
 
             if (querySnapshot.empty && !loadMore) {
-                listingsSection.innerHTML = `<p class="col-span-full text-center p-8 text-lg text-gray-500" data-i18n-key="no_listings">${translations[currentLang].no_listings}</p>`;
+                listingsSection.innerHTML = `<p class="col-span-full text-center p-8 text-lg text-gray-500" data-i18n-key="no_listings"></p>`;
             } else {
                 displayProducts(querySnapshot.docs, listingsSection, loadMore);
                 lastVisibleProduct = querySnapshot.docs[querySnapshot.docs.length - 1];
 
                 if (querySnapshot.docs.length === 12 && loadMoreContainer) {
                     const loadMoreBtn = document.createElement('button');
-                    loadMoreBtn.textContent = "Load More";
                     loadMoreBtn.className = "px-6 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors";
+                    loadMoreBtn.setAttribute('data-i18n-key', 'load_more');
                     loadMoreBtn.onclick = () => renderListings(true);
                     loadMoreContainer.appendChild(loadMoreBtn);
                 }
             }
             isFetching = false;
+            translatePage(currentLang);
         }).catch(error => {
             console.error("Error fetching products:", error);
             listingsSection.innerHTML = `<p class="col-span-full text-center text-red-500">Error loading products.</p>`;
@@ -1260,28 +1279,46 @@
         if (!append) container.innerHTML = '';
         if (docs.length === 0 && !append) {
             container.innerHTML = `<p class="col-span-full text-center p-8 text-lg text-gray-500" data-i18n-key="no_listings"></p>`;
-            translatePage(currentLang);
             return;
         }
         docs.forEach(doc => {
             const product = { id: doc.id, ...doc.data() };
             const card = document.createElement('div');
-            card.className = "listing-card bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden cursor-pointer";
+            card.className = "listing-card bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex flex-col";
+            const isMyProduct = currentUser && currentUser.uid === product.sellerId;
             card.innerHTML = `
-                <img src="${product.imageUrl || 'https://via.placeholder.com/300x200.png?text=Piecety'}" alt="${product.title}" class="w-full h-40 object-cover">
-                <div class="p-4">
-                    <h3 class="font-bold text-lg truncate">${product.title}</h3>
+                <div class="relative">
+                    <img src="${product.imageUrl || 'https://via.placeholder.com/300x200.png?text=Piecety'}" alt="${product.title}" class="w-full h-40 object-cover cursor-pointer product-image">
+                </div>
+                <div class="p-4 flex flex-col flex-grow">
+                    <h3 class="font-bold text-lg truncate product-title cursor-pointer">${product.title}</h3>
                     <p class="text-blue-600 dark:text-blue-400 font-semibold text-xl my-2">${product.price.toLocaleString()} DA</p>
-                    <p class="text-sm text-gray-500 dark:text-gray-400"><i class="fas fa-map-marker-alt mr-1"></i> ${product.wilaya}${product.commune ? `, ${product.commune}` : ''}</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4"><i class="fas fa-map-marker-alt mr-1"></i> ${product.wilaya}${product.commune ? `, ${product.commune}` : ''}</p>
+                    <div class="mt-auto">
+                        ${!isMyProduct ? `<button class="w-full flex items-center justify-center gap-2 px-3 py-2 bg-gray-100 dark:bg-gray-700 text-sm rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 chat-btn"><i class="fas fa-comments"></i> <span data-i18n-key="chat"></span></button>` : ''}
+                    </div>
                 </div>
             `;
-            card.addEventListener('click', () => renderView('product', product));
+            card.querySelector('.product-image').addEventListener('click', () => renderView('product', product));
+            card.querySelector('.product-title').addEventListener('click', () => renderView('product', product));
+            if (!isMyProduct) {
+                card.querySelector('.chat-btn').addEventListener('click', () => startOrOpenChat(product.sellerId, product.sellerName));
+            }
             container.appendChild(card);
         });
     };
 
     const renderProductPage = async (product) => {
         if (!product) { renderView('home'); return; }
+
+        // Recently Viewed Logic
+        let updatedRecentlyViewed = recentlyViewed.filter(id => id !== product.id);
+        updatedRecentlyViewed.unshift(product.id);
+        if (updatedRecentlyViewed.length > 4) {
+            updatedRecentlyViewed.pop();
+        }
+        recentlyViewed = updatedRecentlyViewed;
+        localStorage.setItem('piecety_recently_viewed', JSON.stringify(recentlyViewed));
         
         document.getElementById('product-title-detail').textContent = product.title;
         document.getElementById('product-price-detail').textContent = `${product.price.toLocaleString()} DA`;
@@ -1308,6 +1345,28 @@
         document.getElementById('contact-seller-btn').addEventListener('click', () => {
             startOrOpenChat(product.sellerId, product.sellerName);
         });
+    };
+
+    const renderRecentlyViewed = async () => {
+        const section = document.getElementById('recently-viewed-section');
+        const grid = document.getElementById('recently-viewed-grid');
+        if (!section || !grid || recentlyViewed.length === 0) return;
+
+        section.classList.remove('hidden');
+        grid.innerHTML = '';
+        
+        const productsRef = collection(db, "products");
+        const q = query(productsRef, where("__name__", "in", recentlyViewed));
+        const querySnapshot = await getDocs(q);
+        
+        const viewedProducts = [];
+        querySnapshot.forEach(doc => {
+            viewedProducts.push({ id: doc.id, ...doc.data() });
+        });
+
+        // Sort them in the order they were viewed
+        const sorted = recentlyViewed.map(id => viewedProducts.find(p => p.id === id)).filter(Boolean);
+        displayProducts(sorted.map(p => ({ id: p.id, ...p, data: () => p })), grid);
     };
 
     const renderCartPage = async () => {
@@ -1426,7 +1485,7 @@
         const userProducts = [];
         querySnapshot.forEach(doc => userProducts.push({ id: doc.id, ...doc.data() }));
         
-        displayProducts(userProducts.map(p => doc({ id: p.id, ...p })), grid);
+        displayProducts(userProducts.map(p => ({ ...p, data: () => p })), grid);
     };
 
     const startOrOpenChat = async (sellerId, sellerName) => {
