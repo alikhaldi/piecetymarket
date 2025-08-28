@@ -2,7 +2,7 @@
 <html lang="fr" class="scroll-smooth">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Piecety - Marché des Pièces Auto en Algérie</title>
     <meta name="description" content="Achetez et vendez des pièces automobiles en Algérie avec Piecety, le marché fiable pour les pièces neuves et d'occasion.">
     <meta name="keywords" content="pièces auto, Algérie, marché automobile, Piecety">
@@ -89,7 +89,7 @@
             <i class="fas fa-times text-2xl"></i>
         </button>
     </div>
-    <div id="mobile-nav-links" class="flex flex-col space-y-4"></div>
+    <div id="mobile-nav-links" class="flex flex-col space-y-2"></div>
     <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
         <h3 class="text-lg font-semibold text-gray-600 dark:text-gray-300" data-i18n-key="language">Langue</h3>
         <div class="flex space-x-4 mt-2">
@@ -129,7 +129,7 @@
 </footer>
 
 <div id="post-product-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 invisible opacity-0" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] flex flex-col">
+    <div class="bg-white dark:bg-gray-800 shadow-lg w-full h-full flex flex-col sm:h-auto sm:max-h-[90vh] sm:max-w-2xl sm:rounded-lg">
         <div class="overflow-y-auto p-6 relative">
             <button id="modal-close-btn" class="absolute top-4 right-4 text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 focus:outline-none" aria-label="Fermer le formulaire">
                 <i class="fas fa-times text-2xl"></i>
@@ -139,25 +139,25 @@
                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="product-title" class="block font-medium mb-1" data-i18n-key="ad_title_label">Titre de la pièce <span class="text-red-500">*</span></label>
-                        <input type="text" id="product-title" name="title" required placeholder="Ex: Disque de frein avant" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-describedby="title-error" />
+                        <input type="text" id="product-title" name="title" required placeholder="Ex: Disque de frein avant" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-describedby="title-error" />
                         <p id="title-error" class="text-red-500 text-sm mt-1 hidden" role="alert" aria-live="assertive">Veuillez entrer un titre valide.</p>
                     </div>
                     <div>
                         <label for="product-brand" class="block font-medium mb-1" data-i18n-key="brand_label">Marque <span class="text-red-500">*</span></label>
-                        <select id="product-brand" name="brand" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-describedby="brand-error">
+                        <select id="product-brand" name="brand" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-describedby="brand-error">
                             <option value="" data-i18n-key="select_brand">Sélectionnez une marque</option>
                         </select>
                         <p id="brand-error" class="text-red-500 text-sm mt-1 hidden" role="alert" aria-live="assertive">Veuillez sélectionner une marque.</p>
                     </div>
                     <div>
                         <label for="product-model" class="block font-medium mb-1" data-i18n-key="model_label">Modèle</label>
-                        <select id="product-model" name="model" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" disabled>
+                        <select id="product-model" name="model" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" disabled>
                             <option value="" data-i18n-key="select_model">Sélectionnez un modèle</option>
                         </select>
                     </div>
                     <div>
                         <label for="product-year" class="block font-medium mb-1" data-i18n-key="year_label">Année</label>
-                        <select id="product-year" name="year" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <select id="product-year" name="year" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <option value="" data-i18n-key="select_year">Sélectionnez une année</option>
                         </select>
                     </div>
@@ -165,14 +165,14 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="product-wilaya" class="block font-medium mb-1" data-i18n-key="wilaya_label">Wilaya <span class="text-red-500">*</span></label>
-                        <select id="product-wilaya" name="wilaya" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-describedby="wilaya-error">
+                        <select id="product-wilaya" name="wilaya" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-describedby="wilaya-error">
                             <option value="" data-i18n-key="select_wilaya">Sélectionnez une wilaya</option>
                         </select>
                         <p id="wilaya-error" class="text-red-500 text-sm mt-1 hidden" role="alert" aria-live="assertive">Veuillez sélectionner une wilaya.</p>
                     </div>
                     <div>
                         <label for="product-commune" class="block font-medium mb-1" data-i18n-key="commune_label">Commune</label>
-                        <select id="product-commune" name="commune" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" disabled>
+                        <select id="product-commune" name="commune" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" disabled>
                             <option value="" data-i18n-key="select_commune">Sélectionnez une commune</option>
                         </select>
                     </div>
@@ -180,27 +180,27 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label for="product-category" class="block font-medium mb-1" data-i18n-key="category_label">Catégorie <span class="text-red-500">*</span></label>
-                        <select id="product-category" name="category" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-describedby="category-error">
+                        <select id="product-category" name="category" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-describedby="category-error">
                              <option value="" data-i18n-key="select_category">Sélectionnez une catégorie</option>
                         </select>
                         <p id="category-error" class="text-red-500 text-sm mt-1 hidden" role="alert" aria-live="assertive">Veuillez sélectionner une catégorie.</p>
                     </div>
                     <div>
                         <label for="product-condition" class="block font-medium mb-1" data-i18n-key="condition_label">État</label>
-                        <select id="product-condition" name="condition" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <select id="product-condition" name="condition" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <option value="new" data-i18n-key="new">Neuf</option>
                             <option value="used" data-i18n-key="used">Occasion</option>
                         </select>
                     </div>
                     <div>
                         <label for="product-price" class="block font-medium mb-1" data-i18n-key="price_label">Prix (DA) <span class="text-red-500">*</span></label>
-                        <input type="number" id="product-price" name="price" min="0" required placeholder="Ex: 15000" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-describedby="price-error" />
+                        <input type="number" id="product-price" name="price" min="0" required placeholder="Ex: 15000" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-describedby="price-error" />
                         <p id="price-error" class="text-red-500 text-sm mt-1 hidden" role="alert" aria-live="assertive">Veuillez entrer un prix valide.</p>
                     </div>
                 </div>
                 <div>
                     <label for="product-description" class="block font-medium mb-1" data-i18n-key="description_label">Description</label>
-                    <textarea id="product-description" name="description" rows="3" placeholder="Informations supplémentaires..." class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+                    <textarea id="product-description" name="description" rows="3" placeholder="Informations supplémentaires..." class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
                 </div>
                 <div class="text-center">
                     <button type="submit" id="submit-ad-btn" class="mt-4 px-8 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md flex items-center justify-center disabled:bg-blue-400 disabled:cursor-not-allowed">
@@ -428,8 +428,8 @@
 </template>
 
 <template id="chat-view-template">
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 md:p-6 h-[75vh] flex flex-col">
-        <div class="flex items-center border-b dark:border-gray-700 pb-4 mb-4">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg h-full w-full flex flex-col sm:h-auto sm:max-h-[85vh] sm:max-w-2xl sm:rounded-lg">
+        <div class="flex items-center border-b dark:border-gray-700 p-4 mb-4 flex-shrink-0">
             <button id="back-to-inbox-btn" class="mr-4 text-blue-600 dark:text-blue-400">
                 <i class="fas fa-arrow-left"></i>
             </button>
@@ -439,7 +439,7 @@
         <div id="messages-container" class="flex-1 overflow-y-auto space-y-4 p-2 flex flex-col">
             </div>
 
-        <form id="send-message-form" class="mt-4 flex gap-4 border-t dark:border-gray-700 pt-4">
+        <form id="send-message-form" class="mt-4 flex gap-4 border-t dark:border-gray-700 p-4 flex-shrink-0">
             <input type="text" id="message-input" placeholder="Type a message..." class="flex-1 p-3 rounded-full border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
             <button type="submit" class="bg-blue-600 text-white rounded-full w-12 h-12 flex-shrink-0 flex items-center justify-center">
                 <i class="fas fa-paper-plane"></i>
@@ -1189,18 +1189,17 @@
         const params = new URLSearchParams(window.location.search);
         const productsRef = collection(db, "products");
         
-        let q = query(productsRef); // Start with a base query
+        let q = query(productsRef);
 
-        // Build the query with filters
+        // Build the query with server-side filters
         if (params.get('category')) q = query(q, where("category", "==", params.get('category')));
         if (params.get('brand')) q = query(q, where("brand", "==", params.get('brand')));
         if (params.get('year')) q = query(q, where("year", "==", params.get('year')));
         if (params.get('wilaya')) q = query(q, where("wilaya", "==", params.get('wilaya')));
         if (params.get('condition')) q = query(q, where("condition", "==", params.get('condition')));
-        // Add default sorting
+        
         q = query(q, orderBy("createdAt", "desc"));
 
-        // Add pagination
         if (loadMore && lastVisibleProduct) {
             q = query(q, startAfter(lastVisibleProduct));
         }
@@ -1230,7 +1229,7 @@
             isFetching = false;
         });
     };
-
+    
     const displayProducts = (docs, container, append = false) => {
         if (!container) return;
         if (!append) container.innerHTML = '';
@@ -1612,8 +1611,8 @@
         authLinksContainer.innerHTML = '';
         mobileNavLinks.innerHTML = '';
         
-        mobileNavLinks.innerHTML += `<a href="#" id="mobile-sell-link" class="text-lg" data-i18n-key="sell">${translations[currentLang].sell}</a>`;
-        mobileNavLinks.innerHTML += `<a href="#" id="mobile-cart-link" class="text-lg relative">
+        mobileNavLinks.innerHTML += `<a href="#" id="mobile-sell-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg" data-i18n-key="sell">${translations[currentLang].sell}</a>`;
+        mobileNavLinks.innerHTML += `<a href="#" id="mobile-cart-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg relative">
             <span data-i18n-key="cart_title">${translations[currentLang].cart_title}</span>
             <span id="mobile-cart-count" class="absolute top-0 ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full hidden">0</span>
         </a>`;
@@ -1643,9 +1642,9 @@
                 </div>`;
             authLinksContainer.innerHTML = userMenuHTML;
 
-            mobileNavLinks.innerHTML += `<a href="#" id="mobile-dashboard-link" class="text-lg" data-i18n-key="dashboard">${translations[currentLang].dashboard}</a>`;
-            mobileNavLinks.innerHTML += `<a href="#" id="mobile-messages-link" class="text-lg relative">Messages <span id="mobile-unread-badge" class="hidden absolute top-0 ml-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"></span></a>`;
-            mobileNavLinks.innerHTML += `<button id="mobile-logout-btn" class="text-lg text-left" data-i18n-key="logout">${translations[currentLang].logout}</button>`;
+            mobileNavLinks.innerHTML += `<a href="#" id="mobile-dashboard-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg" data-i18n-key="dashboard">${translations[currentLang].dashboard}</a>`;
+            mobileNavLinks.innerHTML += `<a href="#" id="mobile-messages-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg relative">Messages <span id="mobile-unread-badge" class="hidden absolute top-0 ml-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"></span></a>`;
+            mobileNavLinks.innerHTML += `<button id="mobile-logout-btn" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg text-left" data-i18n-key="logout">${translations[currentLang].logout}</button>`;
 
             document.getElementById('user-menu-btn').addEventListener('click', () => {
                 document.getElementById('user-menu-dropdown').classList.toggle('hidden');
@@ -1676,7 +1675,7 @@
         } else {
             authLinksContainer.innerHTML = `<button id="login-btn" class="px-4 py-2 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors" data-i18n-key="connect">${translations[currentLang].connect}</button>`;
             
-            mobileNavLinks.innerHTML += `<button id="mobile-login-btn" class="text-lg text-left" data-i18n-key="connect">${translations[currentLang].connect}</button>`;
+            mobileNavLinks.innerHTML += `<button id="mobile-login-btn" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg text-left" data-i18n-key="connect">${translations[currentLang].connect}</button>`;
             
             document.getElementById('login-btn').addEventListener('click', () => toggleModal(DOMElements.authModal, true));
             document.getElementById('mobile-login-btn').addEventListener('click', () => {
