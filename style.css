@@ -89,6 +89,7 @@ button, a {
     
     /* Better, more responsive grid for mobile */
     #dynamic-grid {
+        display: grid;
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
         gap: 12px;
     }
@@ -123,6 +124,10 @@ button, a {
 .rtl .fa-search {
     right: 12px;
     left: auto;
+}
+.rtl #search-input{
+    padding-right: 2.5rem;
+    padding-left: 0.75rem;
 }
 
 /* Improve modal for mobile */
