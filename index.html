@@ -538,7 +538,7 @@
             sold_by: "Vendu par:", my_listings: "Mes Annonces", seller_listings: "Annonces de ce vendeur",
             buyer_reviews: "Avis des acheteurs", reviews_soon: "(Avis bientôt disponibles)", reviews_soon_2: "La fonctionnalité d'avis sera bientôt disponible.",
             messages: "Messages", loading_convos: "Chargement des conversations...", chat_with: "Chat avec", type_message_placeholder: "Écrire un message...",
-            recently_viewed: "Récemment consultés"
+            recently_viewed: "Récemment consultés", chat: "Chat"
         },
         en: {
             page_title: "Piecety - Car Parts Marketplace in Algeria",
@@ -582,7 +582,7 @@
             sold_by: "Sold by:", my_listings: "My Listings", seller_listings: "Listings from this seller",
             buyer_reviews: "Buyer Reviews", reviews_soon: "(Reviews coming soon)", reviews_soon_2: "Review functionality will be available soon.",
             messages: "Messages", loading_convos: "Loading conversations...", chat_with: "Chat with", type_message_placeholder: "Type a message...",
-            recently_viewed: "Recently Viewed"
+            recently_viewed: "Recently Viewed", chat: "Chat"
         },
         ar: {
             page_title: "Piecety - سوق قطع غيار السيارات في الجزائر",
@@ -626,7 +626,7 @@
             sold_by: "البائع:", my_listings: "إعلاناتي", seller_listings: "إعلانات من هذا البائع",
             buyer_reviews: "تقييمات المشترين", reviews_soon: "(التقييمات قريبا)", reviews_soon_2: "ميزة التقييم ستكون متاحة قريبا.",
             messages: "الرسائل", loading_convos: "جاري تحميل المحادثات...", chat_with: "محادثة مع", type_message_placeholder: "اكتب رسالة...",
-            recently_viewed: "شوهدت مؤخرا"
+            recently_viewed: "شوهدت مؤخرا", chat: "محادثة"
         }
     };
 
@@ -1311,7 +1311,6 @@
     const renderProductPage = async (product) => {
         if (!product) { renderView('home'); return; }
 
-        // Recently Viewed Logic
         let updatedRecentlyViewed = recentlyViewed.filter(id => id !== product.id);
         updatedRecentlyViewed.unshift(product.id);
         if (updatedRecentlyViewed.length > 4) {
@@ -1364,9 +1363,8 @@
             viewedProducts.push({ id: doc.id, ...doc.data() });
         });
 
-        // Sort them in the order they were viewed
         const sorted = recentlyViewed.map(id => viewedProducts.find(p => p.id === id)).filter(Boolean);
-        displayProducts(sorted.map(p => ({ id: p.id, ...p, data: () => p })), grid);
+        displayProducts(sorted.map(p => ({ ...p, data: () => p })), grid);
     };
 
     const renderCartPage = async () => {
