@@ -538,7 +538,7 @@
             sold_by: "Vendu par:", my_listings: "Mes Annonces", seller_listings: "Annonces de ce vendeur",
             buyer_reviews: "Avis des acheteurs", reviews_soon: "(Avis bientôt disponibles)", reviews_soon_2: "La fonctionnalité d'avis sera bientôt disponible.",
             messages: "Messages", loading_convos: "Chargement des conversations...", chat_with: "Chat avec", type_message_placeholder: "Écrire un message...",
-            recently_viewed: "Récemment consultés", chat: "Chat"
+            recently_viewed: "Récemment consultés", chat: "Chat", load_more: "Charger plus"
         },
         en: {
             page_title: "Piecety - Car Parts Marketplace in Algeria",
@@ -582,7 +582,7 @@
             sold_by: "Sold by:", my_listings: "My Listings", seller_listings: "Listings from this seller",
             buyer_reviews: "Buyer Reviews", reviews_soon: "(Reviews coming soon)", reviews_soon_2: "Review functionality will be available soon.",
             messages: "Messages", loading_convos: "Loading conversations...", chat_with: "Chat with", type_message_placeholder: "Type a message...",
-            recently_viewed: "Recently Viewed", chat: "Chat"
+            recently_viewed: "Recently Viewed", chat: "Chat", load_more: "Load More"
         },
         ar: {
             page_title: "Piecety - سوق قطع غيار السيارات في الجزائر",
@@ -626,7 +626,7 @@
             sold_by: "البائع:", my_listings: "إعلاناتي", seller_listings: "إعلانات من هذا البائع",
             buyer_reviews: "تقييمات المشترين", reviews_soon: "(التقييمات قريبا)", reviews_soon_2: "ميزة التقييم ستكون متاحة قريبا.",
             messages: "الرسائل", loading_convos: "جاري تحميل المحادثات...", chat_with: "محادثة مع", type_message_placeholder: "اكتب رسالة...",
-            recently_viewed: "شوهدت مؤخرا", chat: "محادثة"
+            recently_viewed: "شوهدت مؤخرا", chat: "محادثة", load_more: "تحميل المزيد"
         }
     };
 
@@ -1695,12 +1695,18 @@
         authLinksContainer.innerHTML = '';
         mobileNavLinks.innerHTML = '';
         
+        mobileNavLinks.innerHTML += `<a href="#" id="mobile-home-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg" data-i18n-key="nav_home"></a>`;
         mobileNavLinks.innerHTML += `<a href="#" id="mobile-sell-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg" data-i18n-key="sell"></a>`;
         mobileNavLinks.innerHTML += `<a href="#" id="mobile-cart-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg relative">
             <span data-i18n-key="cart_title"></span>
             <span id="mobile-cart-count" class="absolute top-0 ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full hidden">0</span>
         </a>`;
 
+        document.getElementById('mobile-home-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            DOMElements.mobileMenu.classList.add('hidden');
+            renderView('home');
+        });
         document.getElementById('mobile-sell-link').addEventListener('click', (e) => {
             e.preventDefault();
             DOMElements.mobileMenu.classList.add('hidden');
