@@ -11,15 +11,16 @@
     <meta property="og:description" content="Trouvez des pièces auto neuves et d'occasion en Algérie sur Piecety.">
     <meta property="og:image" content="./icons/car-512.png">
     <meta property="og:url" content="https://alikhaldi.github.io/Piecetymarket/">
-    
     <meta name="twitter:card" content="summary_large_image">
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚗</text></svg>">
     <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#ffffff">
     
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -28,11 +29,15 @@
         }
     </script>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
     <link rel="stylesheet" href="style.css" />
+    <style>
+        /* Suggestion: Improves touch responsiveness on mobile by reducing tap delays */
+        button, a, [role="button"] {
+            touch-action: manipulation;
+        }
+    </style>
 </head>
-<body class="flex flex-col min-h-screen text-gray-800 dark:text-gray-200">
+<body class="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
 
 <div id="message-box" class="fixed top-5 right-5 z-[1000] p-4 rounded-lg shadow-lg transition-all duration-500 ease-in-out opacity-0 translate-x-full max-w-sm break-words"></div>
 
@@ -48,7 +53,6 @@
                 <input id="search-input" type="text" class="w-full p-3 pl-10 rounded-full border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 shadow-inner" data-i18n-placeholder="search_placeholder" aria-label="Search for parts" />
                 <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
             </div>
-            <div id="search-suggestions" class="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-700 rounded-lg shadow-lg z-20 hidden"></div>
         </div>
 
         <nav class="hidden md:flex items-center space-x-2 lg:space-x-4" role="navigation" aria-label="Main navigation">
@@ -57,10 +61,10 @@
                     <span id="current-lang" class="lang-text">FR</span>
                     <i class="fas fa-chevron-down text-xs"></i>
                 </button>
-                <div id="lang-dropdown" class="absolute right-0 mt-2 w-28 bg-white dark:bg-gray-700 rounded-lg shadow-lg py-1 hidden transition-all duration-300 z-10" role="menu" aria-label="Select Language">
-                    <button class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-600 hover:text-blue-600 dark:hover:text-blue-300 lang-btn" data-lang="fr" role="menuitem">Français</button>
-                    <button class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-600 hover:text-blue-600 dark:hover:text-blue-300 lang-btn" data-lang="en" role="menuitem">English</button>
-                    <button class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-600 hover:text-blue-600 dark:hover:text-blue-300 lang-btn" data-lang="ar" role="menuitem">العربية</button>
+                <div id="lang-dropdown" class="absolute right-0 mt-2 w-28 bg-white dark:bg-gray-700 rounded-lg shadow-lg py-1 hidden transition-all duration-300 z-10" role="menu">
+                    <button class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-600 lang-btn" data-lang="fr" role="menuitem">Français</button>
+                    <button class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-600 lang-btn" data-lang="en" role="menuitem">English</button>
+                    <button class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-600 lang-btn" data-lang="ar" role="menuitem">العربية</button>
                 </div>
             </div>
 
@@ -83,9 +87,9 @@
     </div>
 </header>
 
-<div id="mobile-menu" class="fixed inset-0 bg-white dark:bg-gray-900 z-40 hidden flex-col p-6 space-y-4 md:hidden" role="dialog" aria-modal="true" aria-labelledby="mobile-menu-label">
+<div id="mobile-menu" class="fixed inset-0 bg-white dark:bg-gray-900 z-40 hidden flex-col p-6 space-y-4 md:hidden" role="dialog" aria-modal="true">
     <div class="flex justify-between items-center">
-        <h2 id="mobile-menu-label" class="text-2xl font-bold text-blue-600 dark:text-blue-400" data-i18n-key="menu"></h2>
+        <h2 class="text-2xl font-bold text-blue-600 dark:text-blue-400" data-i18n-key="menu"></h2>
         <button id="mobile-menu-close-btn" class="p-3 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400" aria-label="Close menu">
             <i class="fas fa-times text-2xl"></i>
         </button>
@@ -113,7 +117,6 @@
         <button id="mobile-apply-filters-btn" class="w-full px-6 py-3 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md" data-i18n-key="apply_filters"></button>
     </div>
 </div>
-
 
 <main id="app-container" class="flex-1 container mx-auto p-4 md:p-8" role="main" aria-live="polite"></main>
 
@@ -153,66 +156,59 @@
     </a>
 </nav>
 
-<div id="post-product-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-0 sm:p-4 invisible opacity-0" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+<div id="post-product-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-0 sm:p-4 invisible opacity-0" role="dialog" aria-modal="true">
     <div class="bg-white dark:bg-gray-800 shadow-lg w-full h-full flex flex-col sm:h-auto sm:max-h-[90vh] sm:max-w-2xl sm:rounded-lg">
         <div class="overflow-y-auto p-6 relative">
             <button id="modal-close-btn" class="absolute top-4 right-4 text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 focus:outline-none" aria-label="Close form">
                 <i class="fas fa-times text-2xl"></i>
             </button>
-            <h3 id="modal-title" class="text-2xl font-bold mb-6 text-center" data-i18n-key="submit_ad"></h3>
+            <h3 class="text-2xl font-bold mb-6 text-center" data-i18n-key="submit_ad"></h3>
             <form id="post-product-form" class="space-y-4" novalidate>
                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="product-title" class="block font-medium mb-1" data-i18n-key="ad_title_label"></label>
-                        <input type="text" id="product-title" name="title" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" data-i18n-placeholder="ad_title_placeholder" aria-describedby="title-error" />
-                        <p id="title-error" class="text-red-500 text-sm mt-1 hidden" role="alert" aria-live="assertive" data-i18n-key="error_valid_title"></p>
+                        <input type="text" id="product-title" name="title" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" data-i18n-placeholder="ad_title_placeholder" />
+                        <p id="title-error" class="text-red-500 text-sm mt-1 hidden" role="alert" data-i18n-key="error_valid_title"></p>
                     </div>
                     <div>
                         <label for="product-brand" class="block font-medium mb-1" data-i18n-key="brand_label"></label>
-                        <select id="product-brand" name="brand" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-describedby="brand-error">
-                        </select>
-                        <p id="brand-error" class="text-red-500 text-sm mt-1 hidden" role="alert" aria-live="assertive" data-i18n-key="error_select_brand"></p>
+                        <select id="product-brand" name="brand" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
+                        <p id="brand-error" class="text-red-500 text-sm mt-1 hidden" role="alert" data-i18n-key="error_select_brand"></p>
                     </div>
                     <div>
                         <label for="product-model" class="block font-medium mb-1" data-i18n-key="model_label"></label>
-                        <select id="product-model" name="model" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" disabled>
-                        </select>
+                        <select id="product-model" name="model" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" disabled></select>
                     </div>
                     <div>
                         <label for="product-year" class="block font-medium mb-1" data-i18n-key="year_label"></label>
-                        <select id="product-year" name="year" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </select>
+                        <select id="product-year" name="year" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="product-wilaya" class="block font-medium mb-1" data-i18n-key="wilaya_label"></label>
-                        <select id="product-wilaya" name="wilaya" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-describedby="wilaya-error">
-                        </select>
-                        <p id="wilaya-error" class="text-red-500 text-sm mt-1 hidden" role="alert" aria-live="assertive" data-i18n-key="error_select_wilaya"></p>
+                        <select id="product-wilaya" name="wilaya" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
+                        <p id="wilaya-error" class="text-red-500 text-sm mt-1 hidden" role="alert" data-i18n-key="error_select_wilaya"></p>
                     </div>
                     <div>
                         <label for="product-commune" class="block font-medium mb-1" data-i18n-key="commune_label"></label>
-                        <select id="product-commune" name="commune" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" disabled>
-                        </select>
+                        <select id="product-commune" name="commune" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" disabled></select>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label for="product-category" class="block font-medium mb-1" data-i18n-key="category_label"></label>
-                        <select id="product-category" name="category" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-describedby="category-error">
-                        </select>
-                        <p id="category-error" class="text-red-500 text-sm mt-1 hidden" role="alert" aria-live="assertive" data-i18n-key="error_select_category"></p>
+                        <select id="product-category" name="category" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
+                        <p id="category-error" class="text-red-500 text-sm mt-1 hidden" role="alert" data-i18n-key="error_select_category"></p>
                     </div>
                     <div>
                         <label for="product-condition" class="block font-medium mb-1" data-i18n-key="condition_label"></label>
-                        <select id="product-condition" name="condition" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </select>
+                        <select id="product-condition" name="condition" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
                     </div>
                     <div>
                         <label for="product-price" class="block font-medium mb-1" data-i18n-key="price_label"></label>
-                        <input type="number" id="product-price" name="price" min="0" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" data-i18n-placeholder="price_placeholder" aria-describedby="price-error" />
-                        <p id="price-error" class="text-red-500 text-sm mt-1 hidden" role="alert" aria-live="assertive" data-i18n-key="error_valid_price"></p>
+                        <input type="number" id="product-price" name="price" min="0" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" data-i18n-placeholder="price_placeholder" />
+                        <p id="price-error" class="text-red-500 text-sm mt-1 hidden" role="alert" data-i18n-key="error_valid_price"></p>
                     </div>
                 </div>
                 <div>
@@ -232,12 +228,13 @@
         </div>
     </div>
 </div>
-<div id="auth-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 invisible opacity-0" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
+
+<div id="auth-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 invisible opacity-0" role="dialog" aria-modal="true">
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-sm w-full p-6 relative">
         <button id="auth-modal-close-btn" class="absolute top-4 right-4 text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 focus:outline-none" aria-label="Close login form">
             <i class="fas fa-times text-2xl"></i>
         </button>
-        <h3 id="auth-modal-title" class="text-2xl font-bold mb-6 text-center" data-i18n-key="connect"></h3>
+        <h3 class="text-2xl font-bold mb-6 text-center" data-i18n-key="connect"></h3>
         <div class="space-y-4">
             <p class="text-center text-gray-600 dark:text-gray-400" data-i18n-key="login_text"></p>
             <button id="google-login-btn" class="w-full flex items-center justify-center px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-full text-gray-700 dark:text-gray-200 font-semibold hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200 shadow-sm">
@@ -285,38 +282,31 @@
     <h2 class="text-2xl font-bold mb-4" data-i18n-key="filters_title"></h2>
     <div>
         <label for="brand-filter" class="block text-sm font-medium" data-i18n-key="brand_label"></label>
-        <select id="brand-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
-        </select>
+        <select id="brand-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm"></select>
     </div>
     <div id="model-filter-container" class="hidden">
         <label for="model-filter" class="block text-sm font-medium" data-i18n-key="model_label"></label>
-        <select id="model-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
-        </select>
+        <select id="model-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm"></select>
     </div>
     <div>
         <label for="year-filter" class="block text-sm font-medium" data-i18n-key="year_label"></label>
-        <select id="year-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
-        </select>
+        <select id="year-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm"></select>
     </div>
     <div>
         <label for="wilaya-filter" class="block text-sm font-medium" data-i18n-key="wilaya_label"></label>
-        <select id="wilaya-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
-        </select>
+        <select id="wilaya-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm"></select>
     </div>
     <div id="commune-filter-container" class="hidden">
         <label for="commune-filter" class="block text-sm font-medium" data-i18n-key="commune_label"></label>
-        <select id="commune-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
-        </select>
+        <select id="commune-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm"></select>
     </div>
     <div>
         <label for="category-filter" class="block text-sm font-medium" data-i18n-key="category_label"></label>
-        <select id="category-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
-        </select>
+        <select id="category-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm"></select>
     </div>
     <div>
         <label for="condition-filter" class="block text-sm font-medium" data-i18n-key="condition_label"></label>
-        <select id="condition-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm">
-        </select>
+        <select id="condition-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm"></select>
     </div>
     <div>
         <label for="price-range-filter" class="block text-sm font-medium" data-i18n-key="price_range"></label>
@@ -327,7 +317,6 @@
             <span>100k+ DA</span>
         </div>
     </div>
-
     <div class="mt-6 flex flex-col space-y-4">
         <button id="filter-reset-btn" class="w-full px-6 py-3 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-md font-semibold hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors duration-200 shadow-md" data-i18n-key="reset"></button>
     </div>
@@ -376,8 +365,7 @@
         </button>
         <div class="flex justify-between items-center mb-6">
              <h2 class="text-2xl md:text-3xl font-bold" data-i18n-key="cart_title"></h2>
-             <button id="clear-cart-btn" class="px-4 py-2 bg-red-600 text-white text-sm rounded-md font-semibold hover:bg-red-700 transition-colors duration-200 shadow-md" data-i18n-key="clear_cart">
-            </button>
+             <button id="clear-cart-btn" class="px-4 py-2 bg-red-600 text-white text-sm rounded-md font-semibold hover:bg-red-700 transition-colors duration-200 shadow-md" data-i18n-key="clear_cart"></button>
         </div>
         <div id="cart-items-container" class="space-y-4"></div>
         <div id="cart-summary" class="mt-8 pt-4 border-t border-gray-200 dark:border-gray-700">
@@ -446,10 +434,7 @@
             </button>
             <h2 id="chat-with-name" class="text-xl font-bold"></h2>
         </div>
-        
-        <div id="messages-container" class="flex-1 overflow-y-auto space-y-4 p-2 flex flex-col">
-            </div>
-
+        <div id="messages-container" class="flex-1 overflow-y-auto space-y-4 p-2 flex flex-col"></div>
         <form id="send-message-form" class="mt-4 flex gap-4 border-t dark:border-gray-700 p-4 flex-shrink-0">
             <input type="text" id="message-input" class="flex-1 p-3 rounded-full border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" required data-i18n-placeholder="type_message_placeholder">
             <button type="submit" class="bg-blue-600 text-white rounded-full w-12 h-12 flex-shrink-0 flex items-center justify-center" aria-label="Send Message">
@@ -458,7 +443,6 @@
         </form>
     </div>
 </template>
-
 
 <script type="module" src="app.js"></script>
 
