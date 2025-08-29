@@ -247,13 +247,41 @@ const applyFiltersFromURL = (container = document) => {
 };
 
 // --- VIEW RENDERING ---
+
+// NEW: Helper function for bottom nav active state
+const updateBottomNav = (viewName) => {
+    const navLinks = {
+        home: document.getElementById('nav-home'),
+        search: document.getElementById('nav-search'),
+        sell: document.getElementById('nav-sell'),
+        inbox: document.getElementById('nav-messages'),
+        dashboard: document.getElementById('nav-profile'),
+        profile: document.getElementById('nav-profile') // Profile maps to dashboard icon
+    };
+    // Reset all links to default color
+    Object.values(navLinks).forEach(link => {
+        if (link) {
+            link.classList.remove('text-blue-600', 'dark:text-blue-400');
+            link.classList.add('text-gray-600', 'dark:text-gray-300');
+        }
+    });
+    // Apply active color to the current view's link
+    const activeLink = navLinks[viewName];
+    if (activeLink) {
+        activeLink.classList.remove('text-gray-600', 'dark:text-gray-300');
+        activeLink.classList.add('text-blue-600', 'dark:text-blue-400');
+    }
+};
+
+
 const renderView = (viewName, data = null) => {
     if (productsUnsubscribe) productsUnsubscribe();
     if (chatsUnsubscribe) chatsUnsubscribe();
     DOMElements.appContainer.innerHTML = '';
-    updateTitle(viewName, data);
-
+    
     const route = viewName.split('/')[0];
+    updateTitle(route, data);
+
     const templateId = `${route}-view-template`;
     const template = document.getElementById(templateId);
 
@@ -269,6 +297,7 @@ const renderView = (viewName, data = null) => {
     }
     
     currentView = viewName;
+    updateBottomNav(route); // NEW: Update bottom nav on every view change
     window.scrollTo(0, 0);
     translatePage(currentLang);
 };
@@ -458,8 +487,22 @@ const renderListings = (loadMore = false) => {
 
     isFetching = true;
     if (!loadMore) {
-        listingsSection.innerHTML = `<div class="col-span-full text-center p-8"><i class="fas fa-spinner fa-spin text-3xl text-blue-500"></i></div>`;
-        lastVisibleProduct = null; 
+        // NEW: Skeleton loader implementation
+        let skeletonHTML = '';
+        for (let i = 0; i < 8; i++) {
+            skeletonHTML += `
+                <div class="skeleton-card rounded-lg shadow-md p-4 animate-pulse">
+                    <div class="skeleton-img w-full h-40 rounded-md"></div>
+                    <div class="mt-4">
+                        <div class="skeleton-line h-4 w-3/4 rounded"></div>
+                        <div class="skeleton-line h-6 w-1/2 rounded mt-2"></div>
+                        <div class="skeleton-line h-4 w-full rounded mt-4"></div>
+                    </div>
+                </div>
+            `;
+        }
+        listingsSection.innerHTML = skeletonHTML;
+        lastVisibleProduct = null;
     }
     if (loadMoreContainer) loadMoreContainer.innerHTML = '';
 
@@ -872,9 +915,15 @@ const updateAuthUI = (user) => {
         <a href="#" id="mobile-sell-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg" data-i18n-key="sell"></a>
         <a href="#" id="mobile-cart-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg relative"><span data-i18n-key="cart_title"></span><span id="mobile-cart-count" class="absolute top-0 ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full hidden">0</span></a>`;
 
-    document.getElementById('mobile-home-link').onclick = (e) => { e.preventDefault(); DOMElements.mobileMenu.classList.add('hidden'); renderView('home'); };
+    // FIX: Updated mobile home link to clear URL params
+    document.getElementById('mobile-home-link').onclick = (e) => { 
+        e.preventDefault(); 
+        DOMElements.mobileMenu.classList.add('hidden'); 
+        window.history.pushState({}, '', window.location.pathname);
+        renderView('home'); 
+    };
     document.getElementById('mobile-sell-link').onclick = (e) => { e.preventDefault(); DOMElements.mobileMenu.classList.add('hidden'); DOMElements.sellLink.click(); };
-    document.getElementById('mobile-cart-link').onclick = (e) => { e.preventDefault(); DOMElements.mobileMenu.classList.add('hidden'); DOMElements.cartBtn.click(); };
+    document.getElementById('mobile-cart-link').onclick = (e) => { e.preventDefault(); DOMElements.mobileMenu.classList.add('hidden'); renderView('cart'); };
 
     if (user) {
         authLinksContainer.innerHTML = `<div class="relative" id="user-menu"><button id="user-menu-btn" class="flex items-center"><img src="${user.photoURL}" alt="User" class="w-8 h-8 rounded-full"></button><div id="user-menu-dropdown" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-lg shadow-lg py-1 hidden z-20"><a href="#" id="dashboard-link" class="block px-4 py-2 text-sm" data-i18n-key="dashboard"></a><a href="#" id="messages-link" class="relative block px-4 py-2 text-sm" data-i18n-key="messages"><span id="unread-badge" class="hidden absolute right-2 top-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"></span></a><button id="logout-btn" class="w-full text-left px-4 py-2 text-sm" data-i18n-key="logout"></button></div></div>`;
@@ -988,11 +1037,28 @@ const setupEventListeners = () => {
         if (!disabled) populateSelect(DOMElements.postProductCommuneSelect, wilayas[wilaya], 'select_commune', currentLang);
     };
     
-    document.getElementById('nav-home').onclick = (e) => { e.preventDefault(); renderView('home'); };
-    document.getElementById('nav-search').onclick = (e) => { e.preventDefault(); DOMElements.searchInput.focus(); };
+    // FIX: Updated bottom nav home button to clear URL params
+    document.getElementById('nav-home').onclick = (e) => { 
+        e.preventDefault(); 
+        window.history.pushState({}, '', window.location.pathname);
+        renderView('home'); 
+    };
+    document.getElementById('nav-search').onclick = (e) => { e.preventDefault(); DOMElements.searchInput.focus(); updateBottomNav('search'); };
     document.getElementById('nav-sell').onclick = (e) => { e.preventDefault(); DOMElements.sellLink.click(); };
     document.getElementById('nav-messages').onclick = (e) => { e.preventDefault(); currentUser ? renderView('inbox') : toggleModal(DOMElements.authModal, true); };
     document.getElementById('nav-profile').onclick = (e) => { e.preventDefault(); currentUser ? renderView('dashboard') : toggleModal(DOMElements.authModal, true); };
+
+    // NEW: Hide header on scroll
+    let lastScrollY = window.scrollY;
+    const header = document.querySelector('header');
+    window.addEventListener('scroll', () => {
+        if (lastScrollY < window.scrollY && window.scrollY > 100) {
+            header.classList.add('-translate-y-full'); // Hides header
+        } else {
+            header.classList.remove('-translate-y-full'); // Shows header
+        }
+        lastScrollY = window.scrollY;
+    }, { passive: true });
 };
 
 const bootApp = () => {
