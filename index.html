@@ -31,28 +31,60 @@
 
     <link rel="stylesheet" href="style.css" />
     <style>
-        /* Suggestion: Improves touch responsiveness on mobile by reducing tap delays */
+        /* General touch responsiveness */
         button, a, [role="button"] {
             touch-action: manipulation;
         }
-        /* Style for skeleton loader */
-        .skeleton-card {
-            background-color: #e2e8f0; /* light gray */
+
+        /* --- ✅ Styles for Skeleton Loader --- */
+        .skeleton-card { background-color: #e2e8f0; }
+        .dark .skeleton-card { background-color: #374151; }
+        .skeleton-card .skeleton-img { background-color: #cbd5e1; }
+        .dark .skeleton-card .skeleton-img { background-color: #4b5563; }
+        .skeleton-card .skeleton-line { background-color: #cbd5e1; }
+        .dark .skeleton-card .skeleton-line { background-color: #4b5563; }
+
+        /* --- ✅ NEW: Mobile Usability Fixes --- */
+
+        /* Prevent bottom nav from overlapping content */
+        @media (max-width: 768px) {
+          main {
+            padding-bottom: 5rem; /* Adjust to match bottom-nav height */
+          }
         }
-        .dark .skeleton-card {
-            background-color: #374151; /* dark gray */
+
+        /* Optimize search bar for small screens */
+        @media (max-width: 480px) {
+          #search-input {
+            padding: 0.6rem 2.5rem 0.6rem 2.2rem; /* Adjusted for better feel */
+            font-size: 15px;
+          }
+          .fa-search.absolute {
+            left: 0.8rem;
+          }
         }
-        .skeleton-card .skeleton-img {
-            background-color: #cbd5e1; /* slightly darker light gray */
+
+        /* Fix scrolling issue in the product posting modal on mobile */
+        #post-product-modal .overflow-y-auto {
+            max-height: calc(100vh - 80px); /* Leave some space top/bottom */
         }
-        .dark .skeleton-card .skeleton-img {
-            background-color: #4b5563; /* slightly darker dark gray */
+        
+        /* Stack language buttons vertically on very small screens */
+        @media (max-width: 400px) {
+          #mobile-menu .flex.space-x-4 {
+            flex-direction: column;
+            gap: 8px;
+            align-items: flex-start; /* Align to the left */
+          }
+          #mobile-menu .flex.space-x-4 > button {
+              width: 100%; /* Make buttons full-width for easier tapping */
+              text-align: center;
+          }
         }
-        .skeleton-card .skeleton-line {
-            background-color: #cbd5e1; /* slightly darker light gray */
-        }
-        .dark .skeleton-card .skeleton-line {
-            background-color: #4b5563; /* slightly darker dark gray */
+
+        /* Improve usability for number inputs */
+        input[type=number]::-webkit-inner-spin-button { 
+            height: auto; 
         }
     </style>
 </head>
