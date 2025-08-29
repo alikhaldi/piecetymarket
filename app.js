@@ -15,7 +15,6 @@ let isFetching = false;
 let recentlyViewed = JSON.parse(localStorage.getItem('piecety_recently_viewed')) || [];
 
 // --- FIREBASE CONFIGURATION ---
-// Suggestion: For production, use environment variables to protect your API keys.
 const firebaseConfig = {
     apiKey: "AIzaSyBIptEskV2soajxRYPDfwYFYyz9pWQvZL0",
     authDomain: "piecety-app-b39c4.firebaseapp.com",
@@ -247,8 +246,6 @@ const applyFiltersFromURL = (container = document) => {
 };
 
 // --- VIEW RENDERING ---
-
-// NEW: Helper function for bottom nav active state
 const updateBottomNav = (viewName) => {
     const navLinks = {
         home: document.getElementById('nav-home'),
@@ -256,23 +253,20 @@ const updateBottomNav = (viewName) => {
         sell: document.getElementById('nav-sell'),
         inbox: document.getElementById('nav-messages'),
         dashboard: document.getElementById('nav-profile'),
-        profile: document.getElementById('nav-profile') // Profile maps to dashboard icon
+        profile: document.getElementById('nav-profile') 
     };
-    // Reset all links to default color
     Object.values(navLinks).forEach(link => {
         if (link) {
             link.classList.remove('text-blue-600', 'dark:text-blue-400');
             link.classList.add('text-gray-600', 'dark:text-gray-300');
         }
     });
-    // Apply active color to the current view's link
     const activeLink = navLinks[viewName];
     if (activeLink) {
         activeLink.classList.remove('text-gray-600', 'dark:text-gray-300');
         activeLink.classList.add('text-blue-600', 'dark:text-blue-400');
     }
 };
-
 
 const renderView = (viewName, data = null) => {
     if (productsUnsubscribe) productsUnsubscribe();
@@ -297,7 +291,7 @@ const renderView = (viewName, data = null) => {
     }
     
     currentView = viewName;
-    updateBottomNav(route); // NEW: Update bottom nav on every view change
+    updateBottomNav(route);
     window.scrollTo(0, 0);
     translatePage(currentLang);
 };
@@ -480,6 +474,7 @@ const setupFilterListeners = (container = document) => {
     populateSelect(container.querySelector('#category-filter'), categories, 'all_categories', currentLang, true);
 };
 
+// ✅ UPDATED: Implemented skeleton loader
 const renderListings = (loadMore = false) => {
     const listingsSection = document.getElementById('listings-section');
     const loadMoreContainer = document.getElementById('load-more-container');
@@ -487,7 +482,6 @@ const renderListings = (loadMore = false) => {
 
     isFetching = true;
     if (!loadMore) {
-        // NEW: Skeleton loader implementation
         let skeletonHTML = '';
         for (let i = 0; i < 8; i++) {
             skeletonHTML += `
@@ -771,8 +765,7 @@ window.renderChatPage = async (chatData) => {
     const messageInput = document.getElementById('message-input');
     
     const q = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "desc"), limit(25));
-    if(messagesListener) messagesListener(); // Unsubscribe from previous listener
-
+    if(messagesListener) messagesListener(); 
     messagesListener = onSnapshot(q, (snapshot) => {
         messagesContainer.innerHTML = snapshot.empty ? '<p class="text-center text-gray-500">No messages yet. Say hi!</p>' : '';
         snapshot.docs.reverse().forEach(doc => {
@@ -915,7 +908,6 @@ const updateAuthUI = (user) => {
         <a href="#" id="mobile-sell-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg" data-i18n-key="sell"></a>
         <a href="#" id="mobile-cart-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg relative"><span data-i18n-key="cart_title"></span><span id="mobile-cart-count" class="absolute top-0 ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full hidden">0</span></a>`;
 
-    // FIX: Updated mobile home link to clear URL params
     document.getElementById('mobile-home-link').onclick = (e) => { 
         e.preventDefault(); 
         DOMElements.mobileMenu.classList.add('hidden'); 
@@ -1037,7 +1029,6 @@ const setupEventListeners = () => {
         if (!disabled) populateSelect(DOMElements.postProductCommuneSelect, wilayas[wilaya], 'select_commune', currentLang);
     };
     
-    // FIX: Updated bottom nav home button to clear URL params
     document.getElementById('nav-home').onclick = (e) => { 
         e.preventDefault(); 
         window.history.pushState({}, '', window.location.pathname);
@@ -1048,14 +1039,13 @@ const setupEventListeners = () => {
     document.getElementById('nav-messages').onclick = (e) => { e.preventDefault(); currentUser ? renderView('inbox') : toggleModal(DOMElements.authModal, true); };
     document.getElementById('nav-profile').onclick = (e) => { e.preventDefault(); currentUser ? renderView('dashboard') : toggleModal(DOMElements.authModal, true); };
 
-    // NEW: Hide header on scroll
     let lastScrollY = window.scrollY;
     const header = document.querySelector('header');
     window.addEventListener('scroll', () => {
         if (lastScrollY < window.scrollY && window.scrollY > 100) {
-            header.classList.add('-translate-y-full'); // Hides header
+            header.classList.add('-translate-y-full');
         } else {
-            header.classList.remove('-translate-y-full'); // Shows header
+            header.classList.remove('-translate-y-full');
         }
         lastScrollY = window.scrollY;
     }, { passive: true });
