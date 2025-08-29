@@ -30,7 +30,7 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-// --- TRANSLATIONS (Completed) ---
+// --- TRANSLATIONS ---
 const translations = {
     fr: {
         page_title: "Piecety - Marché des Pièces Auto en Algérie", meta_description: "Achetez et vendez des pièces automobiles en Algérie avec Piecety, le marché fiable pour les pièces neuves et d'occasion.", fr_short: "FR", en_short: "EN", ar_short: "AR", menu: "Menu", sell: "Vendre", connect: "Se connecter", language: "Langue", logout: "Déconnexion", dashboard: "Tableau de Bord", nav_home: "Accueil", nav_search: "Recherche", nav_profile: "Profil", hero_title: "Trouvez la bonne pièce pour votre voiture", hero_subtitle: "Le marché algérien des pièces automobiles le plus fiable.", categories_title: "Catégories de Pièces", brands_title: "Sélectionnez une Marque", years_title: "Sélectionnez une Année", filters_title: "Filtrer les annonces", all_brands: "Toutes les marques", all_models: "Tous les modèles", all_years: "Toutes années", all_wilayas: "Toutes wilayas", all_communes: "Toutes communes", condition: "État", any_condition: "Tout", new: "Neuf", used: "Occasion", apply_filters: "Appliquer les filtres", reset: "Réinitialiser", search_placeholder: "Rechercher une pièce...", submit_ad: "Soumettre une annonce", ad_title_label: "Titre de la pièce *", ad_title_placeholder: "Ex: Disque de frein avant", brand_label: "Marque *", select_brand: "Sélectionnez une marque", model_label: "Modèle", select_model: "Sélectionnez un modèle", year_label: "Année", select_year: "Sélectionnez une année", wilaya_label: "Wilaya *", select_wilaya: "Sélectionnez une wilaya", commune_label: "Commune", select_commune: "Sélectionnez une commune", condition_label: "État", price_label: "Prix (DA) *", price_placeholder: "Ex: 15000", description_label: "Description", description_placeholder: "Informations supplémentaires...", submit_ad_btn_text: "Soumettre", loading_text: "Envoi...", error_valid_title: "Veuillez entrer un titre valide.", error_select_brand: "Veuillez sélectionner une marque.", error_select_wilaya: "Veuillez sélectionner une wilaya.", error_select_category: "Veuillez sélectionner une catégorie.", error_valid_price: "Veuillez entrer un prix valide.", login_text: "Connectez-vous pour accéder à toutes les fonctionnalités.", google_login: "Se connecter avec Google", back_to_listings: "Retour aux annonces", add_to_cart: "Ajouter au panier", cart_title: "Mon panier", cart_total: "Total", checkout_btn: "Passer à la caisse", no_listings: "Aucune annonce trouvée.", your_cart_is_empty: "Votre panier est vide.", remove: "Supprimer", quantity: "Quantité", item_total: "Total de l'article", login_required: "Veuillez vous connecter pour utiliser cette fonctionnalité.", show_filters: "Afficher les filtres", price_range: "Gamme de prix", all_categories: "Toutes catégories", category_label: "Catégorie *", select_category: "Sélectionnez une catégorie", contact_seller: "Contacter le vendeur", clear_cart: "Vider le panier", ad_posted: "Votre annonce a été publiée avec succès !", ad_post_failed: "Échec de la publication de l'annonce.", item_added_to_cart: "Article ajouté au panier!", delete_ad_confirm: "Êtes-vous sûr de vouloir supprimer cette annonce ?", sold_by: "Vendu par:", my_listings: "Mes Annonces", seller_listings: "Annonces de ce vendeur", buyer_reviews: "Avis des acheteurs", reviews_soon: "(Avis bientôt disponibles)", reviews_soon_2: "La fonctionnalité d'avis sera bientôt disponible.", messages: "Messages", loading_convos: "Chargement des conversations...", chat_with: "Chat avec", type_message_placeholder: "Écrire un message...", recently_viewed: "Récemment consultés", chat: "Chat", load_more: "Charger plus"
@@ -43,7 +43,7 @@ const translations = {
     }
 };
 
-// --- DATA (Completed) ---
+// --- DATA ---
 const categories = {
     "engine": { fr: "Moteur", en: "Engine", ar: "محرك", icon: "fa-cogs" }, "brakes": { fr: "Freins", en: "Brakes", ar: "مكابح", icon: "fa-car" }, "fuel_system": { fr: "Système de carburant", en: "Fuel System", ar: "نظام الوقود", icon: "fa-gas-pump" }, "cooling": { fr: "Refroidissement", en: "Cooling", ar: "التبريد", icon: "fa-fan" }, "tires": { fr: "Pneus & Jantes", en: "Tires & Rims", ar: "الإطارات والعجلات", icon: "fa-circle" }, "electrical": { fr: "Électrique", en: "Electrical", ar: "كهربائي", icon: "fa-bolt" }, "body": { fr: "Carrosserie", en: "Body", ar: "هيكل", icon: "fa-car-side" }, "tools": { fr: "Outillage", en: "Tools", ar: "أدوات", icon: "fa-wrench" },
 };
@@ -73,6 +73,7 @@ const DOMElements = {
     postProductForm: document.getElementById("post-product-form"),
     mobileMenuBtn: document.getElementById("mobile-menu-btn"),
     mobileMenu: document.getElementById("mobile-menu"),
+    mobileMenuBackdrop: document.getElementById("mobile-menu-backdrop"),
     mobileMenuCloseBtn: document.getElementById("mobile-menu-close-btn"),
     mobileNavLinks: document.getElementById("mobile-nav-links"),
     mobileFiltersModal: document.getElementById("mobile-filters-modal"),
@@ -146,6 +147,17 @@ const debounce = (func, delay) => {
         clearTimeout(timeout);
         timeout = setTimeout(() => func.apply(this, args), delay);
     };
+};
+
+// --- MOBILE MENU CONTROL ---
+const openMobileMenu = () => {
+    DOMElements.mobileMenu.classList.remove('-translate-x-full');
+    DOMElements.mobileMenuBackdrop.classList.remove('invisible', 'opacity-0');
+};
+
+const closeMobileMenu = () => {
+    DOMElements.mobileMenu.classList.add('-translate-x-full');
+    DOMElements.mobileMenuBackdrop.classList.add('invisible', 'opacity-0');
 };
 
 // --- APP LOGIC ---
@@ -474,7 +486,6 @@ const setupFilterListeners = (container = document) => {
     populateSelect(container.querySelector('#category-filter'), categories, 'all_categories', currentLang, true);
 };
 
-// ✅ UPDATED: Implemented skeleton loader
 const renderListings = (loadMore = false) => {
     const listingsSection = document.getElementById('listings-section');
     const loadMoreContainer = document.getElementById('load-more-container');
@@ -485,12 +496,12 @@ const renderListings = (loadMore = false) => {
         let skeletonHTML = '';
         for (let i = 0; i < 8; i++) {
             skeletonHTML += `
-                <div class="skeleton-card rounded-lg shadow-md p-4 animate-pulse">
-                    <div class="skeleton-img w-full h-40 rounded-md"></div>
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 animate-pulse">
+                    <div class="bg-gray-300 dark:bg-gray-700 w-full h-40 rounded-md"></div>
                     <div class="mt-4">
-                        <div class="skeleton-line h-4 w-3/4 rounded"></div>
-                        <div class="skeleton-line h-6 w-1/2 rounded mt-2"></div>
-                        <div class="skeleton-line h-4 w-full rounded mt-4"></div>
+                        <div class="bg-gray-300 dark:bg-gray-700 h-4 w-3/4 rounded"></div>
+                        <div class="bg-gray-300 dark:bg-gray-700 h-6 w-1/2 rounded mt-2"></div>
+                        <div class="bg-gray-300 dark:bg-gray-700 h-4 w-full rounded mt-4"></div>
                     </div>
                 </div>
             `;
@@ -765,7 +776,7 @@ window.renderChatPage = async (chatData) => {
     const messageInput = document.getElementById('message-input');
     
     const q = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "desc"), limit(25));
-    if(messagesListener) messagesListener(); 
+    if(messagesListener) messagesListener();
     messagesListener = onSnapshot(q, (snapshot) => {
         messagesContainer.innerHTML = snapshot.empty ? '<p class="text-center text-gray-500">No messages yet. Say hi!</p>' : '';
         snapshot.docs.reverse().forEach(doc => {
@@ -903,39 +914,28 @@ const validatePostForm = (form) => {
 const updateAuthUI = (user) => {
     const { authLinksContainer, mobileNavLinks } = DOMElements;
     authLinksContainer.innerHTML = '';
-    mobileNavLinks.innerHTML = `
+    
+    let mobileLinksHTML = `
         <a href="#" id="mobile-home-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg" data-i18n-key="nav_home"></a>
         <a href="#" id="mobile-sell-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg" data-i18n-key="sell"></a>
         <a href="#" id="mobile-cart-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg relative"><span data-i18n-key="cart_title"></span><span id="mobile-cart-count" class="absolute top-0 ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full hidden">0</span></a>`;
 
-    document.getElementById('mobile-home-link').onclick = (e) => { 
-        e.preventDefault(); 
-        DOMElements.mobileMenu.classList.add('hidden'); 
-        window.history.pushState({}, '', window.location.pathname);
-        renderView('home'); 
-    };
-    document.getElementById('mobile-sell-link').onclick = (e) => { e.preventDefault(); DOMElements.mobileMenu.classList.add('hidden'); DOMElements.sellLink.click(); };
-    document.getElementById('mobile-cart-link').onclick = (e) => { e.preventDefault(); DOMElements.mobileMenu.classList.add('hidden'); renderView('cart'); };
-
     if (user) {
         authLinksContainer.innerHTML = `<div class="relative" id="user-menu"><button id="user-menu-btn" class="flex items-center"><img src="${user.photoURL}" alt="User" class="w-8 h-8 rounded-full"></button><div id="user-menu-dropdown" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-lg shadow-lg py-1 hidden z-20"><a href="#" id="dashboard-link" class="block px-4 py-2 text-sm" data-i18n-key="dashboard"></a><a href="#" id="messages-link" class="relative block px-4 py-2 text-sm" data-i18n-key="messages"><span id="unread-badge" class="hidden absolute right-2 top-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"></span></a><button id="logout-btn" class="w-full text-left px-4 py-2 text-sm" data-i18n-key="logout"></button></div></div>`;
-        mobileNavLinks.innerHTML += `<a href="#" id="mobile-dashboard-link" class="p-2 text-lg" data-i18n-key="dashboard"></a><a href="#" id="mobile-messages-link" class="p-2 text-lg relative"><span data-i18n-key="messages"></span><span id="mobile-unread-badge" class="hidden absolute top-0 ml-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"></span></a><button id="mobile-logout-btn" class="p-2 text-lg text-left" data-i18n-key="logout"></button>`;
-
+        mobileLinksHTML += `<a href="#" id="mobile-dashboard-link" class="p-2 text-lg" data-i18n-key="dashboard"></a><a href="#" id="mobile-messages-link" class="p-2 text-lg relative"><span data-i18n-key="messages"></span><span id="mobile-unread-badge" class="hidden absolute top-0 ml-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"></span></a><button id="mobile-logout-btn" class="p-2 text-lg text-left" data-i18n-key="logout"></button>`;
+        
         const toggleUserMenu = () => document.getElementById('user-menu-dropdown').classList.toggle('hidden');
-        const closeUserMenu = () => document.getElementById('user-menu-dropdown').classList.add('hidden');
         document.getElementById('user-menu-btn').onclick = toggleUserMenu;
         document.getElementById('logout-btn').onclick = handleSignOut;
-        document.getElementById('dashboard-link').onclick = (e) => { e.preventDefault(); closeUserMenu(); renderView('dashboard'); };
-        document.getElementById('messages-link').onclick = (e) => { e.preventDefault(); closeUserMenu(); renderView('inbox'); };
-        document.getElementById('mobile-logout-btn').onclick = handleSignOut;
-        document.getElementById('mobile-dashboard-link').onclick = (e) => { e.preventDefault(); DOMElements.mobileMenu.classList.add('hidden'); renderView('dashboard'); };
-        document.getElementById('mobile-messages-link').onclick = (e) => { e.preventDefault(); DOMElements.mobileMenu.classList.add('hidden'); renderView('inbox'); };
+        document.getElementById('dashboard-link').onclick = (e) => { e.preventDefault(); renderView('dashboard'); };
+        document.getElementById('messages-link').onclick = (e) => { e.preventDefault(); renderView('inbox'); };
     } else {
         authLinksContainer.innerHTML = `<button id="login-btn" class="px-4 py-2 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors" data-i18n-key="connect"></button>`;
-        mobileNavLinks.innerHTML += `<button id="mobile-login-btn" class="p-2 text-lg text-left" data-i18n-key="connect"></button>`;
+        mobileLinksHTML += `<button id="mobile-login-btn" class="p-2 text-lg text-left" data-i18n-key="connect"></button>`;
         document.getElementById('login-btn').onclick = () => toggleModal(DOMElements.authModal, true);
-        document.getElementById('mobile-login-btn').onclick = () => { DOMElements.mobileMenu.classList.add('hidden'); toggleModal(DOMElements.authModal, true) };
     }
+
+    mobileNavLinks.innerHTML = mobileLinksHTML;
     updateCartDisplay();
     translatePage(currentLang);
 };
@@ -967,18 +967,39 @@ const setupEventListeners = () => {
 
     darkModeToggle.onclick = () => setDarkMode(!DOMElements.html.classList.contains('dark'));
     langDropdownBtn.onclick = (e) => { e.stopPropagation(); DOMElements.langDropdown.classList.toggle('hidden'); };
-    langBtns.forEach(btn => btn.onclick = () => { setLanguage(btn.dataset.lang); DOMElements.langDropdown.classList.add('hidden'); DOMElements.mobileMenu.classList.add('hidden'); });
+    langBtns.forEach(btn => btn.onclick = () => { setLanguage(btn.dataset.lang); DOMElements.langDropdown.classList.add('hidden'); closeMobileMenu(); });
 
     sellLink.onclick = (e) => { e.preventDefault(); toggleModal(currentUser ? DOMElements.postProductModal : DOMElements.authModal, true); };
     cartBtn.onclick = () => renderView('cart');
     homeLink.onclick = (e) => { e.preventDefault(); window.history.pushState({}, '', window.location.pathname); renderView('home'); };
 
-    mobileMenuBtn.onclick = () => DOMElements.mobileMenu.classList.remove('hidden');
-    mobileMenuCloseBtn.onclick = () => DOMElements.mobileMenu.classList.add('hidden');
+    // Mobile Menu Handlers
+    mobileMenuBtn.onclick = openMobileMenu;
+    mobileMenuCloseBtn.onclick = closeMobileMenu;
+    DOMElements.mobileMenuBackdrop.onclick = closeMobileMenu;
+
+    // Mobile Menu Event Delegation
+    DOMElements.mobileNavLinks.addEventListener('click', (e) => {
+        const target = e.target.closest('a, button');
+        if (!target) return;
+        e.preventDefault();
+        
+        const actions = {
+            'mobile-home-link': () => { window.history.pushState({}, '', window.location.pathname); renderView('home'); },
+            'mobile-sell-link': () => sellLink.click(),
+            'mobile-cart-link': () => renderView('cart'),
+            'mobile-dashboard-link': () => renderView('dashboard'),
+            'mobile-messages-link': () => renderView('inbox'),
+            'mobile-logout-btn': handleSignOut,
+            'mobile-login-btn': () => toggleModal(DOMElements.authModal, true)
+        };
+        
+        actions[target.id]?.();
+        closeMobileMenu();
+    });
 
     authModalCloseBtn.onclick = () => toggleModal(DOMElements.authModal, false);
     modalCloseBtn.onclick = () => toggleModal(DOMElements.postProductModal, false);
-    
     googleLoginBtn.onclick = () => signInWithPopup(auth, provider).catch(error => console.error("Login error", error));
 
     DOMElements.postProductForm.onsubmit = async (e) => {
@@ -1014,19 +1035,6 @@ const setupEventListeners = () => {
         if (!langDropdownBtn.contains(e.target)) DOMElements.langDropdown.classList.add('hidden');
         const userMenu = document.getElementById('user-menu');
         if (userMenu && !userMenu.contains(e.target)) document.getElementById('user-menu-dropdown').classList.add('hidden');
-    };
-
-    DOMElements.postProductBrandSelect.onchange = (e) => {
-        const brand = e.target.value;
-        const disabled = !(brand && car_data[brand]);
-        DOMElements.postProductModelSelect.disabled = disabled;
-        if (!disabled) populateSelect(DOMElements.postProductModelSelect, car_data[brand], 'select_model', currentLang);
-    };
-    DOMElements.postProductWilayaSelect.onchange = (e) => {
-        const wilaya = e.target.value;
-        const disabled = !(wilaya && wilayas[wilaya]);
-        DOMElements.postProductCommuneSelect.disabled = disabled;
-        if (!disabled) populateSelect(DOMElements.postProductCommuneSelect, wilayas[wilaya], 'select_commune', currentLang);
     };
     
     document.getElementById('nav-home').onclick = (e) => { 
