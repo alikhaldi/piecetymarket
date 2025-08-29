@@ -40,7 +40,7 @@ button, a, [role="button"] {
   touch-action: manipulation;
 }
 
-/* --- ✅ NEW: Modal & Menu Transitions --- */
+/* --- Modal & Menu Transitions --- */
 .modal, #mobile-menu-backdrop {
     transition: opacity 0.3s ease, visibility 0.3s ease;
 }
@@ -70,7 +70,7 @@ button, a, [role="button"] {
     background-color: #374151; /* dark:bg-gray-700 */
 }
 
-/* --- ✅ NEW: Mobile UX Enhancements --- */
+/* --- Mobile UX Enhancements --- */
 @media (max-width: 768px) {
     /* Prevent bottom nav overlap */
     main {
