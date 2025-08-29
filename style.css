@@ -13,20 +13,16 @@ body {
 ::-webkit-scrollbar {
     width: 8px;
 }
-
 ::-webkit-scrollbar-track {
     background: #f1f1f1;
 }
-
 .dark ::-webkit-scrollbar-track {
     background: #2d3748;
 }
-
 ::-webkit-scrollbar-thumb {
     background: #888;
     border-radius: 4px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
@@ -39,52 +35,51 @@ body {
 }
 
 /* Improved Touch Feedback */
-button, a {
+button, a, [role="button"] {
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
-/* Modal transitions */
-.modal {
+/* --- ✅ NEW: Modal & Menu Transitions --- */
+.modal, #mobile-menu-backdrop {
     transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+#mobile-menu {
+    transition: transform 0.3s ease-in-out;
 }
 
 /* Category Card Hover Effect */
+.category-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
 .category-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
-
 .dark .category-card:hover {
     box-shadow: 0 10px 15px rgba(255, 255, 255, 0.1);
 }
-
+.category-card .category-icon {
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
 .category-card:hover .category-icon {
     transform: scale(1.1);
     background-color: #dbeafe; /* bg-blue-100 */
 }
-
 .dark .category-card:hover .category-icon {
     background-color: #374151; /* dark:bg-gray-700 */
 }
 
-/* Mobile menu improvements */
-#mobile-menu {
-    overflow-y: auto;
-}
-
-/* Better touch targets for mobile */
+/* --- ✅ NEW: Mobile UX Enhancements --- */
 @media (max-width: 768px) {
-    header button, header a {
-        min-height: 44px;
-        min-width: 44px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
+    /* Prevent bottom nav overlap */
+    main {
+        padding-bottom: 5rem;
     }
     
-    /* Improve mobile form elements */
+    /* Improve mobile form elements to prevent iOS zoom */
     input, select, textarea {
-        font-size: 16px; /* Prevents zoom on iOS */
+        font-size: 16px;
     }
     
     /* Better, more responsive grid for mobile */
@@ -93,46 +88,42 @@ button, a {
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
         gap: 12px;
     }
-    
-    .category-card {
-        padding: 12px 8px;
+
+    #mobile-menu {
+        width: 80%; /* Wider for better touch targets */
+        max-width: 320px;
     }
-    
-    .category-icon {
-        width: 48px;
-        height: 48px;
+
+    #mobile-nav-links a, #mobile-nav-links button {
+        padding: 1rem; 
+        font-size: 1.125rem; /* Larger tap areas */
     }
 }
 
-/* Improve listing card on very small screens */
+/* Optimize search bar for small screens */
 @media (max-width: 480px) {
-  .listing-card {
-    flex-direction: column;
-    text-align: center;
-  }
-  .listing-card img {
-    width: 100%;
-    height: auto;
-  }
+    #search-input {
+      padding: 0.6rem 2.5rem 0.6rem 2.2rem;
+      font-size: 15px;
+    }
+    .fa-search.absolute {
+      left: 0.8rem;
+    }
 }
-
 
 /* RTL support for Arabic */
-.rtl {
+html[dir="rtl"] {
     text-align: right;
 }
-.rtl .fa-search {
-    right: 12px;
+html[dir="rtl"] .fa-search.absolute {
+    right: 0.75rem; /* 12px */
     left: auto;
 }
-.rtl #search-input{
+html[dir="rtl"] #search-input {
     padding-right: 2.5rem;
     padding-left: 0.75rem;
 }
-
-/* Improve modal for mobile */
-@media (max-width: 640px) {
-    #post-product-modal .grid {
-        grid-template-columns: 1fr;
-    }
+html[dir="rtl"] .logo svg {
+    margin-left: 0.5rem; /* ml-2 */
+    margin-right: 0;
 }
