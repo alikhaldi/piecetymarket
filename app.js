@@ -1,1230 +1,962 @@
-// app.js - fixed & enhanced version for Piecety
-// - Removes unused imports
-// - Fixes debounce, years calculation, dark-mode toggle, i18n breadcrumb
-// - Adds Facebook login, image upload for ads & profile, profile edit/store
-// - Ensures ownerId (sellerId) saved with products
-
-// Firebase SDK imports (only required functions)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  query,
-  onSnapshot,
-  where,
-  getDocs,
-  doc,
-  setDoc,
-  getDoc,
-  deleteDoc,
-  updateDoc,
-  serverTimestamp,
-  orderBy,
-  limit,
-  startAfter
-} from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
-import {
-  getAuth,
-  signInWithPopup,
-  signOut,
-  GoogleAuthProvider,
-  FacebookAuthProvider,
-  onAuthStateChanged,
-  updateProfile
-} from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
-import {
-  getStorage,
-  ref as storageRef,
-  uploadBytes,
-  getDownloadURL
-} from "https://www.gstatic.com/firebasejs/10.13.1/firebase-storage.js";
+import { getFirestore, collection, addDoc, query, onSnapshot, where, getDocs, doc, setDoc, getDoc, deleteDoc, updateDoc, increment, serverTimestamp, orderBy, limit, startAfter, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+import { getAuth, signInWithPopup, signOut, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 
-/* -------------------------
-   Global state & constants
-   ------------------------- */
+// Firebase Config (use environment variables in production)
+const firebaseConfig = {
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "YOUR_API_KEY",
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "piecety-app-b39c4.firebaseapp.com",
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "piecety-app-b39c4",
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "piecety-app-b39c4.appspot.com",
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "265795860915",
+    appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:265795860915:web:aa10241788cce42f6373c6"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
+// Enable offline persistence
+enableIndexedDbPersistence(db).catch(err => console.warn("Offline persistence failed:", err));
+
+// Global State
 let currentUser = null;
 let currentLang = localStorage.getItem("piecety_lang") || "fr";
-let currentView = "home";
+let currentView = 'home';
 let userCart = {};
 let productsUnsubscribe = null;
 let chatsUnsubscribe = null;
 let lastVisibleProduct = null;
 let isFetching = false;
-let recentlyViewed = JSON.parse(localStorage.getItem("piecety_recently_viewed") || "[]");
+let recentlyViewed = JSON.parse(localStorage.getItem('piecety_recently_viewed')) || [];
 
-/* -------------------------
-   Firebase config + init
-   ------------------------- */
-const firebaseConfig = {
-  apiKey: "AIzaSyBIptEskV2soajxRYPDfwYFYyz9pWQvZL0",
-  authDomain: "piecety-app-b39c4.firebaseapp.com",
-  projectId: "piecety-app-b39c4",
-  storageBucket: "piecety-app-b39c4.appspot.com",
-  messagingSenderId: "265795860915",
-  appId: "1:265795860915:web:aa10241788cce42f6373c6"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
-const googleProvider = new GoogleAuthProvider();
-const fbProvider = new FacebookAuthProvider();
-const storage = getStorage(app);
-
-/* -------------------------
-   Translations (kept minimal)
-   ------------------------- */
-const translations = {
-  fr: {
-    page_title: "Piecety - Marché des Pièces Auto en Algérie",
-    meta_description:
-      "Achetez et vendez des pièces automobiles en Algérie avec Piecety, le marché fiable pour les pièces neuves et d'occasion.",
-    nav_home: "Accueil",
-    search_placeholder: "Rechercher une pièce...",
-    submit_ad: "Soumettre une annonce",
-    submit_ad_btn_text: "Soumettre",
-    ad_posted: "Votre annonce a été publiée avec succès !",
-    ad_post_failed: "Échec de la publication de l'annonce.",
-    login_text: "Connectez-vous pour accéder à toutes les fonctionnalités.",
-    google_login: "Se connecter avec Google",
-    login_required: "Veuillez vous connecter pour utiliser cette fonctionnalité.",
-    item_added_to_cart: "Article ajouté au panier!",
-    logout: "Déconnexion",
-    dashboard: "Tableau de Bord",
-    messages: "Messages",
-    sell: "Vendre",
-    cart_title: "Mon panier"
-  },
-  en: {
-    page_title: "Piecety - Car Parts Marketplace in Algeria",
-    meta_description:
-      "Buy and sell car parts in Algeria with Piecety, the reliable marketplace for new and used parts.",
-    nav_home: "Home",
-    search_placeholder: "Search for a part...",
-    submit_ad: "Submit an Ad",
-    submit_ad_btn_text: "Submit",
-    ad_posted: "Your ad has been posted successfully!",
-    ad_post_failed: "Failed to post ad.",
-    login_text: "Log in to access all features.",
-    google_login: "Sign in with Google",
-    login_required: "Please log in to use this feature.",
-    item_added_to_cart: "Item added to cart!",
-    logout: "Logout",
-    dashboard: "Dashboard",
-    messages: "Messages",
-    sell: "Sell",
-    cart_title: "My Cart"
-  },
-  ar: {
-    page_title: "Piecety - سوق قطع غيار السيارات في الجزائر",
-    meta_description:
-      "بيع وشراء قطع غيار السيارات في الجزائر مع Piecety، السوق الموثوق للقطع الجديدة والمستعملة.",
-    nav_home: "الرئيسية",
-    search_placeholder: "ابحث عن قطعة...",
-    submit_ad: "إرسال إعلان",
-    submit_ad_btn_text: "إرسال",
-    ad_posted: "تم نشر إعلانك بنجاح!",
-    ad_post_failed: "فشل نشر الإعلان.",
-    login_text: "تسجيل الدخول للوصول إلى جميع الميزات.",
-    google_login: "تسجيل الدخول باستخدام Google",
-    login_required: "يرجى تسجيل الدخول لاستخدام هذه الميزة.",
-    item_added_to_cart: "تمت إضافة المنتج إلى السلة!",
-    logout: "تسجيل الخروج",
-    dashboard: "لوحة التحكم",
-    messages: "الرسائل",
-    sell: "بيع",
-    cart_title: "سلة التسوق"
-  }
-};
-
-/* -------------------------
-   Small datasets (abridged)
-   ------------------------- */
-const categories = {
-  engine: { fr: "Moteur", en: "Engine", ar: "محرك", icon: "fa-cogs" },
-  brakes: { fr: "Freins", en: "Brakes", ar: "مكابح", icon: "fa-car" },
-  tires: { fr: "Pneus & Jantes", en: "Tires & Rims", ar: "الإطارات", icon: "fa-circle" }
-};
-
-// car data abbreviated — original file has more
-const car_data = {
-  Toyota: ["Yaris", "Corolla", "Camry"],
-  Peugeot: ["208", "308"]
-};
-
-const brand_icons = {
-  Toyota: "icons/toyota.png",
-  Peugeot: "icons/peugeot.png",
-  default: "icons/car-192.png"
-};
-
-/* -------------------------
-   Years (fix off-by-one)
-   ------------------------- */
-const currentYear = new Date().getFullYear();
-// include 1980 (so length is currentYear - 1979 + 1)
-const years = Array.from(
-  { length: currentYear - 1979 + 1 },
-  (_, i) => (currentYear - i).toString()
-);
-
-/* -------------------------
-   DOM elements (safe access)
-   ------------------------- */
+// DOM Elements
 const DOMElements = {
-  html: document.documentElement,
-  appContainer: document.getElementById("app-container"),
-  messageBox: document.getElementById("message-box"),
-  langDropdownBtn: document.getElementById("lang-dropdown-btn"),
-  langDropdown: document.getElementById("lang-dropdown"),
-  langBtns: document.querySelectorAll(".lang-btn"),
-  searchInput: document.getElementById("search-input"),
-  postProductModal: document.getElementById("post-product-modal"),
-  modalCloseBtn: document.getElementById("modal-close-btn"),
-  postProductForm: document.getElementById("post-product-form"),
-  mobileMenuBtn: document.getElementById("mobile-menu-btn"),
-  mobileMenu: document.getElementById("mobile-menu"),
-  mobileMenuBackdrop: document.getElementById("mobile-menu-backdrop"),
-  mobileMenuCloseBtn: document.getElementById("mobile-menu-close-btn"),
-  mobileNavLinks: document.getElementById("mobile-nav-links"),
-  mobileFiltersModal: document.getElementById("mobile-filters-modal"),
-  mobileFiltersContent: document.getElementById("mobile-filters-content"),
-  mobileFiltersCloseBtn: document.getElementById("mobile-filters-close-btn"),
-  mobileApplyFiltersBtn: document.getElementById("mobile-apply-filters-btn"),
-  authModal: document.getElementById("auth-modal"),
-  authModalCloseBtn: document.getElementById("auth-modal-close-btn"),
-  googleLoginBtn: document.getElementById("google-login-btn"),
-  cartBtn: document.getElementById("cart-btn"),
-  cartCountSpan: document.getElementById("cart-count"),
-  authLinksContainer: document.getElementById("auth-links"),
-  homeLink: document.getElementById("home-link"),
-  sellLink: document.getElementById("sell-link"),
-  darkModeToggle: document.getElementById("dark-mode-toggle"),
-  postProductBrandSelect: document.getElementById("product-brand"),
-  postProductModelSelect: document.getElementById("product-model"),
-  postProductYearSelect: document.getElementById("product-year"),
-  postProductWilayaSelect: document.getElementById("product-wilaya"),
-  postProductCommuneSelect: document.getElementById("product-commune"),
-  postProductCategorySelect: document.getElementById("product-category"),
-  postProductConditionSelect: document.getElementById("product-condition")
+    html: document.documentElement,
+    darkModeToggle: document.getElementById('dark-mode-toggle'),
+    langDropdownBtn: document.getElementById('lang-dropdown-btn'),
+    langDropdown: document.getElementById('lang-dropdown'),
+    langBtns: document.querySelectorAll('#lang-dropdown button'),
+    sellLink: document.getElementById('nav-sell'),
+    cartBtn: document.getElementById('nav-cart'),
+    homeLink: document.getElementById('nav-home'),
+    mobileMenuBtn: document.getElementById('mobile-menu-btn'),
+    mobileMenuCloseBtn: document.getElementById('mobile-menu-close-btn'),
+    mobileMenuBackdrop: document.getElementById('mobile-menu-backdrop'),
+    mobileNavLinks: document.getElementById('mobile-nav-links'),
+    authModal: document.getElementById('auth-modal'),
+    authModalCloseBtn: document.getElementById('auth-modal-close-btn'),
+    googleLoginBtn: document.getElementById('google-login-btn'),
+    postProductModal: document.getElementById('post-product-modal'),
+    modalCloseBtn: document.getElementById('modal-close-btn'),
+    postProductForm: document.getElementById('post-product-form'),
+    searchInput: document.getElementById('search-input'),
+    mobileFiltersModal: document.getElementById('mobile-filters-modal'),
+    mobileFiltersCloseBtn: document.getElementById('mobile-filters-close-btn'),
+    mobileApplyFiltersBtn: document.getElementById('mobile-apply-filters-btn'),
+    authLinksContainer: document.getElementById('auth-links-container'),
+    contentSection: document.getElementById('content-section'),
+    dynamicGrid: document.getElementById('dynamic-grid'),
+    filtersForm: document.getElementById('filters-form')
 };
 
-/* -------------------------
-   Util: showMessage (safer)
-   ------------------------- */
-const showMessage = (msgKeyOrText, duration = 3500, type = "info") => {
-  const box = DOMElements.messageBox;
-  if (!box) return;
-  const text = translations[currentLang]?.[msgKeyOrText] || msgKeyOrText;
-  box.textContent = text;
-
-  // reset classes, keep positioning wrapper
-  box.className =
-    "fixed top-5 right-5 z-[1000] p-4 rounded-lg shadow-lg transition-all duration-500 ease-in-out max-w-sm break-words";
-  const colors =
-    type === "success"
-      ? ["bg-green-100", "text-green-800", "dark:bg-green-900", "dark:text-green-200"]
-      : type === "error"
-      ? ["bg-red-100", "text-red-800", "dark:bg-red-900", "dark:text-red-200"]
-      : ["bg-blue-100", "text-blue-800", "dark:bg-blue-900", "dark:text-blue-200"];
-
-  box.classList.add(...colors);
-
-  // show
-  requestAnimationFrame(() => {
-    box.classList.remove("opacity-0", "translate-x-full", "invisible");
-    box.classList.add("opacity-100", "translate-x-0");
-  });
-
-  setTimeout(() => {
-    box.classList.remove("opacity-100", "translate-x-0");
-    box.classList.add("opacity-0", "translate-x-full");
-  }, duration);
-};
-
-/* -------------------------
-   Util: debounce (fixed)
-   ------------------------- */
-const debounce = (func, delay) => {
-  let timeout;
-  return (...args) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func(...args), delay);
-  };
-};
-
-/* -------------------------
-   Cart display (handles mobile count if present)
-   ------------------------- */
-const updateCartDisplay = () => {
-  const cartItemCount = Object.values(userCart).reduce((s, it) => s + (it.quantity || 0), 0);
-  if (DOMElements.cartCountSpan) {
-    DOMElements.cartCountSpan.textContent = cartItemCount;
-    DOMElements.cartCountSpan.classList.toggle("hidden", cartItemCount === 0);
-  }
-  const mobileCart = document.getElementById("mobile-cart-count");
-  if (mobileCart) {
-    mobileCart.textContent = cartItemCount;
-    mobileCart.classList.toggle("hidden", cartItemCount === 0);
-  }
-};
-
-/* -------------------------
-   Mobile menu
-   ------------------------- */
-const openMobileMenu = () => {
-  DOMElements.mobileMenu?.classList.remove("-translate-x-full");
-  DOMElements.mobileMenuBackdrop?.classList.remove("invisible", "opacity-0");
-};
-const closeMobileMenu = () => {
-  DOMElements.mobileMenu?.classList.add("-translate-x-full");
-  DOMElements.mobileMenuBackdrop?.classList.add("invisible", "opacity-0");
-};
-
-/* -------------------------
-   Language / i18n helpers
-   ------------------------- */
-const translatePage = (lang) => {
-  currentLang = lang;
-  localStorage.setItem("piecety_lang", lang);
-  if (DOMElements.html) {
-    DOMElements.html.setAttribute("dir", lang === "ar" ? "rtl" : "ltr");
-    DOMElements.html.setAttribute("lang", lang);
-  }
-  document.querySelectorAll("[data-i18n-key]").forEach((el) => {
-    const key = el.dataset.i18nKey;
-    if (translations[lang]?.[key]) el.innerHTML = translations[lang][key];
-  });
-  document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
-    const key = el.dataset.i18nPlaceholder;
-    if (translations[lang]?.[key]) el.placeholder = translations[lang][key];
-  });
-
-  // update title & meta
-  document.title = translations[lang]?.page_title || "Piecety";
-  const meta = document.querySelector('meta[name="description"]');
-  if (meta) meta.setAttribute("content", translations[lang]?.meta_description || "");
-};
-
-/* -------------------------
-   Populate selects (generic)
-   ------------------------- */
-const populateSelect = (selectEl, options, defaultLabelKey, lang, valueAsKey = false) => {
-  if (!selectEl) return;
-  const prev = selectEl.value;
-  // reset
-  selectEl.innerHTML = "";
-  const defaultOption = document.createElement("option");
-  defaultOption.value = "";
-  defaultOption.textContent = translations[lang]?.[defaultLabelKey] || defaultLabelKey;
-  selectEl.appendChild(defaultOption);
-
-  if (Array.isArray(options)) {
-    options.slice().sort().forEach((opt) => {
-      const o = document.createElement("option");
-      o.value = opt;
-      o.textContent = opt;
-      selectEl.appendChild(o);
-    });
-  } else {
-    Object.keys(options)
-      .slice()
-      .sort()
-      .forEach((key) => {
-        const o = document.createElement("option");
-        o.value = valueAsKey ? key : key;
-        o.textContent = valueAsKey ? (options[key][lang] || options[key].fr || key) : key;
-        selectEl.appendChild(o);
-      });
-  }
-  selectEl.value = prev || "";
-};
-
-/* -------------------------
-   Render helpers & views (simplified)
-   ------------------------- */
-const updateBreadcrumb = () => {
-  const breadcrumbNav = document.getElementById("breadcrumb-nav");
-  if (!breadcrumbNav) return;
-  const params = new URLSearchParams(window.location.search);
-  const category = params.get("category");
-  const brand = params.get("brand");
-
-  // Use i18n for home label
-  const homeLabel = translations[currentLang]?.nav_home || "Home";
-  const homeLink = document.createElement("a");
-  homeLink.href = "#";
-  homeLink.className = "hover:underline home-crumb";
-  homeLink.textContent = homeLabel;
-  homeLink.addEventListener("click", (e) => {
-    e.preventDefault();
-    window.history.pushState({}, "", window.location.pathname);
-    renderView("home");
-  });
-
-  const fragments = [homeLink];
-  if (category) {
-    fragments.push(document.createTextNode(" / "));
-    const catEl = document.createElement("a");
-    catEl.href = "#";
-    catEl.className = "category-crumb hover:underline";
-    catEl.dataset.category = category;
-    catEl.textContent = categories[category]?.[currentLang] || category;
-    catEl.addEventListener("click", (e) => {
-      e.preventDefault();
-      const newUrl = new URL(window.location);
-      newUrl.searchParams.set("category", category);
-      newUrl.searchParams.delete("brand");
-      window.history.pushState({}, "", newUrl.href);
-      renderHomePage();
-    });
-    fragments.push(catEl);
-  }
-  if (brand) {
-    fragments.push(document.createTextNode(" / "));
-    const brandSpan = document.createElement("span");
-    brandSpan.className = "font-semibold";
-    brandSpan.textContent = brand;
-    fragments.push(brandSpan);
-  }
-
-  breadcrumbNav.innerHTML = "";
-  fragments.forEach((f) => breadcrumbNav.appendChild(f));
-};
-
-const renderHomePage = () => {
-  updateBreadcrumb();
-  renderRecentlyViewed();
-  // Setup and render filters
-  const filtersContainer = document.getElementById("filters-content");
-  if (filtersContainer) {
-    filtersContainer.innerHTML = document.getElementById("filters-template")?.content?.cloneNode(true)?.innerHTML || "";
-    setupFilterListeners(filtersContainer);
-    applyFiltersFromURL(filtersContainer);
-  }
-  // mobile filters
-  if (DOMElements.mobileFiltersContent) {
-    DOMElements.mobileFiltersContent.innerHTML =
-      document.getElementById("filters-template")?.content?.cloneNode(true)?.innerHTML || "";
-    setupFilterListeners(DOMElements.mobileFiltersContent);
-    applyFiltersFromURL(DOMElements.mobileFiltersContent);
-  }
-
-  // render categories grid or brands depending on URL params
-  const params = new URLSearchParams(window.location.search);
-  if (params.get("brand")) {
-    renderYearCategories();
-  } else if (params.get("category")) {
-    renderBrandCategories();
-  } else {
-    renderPartCategories();
-  }
-
-  renderListings();
-};
-
-const renderPartCategories = () => {
-  const grid = document.getElementById("dynamic-grid");
-  const titleEl = document.getElementById("categories-title-heading");
-  if (!grid || !titleEl) return;
-  titleEl.textContent = translations[currentLang]?.categories_title || "Categories";
-  grid.innerHTML = "";
-  Object.entries(categories).forEach(([key, cat]) => {
-    const a = document.createElement("a");
-    a.href = "#";
-    a.className =
-      "bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 text-center category-card flex flex-col items-center justify-center";
-    a.innerHTML = `
-      <div class="p-4 rounded-full bg-blue-50 dark:bg-gray-700 text-blue-600 dark:text-blue-400 mx-auto w-16 h-16 flex items-center justify-center mb-2 category-icon">
-         <i class="fas ${cat.icon} text-3xl"></i>
-      </div>
-      <h3 class="font-semibold text-sm md:text-base">${cat[currentLang] || cat.fr}</h3>
-    `;
-    a.addEventListener("click", (e) => {
-      e.preventDefault();
-      const newUrl = new URL(window.location);
-      newUrl.searchParams.set("category", key);
-      window.history.pushState({}, "", newUrl.href);
-      renderHomePage();
-    });
-    grid.appendChild(a);
-  });
-};
-
-const renderBrandCategories = () => {
-  const grid = document.getElementById("dynamic-grid");
-  const titleEl = document.getElementById("categories-title-heading");
-  if (!grid || !titleEl) return;
-  titleEl.textContent = translations[currentLang]?.brands_title || "Brands";
-  grid.innerHTML = "";
-  Object.keys(car_data).forEach((brandName) => {
-    const a = document.createElement("a");
-    a.href = "#";
-    a.className =
-      "bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 text-center category-card flex flex-col items-center justify-center";
-    const icon = brand_icons[brandName] || brand_icons.default;
-    a.innerHTML = `
-      <img src="${icon}" alt="${brandName}" class="h-16 object-contain mb-2" onerror="this.src='${brand_icons.default}'">
-      <h3 class="font-semibold text-sm md:text-base">${brandName}</h3>
-    `;
-    a.addEventListener("click", (e) => {
-      e.preventDefault();
-      const newUrl = new URL(window.location);
-      newUrl.searchParams.set("brand", brandName);
-      window.history.pushState({}, "", newUrl.href);
-      renderHomePage();
-    });
-    grid.appendChild(a);
-  });
-};
-
-const renderYearCategories = () => {
-  const grid = document.getElementById("dynamic-grid");
-  const titleEl = document.getElementById("categories-title-heading");
-  if (!grid || !titleEl) return;
-  titleEl.textContent = translations[currentLang]?.years_title || "Years";
-  grid.innerHTML = "";
-  years.forEach((y) => {
-    const a = document.createElement("a");
-    a.href = "#";
-    a.className = "bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 text-center";
-    a.innerHTML = `<span class="font-semibold">${y}</span>`;
-    a.addEventListener("click", (e) => {
-      e.preventDefault();
-      ["#filters-content #year-filter", "#mobile-filters-content #year-filter"].forEach((sel) => {
-        const el = document.querySelector(sel);
-        if (el) el.value = y;
-      });
-      applyAndRenderFilters();
-      document.getElementById("listings-section")?.scrollIntoView({ behavior: "smooth" });
-    });
-    grid.appendChild(a);
-  });
-};
-
-/* -------------------------
-   Filtering helpers
-   ------------------------- */
-const applyAndRenderFilters = () => {
-  const params = {};
-  const filtersContainer = document.querySelector("#filters-content") || document;
-  filtersContainer.querySelectorAll(".filter").forEach((el) => {
-    if (el.value) params[el.id.replace("-filter", "")] = el.value;
-  });
-  params.search = DOMElements.searchInput?.value || "";
-
-  const newUrl = new URL(window.location);
-  newUrl.search = new URLSearchParams(params).toString();
-  window.history.replaceState({ path: newUrl.href }, "", newUrl.href);
-
-  renderListings();
-};
-
-const applyFiltersFromURL = (container = document) => {
-  const params = new URLSearchParams(window.location.search);
-  params.forEach((value, key) => {
-    const el = container.querySelector(`#${key}-filter`);
-    if (el) {
-      el.value = value;
-      if (key === "brand") el.dispatchEvent(new Event("change"));
-      if (key === "wilaya") el.dispatchEvent(new Event("change"));
+// Translations
+const translations = {
+    fr: {
+        page_title: "Piecety - Marché des Pièces Auto en Algérie",
+        meta_description: "Achetez et vendez des pièces automobiles en Algérie avec Piecety, le marché fiable pour les pièces neuves et d'occasion.",
+        fr_short: "FR",
+        en_short: "EN",
+        ar_short: "AR",
+        menu: "Menu",
+        sell: "Vendre",
+        connect: "Se connecter",
+        language: "Langue",
+        logout: "Déconnexion",
+        dashboard: "Tableau de Bord",
+        nav_home: "Accueil",
+        nav_search: "Recherche",
+        nav_profile: "Profil",
+        hero_title: "Trouvez la bonne pièce pour votre voiture",
+        hero_subtitle: "Le marché algérien des pièces automobiles le plus fiable.",
+        categories_title: "Catégories de Pièces",
+        brands_title: "Sélectionnez une Marque",
+        years_title: "Sélectionnez une Année",
+        filters_title: "Filtrer les annonces",
+        all_brands: "Toutes les marques",
+        all_models: "Tous les modèles",
+        all_years: "Toutes années",
+        all_wilayas: "Toutes wilayas",
+        all_communes: "Toutes communes",
+        condition: "État",
+        any_condition: "Tout",
+        new: "Neuf",
+        used: "Occasion",
+        apply_filters: "Appliquer les filtres",
+        reset: "Réinitialiser",
+        search_placeholder: "Rechercher une pièce...",
+        submit_ad: "Soumettre une annonce",
+        ad_title_label: "Titre de la pièce *",
+        ad_title_placeholder: "Ex: Disque de frein avant",
+        brand_label: "Marque *",
+        select_brand: "Sélectionnez une marque",
+        model_label: "Modèle",
+        select_model: "Sélectionnez un modèle",
+        year_label: "Année",
+        select_year: "Sélectionnez une année",
+        wilaya_label: "Wilaya *",
+        select_wilaya: "Sélectionnez une wilaya",
+        commune_label: "Commune",
+        select_commune: "Sélectionnez une commune",
+        condition_label: "État",
+        price_label: "Prix (DA) *",
+        price_placeholder: "Ex: 15000",
+        description_label: "Description",
+        description_placeholder: "Informations supplémentaires...",
+        submit_ad_btn_text: "Soumettre",
+        loading_text: "Envoi...",
+        error_valid_title: "Veuillez entrer un titre valide.",
+        error_select_brand: "Veuillez sélectionner une marque.",
+        error_select_wilaya: "Veuillez sélectionner une wilaya.",
+        error_select_category: "Veuillez sélectionner une catégorie.",
+        error_valid_price: "Veuillez entrer un prix valide.",
+        login_text: "Connectez-vous pour accéder à toutes les fonctionnalités.",
+        google_login: "Se connecter avec Google",
+        back_to_listings: "Retour aux annonces",
+        add_to_cart: "Ajouter au panier",
+        cart_title: "Mon panier",
+        cart_total: "Total",
+        checkout_btn: "Passer à la caisse",
+        no_listings: "Aucune annonce trouvée.",
+        your_cart_is_empty: "Votre panier est vide.",
+        remove: "Supprimer",
+        quantity: "Quantité",
+        item_total: "Total de l'article",
+        login_required: "Veuillez vous connecter pour utiliser cette fonctionnalité.",
+        show_filters: "Afficher les filtres",
+        price_range: "Gamme de prix",
+        all_categories: "Toutes catégories",
+        category_label: "Catégorie *",
+        select_category: "Sélectionnez une catégorie",
+        contact_seller: "Contacter le vendeur",
+        clear_cart: "Vider le panier",
+        ad_posted: "Votre annonce a été publiée avec succès !",
+        ad_post_failed: "Échec de la publication de l'annonce.",
+        item_added_to_cart: "Article ajouté au panier!",
+        delete_ad_confirm: "Êtes-vous sûr de vouloir supprimer cette annonce ?",
+        sold_by: "Vendu par:",
+        my_listings: "Mes Annonces",
+        seller_listings: "Annonces de ce vendeur",
+        buyer_reviews: "Avis des acheteurs",
+        reviews_soon: "(Avis bientôt disponibles)",
+        reviews_soon_2: "La fonctionnalité d'avis sera bientôt disponible.",
+        messages: "Messages",
+        loading_convos: "Chargement des conversations...",
+        chat_with: "Chat avec",
+        type_message_placeholder: "Écrire un message...",
+        recently_viewed: "Récemment consultés",
+        chat: "Chat",
+        load_more: "Charger plus"
+    },
+    en: {
+        page_title: "Piecety - Car Parts Marketplace in Algeria",
+        meta_description: "Buy and sell car parts in Algeria with Piecety, the reliable marketplace for new and used parts.",
+        fr_short: "FR",
+        en_short: "EN",
+        ar_short: "AR",
+        menu: "Menu",
+        sell: "Sell",
+        connect: "Log In",
+        language: "Language",
+        logout: "Logout",
+        dashboard: "Dashboard",
+        nav_home: "Home",
+        nav_search: "Search",
+        nav_profile: "Profile",
+        hero_title: "Find the right car part for your vehicle",
+        hero_subtitle: "The most trusted Algerian car parts marketplace.",
+        categories_title: "Parts Categories",
+        brands_title: "Select a Brand",
+        years_title: "Select a Year",
+        filters_title: "Filter Listings",
+        all_brands: "All brands",
+        all_models: "All models",
+        all_years: "All years",
+        all_wilayas: "All wilayas",
+        all_communes: "All communes",
+        condition: "Condition",
+        any_condition: "Any",
+        new: "New",
+        used: "Used",
+        apply_filters: "Apply Filters",
+        reset: "Reset",
+        search_placeholder: "Search for a part...",
+        submit_ad: "Submit an Ad",
+        ad_title_label: "Part Title *",
+        ad_title_placeholder: "e.g., Front brake disc",
+        brand_label: "Brand *",
+        select_brand: "Select a brand",
+        model_label: "Model",
+        select_model: "Select a model",
+        year_label: "Year",
+        select_year: "Select a year",
+        wilaya_label: "State *",
+        select_wilaya: "Select a state",
+        commune_label: "City",
+        select_commune: "Select a city",
+        condition_label: "Condition",
+        price_label: "Price (DA) *",
+        price_placeholder: "e.g., 15000",
+        description_label: "Description",
+        description_placeholder: "Additional information...",
+        submit_ad_btn_text: "Submit",
+        loading_text: "Submitting...",
+        error_valid_title: "Please enter a valid title.",
+        error_select_brand: "Please select a brand.",
+        error_select_wilaya: "Please select a state.",
+        error_select_category: "Please select a category.",
+        error_valid_price: "Please enter a valid price.",
+        login_text: "Log in to access all features.",
+        google_login: "Sign in with Google",
+        back_to_listings: "Back to listings",
+        add_to_cart: "Add to cart",
+        cart_title: "My Cart",
+        cart_total: "Total",
+        checkout_btn: "Proceed to Checkout",
+        no_listings: "No listings found.",
+        your_cart_is_empty: "Your cart is empty.",
+        remove: "Remove",
+        quantity: "Quantity",
+        item_total: "Item Total",
+        login_required: "Please log in to use this feature.",
+        show_filters: "Show Filters",
+        price_range: "Price Range",
+        all_categories: "All Categories",
+        category_label: "Category *",
+        select_category: "Select a category",
+        contact_seller: "Contact Seller",
+        clear_cart: "Clear Cart",
+        ad_posted: "Your ad has been posted successfully!",
+        ad_post_failed: "Failed to post ad.",
+        item_added_to_cart: "Item added to cart!",
+        delete_ad_confirm: "Are you sure you want to delete this ad?",
+        sold_by: "Sold by:",
+        my_listings: "My Listings",
+        seller_listings: "Listings from this seller",
+        buyer_reviews: "Buyer Reviews",
+        reviews_soon: "(Reviews coming soon)",
+        reviews_soon_2: "Review functionality will be available soon.",
+        messages: "Messages",
+        loading_convos: "Loading conversations...",
+        chat_with: "Chat with",
+        type_message_placeholder: "Type a message...",
+        recently_viewed: "Recently Viewed",
+        chat: "Chat",
+        load_more: "Load More"
+    },
+    ar: {
+        page_title: "Piecety - سوق قطع غيار السيارات في الجزائر",
+        meta_description: "بيع وشراء قطع غيار السيارات في الجزائر مع Piecety، السوق الموثوق للقطع الجديدة والمستعملة.",
+        fr_short: "FR",
+        en_short: "EN",
+        ar_short: "AR",
+        menu: "القائمة",
+        sell: "بيع",
+        connect: "تسجيل الدخول",
+        language: "اللغة",
+        logout: "تسجيل الخروج",
+        dashboard: "لوحة التحكم",
+        nav_home: "الرئيسية",
+        nav_search: "بحث",
+        nav_profile: "ملفي",
+        hero_title: "ابحث عن قطعة الغيار المناسبة لسيارتك",
+        hero_subtitle: "أكثر أسواق قطع غيار السيارات ثقة في الجزائر.",
+        categories_title: "فئات القطع",
+        brands_title: "اختر ماركة",
+        years_title: "اختر سنة",
+        filters_title: "تصفية الإعلانات",
+        all_brands: "جميع الماركات",
+        all_models: "جميع الموديلات",
+        all_years: "جميع السنوات",
+        all_wilayas: "جميع الولايات",
+        all_communes: "جميع البلديات",
+        condition: "الحالة",
+        any_condition: "الكل",
+        new: "جديد",
+        used: "مستعمل",
+        apply_filters: "تطبيق الفلاتر",
+        reset: "إعادة تعيين",
+        search_placeholder: "ابحث عن قطعة...",
+        submit_ad: "إرسال إعلان",
+        ad_title_label: "عنوان القطعة *",
+        ad_title_placeholder: "مثال: قرص فرامل أمامي",
+        brand_label: "الماركة *",
+        select_brand: "اختر ماركة",
+        model_label: "الموديل",
+        select_model: "اختر موديل",
+        year_label: "السنة",
+        select_year: "اختر سنة",
+        wilaya_label: "الولاية *",
+        select_wilaya: "اختر ولایة",
+        commune_label: "البلدية",
+        select_commune: "اختر بلدية",
+        condition_label: "الحاله",
+        price_label: "السعر (DA) *",
+        price_placeholder: "مثال: 15000",
+        description_label: "الوصف",
+        description_placeholder: "معلومات إضافية...",
+        submit_ad_btn_text: "إرسال",
+        loading_text: "جاري الإرسال...",
+        error_valid_title: "يرجى إدخال عنوان صالح.",
+        error_select_brand: "يرجى اختيار ماركة.",
+        error_select_wilaya: "يرجى اختيار ولایة.",
+        error_select_category: "يرجى اختيار فئة.",
+        error_valid_price: "يرجى إدخال سعر صالح.",
+        login_text: "تسجيل الدخول للوصول إلى جميع الميزات.",
+        google_login: "تسجيل الدخول بحساب Google",
+        back_to_listings: "العودة إلى الإعلانات",
+        add_to_cart: "إضافة إلى السلة",
+        cart_title: "سلتي",
+        cart_total: "المجموع",
+        checkout_btn: "الذهاب إلى الدفع",
+        no_listings: "لم يتم العثور على إعلانات.",
+        your_cart_is_empty: "سلتك فارغة.",
+        remove: "إزالة",
+        quantity: "الكمية",
+        item_total: "مجموع العنصر",
+        login_required: "يرجى تسجيل الدخول لاستخدام هذه الميزة.",
+        show_filters: "عرض الفلاتر",
+        price_range: "نطاق السعر",
+        all_categories: "جميع الفئات",
+        category_label: "الفئة *",
+        select_category: "اختر فئة",
+        contact_seller: "اتصل بالبائع",
+        clear_cart: "مسح السلة",
+        ad_posted: "تم نشر إعلانك بنجاح!",
+        ad_post_failed: "فشل في نشر الإعلان.",
+        item_added_to_cart: "تم إضافة العنصر إلى السلة!",
+        delete_ad_confirm: "هل أنت متأكد من حذف هذا الإعلان؟",
+        sold_by: "بيع بواسطة:",
+        my_listings: "إعلاناتي",
+        seller_listings: "إعلانات هذا البائع",
+        buyer_reviews: "تقييمات المشترين",
+        reviews_soon: "(التقييمات قريباً)",
+        reviews_soon_2: "سيكون خاصية التقييم متوفرة قريباً.",
+        messages: "الرسائل",
+        loading_convos: "جاري تحميل المحادثات...",
+        chat_with: "محادثة مع",
+        type_message_placeholder: "اكتب رسالة...",
+        recently_viewed: "تمت مشاهدتها مؤخراً",
+        chat: "دردشة",
+        load_more: "تحميل المزيد"
     }
-  });
-  if (DOMElements.searchInput) DOMElements.searchInput.value = params.get("search") || "";
 };
 
-const setupFilterListeners = (container = document) => {
-  if (!container) return;
-  const debouncedApply = debounce(applyAndRenderFilters, 300);
+// --- CATEGORIES, BRANDS, MODELS, YEARS, WILAYAS, COMMUNES ---
+const categories = {
+    engine: { fr: "Moteur", en: "Engine", ar: "محرك", icon: "fa-cogs" },
+    brakes: { fr: "Freins", en: "Brakes", ar: "مكابح", icon: "fa-stop-circle" },
+    suspension: { fr: "Suspension", en: "Suspension", ar: "تعليق", icon: "fa-shock-absorber" },
+    // Add more categories as needed
+};
 
-  const brandFilter = container.querySelector("#brand-filter");
-  if (brandFilter) {
-    populateSelect(brandFilter, car_data, "all_brands", currentLang);
-    brandFilter.addEventListener("change", () => {
-      const modelFilter = container.querySelector("#model-filter");
-      if (!brandFilter.value) {
-        if (modelFilter) {
-          modelFilter.innerHTML = `<option value="">${translations[currentLang]?.all_models || "All models"}</option>`;
-          modelFilter.disabled = true;
+const brands = [
+    { value: "toyota", label: { fr: "Toyota", en: "Toyota", ar: "تويوتا" } },
+    { value: "renault", label: { fr: "Renault", en: "Renault", ar: "رينو" } },
+    // Add more brands
+];
+
+const models = {
+    toyota: [
+        { value: "corolla", label: { fr: "Corolla", en: "Corolla", ar: "كورولا" } },
+        // Add more models
+    ],
+    // Add models for other brands
+};
+
+const years = Array.from({length: 50}, (_, i) => new Date().getFullYear() - i).map(year => ({ value: year.toString(), label: year.toString() }));
+
+const wilayas = [
+    { value: "algiers", label: { fr: "Alger", en: "Algiers", ar: "الجزائر" } },
+    // Add more wilayas
+];
+
+const communes = {
+    algiers: [
+        { value: "algiers-centre", label: { fr: "Alger-Centre", en: "Algiers-Center", ar: "الجزائر الوسطى" } },
+        // Add more communes
+    ],
+    // Add communes for other wilayas
+};
+
+// --- UTILITY FUNCTIONS ---
+const sanitizeInput = (input) => {
+    const div = document.createElement('div');
+    div.textContent = input;
+    return div.innerHTML;
+};
+
+const debounce = (func, wait) => {
+    let timeout;
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func(...args), wait);
+    };
+};
+
+const showMessage = (key, duration, type = 'success') => {
+    const message = document.createElement('div');
+    message.className = `fixed bottom-4 right-4 p-4 rounded-lg text-white ${type === 'success' ? 'bg-green-600' : 'bg-red-600'}`;
+    message.textContent = translations[currentLang][key] || key;
+    document.body.appendChild(message);
+    setTimeout(() => message.remove(), duration);
+};
+
+// --- UI FUNCTIONS ---
+const setDarkMode = (isDark) => {
+    DOMElements.html.classList.toggle('dark', isDark);
+    localStorage.setItem('piecety_dark_mode', isDark);
+};
+
+const setLanguage = (lang) => {
+    currentLang = lang;
+    localStorage.setItem('piecety_lang', lang);
+    DOMElements.html.setAttribute('lang', lang);
+    DOMElements.html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+    translatePage();
+    populateDropdowns(); // Update dropdown labels for new language
+};
+
+const translatePage = () => {
+    document.querySelectorAll('[data-i18n-key]').forEach(el => {
+        const key = el.getAttribute('data-i18n-key');
+        if (translations[currentLang][key]) {
+            el.textContent = translations[currentLang][key];
         }
-      } else {
-        if (modelFilter) {
-          populateSelect(modelFilter, car_data[brandFilter.value] || [], "all_models", currentLang);
-          modelFilter.disabled = false;
+    });
+    document.querySelectorAll('[data-i18n-key-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-key-placeholder');
+        if (translations[currentLang][key]) {
+            el.placeholder = translations[currentLang][key];
         }
-      }
-      debouncedApply();
     });
-  }
-
-  const wilayaFilter = container.querySelector("#wilaya-filter");
-  if (wilayaFilter) {
-    populateSelect(wilayaFilter, Object.keys(wilayas || {}), "all_wilayas", currentLang);
-    wilayaFilter.addEventListener("change", () => {
-      // populate communes if code present in page — uses wilayas object if present
-      const communeFilter = container.querySelector("#commune-filter");
-      if (communeFilter && window.wilayas && wilayaFilter.value && wilayas[wilayaFilter.value]) {
-        populateSelect(communeFilter, wilayas[wilayaFilter.value], "all_communes", currentLang);
-        communeFilter.disabled = false;
-      } else if (communeFilter) {
-        communeFilter.innerHTML = `<option value="">${translations[currentLang]?.all_communes || "All communes"}</option>`;
-        communeFilter.disabled = true;
-      }
-      debouncedApply();
-    });
-  }
-
-  const priceRange = container.querySelector("#price-range-filter");
-  if (priceRange) {
-    priceRange.addEventListener("input", () => {
-      const valueEl = container.querySelector("#price-range-value");
-      if (valueEl) valueEl.textContent = `${Number(priceRange.value).toLocaleString()} DA`;
-    });
-    priceRange.addEventListener("change", debouncedApply);
-  }
-
-  container.querySelectorAll(".filter:not(#brand-filter):not(#wilaya-filter):not(#price-range-filter)").forEach((el) => {
-    el.addEventListener("change", debouncedApply);
-  });
-
-  container.querySelector("#filter-reset-btn")?.addEventListener("click", () => {
-    window.history.pushState({}, "", window.location.pathname);
-    renderView("home");
-  });
+    document.title = translations[currentLang].page_title;
+    document.querySelector('meta[name="description"]').setAttribute('content', translations[currentLang].meta_description);
 };
 
-/* -------------------------
-   LISTINGS / Firestore fetch
-   ------------------------- */
-const displayProducts = (products, container) => {
-  if (!container) return;
-  container.innerHTML = "";
-  products.forEach((product) => {
-    const card = document.createElement("div");
-    card.className = "bg-white dark:bg-gray-800 rounded-lg shadow-md p-4";
-    card.style.minHeight = "220px";
-    card.innerHTML = `
-      <img src="${product.imageUrl || "icons/car-192.png"}" alt="${product.title}" class="w-full h-40 object-cover rounded-md mb-3 product-image" />
-      <h3 class="text-lg font-semibold product-title">${product.title}</h3>
-      <p class="text-sm mt-2">${product.price ? product.price.toLocaleString() + " DA" : ""}</p>
-      <div class="mt-3 flex items-center justify-between">
-        <button class="add-to-cart-btn px-3 py-1 rounded bg-blue-600 text-white text-sm">${translations[currentLang]?.add_to_cart || "Add"}</button>
-        <button class="view-btn px-3 py-1 rounded border text-sm">View</button>
-      </div>
-    `;
-    // events
-    card.querySelector(".add-to-cart-btn")?.addEventListener("click", () => addToCart(product));
-    card.querySelector(".view-btn")?.addEventListener("click", () => renderView("product/" + product.id, product));
-    container.appendChild(card);
-  });
+const toggleModal = (modal, show) => {
+    modal.classList.toggle('hidden', !show);
+    modal.classList.toggle('flex', show);
+    if (show) {
+        modal.querySelector('input, button')?.focus();
+    } else {
+        document.activeElement.blur();
+    }
 };
 
-const renderListings = async (loadMore = false) => {
-  const listingsSection = document.getElementById("listings-grid") || document.getElementById("listings-section");
-  if (!listingsSection || isFetching) return;
-  isFetching = true;
+const openMobileMenu = () => {
+    DOMElements.mobileMenuBackdrop.classList.remove('hidden');
+    DOMElements.mobileMenu.classList.remove('-translate-x-full');
+};
 
-  if (!loadMore) {
-    listingsSection.innerHTML = "";
-    lastVisibleProduct = null;
-  }
+const closeMobileMenu = () => {
+    DOMElements.mobileMenuBackdrop.classList.add('hidden');
+    DOMElements.mobileMenu.classList.add('-translate-x-full');
+};
 
-  try {
-    // Basic query: allow public read via Firestore rules (we configured rules)
-    let q = query(collection(db, "products"), orderBy("createdAt", "desc"), limit(12));
-    // apply filters
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("brand")) q = query(q, where("brand", "==", params.get("brand")));
-    if (params.get("category")) q = query(q, where("category", "==", params.get("category")));
-    if (lastVisibleProduct && loadMore) q = query(q, startAfter(lastVisibleProduct));
-
-    const snaps = await getDocs(q);
-    const products = [];
-    snaps.forEach((s) => {
-      const data = s.data();
-      products.push({ id: s.id, ...data });
+// --- CART FUNCTIONS ---
+const updateCartDisplay = () => {
+    const count = Object.keys(userCart).length;
+    ['cart-count', 'mobile-cart-count'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.textContent = count > 9 ? '9+' : count;
+            el.classList.toggle('hidden', count === 0);
+        }
     });
-    if (snaps.docs.length > 0) lastVisibleProduct = snaps.docs[snaps.docs.length - 1];
-
-    // render
-    displayProducts(products, listingsSection);
-  } catch (err) {
-    console.error("Error fetching products:", err);
-    showMessage("ad_post_failed", 3000, "error");
-  } finally {
-    isFetching = false;
-  }
 };
 
-/* -------------------------
-   CART functions (uses 'carts' collection per-user)
-   ------------------------- */
-const addToCart = async (product) => {
-  if (!currentUser) {
-    showMessage("login_required", 2500, "error");
-    toggleModal(DOMElements.authModal, true);
-    return;
-  }
-  userCart[product.id] = { productId: product.id, quantity: (userCart[product.id]?.quantity || 0) + 1, title: product.title, price: product.price };
-  try {
-    await setDoc(doc(db, "carts", currentUser.uid), userCart);
-    updateCartDisplay();
-    showMessage("item_added_to_cart", 2000, "success");
-  } catch (err) {
-    console.error("Error adding to cart:", err);
-    showMessage("Failed to add item to cart.", 3000, "error");
-  }
-};
-
-const updateCartItem = async (productId, quantity) => {
-  if (!currentUser) return;
-  if (quantity <= 0) {
-    delete userCart[productId];
-  } else {
-    userCart[productId].quantity = quantity;
-  }
-  try {
-    await setDoc(doc(db, "carts", currentUser.uid), userCart);
-    updateCartDisplay();
-  } catch (err) {
-    console.error("Error updating cart:", err);
-    showMessage("Failed to update cart.", 3000, "error");
-  }
+const addToCart = async (productId, productData) => {
+    if (!currentUser) {
+        showMessage('login_required', 3000, 'error');
+        toggleModal(DOMElements.authModal, true);
+        return;
+    }
+    userCart[productId] = { ...productData, quantity: (userCart[productId]?.quantity || 0) + 1 };
+    try {
+        await setDoc(doc(db, "carts", currentUser.uid), userCart);
+        updateCartDisplay();
+        showMessage('item_added_to_cart', 3000, 'success');
+        if (currentView === 'cart') renderView('cart');
+    } catch (error) {
+        console.error("Error adding to cart:", error);
+        showMessage('ad_post_failed', 3000, 'error');
+    }
 };
 
 const removeFromCart = async (productId) => {
-  if (!currentUser) return;
-  delete userCart[productId];
-  try {
-    await setDoc(doc(db, "carts", currentUser.uid), userCart);
-    updateCartDisplay();
-  } catch (err) {
-    console.error("Error removing from cart:", err);
-    showMessage("Failed to remove item.", 3000, "error");
-  }
+    if (!currentUser || !userCart[productId]) return;
+    delete userCart[productId];
+    try {
+        await setDoc(doc(db, "carts", currentUser.uid), userCart);
+        updateCartDisplay();
+        if (currentView === 'cart') renderView('cart');
+    } catch (error) {
+        console.error("Error removing from cart:", error);
+        showMessage('ad_post_failed', 3000, 'error');
+    }
 };
 
-/* -------------------------
-   Form validation for post-ad
-   ------------------------- */
+const clearCart = async () => {
+    if (!currentUser) return;
+    userCart = {};
+    try {
+        await deleteDoc(doc(db, "carts", currentUser.uid));
+        updateCartDisplay();
+        renderView('cart');
+    } catch (error) {
+        console.error("Error clearing cart:", error);
+        showMessage('ad_post_failed', 3000, 'error');
+    }
+};
+
+// --- FORM VALIDATION ---
 const validatePostForm = (form) => {
-  let isValid = true;
-  ["title", "brand", "wilaya", "category", "price"].forEach((name) => {
-    const el = form.elements[name];
-    const errEl = document.getElementById(`${name}-error`);
-    if (!el) return;
-    const invalid = !el.value || !String(el.value).trim();
-    el.classList.toggle("border-red-500", invalid);
-    if (errEl) errEl.classList.toggle("hidden", !invalid);
-    if (invalid) isValid = false;
-  });
-  return isValid;
+    let isValid = true;
+    ['title', 'brand', 'wilaya', 'category', 'price'].forEach(fieldName => {
+        const input = form.elements[fieldName];
+        const errorEl = document.getElementById(`${fieldName}-error`);
+        const isInvalid = !input.value.trim() || (fieldName === 'price' && isNaN(Number(input.value)));
+        input.classList.toggle('border-red-500', isInvalid);
+        errorEl?.classList.toggle('hidden', !isInvalid);
+        if (isInvalid) isValid = false;
+    });
+    return isValid;
 };
 
-/* -------------------------
-   Image upload helpers (Firebase Storage)
-   ------------------------- */
-const uploadImageFile = async (file, pathPrefix = "uploads") => {
-  if (!file) return null;
-  try {
-    const ext = file.name.split(".").pop();
-    const name = `${pathPrefix}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
-    const r = storageRef(storage, name);
-    const snapshot = await uploadBytes(r, file);
-    const url = await getDownloadURL(snapshot.ref);
-    return url;
-  } catch (err) {
-    console.error("Image upload failed:", err);
-    return null;
-  }
-};
-
-/* -------------------------
-   Authentication (Google + Facebook)
-   ------------------------- */
-const handleSignInWithGoogle = async () => {
-  try {
-    await signInWithPopup(auth, googleProvider);
-  } catch (err) {
-    console.error("Google sign-in error:", err);
-    showMessage("login_text", 3000, "error");
-  }
-};
-
-const handleSignInWithFacebook = async () => {
-  try {
-    // request only email/profile by default
-    await signInWithPopup(auth, fbProvider);
-  } catch (err) {
-    console.error("Facebook sign-in error:", err);
-    showMessage("login_text", 3000, "error");
-  }
-};
-
+// --- AUTHENTICATION ---
 const handleSignOut = async () => {
-  try {
-    await signOut(auth);
-    showMessage("logout", 2000, "success");
-  } catch (err) {
-    console.error("Sign out error:", err);
-  }
-};
-
-/* -------------------------
-   Profile editing (store)
-   ------------------------- */
-const renderDashboard = async () => {
-  if (!currentUser) {
-    showMessage("login_required", 3000, "error");
-    renderView("home");
-    return;
-  }
-  // create a simple dashboard UI into the app container
-  const c = DOMElements.appContainer;
-  if (!c) return;
-  c.innerHTML = `
-    <section class="max-w-3xl mx-auto p-4">
-      <h2 class="text-2xl font-bold mb-4">${translations[currentLang]?.dashboard || "Dashboard"}</h2>
-      <div class="mb-4">
-        <img id="dashboard-profile-pic" src="${currentUser.photoURL || 'icons/user-placeholder.png'}" alt="Profile" class="w-24 h-24 rounded-full mb-2">
-        <input id="profile-pic-input" type="file" accept="image/*" class="block mt-2" />
-      </div>
-      <div class="mb-4">
-        <label class="block mb-1">Display name</label>
-        <input id="profile-displayname" class="w-full border p-2 rounded" value="${currentUser.displayName || ""}">
-      </div>
-      <div class="mb-4">
-        <label class="block mb-1">Store name (optional)</label>
-        <input id="profile-store-name" class="w-full border p-2 rounded" placeholder="My store name">
-      </div>
-      <div class="flex space-x-2">
-        <button id="save-profile-btn" class="px-4 py-2 bg-blue-600 text-white rounded">${translations[currentLang]?.submit_ad_btn_text || "Save"}</button>
-        <button id="back-list-btn" class="px-4 py-2 border rounded">Back</button>
-      </div>
-    </section>
-  `;
-
-  document.getElementById("back-list-btn")?.addEventListener("click", () => renderView("home"));
-  document.getElementById("save-profile-btn")?.addEventListener("click", async () => {
-    const displayName = document.getElementById("profile-displayname")?.value || "";
-    const storeName = document.getElementById("profile-store-name")?.value || "";
-    const picInput = document.getElementById("profile-pic-input");
-    let photoURL = currentUser.photoURL || null;
-
-    if (picInput && picInput.files && picInput.files[0]) {
-      const url = await uploadImageFile(picInput.files[0], `profiles/${currentUser.uid}`);
-      if (url) photoURL = url;
-    }
-
     try {
-      // update profile in Firebase Auth (displayName/photoURL)
-      await updateProfile(auth.currentUser, { displayName, photoURL });
-      // save store info in Firestore under users collection
-      await setDoc(doc(db, "users", currentUser.uid), {
-        displayName,
-        photoURL,
-        storeName,
-        updatedAt: serverTimestamp()
-      }, { merge: true });
-      showMessage("ad_posted", 2500, "success");
-      // refresh UI
-      currentUser = auth.currentUser;
-      renderDashboard();
-      updateAuthUI(currentUser);
-    } catch (err) {
-      console.error("Profile update failed:", err);
-      showMessage("ad_post_failed", 3000, "error");
+        await signOut(auth);
+        closeMobileMenu();
+    } catch (error) {
+        console.error("Sign out error:", error);
+        showMessage('ad_post_failed', 3000, 'error');
     }
-  });
 };
 
-/* -------------------------
-   Post product flow: handle images + ownerId (sellerId)
-   ------------------------- */
-const handlePostProductForm = () => {
-  const form = DOMElements.postProductForm;
-  if (!form) return;
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    if (!currentUser) {
-      showMessage("login_required", 3000, "error");
-      toggleModal(DOMElements.authModal, true);
-      return;
-    }
-    if (!validatePostForm(form)) return;
-
-    const submitBtn = form.querySelector('button[type="submit"]');
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.querySelector(".btn-spinner")?.classList.remove("hidden");
-    }
-
-    try {
-      // collect form data
-      const fd = new FormData(form);
-      const formData = Object.fromEntries(fd.entries());
-      // convert price
-      formData.price = Number(formData.price || 0);
-      // image upload: look for file input id product-images
-      let imageUrl = null;
-      const imagesInput = document.getElementById("product-images");
-      if (imagesInput && imagesInput.files && imagesInput.files[0]) {
-        // upload first image for listing thumbnail
-        imageUrl = await uploadImageFile(imagesInput.files[0], `products/${currentUser.uid}`);
-      } else if (formData.imageUrl) {
-        imageUrl = formData.imageUrl; // optional direct URL
-      }
-
-      const productData = {
-        title: formData.title,
-        brand: formData.brand,
-        model: formData.model || null,
-        year: formData.year || null,
-        wilaya: formData.wilaya,
-        commune: formData.commune || null,
-        category: formData.category,
-        condition: formData.condition || null,
-        price: formData.price,
-        description: formData.description || "",
-        createdAt: serverTimestamp(),
-        sellerId: currentUser.uid,
-        sellerName: currentUser.displayName || null,
-        imageUrl
-      };
-
-      // save product
-      await addDoc(collection(db, "products"), productData);
-      showMessage("ad_posted", 3000, "success");
-      form.reset();
-      toggleModal(DOMElements.postProductModal, false);
-      renderListings();
-    } catch (err) {
-      console.error("Error adding document: ", err);
-      showMessage("ad_post_failed", 3000, "error");
-    } finally {
-      if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.querySelector(".btn-spinner")?.classList.add("hidden");
-      }
-    }
-  });
-};
-
-/* -------------------------
-   Auth UI update & listeners
-   ------------------------- */
 const updateAuthUI = (user) => {
-  const authLinksContainer = DOMElements.authLinksContainer;
-  const mobileNavLinks = DOMElements.mobileNavLinks;
-  if (!authLinksContainer || !mobileNavLinks) return;
+    const authLinksContainer = DOMElements.authLinksContainer;
+    authLinksContainer.innerHTML = '';
+    let mobileLinksHTML = `
+        <a href="#" id="mobile-home-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg" data-i18n-key="nav_home"></a>
+        <a href="#" id="mobile-sell-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg" data-i18n-key="sell"></a>
+        <a href="#" id="mobile-cart-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg relative"><span data-i18n-key="cart_title"></span><span id="mobile-cart-count" class="absolute top-0 ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full hidden">0</span></a>`;
 
-  // mobile links template (simple)
-  let mobileLinksHTML = `
-    <a href="#" id="mobile-home-link" class="p-2 rounded-md text-lg" data-i18n-key="nav_home"></a>
-    <a href="#" id="mobile-sell-link" class="p-2 rounded-md text-lg" data-i18n-key="sell"></a>
-    <a href="#" id="mobile-cart-link" class="p-2 rounded-md text-lg relative"><span data-i18n-key="cart_title"></span><span id="mobile-cart-count" class="absolute top-0 ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full hidden">0</span></a>
-  `;
+    if (user) {
+        authLinksContainer.innerHTML = `
+            <div class="relative" id="user-menu">
+                <button id="user-menu-btn" class="flex items-center" aria-label="User menu" aria-haspopup="true">
+                    <img src="${user.photoURL || 'default-profile.png'}" alt="User profile" class="w-8 h-8 rounded-full">
+                </button>
+                <div id="user-menu-dropdown" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-lg shadow-lg py-1 hidden z-20">
+                    <a href="#" id="dashboard-link" class="block px-4 py-2 text-sm" data-i18n-key="dashboard"></a>
+                    <a href="#" id="messages-link" class="relative block px-4 py-2 text-sm" data-i18n-key="messages">
+                        <span id="unread-badge" class="hidden absolute right-2 top-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"></span>
+                    </a>
+                    <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm" data-i18n-key="logout"></button>
+                </div>
+            </div>`;
+        mobileLinksHTML += `
+            <a href="#" id="mobile-dashboard-link" class="p-2 text-lg" data-i18n-key="dashboard"></a>
+            <a href="#" id="mobile-messages-link" class="p-2 text-lg relative"><span data-i18n-key="messages"></span><span id="mobile-unread-badge" class="hidden absolute top-0 ml-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"></span></a>
+            <button id="mobile-logout-btn" class="p-2 text-lg text-left" data-i18n-key="logout"></button>`;
+        
+        const toggleUserMenu = () => document.getElementById('user-menu-dropdown').classList.toggle('hidden');
+        document.getElementById('user-menu-btn').onclick = toggleUserMenu;
+        document.getElementById('logout-btn').onclick = handleSignOut;
+        document.getElementById('dashboard-link').onclick = (e) => { e.preventDefault(); renderView('dashboard'); };
+        document.getElementById('messages-link').onclick = (e) => { e.preventDefault(); renderView('inbox'); };
+    } else {
+        authLinksContainer.innerHTML = `<button id="login-btn" class="px-4 py-2 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors" data-i18n-key="connect"></button>`;
+        mobileLinksHTML += `<button id="mobile-login-btn" class="p-2 text-lg text-left" data-i18n-key="connect"></button>`;
+        document.getElementById('login-btn').onclick = () => toggleModal(DOMElements.authModal, true);
+    }
 
-  if (user) {
-    authLinksContainer.innerHTML = "";
-    // user menu
-    const wrapper = document.createElement("div");
-    wrapper.className = "relative";
-    wrapper.id = "user-menu";
-    const btn = document.createElement("button");
-    btn.id = "user-menu-btn";
-    btn.className = "flex items-center";
-    const img = document.createElement("img");
-    img.src = user.photoURL || "icons/user-placeholder.png";
-    img.alt = "User";
-    img.className = "w-8 h-8 rounded-full";
-    btn.appendChild(img);
-    wrapper.appendChild(btn);
-
-    const dropdown = document.createElement("div");
-    dropdown.id = "user-menu-dropdown";
-    dropdown.className = "absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-lg shadow-lg py-1 hidden z-20";
-    dropdown.innerHTML = `
-      <a href="#" id="dashboard-link" class="block px-4 py-2 text-sm">${translations[currentLang]?.dashboard || "Dashboard"}</a>
-      <a href="#" id="messages-link" class="relative block px-4 py-2 text-sm">${translations[currentLang]?.messages || "Messages"}<span id="unread-badge" class="hidden absolute right-2 top-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"></span></a>
-      <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm">${translations[currentLang]?.logout || "Logout"}</button>
-    `;
-    wrapper.appendChild(dropdown);
-    authLinksContainer.appendChild(wrapper);
-
-    // mobile links for logged in user
-    mobileLinksHTML += `<a href="#" id="mobile-dashboard-link" class="p-2 text-lg" data-i18n-key="dashboard"></a><a href="#" id="mobile-messages-link" class="p-2 text-lg relative"><span data-i18n-key="messages"></span><span id="mobile-unread-badge" class="hidden absolute top-0 ml-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"></span></a><button id="mobile-logout-btn" class="p-2 text-lg text-left">${translations[currentLang]?.logout || "Logout"}</button>`;
-    mobileNavLinks.innerHTML = mobileLinksHTML;
-
-    // bind events
-    document.getElementById("user-menu-btn")?.addEventListener("click", () => {
-      document.getElementById("user-menu-dropdown")?.classList.toggle("hidden");
-    });
-    document.getElementById("logout-btn")?.addEventListener("click", handleSignOut);
-    document.getElementById("dashboard-link")?.addEventListener("click", (e) => {
-      e.preventDefault();
-      renderView("dashboard");
-    });
-    document.getElementById("messages-link")?.addEventListener("click", (e) => {
-      e.preventDefault();
-      renderView("inbox");
-    });
-
-  } else {
-    // not logged in
-    authLinksContainer.innerHTML = `<button id="login-btn" class="px-4 py-2 bg-blue-600 text-white rounded-full">${translations[currentLang]?.connect || "Log In"}</button>`;
-    mobileNavLinks.innerHTML = mobileLinksHTML + `<button id="mobile-login-btn" class="p-2 text-lg">${translations[currentLang]?.connect || "Log In"}</button>`;
-    document.getElementById("login-btn")?.addEventListener("click", () => toggleModal(DOMElements.authModal, true));
-    document.getElementById("mobile-login-btn")?.addEventListener("click", () => toggleModal(DOMElements.authModal, true));
-  }
-
-  // update cart display
-  updateCartDisplay();
-  translatePage(currentLang);
+    DOMElements.mobileNavLinks.innerHTML = mobileLinksHTML;
+    updateCartDisplay();
+    translatePage();
 };
 
-/* -------------------------
-   Unread messages listener
-   ------------------------- */
+// --- UNREAD MESSAGES ---
 const listenForUnreadMessages = (user) => {
-  if (chatsUnsubscribe) chatsUnsubscribe();
-  if (!user) {
-    updateUnreadBadge(0);
-    return;
-  }
-  const q = query(collection(db, "chats"), where("participants", "array-contains", user.uid));
-  chatsUnsubscribe = onSnapshot(q, (snap) => {
-    const total = snap.docs.reduce((acc, d) => acc + (d.data().unreadCount?.[user.uid] || 0), 0);
-    updateUnreadBadge(total);
-  });
+    if (chatsUnsubscribe) chatsUnsubscribe();
+    if (!user) { updateUnreadBadge(0); return; }
+
+    const q = query(collection(db, "chats"), where("participants", "array-contains", user.uid));
+    chatsUnsubscribe = onSnapshot(q, (snapshot) => {
+        const totalUnread = snapshot.docs.reduce((acc, doc) => acc + (doc.data().unreadCount?.[user.uid] || 0), 0);
+        updateUnreadBadge(totalUnread);
+    });
 };
 
 const updateUnreadBadge = (count) => {
-  ["unread-badge", "mobile-unread-badge", "nav-unread-badge"].forEach((id) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.textContent = count > 9 ? "9+" : String(count);
-    el.classList.toggle("hidden", count === 0);
-  });
-};
-
-/* -------------------------
-   Modal helper
-   ------------------------- */
-const toggleModal = (modalElement, show) => {
-  if (!modalElement) return;
-  if (show) {
-    modalElement.classList.remove("invisible", "opacity-0");
-  } else {
-    modalElement.classList.add("invisible", "opacity-0");
-  }
-};
-
-/* -------------------------
-   Setup event listeners
-   ------------------------- */
-const setupEventListeners = () => {
-  // dark mode toggle
-  DOMElements.darkModeToggle?.addEventListener("click", () => {
-    const isDark = DOMElements.html.classList.toggle("dark");
-    localStorage.setItem("piecety_dark_mode", isDark ? "1" : "0");
-    const icon = DOMElements.darkModeToggle.querySelector("i");
-    if (icon) {
-      icon.classList.remove("fa-moon", "fa-sun");
-      icon.classList.add(isDark ? "fa-sun" : "fa-moon");
-    }
-  });
-
-  // language buttons
-  DOMElements.langBtns?.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const lang = btn.dataset.lang;
-      translatePage(lang);
-      DOMElements.langDropdown?.classList.add("hidden");
-      closeMobileMenu();
-      renderView(currentView || "home");
+    ['unread-badge', 'mobile-unread-badge', 'nav-unread-badge'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.textContent = count > 9 ? '9+' : count;
+            el.classList.toggle('hidden', count === 0);
+        }
     });
-  });
-
-  // mobile menu
-  DOMElements.mobileMenuBtn?.addEventListener("click", openMobileMenu);
-  DOMElements.mobileMenuCloseBtn?.addEventListener("click", closeMobileMenu);
-  DOMElements.mobileMenuBackdrop?.addEventListener("click", closeMobileMenu);
-
-  // search input
-  if (DOMElements.searchInput) {
-    DOMElements.searchInput.placeholder = translations[currentLang]?.search_placeholder || "";
-    DOMElements.searchInput.addEventListener("input", debounce(() => applyAndRenderFilters(), 500));
-  }
-
-  // auth modal close
-  DOMElements.authModalCloseBtn?.addEventListener("click", () => toggleModal(DOMElements.authModal, false));
-  DOMElements.modalCloseBtn?.addEventListener("click", () => toggleModal(DOMElements.postProductModal, false));
-
-  // google & facebook login buttons
-  DOMElements.googleLoginBtn?.addEventListener("click", handleSignInWithGoogle);
-  // we need to add a facebook login button to the auth modal if not present
-  let fbBtn = document.getElementById("facebook-login-btn");
-  if (!fbBtn && DOMElements.authModal) {
-    // append facebook button under google button if auth modal exists
-    const googleBtn = DOMElements.googleLoginBtn;
-    if (googleBtn && googleBtn.parentNode) {
-      fbBtn = document.createElement("button");
-      fbBtn.id = "facebook-login-btn";
-      fbBtn.className = googleBtn.className;
-      fbBtn.innerHTML = '<i class="fab fa-facebook-f text-xl mr-2"></i> Sign in with Facebook';
-      googleBtn.parentNode.appendChild(fbBtn);
-    }
-  }
-  fbBtn?.addEventListener("click", handleSignInWithFacebook);
-
-  // sell link
-  DOMElements.sellLink?.addEventListener("click", (e) => {
-    e.preventDefault();
-    toggleModal(currentUser ? DOMElements.postProductModal : DOMElements.authModal, true);
-  });
-
-  // cart button
-  DOMElements.cartBtn?.addEventListener("click", () => renderView("cart"));
-
-  // home link
-  DOMElements.homeLink?.addEventListener("click", (e) => {
-    e.preventDefault();
-    window.history.pushState({}, "", window.location.pathname);
-    renderView("home");
-  });
-
-  // wire mobile filters
-  DOMElements.mobileFiltersCloseBtn?.addEventListener("click", () => {
-    DOMElements.mobileFiltersModal?.classList.add("translate-x-full");
-  });
-  DOMElements.mobileApplyFiltersBtn?.addEventListener("click", () => {
-    applyAndRenderFilters();
-    DOMElements.mobileFiltersModal?.classList.add("translate-x-full");
-  });
-
-  // post product form handler
-  handlePostProductForm();
 };
 
-/* -------------------------
-   Render & router
-   ------------------------- */
-const renderView = (viewName, data = null) => {
-  // Basic router: expects templates in index.html e.g. home-view-template
-  const route = viewName.split("/")[0];
-  currentView = viewName;
-  // remove existing listeners/unsubscribes
-  if (productsUnsubscribe) productsUnsubscribe();
-  if (chatsUnsubscribe) chatsUnsubscribe();
+// --- POPULATE DROPDOWNS ---
+const populateDropdowns = () => {
+    // Category
+    const categorySelect = document.getElementById('category');
+    categorySelect.innerHTML = `<option value="" data-i18n-key="select_category"></option>`;
+    Object.entries(categories).forEach(([value, data]) => {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = data[currentLang];
+        categorySelect.appendChild(option);
+    });
 
-  // load template
-  const templateId = `${route}-view-template`;
-  const template = document.getElementById(templateId);
-  const container = DOMElements.appContainer;
-  if (!container) return;
-  container.innerHTML = "";
-  if (template && template.content) {
-    container.appendChild(template.content.cloneNode(true));
-    // call view-specific renderer if exists
-    const viewFnName = `render${route.charAt(0).toUpperCase()}${route.slice(1)}Page`;
-    if (typeof window[viewFnName] === "function") {
-      try {
-        window[viewFnName](data);
-      } catch (err) {
-        console.error("Error rendering view fn:", err);
-      }
-    } else {
-      // fallback
-      if (route === "home") renderHomePage();
-    }
-  } else {
-    // if no template, fallback to home
-    renderHomePage();
-  }
-  translatePage(currentLang);
-  window.scrollTo(0, 0);
+    // Brand
+    const brandSelect = document.getElementById('brand');
+    brandSelect.innerHTML = `<option value="" data-i18n-key="select_brand"></option>`;
+    brands.forEach(brand => {
+        const option = document.createElement('option');
+        option.value = brand.value;
+        option.textContent = brand.label[currentLang];
+        brandSelect.appendChild(option);
+    });
+
+    // Model (dynamic, based on brand)
+    brandSelect.onchange = (e) => {
+        const modelSelect = document.getElementById('model');
+        modelSelect.innerHTML = `<option value="" data-i18n-key="select_model"></option>`;
+        const selectedBrand = e.target.value;
+        if (models[selectedBrand]) {
+            models[selectedBrand].forEach(model => {
+                const option = document.createElement('option');
+                option.value = model.value;
+                option.textContent = model.label[currentLang];
+                modelSelect.appendChild(option);
+            });
+        }
+    };
+
+    // Year
+    const yearSelect = document.getElementById('year');
+    yearSelect.innerHTML = `<option value="" data-i18n-key="select_year"></option>`;
+    years.forEach(year => {
+        const option = document.createElement('option');
+        option.value = year.value;
+        option.textContent = year.label;
+        yearSelect.appendChild(option);
+    });
+
+    // Wilaya
+    const wilayaSelect = document.getElementById('wilaya');
+    wilayaSelect.innerHTML = `<option value="" data-i18n-key="select_wilaya"></option>`;
+    wilayas.forEach(wilaya => {
+        const option = document.createElement('option');
+        option.value = wilaya.value;
+        option.textContent = wilaya.label[currentLang];
+        wilayaSelect.appendChild(option);
+    });
+
+    // Commune (dynamic, based on wilaya)
+    wilayaSelect.onchange = (e) => {
+        const communeSelect = document.getElementById('commune');
+        communeSelect.innerHTML = `<option value="" data-i18n-key="select_commune"></option>`;
+        const selectedWilaya = e.target.value;
+        if (communes[selectedWilaya]) {
+            communes[selectedWilaya].forEach(commune => {
+                const option = document.createElement('option');
+                option.value = commune.value;
+                option.textContent = commune.label[currentLang];
+                communeSelect.appendChild(option);
+            });
+        }
+    };
+
+    // Condition
+    const conditionSelect = document.getElementById('condition');
+    conditionSelect.innerHTML = `
+        <option value="any" data-i18n-key="any_condition"></option>
+        <option value="new" data-i18n-key="new"></option>
+        <option value="used" data-i18n-key="used"></option>
+    `;
 };
 
-/* -------------------------
-   Auth state observer
-   ------------------------- */
-onAuthStateChanged(auth, async (user) => {
-  currentUser = user || null;
-  updateAuthUI(currentUser);
-  if (currentUser) {
-    // load user's cart
-    try {
-      const cartSnap = await getDoc(doc(db, "carts", currentUser.uid));
-      if (cartSnap.exists()) userCart = cartSnap.data() || {};
-      else userCart = {};
-    } catch (err) {
-      console.error("Error fetching cart:", err);
-      userCart = {};
+// --- RENDERING FUNCTIONS ---
+const renderView = async (view) => {
+    if (productsUnsubscribe) productsUnsubscribe();
+    currentView = view;
+    DOMElements.contentSection.innerHTML = '';
+
+    if (view === 'home') {
+        renderHomeView();
+    } else if (view === 'cart') {
+        renderCartView();
+    } else if (view === 'dashboard') {
+        renderDashboardView();
+    } else if (view === 'inbox') {
+        renderInboxView();
     }
-    // listen for unread messages
-    listenForUnreadMessages(currentUser);
-  } else {
-    userCart = {};
-    updateCartDisplay();
-    listenForUnreadMessages(null);
-  }
-});
-
-/* -------------------------
-   Initialization
-   ------------------------- */
-const init = () => {
-  // translate
-  translatePage(currentLang);
-
-  // wire events
-  setupEventListeners();
-
-  // initial view
-  renderView("home");
-
-  // fill selects for post product modal if present
-  populateSelect(DOMElements.postProductBrandSelect, Object.keys(car_data), "all_brands", currentLang);
-  populateSelect(DOMElements.postProductYearSelect, years, "all_years", currentLang);
-  populateSelect(DOMElements.postProductCategorySelect, Object.keys(categories), "all_categories", currentLang, true);
-  populateSelect(DOMElements.postProductConditionSelect, ["new", "used"], "condition", currentLang);
-
-  // apply stored dark mode
-  const savedDark = localStorage.getItem("piecety_dark_mode");
-  if (savedDark === "1") {
-    DOMElements.html.classList.add("dark");
-    const icon = DOMElements.darkModeToggle?.querySelector("i");
-    if (icon) {
-      icon.classList.remove("fa-moon");
-      icon.classList.add("fa-sun");
-    }
-  }
-
-  // attach listeners to navigation bottom if present
-  const navHome = document.getElementById("nav-home");
-  navHome?.addEventListener("click", (e) => {
-    e.preventDefault();
-    renderView("home");
-  });
-
-  // message box aria-live for accessibility
-  if (DOMElements.messageBox) {
-    DOMElements.messageBox.setAttribute("role", "status");
-    DOMElements.messageBox.setAttribute("aria-live", "polite");
-  }
 };
 
-document.addEventListener("DOMContentLoaded", init);
-
-// expose some helpers for debugging (optional)
-window.Piecety = {
-  db,
-  auth,
-  storage,
-  renderView,
-  uploadImageFile,
-  addToCart,
-  renderDashboard
+const renderHomeView = () => {
+    DOMElements.contentSection.innerHTML = `<p data-i18n-key="loading_text"></p>`;
+    const q = query(collection(db, "products"), orderBy("createdAt", "desc"), limit(20));
+    productsUnsubscribe = onSnapshot(q, (snapshot) => {
+        DOMElements.contentSection.innerHTML = snapshot.docs.map(doc => {
+            const data = doc.data();
+            return `
+                <div class="category-card p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
+                    <h3>${sanitizeInput(data.title)}</h3>
+                    <p>${sanitizeInput(data.description)}</p>
+                    <p>${data.price} DA</p>
+                    <button onclick="addToCart('${doc.id}', ${JSON.stringify(data)})" class="bg-blue-600 text-white px-4 py-2 rounded" data-i18n-key="add_to_cart"></button>
+                </div>
+            `;
+        }).join('') || `<p data-i18n-key="no_listings"></p>`;
+        translatePage();
+    });
 };
+
+const renderCartView = () => {
+    DOMElements.contentSection.innerHTML = `
+        <h2 class="text-2xl font-semibold mb-4" data-i18n-key="cart_title"></h2>
+        ${Object.keys(userCart).length === 0 ? `<p data-i18n-key="your_cart_is_empty"></p>` : Object.entries(userCart).map(([id, item]) => `
+            <div class="flex justify-between p-4 bg-white dark:bg-gray-800 rounded-lg shadow mb-2">
+                <div>
+                    <h3>${sanitizeInput(item.title)}</h3>
+                    <p data-i18n-key="quantity">${item.quantity}</p>
+                    <p data-i18n-key="item_total">${item.price * item.quantity} DA</p>
+                </div>
+                <button onclick="removeFromCart('${id}')" class="text-red-600" data-i18n-key="remove"></button>
+            </div>
+        `).join('')}
+        <button id="clear-cart-btn" class="bg-red-600 text-white px-4 py-2 rounded mt-4" data-i18n-key="clear_cart"></button>
+    `;
+    translatePage();
+    document.getElementById('clear-cart-btn').onclick = clearCart;
+};
+
+const renderDashboardView = async () => {
+    DOMElements.contentSection.innerHTML = `<p data-i18n-key="loading_text"></p>`;
+    const q = query(collection(db, "products"), where("sellerId", "==", currentUser.uid));
+    const snapshot = await getDocs(q);
+    DOMElements.contentSection.innerHTML = `<h2 data-i18n-key="my_listings"></h2>` + snapshot.docs.map(doc => {
+        const data = doc.data();
+        return `
+            <div class="p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
+                <h3>${sanitizeInput(data.title)}</h3>
+                <p>${data.price} DA</p>
+                <button onclick="deleteProduct('${doc.id}')" class="text-red-600" data-i18n-key="remove"></button>
+            </div>
+        `;
+    }).join('') || `<p data-i18n-key="no_listings"></p>`;
+    translatePage();
+};
+
+const deleteProduct = async (productId) => {
+    if (confirm(translations[currentLang].delete_ad_confirm)) {
+        try {
+            await deleteDoc(doc(db, "products", productId));
+            showMessage('ad_post_failed', 3000, 'success'); // Note: Use a better key for success delete
+            renderView('dashboard');
+        } catch (error) {
+            console.error("Error deleting product:", error);
+            showMessage('ad_post_failed', 3000, 'error');
+        }
+    }
+};
+
+const renderInboxView = () => {
+    DOMElements.contentSection.innerHTML = `<p data-i18n-key="loading_convos"></p>`;
+    const q = query(collection(db, "chats"), where("participants", "array-contains", currentUser.uid));
+    productsUnsubscribe = onSnapshot(q, (snapshot) => {
+        DOMElements.contentSection.innerHTML = snapshot.docs.map(doc => {
+            const data = doc.data();
+            const otherParticipant = data.participants.find(id => id !== currentUser.uid);
+            return `
+                <div class="p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
+                    <h3 data-i18n-key="chat_with">${otherParticipant}</h3>
+                    <p>Last message: ${sanitizeInput(data.lastMessage || '')}</p>
+                </div>
+            `;
+        }).join('') || `<p data-i18n-key="no_listings"></p>`; // Reuse no_listings for no chats
+        translatePage();
+    });
+};
+
+// --- FILTERS ---
+const applyAndRenderFilters = () => {
+    if (productsUnsubscribe) productsUnsubscribe();
+    const searchTerm = DOMElements.searchInput.value.toLowerCase();
+    let q = query(collection(db, "products"), orderBy("createdAt", "desc"), limit(20));
+    if (searchTerm) {
+        q = query(q, where("title", "==", searchTerm)); // Simple example, use Firestore search extensions for better search
+    }
+    // Add more filter logic based on filters-form
+    productsUnsubscribe = onSnapshot(q, (snapshot) => {
+        DOMElements.contentSection.innerHTML = snapshot.docs.map(doc => {
+            const data = doc.data();
+            return `
+                <div class="category-card p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
+                    <h3>${sanitizeInput(data.title)}</h3>
+                    <p>${sanitizeInput(data.description)}</p>
+                    <p>${data.price} DA</p>
+                    <button onclick="addToCart('${doc.id}', ${JSON.stringify(data)})" class="bg-blue-600 text-white px-4 py-2 rounded" data-i18n-key="add_to_cart"></button>
+                </div>
+            `;
+        }).join('') || `<p data-i18n-key="no_listings"></p>`;
+        translatePage();
+    });
+};
+
+// --- SETUP & INITIALIZATION ---
+const setupEventListeners = () => {
+    const { darkModeToggle, langDropdownBtn, langBtns, sellLink, cartBtn, homeLink, mobileMenuBtn, mobileMenuCloseBtn, authModalCloseBtn, googleLoginBtn, modalCloseBtn, searchInput, mobileFiltersCloseBtn, mobileApplyFiltersBtn } = DOMElements;
+
+    darkModeToggle.onclick = () => setDarkMode(!DOMElements.html.classList.contains('dark'));
+    langDropdownBtn.onclick = (e) => { e.stopPropagation(); DOMElements.langDropdown.classList.toggle('hidden'); };
+    langBtns.forEach(btn => btn.onclick = () => { setLanguage(btn.dataset.lang); DOMElements.langDropdown.classList.add('hidden'); closeMobileMenu(); });
+
+    sellLink.onclick = (e) => { e.preventDefault(); toggleModal(currentUser ? DOMElements.postProductModal : DOMElements.authModal, true); };
+    cartBtn.onclick = () => renderView('cart');
+    homeLink.onclick = (e) => { e.preventDefault(); window.history.pushState({}, '', window.location.pathname); renderView('home'); };
+
+    // Mobile Menu Handlers
+    mobileMenuBtn.onclick = openMobileMenu;
+    mobileMenuCloseBtn.onclick = closeMobileMenu;
+    DOMElements.mobileMenuBackdrop.onclick = closeMobileMenu;
+
+    // Mobile Menu Event Delegation
+    DOMElements.mobileNavLinks.addEventListener('click', (e) => {
+        const target = e.target.closest('a, button');
+        if (!target) return;
+        e.preventDefault();
+        
+        const actions = {
+            'mobile-home-link': () => { window.history.pushState({}, '', window.location.pathname); renderView('home'); },
+            'mobile-sell-link': () => sellLink.click(),
+            'mobile-cart-link': () => renderView('cart'),
+            'mobile-dashboard-link': () => renderView('dashboard'),
+            'mobile-messages-link': () => renderView('inbox'),
+            'mobile-logout-btn': handleSignOut,
+            'mobile-login-btn': () => toggleModal(DOMElements.authModal, true)
+        };
+        
+        actions[target.id]?.();
+        closeMobileMenu();
+    });
+
+    authModalCloseBtn.onclick = () => toggleModal(DOMElements.authModal, false);
+    modalCloseBtn.onclick = () => toggleModal(DOMElements.postProductModal, false);
+    googleLoginBtn.onclick = () => signInWithPopup(auth, provider).catch(error => console.error("Login error", error));
+
+    DOMElements.postProductForm.onsubmit = async (e) => {
+        e.preventDefault();
+        if (!validatePostForm(e.target) || !currentUser) return;
+        
+        const btn = e.target.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.querySelector('.btn-spinner').classList.remove('hidden');
+
+        const formData = Object.fromEntries(new FormData(e.target).entries());
+        const productData = { ...formData, price: Number(formData.price), sellerId: currentUser.uid, sellerName: currentUser.displayName, createdAt: serverTimestamp() };
+
+        try {
+            await addDoc(collection(db, "products"), productData);
+            showMessage('ad_posted', 3000, 'success');
+            e.target.reset();
+            toggleModal(DOMElements.postProductModal, false);
+        } catch (error) {
+            console.error("Error adding document: ", error);
+            showMessage('ad_post_failed', 3000, 'error');
+        } finally {
+            btn.disabled = false;
+            btn.querySelector('.btn-spinner').classList.add('hidden');
+        }
+    };
+    
+    searchInput.oninput = debounce(applyAndRenderFilters, 500);
+    mobileFiltersCloseBtn.onclick = () => DOMElements.mobileFiltersModal.classList.add('translate-x-full');
+    mobileApplyFiltersBtn.onclick = () => { applyAndRenderFilters(); DOMElements.mobileFiltersModal.classList.add('translate-x-full'); };
+
+    document.onclick = (e) => {
+        if (!langDropdownBtn.contains(e.target)) DOMElements.langDropdown.classList.add('hidden');
+        const userMenu = document.getElementById('user-menu');
+        if (userMenu && !userMenu.contains(e.target)) document.getElementById('user-menu-dropdown').classList.add('hidden');
+    };
+    
+    document.getElementById('nav-home').onclick = (e) => { 
+        e.preventDefault(); 
+        window.history.pushState({}, '', window.location.pathname);
+        renderView('home'); 
+    };
+    document.getElementById('nav-search').onclick = (e) => { e.preventDefault(); DOMElements.searchInput.focus(); };
+    document.getElementById('nav-sell').onclick = (e) => { e.preventDefault(); DOMElements.sellLink.click(); };
+    document.getElementById('nav-messages').onclick = (e) => { e.preventDefault(); currentUser ? renderView('inbox') : toggleModal(DOMElements.authModal, true); };
+    document.getElementById('nav-profile').onclick = (e) => { e.preventDefault(); currentUser ? renderView('dashboard') : toggleModal(DOMElements.authModal, true); };
+
+    let lastScrollY = window.scrollY;
+    const header = document.querySelector('header');
+    window.addEventListener('scroll', () => {
+        if (lastScrollY < window.scrollY && window.scrollY > 100) {
+            header.classList.add('-translate-y-full');
+        } else {
+            header.classList.remove('-translate-y-full');
+        }
+        lastScrollY = window.scrollY;
+    }, { passive: true });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            toggleModal(DOMElements.authModal, false);
+            toggleModal(DOMElements.postProductModal, false);
+            closeMobileMenu();
+            DOMElements.mobileFiltersModal.classList.add('translate-x-full');
+        }
+    });
+};
+
+// --- BOOT APP ---
+const bootApp = () => {
+    setDarkMode(localStorage.getItem('piecety_dark_mode') === 'true');
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+    populateDropdowns();
+    setupEventListeners();
+
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js')
+            .then(() => console.log('Service worker registered.'))
+            .catch(err => console.error('Service worker registration failed:', err));
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+        currentUser = user;
+        updateAuthUI(user);
+        listenForUnreadMessages(user);
+        userCart = {};
+        if (user) {
+            toggleModal(DOMElements.authModal, false);
+            const cartSnap = await getDoc(doc(db, "carts", user.uid));
+            if (cartSnap.exists()) userCart = cartSnap.data();
+        }
+        updateCartDisplay();
+        renderView('home');
+    });
+    
+    window.onpopstate = () => renderView('home');
+    setLanguage(currentLang);
+};
+
+bootApp();
