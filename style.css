@@ -1,160 +1,207 @@
-:root {
-    --bg-color: #f7fafc;
-    --bg-dark-color: #111827;
-    --text-color: #1f2937;
-    --text-dark-color: #e5e7eb;
-    --primary-color: #2563eb;
-    --primary-hover: #1d4ed8;
-    --border-color: #d1d5db;
-    --border-dark-color: #4b5563;
-    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --shadow-dark: 0 4px 6px rgba(255, 255, 255, 0.1);
-}
-
-.dark {
-    --bg-color: var(--bg-dark-color);
-    --text-color: var(--text-dark-color);
-    --border-color: var(--border-dark-color);
-}
-
+/* General Body Styles */
 body {
     font-family: 'Inter', 'Noto Sans Arabic', sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    font-size: 1rem;
-    margin: 0;
+    background-color: #f7fafc;
+    font-size: 1rem; /* Use relative units */
 }
 
+html.dark body {
+    background-color: #111827;
+}
+
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
-    width: 0.5rem;
+    width: 8px;
 }
-
 ::-webkit-scrollbar-track {
     background: #f1f1f1;
 }
-
-.dark ::-webkit-scrollbar-track {
+html.dark ::-webkit-scrollbar-track {
     background: #2d3748;
 }
-
 ::-webkit-scrollbar-thumb {
     background: #888;
-    border-radius: 0.25rem;
+    border-radius: 4px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
 
+/* Focus visible for accessibility */
 :focus-visible {
-    outline: 2px solid var(--primary-color);
+    outline: 2px solid #2563eb;
     outline-offset: 2px;
-    border-radius: 0.25rem;
+    border-radius: 4px;
 }
 
+/* Improved Touch Feedback */
 button, a, [role="button"] {
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
 }
 
+/* --- Modal & Menu Transitions --- */
 .modal, #mobile-menu-backdrop {
     transition: opacity 0.3s ease, visibility 0.3s ease;
 }
-
 #mobile-menu {
     transition: transform 0.3s ease-in-out;
 }
 
+/* Category Card Hover Effect */
 .category-card {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-
 .category-card:hover {
-    transform: translateY(-0.3125rem);
-    box-shadow: var(--shadow);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
-
-.dark .category-card:hover {
-    box-shadow: var(--shadow-dark);
+html.dark .category-card:hover {
+    box-shadow: 0 10px 15px rgba(255, 255, 255, 0.1);
 }
-
 .category-card .category-icon {
     transition: transform 0.2s ease, background-color 0.2s ease;
 }
-
 .category-card:hover .category-icon {
     transform: scale(1.1);
-    background-color: #dbeafe;
+    background-color: #dbeafe; /* bg-blue-100 */
+}
+html.dark .category-card:hover .category-icon {
+    background-color: #374151; /* dark:bg-gray-700 */
 }
 
-.dark .category-card:hover .category-icon {
-    background-color: #374151;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .category-card, .modal, #mobile-menu, #mobile-menu-backdrop {
-        transition: none;
-    }
+/* --- Mobile UX Enhancements --- */
+:root {
+    --bottom-nav-height: 5rem;
 }
 
 @media (max-width: 768px) {
+    /* Prevent bottom nav overlap */
     main {
-        padding-bottom: 5rem;
+        padding-bottom: var(--bottom-nav-height);
     }
-
+    
+    /* Improve mobile form elements to prevent iOS zoom */
     input, select, textarea {
         font-size: 16px;
     }
-
+    
+    /* Better, more responsive grid for mobile */
     #dynamic-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-        gap: 0.75rem;
+        gap: 12px;
     }
 
     #mobile-menu {
-        width: 80%;
-        max-width: 20rem;
+        width: 80%; /* Wider for better touch targets */
+        max-width: 320px;
     }
 
     #mobile-nav-links a, #mobile-nav-links button {
-        padding: 1rem;
-        font-size: 1.125rem;
+        padding: 1rem; 
+        font-size: 1.125rem; /* Larger tap areas */
     }
 }
 
-@media (max-width: 1024px) and (min-width: 769px) {
-    #dynamic-grid {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    }
-}
-
+/* Optimize search bar for small screens */
 @media (max-width: 480px) {
     #search-input {
         padding: 0.6rem 2.5rem 0.6rem 2.2rem;
-        font-size: 0.9375rem;
+        font-size: 15px;
     }
-
     .fa-search.absolute {
         left: 0.8rem;
     }
 }
 
+/* RTL support for Arabic */
 html[dir="rtl"] {
     text-align: right;
 }
-
 html[dir="rtl"] .fa-search.absolute {
-    right: 0.75rem;
+    right: 0.75rem; /* 12px */
     left: auto;
 }
-
 html[dir="rtl"] #search-input {
-    padding-inline-end: 2.5rem;
-    padding-inline-start: 0.75rem;
+    padding-right: 2.5rem;
+    padding-left: 0.75rem;
+}
+html[dir="rtl"] .logo svg {
+    margin-left: 0.5rem; /* ml-2 */
+    margin-right: 0;
 }
 
-html[dir="rtl"] .logo svg {
-    margin-inline-end: 0;
-    margin-inline-start: 0.5rem;
+/* New CSS for added features */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+}
+
+.modal-content {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+}
+html.dark .modal-content {
+    background: #1f2937;
+    color: white;
+}
+
+.image-upload-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 1rem;
+}
+
+.image-preview {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+
+.store-badge {
+    background-color: #2563eb;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    display: inline-block;
+    margin-left: 0.5rem;
+}
+
+.btn {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.btn-primary {
+    background-color: #2563eb;
+    color: white;
+}
+.btn-primary:hover {
+    background-color: #1d4ed8;
+}
+
+.btn-secondary {
+    background-color: #e5e7eb;
+    color: #1f2937;
+}
+.btn-secondary:hover {
+    background-color: #d1d5db;
 }
