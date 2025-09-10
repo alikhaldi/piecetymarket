@@ -1,129 +1,160 @@
-/* General Body Styles */
+:root {
+    --bg-color: #f7fafc;
+    --bg-dark-color: #111827;
+    --text-color: #1f2937;
+    --text-dark-color: #e5e7eb;
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --border-color: #d1d5db;
+    --border-dark-color: #4b5563;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-dark: 0 4px 6px rgba(255, 255, 255, 0.1);
+}
+
+.dark {
+    --bg-color: var(--bg-dark-color);
+    --text-color: var(--text-dark-color);
+    --border-color: var(--border-dark-color);
+}
+
 body {
     font-family: 'Inter', 'Noto Sans Arabic', sans-serif;
-    background-color: #f7fafc;
-    font-size: 1rem; /* Use relative units */
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-size: 1rem;
+    margin: 0;
 }
 
-.dark body {
-    background-color: #111827;
-}
-
-/* Custom Scrollbar */
 ::-webkit-scrollbar {
-    width: 8px;
+    width: 0.5rem;
 }
+
 ::-webkit-scrollbar-track {
     background: #f1f1f1;
 }
+
 .dark ::-webkit-scrollbar-track {
     background: #2d3748;
 }
+
 ::-webkit-scrollbar-thumb {
     background: #888;
-    border-radius: 4px;
+    border-radius: 0.25rem;
 }
+
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
 
-/* Focus visible for accessibility */
 :focus-visible {
-    outline: 2px solid #2563eb;
+    outline: 2px solid var(--primary-color);
     outline-offset: 2px;
-    border-radius: 4px;
+    border-radius: 0.25rem;
 }
 
-/* Improved Touch Feedback */
 button, a, [role="button"] {
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
-/* --- Modal & Menu Transitions --- */
 .modal, #mobile-menu-backdrop {
     transition: opacity 0.3s ease, visibility 0.3s ease;
 }
+
 #mobile-menu {
     transition: transform 0.3s ease-in-out;
 }
 
-/* Category Card Hover Effect */
 .category-card {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
 .category-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    transform: translateY(-0.3125rem);
+    box-shadow: var(--shadow);
 }
+
 .dark .category-card:hover {
-    box-shadow: 0 10px 15px rgba(255, 255, 255, 0.1);
+    box-shadow: var(--shadow-dark);
 }
+
 .category-card .category-icon {
     transition: transform 0.2s ease, background-color 0.2s ease;
 }
+
 .category-card:hover .category-icon {
     transform: scale(1.1);
-    background-color: #dbeafe; /* bg-blue-100 */
-}
-.dark .category-card:hover .category-icon {
-    background-color: #374151; /* dark:bg-gray-700 */
+    background-color: #dbeafe;
 }
 
-/* --- Mobile UX Enhancements --- */
+.dark .category-card:hover .category-icon {
+    background-color: #374151;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .category-card, .modal, #mobile-menu, #mobile-menu-backdrop {
+        transition: none;
+    }
+}
+
 @media (max-width: 768px) {
-    /* Prevent bottom nav overlap */
     main {
         padding-bottom: 5rem;
     }
-    
-    /* Improve mobile form elements to prevent iOS zoom */
+
     input, select, textarea {
         font-size: 16px;
     }
-    
-    /* Better, more responsive grid for mobile */
+
     #dynamic-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-        gap: 12px;
+        gap: 0.75rem;
     }
 
     #mobile-menu {
-        width: 80%; /* Wider for better touch targets */
-        max-width: 320px;
+        width: 80%;
+        max-width: 20rem;
     }
 
     #mobile-nav-links a, #mobile-nav-links button {
-        padding: 1rem; 
-        font-size: 1.125rem; /* Larger tap areas */
+        padding: 1rem;
+        font-size: 1.125rem;
     }
 }
 
-/* Optimize search bar for small screens */
+@media (max-width: 1024px) and (min-width: 769px) {
+    #dynamic-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+}
+
 @media (max-width: 480px) {
     #search-input {
-      padding: 0.6rem 2.5rem 0.6rem 2.2rem;
-      font-size: 15px;
+        padding: 0.6rem 2.5rem 0.6rem 2.2rem;
+        font-size: 0.9375rem;
     }
+
     .fa-search.absolute {
-      left: 0.8rem;
+        left: 0.8rem;
     }
 }
 
-/* RTL support for Arabic */
 html[dir="rtl"] {
     text-align: right;
 }
+
 html[dir="rtl"] .fa-search.absolute {
-    right: 0.75rem; /* 12px */
+    right: 0.75rem;
     left: auto;
 }
+
 html[dir="rtl"] #search-input {
-    padding-right: 2.5rem;
-    padding-left: 0.75rem;
+    padding-inline-end: 2.5rem;
+    padding-inline-start: 0.75rem;
 }
+
 html[dir="rtl"] .logo svg {
-    margin-left: 0.5rem; /* ml-2 */
-    margin-right: 0;
+    margin-inline-end: 0;
+    margin-inline-start: 0.5rem;
 }
