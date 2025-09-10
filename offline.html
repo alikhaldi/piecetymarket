@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr" class="bg-gray-50 dark:bg-gray-900">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vous êtes hors ligne - Piecety</title>
+  <link rel="icon" href="icons/car-192.png" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen text-center p-6 text-gray-800 dark:text-gray-200">
+
+  <div class="max-w-md bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+    <div class="flex justify-center mb-6">
+      <img src="icons/car-192.png" alt="Piecety" class="h-16 w-16" />
+    </div>
+    <h1 class="text-2xl font-bold mb-4">Vous êtes hors ligne</h1>
+    <p class="mb-6">Il semble que vous n'ayez pas de connexion Internet.  
+      Certaines fonctionnalités peuvent être limitées jusqu’à ce que vous soyez de nouveau en ligne.</p>
+    <button onclick="window.location.reload()" class="px-5 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition">
+      Réessayer <i class="fas fa-sync-alt ml-2"></i>
+    </button>
+  </div>
+
+  <footer class="mt-8 text-sm text-gray-500 dark:text-gray-400">
+    &copy; <span id="year-span"></span> Piecety - Marché des Pièces Auto en Algérie
+  </footer>
+
+  <script>
+    document.getElementById("year-span").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
