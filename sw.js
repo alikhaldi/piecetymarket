@@ -1,72 +1,70 @@
-const CACHE_NAME = "piecety-cache-v2"; // Incremented version
-const urlsToCache = [
+const CACHE_NAME = "piecety-cache-v1";
+const OFFLINE_URL = "offline.html";
+
+const ASSETS_TO_CACHE = [
   "./",
   "./index.html",
   "./style.css",
-  "./offline.html", // Offline fallback page
+  "./app.js",
+  "./manifest.json",
   "./icons/car-192.png",
-  "./icons/car-512.png",
-  "./icons/toyota.png",
-  "./icons/peugeot.png",
-  "./icons/volkswagen.png",
-  "./icons/renault.png",
-  "./icons/hyundai.png",
-  "./icons/nissan.png",
-  "./icons/fiat.png",
-  "./icons/citroen.png",
-  "./icons/kia.png",
-  "./icons/mercedes.png"
+  "./icons/car-512.png"
 ];
 
-// More resilient installation
-self.addEventListener("install", event => {
-  event.waitUntil((async () => {
-    const cache = await caches.open(CACHE_NAME);
-    console.log('Opened cache');
-    for (const url of urlsToCache) {
-      try {
-        await cache.add(url);
-      } catch (err) {
-        console.warn("SW: Failed to cache", url, err);
+// ✅ Install
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
+      for (const asset of ASSETS_TO_CACHE) {
+        try {
+          await cache.add(asset);
+        } catch (err) {
+          console.warn("SW: Failed to cache", asset, err);
+        }
       }
-    }
-  })());
+      // Try offline.html if available
+      try {
+        await cache.add(OFFLINE_URL);
+      } catch {
+        console.info("SW: No offline.html found, skipping.");
+      }
+    })()
+  );
+  self.skipWaiting();
 });
 
-// Cleanup old caches
-self.addEventListener("activate", event => {
-    const cacheWhitelist = [CACHE_NAME];
-    event.waitUntil(
-        caches.keys().then(cacheNames => {
-            return Promise.all(
-                cacheNames.map(cacheName => {
-                    if (!cacheWhitelist.includes(cacheName)) {
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
-        })
-    );
+// ✅ Activate
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(keys.map((key) => key !== CACHE_NAME && caches.delete(key)))
+    )
+  );
+  self.clients.claim();
 });
 
-// Stale-while-revalidate strategy
-self.addEventListener("fetch", event => {
-    event.respondWith(
-        caches.open(CACHE_NAME).then(cache => {
-            return cache.match(event.request).then(response => {
-                const fetchPromise = fetch(event.request).then(networkResponse => {
-                    // If we got a valid response, update the cache
-                    if (networkResponse && networkResponse.status === 200) {
-                        cache.put(event.request, networkResponse.clone());
-                    }
-                    return networkResponse;
-                }).catch(() => {
-                    // If the network fails, return the offline page
-                    return caches.match("./offline.html");
-                });
-                // Return the cached version first, then update in the background
-                return response || fetchPromise;
-            });
+// ✅ Fetch
+self.addEventListener("fetch", (event) => {
+  if (event.request.method !== "GET") return;
+
+  event.respondWith(
+    caches.match(event.request).then((cachedResponse) => {
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+
+      return fetch(event.request)
+        .then((response) => {
+          // Cache valid responses only
+          if (!response || response.status !== 200) {
+            return response;
+          }
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone));
+          return response;
         })
-    );
+        .catch(() => caches.match(OFFLINE_URL));
+    })
+  );
 });
