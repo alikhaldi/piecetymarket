@@ -304,7 +304,7 @@ const translatePage = (lang) => {
         if (translations[lang]?.[key]) el.innerHTML = translations[lang][key];
     });
     document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
-        const key = el.dataset.i18nPlaceholder;
+        const key = el.dataset.i18n-placeholder;
         if (translations[lang]?.[key]) el.placeholder = translations[lang][key];
     });
 };
@@ -921,7 +921,7 @@ window.renderInboxPage = () => {
             convoEl.innerHTML = `
                 <div><h4 class="font-bold">${otherUserName}</h4><p class="text-sm text-gray-500 dark:text-gray-400 truncate">${chat.lastMessage}</p></div>
                 ${chat.unreadCount?.[currentUser.uid] > 0 ? `<span class="bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">${chat.unreadCount[currentUser.uid]}</span>` : ''}`;
-            convoEl.onclick = () => renderView('chat', { chatId, otherUserName });
+            convoEl.onclick = () => renderView('chat', { chatId: doc.id, otherUserName });
             listContainer.appendChild(convoEl);
         });
     }, (error) => {
@@ -1275,12 +1275,27 @@ const setupEventListeners = () => {
         btn.querySelector('.btn-spinner').classList.remove('hidden');
 
         const formData = Object.fromEntries(new FormData(e.target).entries());
-        const imageFile = formData.image;
+        const imageFile = DOMElements.postProductImageInput.files[0];
 
         try {
-            const imageRef = ref(storage, `product_images/${currentUser.uid}/${Date.now()}_${imageFile.name}`);
-            const snapshot = await uploadBytes(imageRef, imageFile);
-            const imageUrl = await getDownloadURL(snapshot.ref);
+            // Check if there is a file to upload
+            if (!imageFile) {
+                showMessage("Please select an image first!", 3000, "error");
+                btn.disabled = false;
+                btn.querySelector('.btn-spinner').classList.add('hidden');
+                return;
+            }
+
+            // Create a storage ref with a unique path
+            const storageRef = ref(storage, `product_images/${Date.now()}_${imageFile.name}`);
+
+            // Upload the file
+            await uploadBytes(storageRef, imageFile);
+            console.log("✅ File uploaded successfully!");
+
+            // Get the download URL
+            const imageUrl = await getDownloadURL(storageRef);
+            console.log("✅ File available at:", imageUrl);
 
             const productData = {
                 ...formData,
@@ -1296,7 +1311,7 @@ const setupEventListeners = () => {
             e.target.reset();
             toggleModal(DOMElements.postProductModal, false);
         } catch (error) {
-            console.error("Error adding document: ", error);
+            console.error("❌ Upload or Firestore write failed:", error);
             showMessage('ad_post_failed', 3000, 'error');
         } finally {
             btn.disabled = false;
