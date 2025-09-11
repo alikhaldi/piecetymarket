@@ -49,6 +49,7 @@ const translations = {
         terms_use_text: "Piecety est un marché en ligne pour l'achat et la vente de pièces automobiles. Vous êtes responsable de toute activité liée à votre compte. L'application ne peut être utilisée qu'à des fins légales et d'une manière qui ne porte pas atteinte aux droits d'autrui.",
         terms_account_title: "3. Comptes utilisateurs",
         terms_account_text: "Vous devez être âgé d'au moins 18 ans pour créer un compte. Vous êtes responsable de la sécurité de votre mot de passe et de votre compte. Vous acceptez de ne pas partager les informations de votre compte ou de les utiliser pour d'autres personnes.",
+        terms_delete_account_policy: "Vous pouvez supprimer votre compte à tout moment. La suppression de votre compte entraînera la suppression définitive de toutes vos annonces, messages et données personnelles.",
         terms_content_title: "4. Contenu utilisateur",
         terms_content_text: "Vous êtes seul responsable du contenu (annonces, photos, messages) que vous publiez sur l'application. Vous garantissez que vous avez les droits nécessaires pour publier ce contenu et qu'il n'est pas illégal, menaçant, diffamatoire ou obscène. Piecety se réserve le droit de supprimer tout contenu jugé inapproprié.",
         terms_liability_title: "5. Limitation de responsabilité",
@@ -57,7 +58,7 @@ const translations = {
         terms_termination_text: "Nous pouvons résilier ou suspendre votre compte et votre accès à l'application, sans préavis ni responsabilité, pour quelque raison que ce soit, y compris si vous enfreignez les Conditions. Vous pouvez supprimer votre compte à tout moment depuis votre tableau de bord.",
         danger_zone: "Zone de danger",
         delete_account: "Supprimer mon compte",
-        delete_account_confirm: "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible et supprimera toutes vos annonces, messages et données personnelles. Cette action est IRREVERSIBLE !"
+        delete_account_confirm: "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible et supprimera toutes vos annonces, messages et données personnelles. Cette action est IRREVERSIBLE!"
     },
     en: {
         page_title: "Piecety - Car Parts Marketplace in Algeria", meta_description: "Buy and sell car parts in Algeria with Piecety, the reliable marketplace for new and used parts.", fr_short: "FR", en_short: "EN", ar_short: "AR", menu: "Menu", sell: "Sell", connect: "Log In", language: "Language", logout: "Logout", dashboard: "Dashboard", nav_home: "Home", nav_search: "Search", nav_profile: "Profile", hero_title: "Find the right car part for your vehicle", hero_subtitle: "The most trusted Algerian car parts marketplace.", categories_title: "Parts Categories", brands_title: "Select a Brand", years_title: "Select a Year", filters_title: "Filter Listings", all_brands: "All brands", all_models: "All models", all_years: "All years", all_wilayas: "All wilayas", all_communes: "All communes", condition: "Condition", any_condition: "Any", new: "New", used: "Used", apply_filters: "Apply Filters", reset: "Reset", search_placeholder: "Search for a part...", submit_ad: "Submit an Ad", ad_title_label: "Part Title *", ad_title_placeholder: "e.g., Front brake disc", brand_label: "Brand *", select_brand: "Select a brand", model_label: "Model", select_model: "Select a model", year_label: "Year", select_year: "Select a year", wilaya_label: "State *", select_wilaya: "Select a state", commune_label: "City", select_commune: "Select a city", condition_label: "Condition", price_label: "Price (DA) *", price_placeholder: "e.g., 15000", description_label: "Description", description_placeholder: "Additional information...", submit_ad_btn_text: "Submit", loading_text: "Submitting...", error_valid_title: "Please enter a valid title.", error_select_brand: "Please select a brand.", error_select_wilaya: "Please select a state.", error_select_category: "Please select a category.", error_valid_price: "Please enter a valid price.", login_text: "Log in to access all features.", google_login: "Sign in with Google", back_to_listings: "Back to listings", add_to_cart: "Add to cart", cart_title: "My Cart", cart_total: "Total", checkout_btn: "Proceed to Checkout", no_listings: "No listings found.", your_cart_is_empty: "Your cart is empty.", remove: "Remove", quantity: "Quantity", item_total: "Item Total", login_required: "Please log in to use this feature.", show_filters: "Show Filters", price_range: "Price Range", all_categories: "All Categories", category_label: "Category *", select_category: "Select a category", contact_seller: "Contact Seller", clear_cart: "Clear Cart", ad_posted: "Your ad has been posted successfully!", ad_post_failed: "Failed to post ad.", item_added_to_cart: "Item added to cart!", delete_ad_confirm: "Are you sure you want to delete this ad?", sold_by: "Sold by:", my_listings: "My Listings", seller_listings: "Listings from this seller", buyer_reviews: "Buyer Reviews", reviews_soon: "(Reviews coming soon)", reviews_soon_2: "Review functionality will be available soon.", messages: "Messages", loading_convos: "Loading conversations...", chat_with: "Chat with", type_message_placeholder: "Type a message...", recently_viewed: "Recently Viewed", chat: "Chat", load_more: "Load More", ad_image_label: "Part Image *", facebook_login: "Sign in with Facebook", store_label: "Store Name", store_name_placeholder: "e.g., Abdelkader Auto Parts", store_profile: "Store Profile", setup_store_profile: "Set Up Store Profile", store_name_label: "Store Name", store_logo_label: "Store Logo", save: "Save", profile_pic_label: "Profile Picture", update_profile_pic: "Update Picture",
@@ -68,6 +69,7 @@ const translations = {
         terms_last_updated: "Last Updated:",
         terms_intro_title: "1. Introduction",
         terms_intro_text: "Welcome to Piecety. By accessing or using our app, you agree to be bound by these terms. If you disagree with any part of these terms, please do not use our service.",
+        terms_delete_account_policy: "You can delete your account at any time. Deleting your account will result in the permanent deletion of all your ads, messages, and personal data.",
         terms_use_title: "2. Use of the App",
         terms_use_text: "Piecety is an online marketplace for buying and selling car parts. You are responsible for all activity under your account. The app may only be used for lawful purposes and in a way that does not infringe on the rights of others.",
         terms_account_title: "3. User Accounts",
@@ -91,6 +93,7 @@ const translations = {
         terms_last_updated: "آخر تحديث:",
         terms_intro_title: "1. مقدمة",
         terms_intro_text: "أهلاً بك في Piecety. عند دخولك أو استخدامك لتطبيقنا، فإنك توافق على الالتزام بهذه الشروط. إذا كنت لا توافق على أي جزء من هذه الشروط، يرجى عدم استخدام خدمتنا.",
+        terms_delete_account_policy: "يمكنك حذف حسابك في أي وقت. سيؤدي حذف حسابك إلى الحذف الدائم لجميع إعلاناتك ورسائلك وبياناتك الشخصية.",
         terms_use_title: "2. استخدام التطبيق",
         terms_use_text: "Piecety هو سوق إلكتروني لبيع وشراء قطع غيار السيارات. أنت مسؤول عن جميع الأنشطة التي تتم تحت حسابك. يمكن استخدام التطبيق فقط لأغراض قانونية وبطريقة لا تنتهك حقوق الآخرين.",
         terms_account_title: "3. حسابات المستخدمين",
@@ -262,7 +265,7 @@ const translatePage = (lang) => {
         if (translations[lang]?.[key]) el.innerHTML = translations[lang][key];
     });
     document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
-        const key = el.dataset.i18n-placeholder;
+        const key = el.dataset.i18nPlaceholder;
         if (translations[lang]?.[key]) el.placeholder = translations[lang][key];
     });
 };
@@ -1180,6 +1183,15 @@ const setupEventListeners = () => {
     modalCloseBtn.onclick = () => toggleModal(DOMElements.postProductModal, false);
     googleLoginBtn.onclick = () => signInWithPopup(auth, googleProvider).catch(error => console.error("Login error", error));
     facebookLoginBtn.onclick = () => signInWithPopup(auth, facebookProvider).catch(error => console.error("Login error", error));
+    
+    DOMElements.postProductModal.addEventListener('transitionend', (e) => {
+        if (!DOMElements.postProductModal.classList.contains('invisible')) {
+            populateSelect(DOMElements.postProductBrandSelect, car_data, 'select_brand', currentLang);
+            populateSelect(DOMElements.postProductYearSelect, years, 'select_year', currentLang);
+            populateSelect(DOMElements.postProductWilayaSelect, wilayas, 'select_wilaya', currentLang);
+            populateSelect(DOMElements.postProductCategorySelect, categories, 'select_category', currentLang, true);
+        }
+    });
 
     DOMElements.postProductForm.onsubmit = async (e) => {
         e.preventDefault();
@@ -1216,6 +1228,30 @@ const setupEventListeners = () => {
         } finally {
             btn.disabled = false;
             btn.querySelector('.btn-spinner').classList.add('hidden');
+        }
+    };
+    
+    DOMElements.postProductBrandSelect.onchange = () => {
+        const modelSelect = DOMElements.postProductModelSelect;
+        const selectedBrand = DOMElements.postProductBrandSelect.value;
+        if (selectedBrand && car_data[selectedBrand]) {
+            populateSelect(modelSelect, car_data[selectedBrand], 'select_model', currentLang);
+            modelSelect.disabled = false;
+        } else {
+            modelSelect.disabled = true;
+            modelSelect.innerHTML = `<option value="">${translations[currentLang].select_model}</option>`;
+        }
+    };
+    
+    DOMElements.postProductWilayaSelect.onchange = () => {
+        const communeSelect = DOMElements.postProductCommuneSelect;
+        const selectedWilaya = DOMElements.postProductWilayaSelect.value;
+        if (selectedWilaya && wilayas[selectedWilaya]) {
+            populateSelect(communeSelect, wilayas[selectedWilaya], 'select_commune', currentLang);
+            communeSelect.disabled = false;
+        } else {
+            communeSelect.disabled = true;
+            communeSelect.innerHTML = `<option value="">${translations[currentLang].select_commune}</option>`;
         }
     };
     
