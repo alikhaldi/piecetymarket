@@ -21,7 +21,7 @@ const firebaseConfig = {
     apiKey: "AIzaSyBIptEskV2soajxRYPDfwYFYyz9pWQvZL0",
     authDomain: "piecety-app-b39c4.firebaseapp.com",
     projectId: "piecety-app-b39c4",
-    storageBucket: "piecety-app-b39c4.appspot.com",
+    storageBucket: "piecety-app-b39c4.firebasestorage.app",
     messagingSenderId: "265795860915",
     appId: "1:265795860915:web:aa10241788cce42f6373c6"
 };
@@ -478,7 +478,7 @@ const updateBreadcrumb = () => {
         link.onclick = (e) => {
             e.preventDefault();
             const newUrl = new URL(window.location.origin + window.location.pathname);
-            if (e.target.dataset.category) newUrl.searchParams.set('category', e.target.dataset.category);
+            if (e.target.dataset.category) newUrl.searchParams.set('category', e.target.dataset.dataset.category);
             if (e.target.dataset.subCategory) newUrl.searchParams.set('sub_category', e.target.dataset.subCategory);
             if (e.target.dataset.brand) newUrl.searchParams.set('brand', e.target.dataset.brand);
             if (e.target.dataset.model) newUrl.searchParams.set('model', e.target.dataset.model);
