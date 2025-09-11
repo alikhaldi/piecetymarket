@@ -58,7 +58,9 @@ const translations = {
         terms_termination_text: "Nous pouvons résilier ou suspendre votre compte et votre accès à l'application, sans préavis ni responsabilité, pour quelque raison que ce soit, y compris si vous enfreignez les Conditions. Vous pouvez supprimer votre compte à tout moment depuis votre tableau de bord.",
         danger_zone: "Zone de danger",
         delete_account: "Supprimer mon compte",
-        delete_account_confirm: "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible et supprimera toutes vos annonces, messages et données personnelles. Cette action est IRREVERSIBLE!"
+        delete_account_confirm: "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible et supprimera toutes vos annonces, messages et données personnelles. Cette action est IRREVERSIBLE !",
+        sub_categories_title: "Sous-catégories pour",
+        back: "Retour"
     },
     en: {
         page_title: "Piecety - Car Parts Marketplace in Algeria", meta_description: "Buy and sell car parts in Algeria with Piecety, the reliable marketplace for new and used parts.", fr_short: "FR", en_short: "EN", ar_short: "AR", menu: "Menu", sell: "Sell", connect: "Log In", language: "Language", logout: "Logout", dashboard: "Dashboard", nav_home: "Home", nav_search: "Search", nav_profile: "Profile", hero_title: "Find the right car part for your vehicle", hero_subtitle: "The most trusted Algerian car parts marketplace.", categories_title: "Parts Categories", brands_title: "Select a Brand", years_title: "Select a Year", filters_title: "Filter Listings", all_brands: "All brands", all_models: "All models", all_years: "All years", all_wilayas: "All wilayas", all_communes: "All communes", condition: "Condition", any_condition: "Any", new: "New", used: "Used", apply_filters: "Apply Filters", reset: "Reset", search_placeholder: "Search for a part...", submit_ad: "Submit an Ad", ad_title_label: "Part Title *", ad_title_placeholder: "e.g., Front brake disc", brand_label: "Brand *", select_brand: "Select a brand", model_label: "Model", select_model: "Select a model", year_label: "Year", select_year: "Select a year", wilaya_label: "State *", select_wilaya: "Select a state", commune_label: "City", select_commune: "Select a city", condition_label: "Condition", price_label: "Price (DA) *", price_placeholder: "e.g., 15000", description_label: "Description", description_placeholder: "Additional information...", submit_ad_btn_text: "Submit", loading_text: "Submitting...", error_valid_title: "Please enter a valid title.", error_select_brand: "Please select a brand.", error_select_wilaya: "Please select a state.", error_select_category: "Please select a category.", error_valid_price: "Please enter a valid price.", login_text: "Log in to access all features.", google_login: "Sign in with Google", back_to_listings: "Back to listings", add_to_cart: "Add to cart", cart_title: "My Cart", cart_total: "Total", checkout_btn: "Proceed to Checkout", no_listings: "No listings found.", your_cart_is_empty: "Your cart is empty.", remove: "Remove", quantity: "Quantity", item_total: "Item Total", login_required: "Please log in to use this feature.", show_filters: "Show Filters", price_range: "Price Range", all_categories: "All Categories", category_label: "Category *", select_category: "Select a category", contact_seller: "Contact Seller", clear_cart: "Clear Cart", ad_posted: "Your ad has been posted successfully!", ad_post_failed: "Failed to post ad.", item_added_to_cart: "Item added to cart!", delete_ad_confirm: "Are you sure you want to delete this ad?", sold_by: "Sold by:", my_listings: "My Listings", seller_listings: "Listings from this seller", buyer_reviews: "Buyer Reviews", reviews_soon: "(Reviews coming soon)", reviews_soon_2: "Review functionality will be available soon.", messages: "Messages", loading_convos: "Loading conversations...", chat_with: "Chat with", type_message_placeholder: "Type a message...", recently_viewed: "Recently Viewed", chat: "Chat", load_more: "Load More", ad_image_label: "Part Image *", facebook_login: "Sign in with Facebook", store_label: "Store Name", store_name_placeholder: "e.g., Abdelkader Auto Parts", store_profile: "Store Profile", setup_store_profile: "Set Up Store Profile", store_name_label: "Store Name", store_logo_label: "Store Logo", save: "Save", profile_pic_label: "Profile Picture", update_profile_pic: "Update Picture",
@@ -82,7 +84,9 @@ const translations = {
         terms_termination_text: "We may terminate or suspend your account and access to the app, without prior notice or liability, for any reason whatsoever, including if you breach the Terms. You may delete your account at any time from your dashboard.",
         danger_zone: "Danger Zone",
         delete_account: "Delete My Account",
-        delete_account_confirm: "Are you sure you want to delete your account? This action is irreversible and will permanently delete all your ads, messages, and personal data. This action is IRREVERSIBLE!"
+        delete_account_confirm: "Are you sure you want to delete your account? This action is irreversible and will permanently delete all your ads, messages, and personal data. This action is IRREVERSIBLE!",
+        sub_categories_title: "Sub-categories for",
+        back: "Back"
     },
     ar: {
         page_title: "Piecety - سوق قطع غيار السيارات في الجزائر", meta_description: "بيع وشراء قطع غيار السيارات في الجزائر مع Piecety، السوق الموثوق للقطع الجديدة والمستعملة.", fr_short: "FR", en_short: "EN", ar_short: "AR", menu: "القائمة", sell: "بيع", connect: "تسجيل الدخول", language: "اللغة", logout: "تسجيل الخروج", dashboard: "لوحة التحكم", nav_home: "الرئيسية", nav_search: "بحث", nav_profile: "ملفي", hero_title: "ابحث عن قطعة الغيار المناسبة لسيارتك", hero_subtitle: "أكثر أسواق قطع غيار السيارات ثقة في الجزائر.", categories_title: "فئات القطع", brands_title: "اختر ماركة", years_title: "اختر سنة", filters_title: "تصفية الإعلانات", all_brands: "جميع الماركات", all_models: "جميع الموديلات", all_years: "جميع السنوات", all_wilayas: "جميع الولايات", all_communes: "جميع البلديات", condition: "الحالة", any_condition: "الكل", new: "جديد", used: "مستعمل", apply_filters: "تطبيق الفلاتر", reset: "إعادة تعيين", search_placeholder: "ابحث عن قطعة...", submit_ad: "إرسال إعلان", ad_title_label: "عنوان القطعة *", ad_title_placeholder: "مثال: قرص فرامل أمامي", brand_label: "الماركة *", select_brand: "اختر ماركة", model_label: "الموديل", select_model: "اختر موديل", year_label: "السنة", select_year: "اختر سنة", wilaya_label: "الولاية *", select_wilaya: "اختر ولاية", commune_label: "البلدية", select_commune: "اختر بلدية", condition_label: "الحالة", price_label: "السعر (دج) *", price_placeholder: "مثال: 15000", description_label: "الوصف", description_placeholder: "معلومات إضافية...", submit_ad_btn_text: "إرسال", loading_text: "جار الإرسال...", error_valid_title: "الرجاء إدخال عنوان صالح.", error_select_brand: "الرجاء اختيار ماركة.", error_select_wilaya: "الرجاء اختيار ولاية.", error_select_category: "الرجاء اختيار فئة.", error_valid_price: "الرجاء إدخال سعر صالح.", login_text: "تسجيل الدخول للوصول إلى جميع الميزات.", google_login: "تسجيل الدخول باستخدام Google", back_to_listings: "العودة إلى الإعلانات", add_to_cart: "أضف إلى السلة", cart_title: "سلة التسوق", cart_total: "الإجمالي", checkout_btn: "الدفع", no_listings: "لم يتم العثور على إعلانات.", your_cart_is_empty: "سلة التسوق فارغة.", remove: "حذف", quantity: "الكمية", item_total: "إجمالي السلعة", login_required: "يرجى تسجيل الدخول لاستخدام هذه الميزة.", show_filters: "إظهار الفلاتر", price_range: "نطاق السعر", all_categories: "جميع الفئات", category_label: "الفئة *", select_category: "اختر فئة", contact_seller: "اتصل بالبائع", clear_cart: "إفراغ السلة", ad_posted: "تم نشر إعلانك بنجاح!", ad_post_failed: "فشل نشر الإعلان.", item_added_to_cart: "تمت إضافة المنتج إلى السلة!", delete_ad_confirm: "هل أنت متأكد من أنك تريد حذف هذا الإعلان؟", sold_by: "البائع:", my_listings: "إعلاناتي", seller_listings: "إعلانات من هذا البائع", buyer_reviews: "تقييمات المشترين", reviews_soon: "(التقييمات قريبا)", reviews_soon_2: "ميزة التقييم ستكون متاحة قريبا.", messages: "الرسائل", loading_convos: "جاري تحميل المحادثات...", chat_with: "محادثة مع", type_message_placeholder: "اكتب رسالة...", recently_viewed: "شوهدت مؤخرا", chat: "محادثة", load_more: "تحميل المزيد", ad_image_label: "صورة القطعة *", facebook_login: "تسجيل الدخول باستخدام Facebook", store_label: "اسم المتجر", store_name_placeholder: "مثال: قطع غيار سيارات عبد القادر", store_profile: "ملف المتجر", setup_store_profile: "إعداد ملف المتجر", store_name_label: "اسم المتجر", store_logo_label: "شعار المتجر", save: "حفظ", profile_pic_label: "صورة الملف الشخصي", update_profile_pic: "تحديث الصورة",
@@ -106,13 +110,48 @@ const translations = {
         terms_termination_text: "يجوز لنا إنهاء أو تعليق حسابك ووصولك إلى التطبيق، دون إشعار مسبق أو مسؤولية، لأي سبب كان، بما في ذلك إذا انتهكت الشروط. يمكنك حذف حسابك في أي وقت من لوحة التحكم الخاصة بك.",
         danger_zone: "منطقة الخطر",
         delete_account: "حذف حسابي",
-        delete_account_confirm: "هل أنت متأكد أنك تريد حذف حسابك؟ هذا الإجراء لا يمكن التراجع عنه وسيحذف بشكل دائم جميع إعلاناتك ورسائلك وبياناتك الشخصية. هذا الإجراء لا يمكن التراجع عنه!"
+        delete_account_confirm: "هل أنت متأكد أنك تريد حذف حسابك؟ هذا الإجراء لا يمكن التراجع عنه وسيحذف بشكل دائم جميع إعلاناتك ورسائلك وبياناتك الشخصية. هذا الإجراء لا يمكن التراجع عنه!",
+        sub_categories_title: "الفئات الفرعية لـ",
+        back: "رجوع"
     }
 };
 
 // --- DATA ---
 const categories = {
-    "engine": { fr: "Moteur", en: "Engine", ar: "محرك", icon: "fa-cogs" }, "brakes": { fr: "Freins", en: "Brakes", ar: "مكابح", icon: "fa-car" }, "fuel_system": { fr: "Système de carburant", en: "Fuel System", ar: "نظام الوقود", icon: "fa-gas-pump" }, "cooling": { fr: "Refroidissement", en: "Cooling", ar: "التبريد", icon: "fa-fan" }, "tires": { fr: "Pneus & Jantes", en: "Tires & Rims", ar: "الإطارات والعجلات", icon: "fa-circle" }, "electrical": { fr: "Électrique", en: "Electrical", ar: "كهربائي", icon: "fa-bolt" }, "body": { fr: "Carrosserie", en: "Body", ar: "هيكل", icon: "fa-car-side" }, "tools": { fr: "Outillage", en: "Tools", ar: "أدوات", icon: "fa-wrench" },
+    "engine": { fr: "Moteur", en: "Engine", ar: "محرك", icon: "fa-cogs", sub: {
+        "engine_mount": { fr: "Support moteur", en: "Engine Mount", ar: "حامل المحرك" },
+        "turbo": { fr: "Turbo", en: "Turbocharger", ar: "شاحن توربيني" },
+        "water_pump": { fr: "Pompe à eau", en: "Water Pump", ar: "مضخة الماء" },
+        "head_gasket": { fr: "Joint de culasse", en: "Head Gasket", ar: "حشية رأس الأسطوانة" }
+    }},
+    "brakes": { fr: "Freins", en: "Brakes", ar: "مكابح", icon: "fa-car", sub: {
+        "brake_discs": { fr: "Disques de frein", en: "Brake Discs", ar: "أقراص الفرامل" },
+        "brake_pads": { fr: "Plaquettes de frein", en: "Brake Pads", ar: "وسادات الفرامل" },
+        "brake_caliper": { fr: "Étrier de frein", en: "Brake Caliper", ar: "فكي الفرامل" }
+    }},
+    "filters": { fr: "Filtres", en: "Filters", ar: "فلاتر", icon: "fa-filter", sub: {
+        "oil_filter": { fr: "Filtre à huile", en: "Oil Filter", ar: "فلتر الزيت" },
+        "air_filter": { fr: "Filtre à air", en: "Air Filter", ar: "فلتر الهواء" },
+        "cabin_filter": { fr: "Filtre d'habitacle", en: "Cabin Filter", ar: "فلتر المقصورة" },
+        "fuel_filter": { fr: "Filtre à carburant", en: "Fuel Filter", ar: "فلتر الوقود" }
+    }},
+    "suspension": { fr: "Suspension", en: "Suspension", ar: "نظام التعليق", icon: "fa-car-side", sub: {
+        "shock_absorber": { fr: "Amortisseur", en: "Shock Absorber", ar: "ممتص الصدمات" },
+        "suspension_arm": { fr: "Bras de suspension", en: "Suspension Arm", ar: "ذراع التحكم" },
+        "wheel_bearing": { fr: "Roulement de roue", en: "Wheel Bearing", ar: "محمل العجلة" }
+    }},
+    "electrical": { fr: "Électrique", en: "Electrical", ar: "كهربائي", icon: "fa-bolt", sub: {
+        "alternator": { fr: "Alternateur", en: "Alternator", ar: "مولد" },
+        "battery": { fr: "Batterie", en: "Battery", ar: "بطارية" },
+        "starter": { fr: "Démarreur", en: "Starter", ar: "بادئ التشغيل" },
+        "spark_plugs": { fr: "Bougies d'allumage", en: "Spark Plugs", ar: "شمعات الإشعال" }
+    }},
+    "body": { fr: "Carrosserie", en: "Body", ar: "هيكل السيارة", icon: "fa-car-side", sub: {
+        "headlights": { fr: "Phares", en: "Headlights", ar: "المصابيح الأمامية" },
+        "rear_lights": { fr: "Feux arrière", en: "Rear Lights", ar: "المصابيح الخلفية" },
+        "mirror": { fr: "Rétroviseur", en: "Mirror", ar: "مرآة" },
+        "wiper_blades": { fr: "Balais d'essuie-glace", en: "Wiper Blades", ar: "شفرات المساحات" }
+    }}
 };
 const wilayas = {
     "Adrar": ["Adrar", "Charouine", "Reggane", "Aoulef", "Timimoun", "Bordj Badji Mokhtar", "In Salah"], "Chlef": ["Chlef", "Ténès", "Ouled Farès", "El Marsa", "Oued Fodda"], "Laghouat": ["Laghouat", "Aflou", "Aïn Madhi", "Ksar El Hirane", "Hassi R'Mel"], "Oum El Bouaghi": ["Oum El Bouaghi", "Aïn Beïda", "Aïn M'lila", "F'kirina", "Souk Naamane"], "Batna": ["Batna", "Barika", "Arris", "Merouana", "Timgad"], "Béjaïa": ["Béjaïa", "Akbou", "El Kseur", "Sidi Aïch", "Aokas"], "Biskra": ["Biskra", "Tolga", "Sidi Okba", "El Kantara", "Ouled Djellal"], "Béchar": ["Béchar", "Kenadsa", "Beni Ounif", "Taghit", "Abadla"], "Blida": ["Blida", "Boufarik", "Larbaâ", "Meftah", "Mouzaia"], "Bouira": ["Bouira", "Lakhdaria", "Sour El Ghozlane", "Aïn Bessem", "M'chedallah"], "Tamanrasset": ["Tamanrasset", "In Salah", "In Guezzam", "Djanet"], "Tébessa": ["Tébessa", "Bir El Ater", "Cheria", "El Aouinet", "Ouenza"], "Tlemcen": ["Tlemcen", "Maghnia", "Ghazaouet", "Remchi", "Nedroma"], "Tiaret": ["Tiaret", "Frenda", "Sougueur", "Ksar Chellala", "Mahdia"], "Tizi Ouzou": ["Tizi Ouzou", "Azazga", "Draâ Ben Khedda", "Tigzirt", "Larbaâ Nath Irathen"], "Alger": ["Alger Centre", "Bab El Oued", "Hussein Dey", "Kouba", "El Harrach", "Dar El Beïda"], "Djelfa": ["Djelfa", "Messaad", "Aïn Oussera", "Hassi Bahbah", "El Idrissia"], "Jijel": ["Jijel", "Taher", "El Milia", "Chekfa", "Ziama Mansouriah"], "Sétif": ["Sétif", "El Eulma", "Aïn Oulmane", "Bougaâ", "Beni Ouartilane"], "Saïda": ["Saïda", "Aïn El Hadjar", "Sidi Boubkeur", "Youb", "Ouled Brahim"], "Skikda": ["Skikda", "Azzaba", "Collo", "El Harrouch", "Ramdane Djamel"], "Sidi Bel Abbès": ["Sidi Bel Abbès", "Telagh", "Sfisef", "Ras El Ma", "Ben Badis"], "Annaba": ["Annaba", "El Bouni", "El Hadjar", "Sidi Amar", "Berrahal"], "Guelma": ["Guelma", "Oued Zenati", "Héliopolis", "Bouchegouf", "Ain Reggada"], "Constantine": ["Constantine", "El Khroub", "Hamma Bouziane", "Didouche Mourad", "Aïn Smara"], "Médéa": ["Médéa", "Berrouaghia", "Ksar Boukhari", "Tablat", "Aïn Boucif"], "Mostaganem": ["Mostaganem", "Sidi Ali", "Achaacha", "Hassi Mameche", "Aïn Tédelès"], "M'Sila": ["M'Sila", "Bou Saâda", "Sidi Aïssa", "Aïn El Melh", "Magra"], "Mascara": ["Mascara", "Tighennif", "Sig", "Ghriss", "Mohammadia"], "Ouargla": ["Ouargla", "Hassi Messaoud", "Touggourt", "Rouissat", "N'Goussa"], "Oran": ["Oran", "Es Senia", "Arzew", "Bir El Djir", "Aïn El Turk"], "El Bayadh": ["El Bayadh", "Bougtob", "Brezina", "Rogassa", "El Abiodh Sidi Cheikh"], "Illizi": ["Illizi", "Djanet", "In Amenas", "Bordj Omar Driss"], "Bordj Bou Arréridj": ["Bordj Bou Arréridj", "Ras El Oued", "Mansoura", "Medjana", "El Achir"], "Boumerdès": ["Boumerdès", "Boudouaou", "Dellys", "Réghaïa", "Isser"], "El Tarf": ["El Tarf", "El Kala", "Ben M'Hidi", "Besbes", "Dréan"], "Tindouf": ["Tindouf", "Oum El Assel"], "Tissemsilt": ["Tissemsilt", "Théniet El Had", "Lardjem", "Bordj Bounaama", "Ammi Moussa"], "El Oued": ["El Oued", "Guemar", "Debila", "Robbah", "El M'Ghair"], "Khenchela": ["Khenchela", "Kais", "Chechar", "Ouled Rechache", "El Hamma"], "Souk Ahras": ["Souk Ahras", "M'daourouch", "Sedrata", "Taoura", "Heddada"], "Tipaza": ["Tipaza", "Cherchell", "Koléa", "Hadjout", "Fouka"], "Mila": ["Mila", "Ferdjioua", "Grarem Gouga", "Tadjenanet", "Chelghoum Laïd"], "Aïn Defla": ["Aïn Defla", "Khemis Miliana", "Miliana", "El Attaf", "Djelida"], "Naâma": ["Naâma", "Mécheria", "Aïn Sefra", "Sfissifa", "Moghrar"], "Aïn Témouchent": ["Aïn Témouchent", "Béni Saf", "Hammam Bou Hadjar", "El Malah", "Aghlal"], "Ghardaïa": ["Ghardaïa", "Metlili", "El Guerrara", "Berriane", "Bounoura"], "Relizane": ["Relizane", "Oued Rhiou", "Mazouna", "Ammi Moussa", "Zemmoura"], "El M'ghair": ["El M'ghair", "Djamaa", "Sidi Amrane", "Oum Toub"], "El Meniaa": ["El Meniaa", "Hassi Gara", "Mansourah"],
@@ -380,8 +419,9 @@ const renderView = (viewName, data = null) => {
 window.renderHomePage = () => {
     updateBreadcrumb();
     const params = new URLSearchParams(window.location.search);
-    if (params.get('brand')) renderYearCategories();
-    else if (params.get('category')) renderBrandCategories();
+    if (params.get('brand')) renderYearCategories(params.get('brand'), params.get('model'), params.get('category'));
+    else if (params.get('sub_category')) renderBrandCategories(params.get('sub_category'));
+    else if (params.get('category')) renderSubCategories(params.get('category'));
     else renderPartCategories();
     
     renderRecentlyViewed();
@@ -408,30 +448,43 @@ const updateBreadcrumb = () => {
 
     const params = new URLSearchParams(window.location.search);
     const category = params.get('category');
+    const sub_category = params.get('sub_category');
     const brand = params.get('brand');
+    const model = params.get('model');
+    const year = params.get('year');
 
-    let html = `<a href="#" class="hover:underline home-crumb">Home</a>`;
+    let html = `<a href="#" class="hover:underline home-crumb" data-route="home">${translations[currentLang].nav_home}</a>`;
     if (category) {
-        const categoryName = categories[category]?.[currentLang] || category;
-        html += ` <span class="mx-2">/</span> <a href="#" class="hover:underline category-crumb" data-category="${category}">${categoryName}</a>`;
+        const catName = categories[category]?.[currentLang] || category;
+        html += ` <span class="mx-2">/</span> <a href="#" class="hover:underline category-crumb" data-route="home" data-category="${category}">${catName}</a>`;
+    }
+    if (sub_category) {
+        const subCatName = categories[category]?.sub[sub_category]?.[currentLang] || sub_category;
+        html += ` <span class="mx-2">/</span> <a href="#" class="hover:underline sub-category-crumb" data-route="home" data-category="${category}" data-sub-category="${sub_category}">${subCatName}</a>`;
     }
     if (brand) {
-        html += ` <span class="mx-2">/</span> <span class="font-semibold">${brand}</span>`;
+        html += ` <span class="mx-2">/</span> <a href="#" class="hover:underline brand-crumb" data-route="home" data-category="${category}" data-sub-category="${sub_category}" data-brand="${brand}">${brand}</a>`;
     }
+    if (model) {
+        html += ` <span class="mx-2">/</span> <a href="#" class="hover:underline model-crumb" data-route="home" data-category="${category}" data-sub-category="${sub_category}" data-brand="${brand}" data-model="${model}">${model}</a>`;
+    }
+    if (year) {
+        html += ` <span class="mx-2">/</span> <span class="font-semibold">${year}</span>`;
+    }
+    
     breadcrumbNav.innerHTML = html;
-
-    breadcrumbNav.querySelector('.home-crumb')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.history.pushState({}, '', window.location.pathname);
-        renderView('home');
-    });
-    breadcrumbNav.querySelector('.category-crumb')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        const newUrl = new URL(window.location);
-        newUrl.searchParams.set('category', e.target.dataset.category);
-        newUrl.searchParams.delete('brand');
-        window.history.pushState({path: newUrl.href}, '', newUrl.href);
-        renderHomePage();
+    
+    breadcrumbNav.querySelectorAll('a').forEach(link => {
+        link.onclick = (e) => {
+            e.preventDefault();
+            const newUrl = new URL(window.location.origin + window.location.pathname);
+            if (e.target.dataset.category) newUrl.searchParams.set('category', e.target.dataset.category);
+            if (e.target.dataset.subCategory) newUrl.searchParams.set('sub_category', e.target.dataset.subCategory);
+            if (e.target.dataset.brand) newUrl.searchParams.set('brand', e.target.dataset.brand);
+            if (e.target.dataset.model) newUrl.searchParams.set('model', e.target.dataset.model);
+            window.history.pushState({ path: newUrl.href }, '', newUrl.href);
+            renderHomePage();
+        };
     });
 };
 
@@ -469,7 +522,27 @@ const renderPartCategories = () => {
     );
 };
 
-const renderBrandCategories = () => {
+const renderSubCategories = (categoryKey) => {
+    const subCategories = categories[categoryKey]?.sub;
+    if (!subCategories) { renderPartCategories(); return; }
+    
+    renderDynamicGrid(`sub_categories_title`, Object.entries(subCategories),
+        ([key, subCat]) => `
+            <div class="p-4 rounded-full bg-blue-50 dark:bg-gray-700 text-blue-600 dark:text-blue-400 mx-auto w-16 h-16 flex items-center justify-center mb-2 category-icon">
+                <i class="fas fa-tools text-3xl"></i>
+            </div>
+            <h3 class="font-semibold text-sm md:text-base">${subCat[currentLang]}</h3>`,
+        (e, [key]) => {
+            e.preventDefault();
+            const newUrl = new URL(window.location);
+            newUrl.searchParams.set('sub_category', key);
+            window.history.pushState({ path: newUrl.href }, '', newUrl.href);
+            renderHomePage();
+        }
+    );
+};
+
+const renderBrandCategories = (subCategoryKey) => {
     renderDynamicGrid('brands_title', Object.entries(car_data), 
         ([brandName]) => `
             <img src="${brand_icons[brandName] || 'icons/car-192.png'}" alt="${brandName}" class="h-16 object-contain mb-2" onerror="this.src='icons/car-192.png'">
@@ -484,7 +557,7 @@ const renderBrandCategories = () => {
     );
 };
 
-const renderYearCategories = () => {
+const renderYearCategories = (brand, model) => {
     renderDynamicGrid('years_title', years, 
         (year) => `<span class="font-semibold">${year}</span>`,
         (e, year) => {
