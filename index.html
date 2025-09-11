@@ -1,202 +1,446 @@
 <!DOCTYPE html>
-<html lang="fr" class="light" dir="ltr">
+<html lang="fr" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n-key="page_title">Piecety - Marché des Pièces Auto en Algérie</title>
-    <meta name="description" data-i18n-key="meta_description" content="Achetez et vendez des pièces automobiles en Algérie avec Piecety, le marché fiable pour les pièces neuves et d'occasion.">
+    <title>Piecety - MarchÃ© des PiÃ¨ces Auto en AlgÃ©rie</title>
+    <meta name="description" content="Achetez et vendez des piÃ¨ces automobiles en AlgÃ©rie avec Piecety, le marchÃ© fiable pour les piÃ¨ces neuves et d'occasion.">
+    <meta name="keywords" content="piÃ¨ces auto, AlgÃ©rie, marchÃ© automobile, Piecety">
+
+    <meta property="og:title" content="Piecety - MarchÃ© des PiÃ¨ces Auto en AlgÃ©rie">
+    <meta property="og:description" content="Trouvez des piÃ¨ces auto neuves et d'occasion en AlgÃ©rie sur Piecety.">
+    <meta property="og:image" content="./icons/car-512.png">
+    <meta property="og:url" content="https://alikhaldi.github.io/Piecetymarket/">
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>ðŸš—</text></svg>">
     <link rel="manifest" href="manifest.json">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-    <script type="module" src="app.js"></script>
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class', // Enable dark mode using a class
+        }
+    </script>
+
+    <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-    <header class="fixed top-0 w-full bg-white dark:bg-gray-800 shadow transition-transform duration-300 z-40">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <a href="#" class="logo flex items-center">
-                <svg class="w-8 h-8 mr-2" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
-                <span>Piecety</span>
-            </a>
-            <nav class="hidden md:flex items-center space-x-4">
-                <a href="#" id="home-link" class="text-gray-600 hover:text-blue-600" data-i18n-key="nav_home">Accueil</a>
-                <div class="relative">
-                    <button id="lang-dropdown-btn" class="flex items-center text-gray-600 hover:text-blue-600">
-                        <span id="lang-current">FR</span>
-                        <svg class="w-4 h-4 ml-1" viewBox="0 0 20 20"><path fill="currentColor" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
-                    </button>
-                    <div id="lang-dropdown" class="absolute hidden mt-2 w-32 bg-white dark:bg-gray-700 rounded-lg shadow-lg">
-                        <a href="#" data-lang="fr" class="block px-4 py-2 text-sm" data-i18n-key="fr_short">Français</a>
-                        <a href="#" data-lang="en" class="block px-4 py-2 text-sm" data-i18n-key="en_short">English</a>
-                        <a href="#" data-lang="ar" class="block px-4 py-2 text-sm" data-i18n-key="ar_short">العربية</a>
+<body class="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+
+<div id="message-box" class="fixed top-5 right-5 z-[1000] p-4 rounded-lg shadow-lg transition-all duration-500 ease-in-out opacity-0 translate-x-full max-w-sm break-words"></div>
+
+<header class="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-50 transition-transform duration-300" role="banner">
+    <div class="container mx-auto p-4 flex items-center justify-between">
+        <a href="#" id="home-link" class="text-xl sm:text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400 logo transition-transform hover:scale-105 flex items-center">
+            <svg class="h-8 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M21.92,7.62A1,1,0,0,0,21,7H18.32a3,3,0,0,0-5.64,0H3a1,1,0,0,0-1,1V17a1,1,0,0,0,1,1H4.2a3,3,0,0,0,5.6,0H16.2a3,3,0,0,0,5.6,0H23a1,1,0,0,0,1-1V8.62A1,1,0,0,0,21.92,7.62ZM6,15a1,1,0,1,1,1-1A1,1,0,0,1,6,15Zm12,0a1,1,0,1,1,1-1A1,1,0,0,1,18,15Z"></path></svg>
+            Piecety
+        </a>
+
+        <div class="flex-1 mx-2 sm:mx-4 md:mx-8 relative">
+            <div class="relative">
+                <input id="search-input" type="text" class="w-full p-3 pl-10 rounded-full border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 shadow-inner" data-i18n-placeholder="search_placeholder" aria-label="Search for parts" />
+                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            </div>
+        </div>
+
+        <nav class="hidden md:flex items-center space-x-2 lg:space-x-4" role="navigation" aria-label="Main navigation">
+             <div class="relative group">
+                <button id="lang-dropdown-btn" aria-haspopup="true" aria-expanded="false" class="flex items-center space-x-1 p-3 font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
+                    <span id="current-lang" class="lang-text">FR</span>
+                    <i class="fas fa-chevron-down text-xs"></i>
+                </button>
+                <div id="lang-dropdown" class="absolute right-0 mt-2 w-28 bg-white dark:bg-gray-700 rounded-lg shadow-lg py-1 hidden transition-all duration-300 z-10" role="menu">
+                    <button class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-600 lang-btn" data-lang="fr" role="menuitem">FranÃ§ais</button>
+                    <button class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-600 lang-btn" data-lang="en" role="menuitem">English</button>
+                    <button class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-600 lang-btn" data-lang="ar" role="menuitem">Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©</button>
+                </div>
+            </div>
+
+            <button id="dark-mode-toggle" class="p-3 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none" aria-label="Toggle Dark Mode">
+                <i class="fas fa-moon text-xl"></i>
+            </button>
+            <a href="#" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors duration-200 px-3 py-2" data-i18n-key="sell" id="sell-link"></a>
+            
+            <button id="cart-btn" class="relative p-3 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none" aria-label="Shopping Cart">
+                <i class="fas fa-shopping-cart text-xl"></i>
+                <span id="cart-count" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full hidden">0</span>
+            </button>
+            
+            <div id="auth-links" class="flex items-center space-x-2"></div>
+        </nav>
+
+        <button id="mobile-menu-btn" class="md:hidden p-3 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+            <i class="fas fa-bars text-xl"></i>
+        </button>
+    </div>
+</header>
+
+<div id="mobile-menu-backdrop" class="fixed inset-0 bg-black bg-opacity-50 z-30 invisible opacity-0"></div>
+
+<div id="mobile-menu" class="fixed top-0 left-0 h-full bg-white dark:bg-gray-900 z-40 flex flex-col p-6 space-y-4 md:hidden transform -translate-x-full" role="dialog" aria-modal="true">
+    <div class="flex justify-between items-center">
+        <h2 class="text-2xl font-bold text-blue-600 dark:text-blue-400" data-i18n-key="menu"></h2>
+        <button id="mobile-menu-close-btn" class="p-3 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400" aria-label="Close menu">
+            <i class="fas fa-times text-2xl"></i>
+        </button>
+    </div>
+    <div id="mobile-nav-links" class="flex flex-col space-y-2"></div>
+    <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
+        <h3 class="text-lg font-semibold text-gray-600 dark:text-gray-300" data-i18n-key="language"></h3>
+        <div class="flex space-x-4 mt-2">
+            <button class="p-2 border dark:border-gray-600 rounded-md text-sm font-medium lang-btn" data-lang="fr">FranÃ§ais</button>
+            <button class="p-2 border dark:border-gray-600 rounded-md text-sm font-medium lang-btn" data-lang="en">English</button>
+            <button class="p-2 border dark:border-gray-600 rounded-md text-sm font-medium lang-btn" data-lang="ar">Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©</button>
+        </div>
+    </div>
+</div>
+
+<div id="mobile-filters-modal" class="fixed top-0 right-0 h-full w-full max-w-md bg-white dark:bg-gray-900 z-[60] shadow-xl p-6 transform translate-x-full md:hidden">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold" data-i18n-key="filters_title"></h2>
+        <button id="mobile-filters-close-btn" class="p-2" aria-label="Close filters">
+            <i class="fas fa-times text-2xl"></i>
+        </button>
+    </div>
+    <div id="mobile-filters-content" class="h-[calc(100%-100px)] overflow-y-auto"></div>
+    <div class="absolute bottom-0 left-0 w-full p-4 bg-white dark:bg-gray-900 border-t dark:border-gray-700">
+        <button id="mobile-apply-filters-btn" class="w-full px-6 py-3 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md" data-i18n-key="apply_filters"></button>
+    </div>
+</div>
+
+<main id="app-container" class="flex-1 container mx-auto p-4 md:p-8" role="main" aria-live="polite"></main>
+
+<footer class="bg-gray-800 dark:bg-gray-900 text-white p-6 md:p-8 mt-auto text-center pb-24 md:pb-8">
+    <div class="flex justify-center space-x-6 mb-4">
+        <a href="#" class="text-gray-400 hover:text-white transition" aria-label="Facebook"><i class="fab fa-facebook-f text-xl"></i></a>
+        <a href="#" class="text-gray-400 hover:text-white transition" aria-label="Instagram"><i class="fab fa-instagram text-xl"></i></a>
+        <a href="#" class="text-gray-400 hover:text-white transition" aria-label="Twitter"><i class="fab fa-twitter text-xl"></i></a>
+    </div>
+    <p class="text-sm font-light">
+        &copy; <span id="current-year"></span> Piecety - MarchÃ© des PiÃ¨ces Auto en AlgÃ©rie.
+    </p>
+    <p class="text-xs mt-2 text-gray-400"><a href="#" class="hover:underline">Contact Us</a> | <a href="#" class="hover:underline">Terms of Service</a></p>
+</footer>
+
+<nav id="bottom-nav" class="fixed bottom-0 w-full bg-white dark:bg-gray-800 shadow-lg flex justify-around py-2 md:hidden z-50 border-t dark:border-gray-700">
+    <a href="#" id="nav-home" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" aria-label="Home">
+        <i class="fas fa-home text-xl"></i>
+        <span class="text-xs" data-i18n-key="nav_home"></span>
+    </a>
+    <a href="#" id="nav-search" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" aria-label="Search">
+        <i class="fas fa-search text-xl"></i>
+        <span class="text-xs" data-i18n-key="nav_search"></span>
+    </a>
+    <a href="#" id="nav-sell" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" aria-label="Sell">
+        <i class="fas fa-plus-circle text-xl"></i>
+        <span class="text-xs" data-i18n-key="sell"></span>
+    </a>
+    <a href="#" id="nav-messages" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors relative" aria-label="Messages">
+        <i class="fas fa-comments text-xl"></i>
+        <span class="text-xs" data-i18n-key="messages"></span>
+        <span id="nav-unread-badge" class="hidden absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center text-[10px]"></span>
+    </a>
+    <a href="#" id="nav-profile" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" aria-label="Profile">
+        <i class="fas fa-user-circle text-xl"></i>
+        <span class="text-xs" data-i18n-key="nav_profile"></span>
+    </a>
+</nav>
+
+<div id="post-product-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-0 sm:p-4 invisible opacity-0" role="dialog" aria-modal="true">
+    <div class="bg-white dark:bg-gray-800 shadow-lg w-full h-full flex flex-col sm:h-auto sm:max-h-[90vh] sm:max-w-2xl sm:rounded-lg">
+        <div class="overflow-y-auto p-6 relative">
+            <button id="modal-close-btn" class="absolute top-4 right-4 text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 focus:outline-none" aria-label="Close form">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+            <h3 class="text-2xl font-bold mb-6 text-center" data-i18n-key="submit_ad"></h3>
+            <form id="post-product-form" class="space-y-4" novalidate>
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="product-title" class="block font-medium mb-1" data-i18n-key="ad_title_label"></label>
+                        <input type="text" id="product-title" name="title" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" data-i18n-placeholder="ad_title_placeholder" />
+                        <p id="title-error" class="text-red-500 text-sm mt-1 hidden" role="alert" data-i18n-key="error_valid_title"></p>
+                    </div>
+                    <div>
+                        <label for="product-brand" class="block font-medium mb-1" data-i18n-key="brand_label"></label>
+                        <select id="product-brand" name="brand" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
+                        <p id="brand-error" class="text-red-500 text-sm mt-1 hidden" role="alert" data-i18n-key="error_select_brand"></p>
+                    </div>
+                    <div>
+                        <label for="product-model" class="block font-medium mb-1" data-i18n-key="model_label"></label>
+                        <select id="product-model" name="model" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" disabled></select>
+                    </div>
+                    <div>
+                        <label for="product-year" class="block font-medium mb-1" data-i18n-key="year_label"></label>
+                        <select id="product-year" name="year" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
                     </div>
                 </div>
-                <a href="#" id="sell-link" class="px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700" data-i18n-key="sell">Vendre</a>
-                <button id="cart-btn" class="relative">
-                    <i class="fas fa-shopping-cart text-gray-600"></i>
-                    <span id="cart-count" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold text-red-100 bg-red-600 rounded-full hidden">0</span>
-                </button>
-                <div id="auth-links-container"></div>
-                <button id="dark-mode-toggle" class="text-gray-600 hover:text-blue-600">
-                    <i class="fas fa-moon"></i>
-                </button>
-            </nav>
-            <button id="mobile-menu-btn" class="md:hidden text-gray-600">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
-    </header>
-
-    <div id="mobile-menu-backdrop" class="fixed inset-0 bg-black bg-opacity-50 hidden opacity-0 invisible transition-all duration-300 z-50"></div>
-    <div id="mobile-menu" class="fixed top-0 right-0 h-full bg-white dark:bg-gray-800 shadow-lg transform translate-x-full transition-transform duration-300 z-50">
-        <div class="flex justify-between p-4 border-b">
-            <span class="text-lg font-semibold">Piecety</span>
-            <button id="mobile-menu-close-btn"><i class="fas fa-times"></i></button>
-        </div>
-        <div id="mobile-nav-links" class="flex flex-col p-4"></div>
-    </div>
-
-    <main id="content" class="container mx-auto px-4 pt-20">
-        <nav class="text-sm text-gray-500 mb-4">
-            <a href="#" id="breadcrumb-home" data-i18n-key="nav_home">Accueil</a>
-        </nav>
-        <section class="py-12">
-            <h1 class="text-3xl font-bold" data-i18n-key="hero_title">Trouvez la bonne pièce pour votre voiture</h1>
-            <p class="mt-2 text-lg" data-i18n-key="hero_subtitle">Le marché algérien des pièces automobiles le plus fiable.</p>
-        </section>
-    </main>
-
-    <div id="auth-modal" class="modal hidden opacity-0 invisible">
-        <div class="modal-content">
-            <button id="auth-modal-close-btn" class="absolute top-2 right-2"><i class="fas fa-times"></i></button>
-            <h2 class="text-xl font-bold mb-4" data-i18n-key="login_text">Connectez-vous pour accéder à toutes les fonctionnalités.</h2>
-            <button id="google-login-btn" class="btn btn-primary w-full mb-2" data-i18n-key="google_login">Se connecter avec Google</button>
-            <button id="facebook-login-btn" class="btn btn-primary w-full" data-i18n-key="facebook_login">Se connecter avec Facebook</button>
-        </div>
-    </div>
-
-    <div id="post-product-modal" class="modal hidden opacity-0 invisible">
-        <div class="modal-content">
-            <button id="modal-close-btn" class="modal-close-btn absolute top-2 right-2"><i class="fas fa-times"></i></button>
-            <h2 class="text-xl font-bold mb-4" data-i18n-key="submit_ad">Soumettre une annonce</h2>
-            <form id="post-product-form">
-                <div class="mb-4">
-                    <label class="block" data-i18n-key="ad_title_label">Titre de la pièce *</label>
-                    <input type="text" name="title" class="w-full p-2 border rounded" data-i18n-key-placeholder="ad_title_placeholder" placeholder="Ex: Disque de frein avant">
-                    <p id="title-error" class="text-red-500 hidden" data-i18n-key="error_valid_title">Veuillez entrer un titre valide.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="product-wilaya" class="block font-medium mb-1" data-i18n-key="wilaya_label"></label>
+                        <select id="product-wilaya" name="wilaya" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
+                        <p id="wilaya-error" class="text-red-500 text-sm mt-1 hidden" role="alert" data-i18n-key="error_select_wilaya"></p>
+                    </div>
+                    <div>
+                        <label for="product-commune" class="block font-medium mb-1" data-i18n-key="commune_label"></label>
+                        <select id="product-commune" name="commune" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" disabled></select>
+                    </div>
                 </div>
-                <div class="mb-4">
-                    <label class="block" data-i18n-key="category_label">Catégorie *</label>
-                    <select name="category" class="w-full p-2 border rounded">
-                        <option value="" data-i18n-key="select_category">Sélectionnez une catégorie</option>
-                        ${Object.entries(categories).map(([key, cat]) => `<option value="${key}">${cat[currentLang]}</option>`).join('')}
-                    </select>
-                    <p id="category-error" class="text-red-500 hidden" data-i18n-key="error_select_category">Veuillez sélectionner une catégorie.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="product-category" class="block font-medium mb-1" data-i18n-key="category_label"></label>
+                        <select id="product-category" name="category" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
+                        <p id="category-error" class="text-red-500 text-sm mt-1 hidden" role="alert" data-i18n-key="error_select_category"></p>
+                    </div>
+                    <div>
+                        <label for="product-condition" class="block font-medium mb-1" data-i18n-key="condition_label"></label>
+                        <select id="product-condition" name="condition" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
+                    </div>
+                    <div>
+                        <label for="product-price" class="block font-medium mb-1" data-i18n-key="price_label"></label>
+                        <input type="number" id="product-price" name="price" min="0" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" data-i18n-placeholder="price_placeholder" />
+                        <p id="price-error" class="text-red-500 text-sm mt-1 hidden" role="alert" data-i18n-key="error_valid_price"></p>
+                    </div>
                 </div>
-                <div class="mb-4">
-                    <label class="block" data-i18n-key="brand_label">Marque *</label>
-                    <select name="brand" class="w-full p-2 border rounded">
-                        <option value="" data-i18n-key="select_brand">Sélectionnez une marque</option>
-                        <!-- Add brands dynamically -->
-                    </select>
-                    <p id="brand-error" class="text-red-500 hidden" data-i18n-key="error_select_brand">Veuillez sélectionner une marque.</p>
+                <div>
+                    <label for="product-description" class="block font-medium mb-1" data-i18n-key="description_label"></label>
+                    <textarea id="product-description" name="description" rows="3" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" data-i18n-placeholder="description_placeholder"></textarea>
                 </div>
-                <div class="mb-4">
-                    <label class="block" data-i18n-key="model_label">Modèle</label>
-                    <select name="model" class="w-full p-2 border rounded">
-                        <option value="" data-i18n-key="select_model">Sélectionnez un modèle</option>
-                    </select>
+                <div class="text-center">
+                    <button type="submit" id="submit-ad-btn" class="mt-4 px-8 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md flex items-center justify-center disabled:bg-blue-400 disabled:cursor-not-allowed">
+                        <span class="btn-text" data-i18n-key="submit_ad_btn_text"></span>
+                        <svg class="animate-spin ml-3 h-5 w-5 text-white hidden btn-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </button>
                 </div>
-                <div class="mb-4">
-                    <label class="block" data-i18n-key="year_label">Année</label>
-                    <select name="year" class="w-full p-2 border rounded">
-                        <option value="" data-i18n-key="select_year">Sélectionnez une année</option>
-                        ${years.map(year => `<option value="${year}">${year}</option>`).join('')}
-                    </select>
-                </div>
-                <div class="mb-4">
-                    <label class="block" data-i18n-key="wilaya_label">Wilaya *</label>
-                    <select name="wilaya" class="w-full p-2 border rounded">
-                        <option value="" data-i18n-key="select_wilaya">Sélectionnez une wilaya</option>
-                        <!-- Add wilayas dynamically -->
-                    </select>
-                    <p id="wilaya-error" class="text-red-500 hidden" data-i18n-key="error_select_wilaya">Veuillez sélectionner une wilaya.</p>
-                </div>
-                <div class="mb-4">
-                    <label class="block" data-i18n-key="commune_label">Commune</label>
-                    <select name="commune" class="w-full p-2 border rounded">
-                        <option value="" data-i18n-key="select_commune">Sélectionnez une commune</option>
-                    </select>
-                </div>
-                <div class="mb-4">
-                    <label class="block" data-i18n-key="condition_label">État</label>
-                    <select name="condition" class="w-full p-2 border rounded">
-                        <option value="any" data-i18n-key="any_condition">Tout</option>
-                        <option value="new" data-i18n-key="new">Neuf</option>
-                        <option value="used" data-i18n-key="used">Occasion</option>
-                    </select>
-                </div>
-                <div class="mb-4">
-                    <label class="block" data-i18n-key="price_label">Prix (DA) *</label>
-                    <input type="number" name="price" class="w-full p-2 border rounded" data-i18n-key-placeholder="price_placeholder" placeholder="Ex: 15000">
-                    <p id="price-error" class="text-red-500 hidden" data-i18n-key="error_valid_price">Veuillez entrer un prix valide.</p>
-                </div>
-                <div class="mb-4">
-                    <label class="block" data-i18n-key="description_label">Description</label>
-                    <textarea name="description" class="w-full p-2 border rounded" data-i18n-key-placeholder="description_placeholder" placeholder="Informations supplémentaires..."></textarea>
-                </div>
-                <div class="mb-4">
-                    <label class="block" data-i18n-key="images_label">Images</label>
-                    <input type="file" name="images" multiple accept="image/*" class="w-full p-2 border rounded">
-                    <div class="image-upload-preview"></div>
-                </div>
-                <button type="submit" class="btn btn-primary w-full" data-i18n-key="submit_ad_btn_text">
-                    Soumettre
-                    <span class="btn-spinner hidden"><i class="fas fa-spinner fa-spin"></i></span>
-                </button>
             </form>
         </div>
     </div>
+</div>
 
-    <div id="profile-edit-modal" class="modal hidden opacity-0 invisible">
-        <div class="modal-content">
-            <button class="modal-close-btn absolute top-2 right-2"><i class="fas fa-times"></i></button>
-            <h2 class="text-xl font-bold mb-4" data-i18n-key="edit_profile">Modifier le profil</h2>
-            <form></form>
+<div id="auth-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 invisible opacity-0" role="dialog" aria-modal="true">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-sm w-full p-6 relative">
+        <button id="auth-modal-close-btn" class="absolute top-4 right-4 text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 focus:outline-none" aria-label="Close login form">
+            <i class="fas fa-times text-2xl"></i>
+        </button>
+        <h3 class="text-2xl font-bold mb-6 text-center" data-i18n-key="connect"></h3>
+        <div class="space-y-4">
+            <p class="text-center text-gray-600 dark:text-gray-400" data-i18n-key="login_text"></p>
+            <button id="google-login-btn" class="w-full flex items-center justify-center px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-full text-gray-700 dark:text-gray-200 font-semibold hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200 shadow-sm">
+                <i class="fab fa-google text-xl mr-2"></i>
+                <span data-i18n-key="google_login"></span>
+            </button>
         </div>
     </div>
+</div>
 
-    <div id="store-create-modal" class="modal hidden opacity-0 invisible">
-        <div class="modal-content">
-            <button class="modal-close-btn absolute top-2 right-2"><i class="fas fa-times"></i></button>
-            <h2 class="text-xl font-bold mb-4" data-i18n-key="create_store">Créer une boutique</h2>
-            <form></form>
+<template id="home-view-template">
+    <section class="text-center py-12 md:py-20 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl shadow-lg mb-8 md:mb-12">
+        <h1 class="text-3xl md:text-5xl font-extrabold mb-4" data-i18n-key="hero_title"></h1>
+        <p class="text-lg md:text-xl font-light mb-8 max-w-3xl mx-auto" data-i18n-key="hero_subtitle"></p>
+    </section>
+
+    <section class="mb-8 md:mb-12" aria-labelledby="categories-title-heading">
+        <div id="breadcrumb-nav" class="mb-4 text-sm text-gray-500 dark:text-gray-400"></div>
+        <h2 id="categories-title-heading" class="text-2xl md:text-3xl font-bold mb-6 text-center"></h2>
+        <div id="dynamic-grid" class="grid gap-4 md:gap-6"></div>
+    </section>
+    
+    <section id="recently-viewed-section" class="mb-8 md:mb-12 hidden">
+        <h2 class="text-2xl md:text-3xl font-bold mb-6" data-i18n-key="recently_viewed"></h2>
+        <div id="recently-viewed-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+    </section>
+
+    <div class="flex flex-col md:flex-row gap-8">
+        <aside id="filters-sidebar" class="w-full md:w-1/4 lg:w-1/5 md:block hidden">
+             <div id="filters-content" class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 space-y-6"></div>
+        </aside>
+
+        <section class="w-full md:w-3/4 lg:w-4/5">
+             <div class="flex justify-between items-center mb-6">
+                <button id="show-filters-btn" class="md:hidden w-full px-6 py-3 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-md font-semibold hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200 shadow-md" data-i18n-key="show_filters">
+                </button>
+            </div>
+            <div id="listings-section" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+            <div id="load-more-container" class="text-center mt-8"></div>
+        </section>
+    </div>
+</template>
+
+<template id="filters-template">
+    <h2 class="text-2xl font-bold mb-4" data-i18n-key="filters_title"></h2>
+    <div>
+        <label for="brand-filter" class="block text-sm font-medium" data-i18n-key="brand_label"></label>
+        <select id="brand-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm"></select>
+    </div>
+    <div id="model-filter-container" class="hidden">
+        <label for="model-filter" class="block text-sm font-medium" data-i18n-key="model_label"></label>
+        <select id="model-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm"></select>
+    </div>
+    <div>
+        <label for="year-filter" class="block text-sm font-medium" data-i18n-key="year_label"></label>
+        <select id="year-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm"></select>
+    </div>
+    <div>
+        <label for="wilaya-filter" class="block text-sm font-medium" data-i18n-key="wilaya_label"></label>
+        <select id="wilaya-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm"></select>
+    </div>
+    <div id="commune-filter-container" class="hidden">
+        <label for="commune-filter" class="block text-sm font-medium" data-i18n-key="commune_label"></label>
+        <select id="commune-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm"></select>
+    </div>
+    <div>
+        <label for="category-filter" class="block text-sm font-medium" data-i18n-key="category_label"></label>
+        <select id="category-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm"></select>
+    </div>
+    <div>
+        <label for="condition-filter" class="block text-sm font-medium" data-i18n-key="condition_label"></label>
+        <select id="condition-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm"></select>
+    </div>
+    <div>
+        <label for="price-range-filter" class="block text-sm font-medium" data-i18n-key="price_range"></label>
+        <input type="range" id="price-range-filter" min="0" max="100000" step="1000" class="filter w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer">
+        <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
+            <span>0 DA</span>
+            <span id="price-range-value">50000 DA</span>
+            <span>100k+ DA</span>
         </div>
     </div>
+    <div class="mt-6 flex flex-col space-y-4">
+        <button id="filter-reset-btn" class="w-full px-6 py-3 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-md font-semibold hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors duration-200 shadow-md" data-i18n-key="reset"></button>
+    </div>
+</template>
 
-    <div id="ad-edit-modal" class="modal hidden opacity-0 invisible">
-        <div class="modal-content">
-            <button class="modal-close-btn absolute top-2 right-2"><i class="fas fa-times"></i></button>
-            <h2 class="text-xl font-bold mb-4" data-i18n-key="edit_ad">Modifier l'annonce</h2>
-            <form></form>
+<template id="product-detail-view-template">
+    <div id="product-detail" class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6 md:p-8">
+        <button id="back-to-listings-btn" class="mb-4 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-semibold flex items-center">
+            <i class="fas fa-arrow-left mr-2"></i>
+            <span data-i18n-key="back_to_listings"></span>
+        </button>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <img id="product-image-detail" src="" alt="" class="w-full h-80 md:h-96 object-cover rounded-lg shadow-md" />
+            <div>
+                <h2 id="product-title-detail" class="text-2xl md:text-3xl font-bold mb-2"></h2>
+                <p id="product-price-detail" class="text-blue-600 dark:text-blue-400 font-bold text-2xl mb-4"></p>
+                <div class="space-y-2 text-sm mb-6 border-t border-b dark:border-gray-700 py-4">
+                    <p><strong><span data-i18n-key="brand_label"></span>:</strong> <span id="product-brand-detail"></span></p>
+                    <p><strong><span data-i18n-key="model_label"></span>:</strong> <span id="product-model-detail"></span></p>
+                    <p><strong><span data-i18n-key="year_label"></span>:</strong> <span id="product-year-detail"></span></p>
+                    <p><strong><span data-i18n-key="wilaya_label"></span>:</strong> <span id="product-wilaya-detail"></span></p>
+                    <p><strong><span data-i18n-key="commune_label"></span>:</strong> <span id="product-commune-detail"></span></p>
+                    <p><strong data-i18n-key="sold_by"></strong> <a href="#" id="seller-profile-link" class="text-blue-600 dark:text-blue-400 hover:underline"></a></p>
+                </div>
+                <p id="product-description-detail" class="leading-relaxed mb-6"></p>
+                <div class="flex flex-col space-y-4">
+                     <button id="add-to-cart-btn" class="w-full px-6 py-3 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition-colors duration-200 shadow-md flex items-center justify-center">
+                        <i class="fas fa-cart-plus mr-2"></i>
+                        <span data-i18n-key="add_to_cart"></span>
+                    </button>
+                    <button id="contact-seller-btn" class="w-full px-6 py-3 bg-gray-600 text-white rounded-full font-semibold hover:bg-gray-700 transition-colors duration-200 shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center">
+                        <i class="fas fa-comments mr-2"></i>
+                        <span data-i18n-key="contact_seller"></span>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
+</template>
 
-    <div id="mobile-filters-modal" class="fixed top-0 right-0 h-full bg-white dark:bg-gray-800 shadow-lg transform translate-x-full transition-transform duration-300 z-50">
-        <div class="p-4">
-            <button id="mobile-filters-close-btn"><i class="fas fa-times"></i></button>
-            <h2 class="text-xl font-bold mb-4" data-i18n-key="filters_title">Filtrer les annonces</h2>
-            <!-- Filter form -->
-            <button id="mobile-apply-filters-btn" class="btn btn-primary w-full" data-i18n-key="apply_filters">Appliquer les filtres</button>
+<template id="cart-view-template">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 md:p-8">
+        <button id="back-from-cart-btn" class="mb-4 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-semibold flex items-center">
+            <i class="fas fa-arrow-left mr-2"></i>
+            <span data-i18n-key="back_to_listings"></span>
+        </button>
+        <div class="flex justify-between items-center mb-6">
+             <h2 class="text-2xl md:text-3xl font-bold" data-i18n-key="cart_title"></h2>
+             <button id="clear-cart-btn" class="px-4 py-2 bg-red-600 text-white text-sm rounded-md font-semibold hover:bg-red-700 transition-colors duration-200 shadow-md" data-i18n-key="clear_cart"></button>
+        </div>
+        <div id="cart-items-container" class="space-y-4"></div>
+        <div id="cart-summary" class="mt-8 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <p class="text-xl font-bold flex justify-between">
+                <span data-i18n-key="cart_total"></span>:
+                <span id="cart-total-price">0 DA</span>
+            </p>
+            <button id="checkout-btn" class="w-full mt-4 px-6 py-3 bg-green-600 text-white rounded-md font-semibold hover:bg-green-700 transition-colors duration-200 shadow-md">
+                <span data-i18n-key="checkout_btn"></span>
+            </button>
         </div>
     </div>
+</template>
 
-    <nav class="fixed bottom-0 w-full bg-white dark:bg-gray-800 shadow-lg md:hidden">
-        <div class="flex justify-around py-2">
-            <a href="#" id="nav-home" class="text-gray-600 hover:text-blue-600" data-i18n-key="nav_home"><i class="fas fa-home"></i></a>
-            <a href="#" id="nav-search" class="text-gray-600 hover:text-blue-600" data-i18n-key="nav_search"><i class="fas fa-search"></i></a>
-            <a href="#" id="nav-sell" class="text-gray-600 hover:text-blue-600" data-i18n-key="sell"><i class="fas fa-plus-circle"></i></a>
-            <a href="#" id="nav-messages" class="text-gray-600 hover:text-blue-600 relative" data-i18n-key="messages">
-                <i class="fas fa-envelope"></i>
-                <span id="nav-unread-badge" class="hidden absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"></span>
-            </a>
-            <a href="#" id="nav-profile" class="text-gray-600 hover:text-blue
+<template id="dashboard-view-template">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 md:p-8">
+        <h2 class="text-2xl md:text-3xl font-bold mb-6" data-i18n-key="dashboard"></h2>
+        <div id="dashboard-content">
+            <h3 class="text-xl font-semibold mb-4 border-b dark:border-gray-700 pb-2" data-i18n-key="my_listings"></h3>
+            <div id="my-listings-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+        </div>
+    </div>
+</template>
+
+<template id="profile-view-template">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 md:p-8">
+        <div class="flex flex-col md:flex-row items-center md:items-start text-center md:text-left">
+            <i class="fas fa-user-circle text-6xl md:text-8xl text-gray-300 md:mr-6 mb-4 md:mb-0"></i>
+            <div>
+                <h2 id="profile-name" class="text-2xl md:text-3xl font-bold"></h2>
+                <div id="profile-rating" class="flex items-center justify-center md:justify-start text-yellow-500 mt-2">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+                    <span class="text-gray-600 dark:text-gray-400 ml-2 text-sm" data-i18n-key="reviews_soon"></span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-8">
+            <h3 class="text-xl font-semibold mb-4 border-b dark:border-gray-700 pb-2" data-i18n-key="seller_listings"></h3>
+            <div id="user-products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+        </div>
+        
+        <div class="mt-8">
+            <h3 class="text-xl font-semibold mb-4 border-b dark:border-gray-700 pb-2" data-i18n-key="buyer_reviews"></h3>
+            <div id="user-reviews-list" class="space-y-4">
+                <p class="text-gray-500 dark:text-gray-400" data-i18n-key="reviews_soon_2"></p>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="inbox-view-template">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 md:p-8">
+        <h2 class="text-2xl md:text-3xl font-bold mb-6" data-i18n-key="messages"></h2>
+        <div id="conversations-list" class="space-y-4">
+            <p id="inbox-loading" class="text-center text-gray-500" data-i18n-key="loading_convos"></p>
+        </div>
+    </div>
+</template>
+
+<template id="chat-view-template">
+    <div class="bg-white dark:bg-gray-800 shadow-lg h-full w-full flex flex-col sm:h-auto sm:max-h-[85vh] sm:max-w-2xl sm:rounded-lg">
+        <div class="flex items-center border-b dark:border-gray-700 p-4 mb-4 flex-shrink-0">
+            <button id="back-to-inbox-btn" class="mr-4 text-blue-600 dark:text-blue-400" aria-label="Back to Inbox">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2 id="chat-with-name" class="text-xl font-bold"></h2>
+        </div>
+        <div id="messages-container" class="flex-1 overflow-y-auto space-y-4 p-2 flex flex-col"></div>
+        <form id="send-message-form" class="mt-4 flex gap-4 border-t dark:border-gray-700 p-4 flex-shrink-0">
+            <input type="text" id="message-input" class="flex-1 p-3 rounded-full border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" required data-i18n-placeholder="type_message_placeholder">
+            <button type="submit" class="bg-blue-600 text-white rounded-full w-12 h-12 flex-shrink-0 flex items-center justify-center" aria-label="Send Message">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </form>
+    </div>
+</template>
+
+<script type="module" src="app.js"></script>
+
+</body>
+</html>
