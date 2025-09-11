@@ -1,7 +1,8 @@
 // Firebase Imports
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
 import { getFirestore, collection, addDoc, query, onSnapshot, where, getDocs, doc, setDoc, getDoc, deleteDoc, updateDoc, increment, serverTimestamp, orderBy, limit, startAfter } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
-import { getAuth, signInWithPopup, signOut, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+import { getAuth, signInWithPopup, signOut, GoogleAuthProvider, FacebookAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-storage.js";
 
 // --- GLOBAL STATE & CONSTANTS ---
 let currentUser = null;
@@ -13,6 +14,7 @@ let chatsUnsubscribe = null;
 let lastVisibleProduct = null;
 let isFetching = false;
 let recentlyViewed = JSON.parse(localStorage.getItem('piecety_recently_viewed')) || [];
+let userProfile = null;
 
 // --- FIREBASE CONFIGURATION ---
 const firebaseConfig = {
@@ -28,18 +30,20 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
+const storage = getStorage(app);
+const googleProvider = new GoogleAuthProvider();
+const facebookProvider = new FacebookAuthProvider();
 
 // --- TRANSLATIONS ---
 const translations = {
     fr: {
-        page_title: "Piecety - Marché des Pièces Auto en Algérie", meta_description: "Achetez et vendez des pièces automobiles en Algérie avec Piecety, le marché fiable pour les pièces neuves et d'occasion.", fr_short: "FR", en_short: "EN", ar_short: "AR", menu: "Menu", sell: "Vendre", connect: "Se connecter", language: "Langue", logout: "Déconnexion", dashboard: "Tableau de Bord", nav_home: "Accueil", nav_search: "Recherche", nav_profile: "Profil", hero_title: "Trouvez la bonne pièce pour votre voiture", hero_subtitle: "Le marché algérien des pièces automobiles le plus fiable.", categories_title: "Catégories de Pièces", brands_title: "Sélectionnez une Marque", years_title: "Sélectionnez une Année", filters_title: "Filtrer les annonces", all_brands: "Toutes les marques", all_models: "Tous les modèles", all_years: "Toutes années", all_wilayas: "Toutes wilayas", all_communes: "Toutes communes", condition: "État", any_condition: "Tout", new: "Neuf", used: "Occasion", apply_filters: "Appliquer les filtres", reset: "Réinitialiser", search_placeholder: "Rechercher une pièce...", submit_ad: "Soumettre une annonce", ad_title_label: "Titre de la pièce *", ad_title_placeholder: "Ex: Disque de frein avant", brand_label: "Marque *", select_brand: "Sélectionnez une marque", model_label: "Modèle", select_model: "Sélectionnez un modèle", year_label: "Année", select_year: "Sélectionnez une année", wilaya_label: "Wilaya *", select_wilaya: "Sélectionnez une wilaya", commune_label: "Commune", select_commune: "Sélectionnez une commune", condition_label: "État", price_label: "Prix (DA) *", price_placeholder: "Ex: 15000", description_label: "Description", description_placeholder: "Informations supplémentaires...", submit_ad_btn_text: "Soumettre", loading_text: "Envoi...", error_valid_title: "Veuillez entrer un titre valide.", error_select_brand: "Veuillez sélectionner une marque.", error_select_wilaya: "Veuillez sélectionner une wilaya.", error_select_category: "Veuillez sélectionner une catégorie.", error_valid_price: "Veuillez entrer un prix valide.", login_text: "Connectez-vous pour accéder à toutes les fonctionnalités.", google_login: "Se connecter avec Google", back_to_listings: "Retour aux annonces", add_to_cart: "Ajouter au panier", cart_title: "Mon panier", cart_total: "Total", checkout_btn: "Passer à la caisse", no_listings: "Aucune annonce trouvée.", your_cart_is_empty: "Votre panier est vide.", remove: "Supprimer", quantity: "Quantité", item_total: "Total de l'article", login_required: "Veuillez vous connecter pour utiliser cette fonctionnalité.", show_filters: "Afficher les filtres", price_range: "Gamme de prix", all_categories: "Toutes catégories", category_label: "Catégorie *", select_category: "Sélectionnez une catégorie", contact_seller: "Contacter le vendeur", clear_cart: "Vider le panier", ad_posted: "Votre annonce a été publiée avec succès !", ad_post_failed: "Échec de la publication de l'annonce.", item_added_to_cart: "Article ajouté au panier!", delete_ad_confirm: "Êtes-vous sûr de vouloir supprimer cette annonce ?", sold_by: "Vendu par:", my_listings: "Mes Annonces", seller_listings: "Annonces de ce vendeur", buyer_reviews: "Avis des acheteurs", reviews_soon: "(Avis bientôt disponibles)", reviews_soon_2: "La fonctionnalité d'avis sera bientôt disponible.", messages: "Messages", loading_convos: "Chargement des conversations...", chat_with: "Chat avec", type_message_placeholder: "Écrire un message...", recently_viewed: "Récemment consultés", chat: "Chat", load_more: "Charger plus"
+        page_title: "Piecety - Marché des Pièces Auto en Algérie", meta_description: "Achetez et vendez des pièces automobiles en Algérie avec Piecety, le marché fiable pour les pièces neuves et d'occasion.", fr_short: "FR", en_short: "EN", ar_short: "AR", menu: "Menu", sell: "Vendre", connect: "Se connecter", language: "Langue", logout: "Déconnexion", dashboard: "Tableau de Bord", nav_home: "Accueil", nav_search: "Recherche", nav_profile: "Profil", hero_title: "Trouvez la bonne pièce pour votre voiture", hero_subtitle: "Le marché algérien des pièces automobiles le plus fiable.", categories_title: "Catégories de Pièces", brands_title: "Sélectionnez une Marque", years_title: "Sélectionnez une Année", filters_title: "Filtrer les annonces", all_brands: "Toutes les marques", all_models: "Tous les modèles", all_years: "Toutes années", all_wilayas: "Toutes wilayas", all_communes: "Toutes communes", condition: "État", any_condition: "Tout", new: "Neuf", used: "Occasion", apply_filters: "Appliquer les filtres", reset: "Réinitialiser", search_placeholder: "Rechercher une pièce...", submit_ad: "Soumettre une annonce", ad_title_label: "Titre de la pièce *", ad_title_placeholder: "Ex: Disque de frein avant", brand_label: "Marque *", select_brand: "Sélectionnez une marque", model_label: "Modèle", select_model: "Sélectionnez un modèle", year_label: "Année", select_year: "Sélectionnez une année", wilaya_label: "Wilaya *", select_wilaya: "Sélectionnez une wilaya", commune_label: "Commune", select_commune: "Sélectionnez une commune", condition_label: "État", price_label: "Prix (DA) *", price_placeholder: "Ex: 15000", description_label: "Description", description_placeholder: "Informations supplémentaires...", submit_ad_btn_text: "Soumettre", loading_text: "Envoi...", error_valid_title: "Veuillez entrer un titre valide.", error_select_brand: "Veuillez sélectionner une marque.", error_select_wilaya: "Veuillez sélectionner une wilaya.", error_select_category: "Veuillez sélectionner une catégorie.", error_valid_price: "Veuillez entrer un prix valide.", login_text: "Connectez-vous pour accéder à toutes les fonctionnalités.", google_login: "Se connecter avec Google", back_to_listings: "Retour aux annonces", add_to_cart: "Ajouter au panier", cart_title: "Mon panier", cart_total: "Total", checkout_btn: "Passer à la caisse", no_listings: "Aucune annonce trouvée.", your_cart_is_empty: "Votre panier est vide.", remove: "Supprimer", quantity: "Quantité", item_total: "Total de l'article", login_required: "Veuillez vous connecter pour utiliser cette fonctionnalité.", show_filters: "Afficher les filtres", price_range: "Gamme de prix", all_categories: "Toutes catégories", category_label: "Catégorie *", select_category: "Sélectionnez une catégorie", contact_seller: "Contacter le vendeur", clear_cart: "Vider le panier", ad_posted: "Votre annonce a été publiée avec succès !", ad_post_failed: "Échec de la publication de l'annonce.", item_added_to_cart: "Article ajouté au panier!", delete_ad_confirm: "Êtes-vous sûr de vouloir supprimer cette annonce ?", sold_by: "Vendu par:", my_listings: "Mes Annonces", seller_listings: "Annonces de ce vendeur", buyer_reviews: "Avis des acheteurs", reviews_soon: "(Avis bientôt disponibles)", reviews_soon_2: "La fonctionnalité d'avis sera bientôt disponible.", messages: "Messages", loading_convos: "Chargement des conversations...", chat_with: "Chat avec", type_message_placeholder: "Écrire un message...", recently_viewed: "Récemment consultés", chat: "Chat", load_more: "Charger plus", ad_image_label: "Image de la pièce *", facebook_login: "Se connecter avec Facebook", store_label: "Nom du magasin", store_name_placeholder: "Ex: Pièces Autos Abdelkader", store_profile: "Profil de Magasin", setup_store_profile: "Configurer le Profil de Magasin", store_name_label: "Nom du Magasin", store_logo_label: "Logo du Magasin", save: "Enregistrer", profile_pic_label: "Photo de Profil", update_profile_pic: "Mettre à jour la Photo"
     },
     en: {
-        page_title: "Piecety - Car Parts Marketplace in Algeria", meta_description: "Buy and sell car parts in Algeria with Piecety, the reliable marketplace for new and used parts.", fr_short: "FR", en_short: "EN", ar_short: "AR", menu: "Menu", sell: "Sell", connect: "Log In", language: "Language", logout: "Logout", dashboard: "Dashboard", nav_home: "Home", nav_search: "Search", nav_profile: "Profile", hero_title: "Find the right car part for your vehicle", hero_subtitle: "The most trusted Algerian car parts marketplace.", categories_title: "Parts Categories", brands_title: "Select a Brand", years_title: "Select a Year", filters_title: "Filter Listings", all_brands: "All brands", all_models: "All models", all_years: "All years", all_wilayas: "All wilayas", all_communes: "All communes", condition: "Condition", any_condition: "Any", new: "New", used: "Used", apply_filters: "Apply Filters", reset: "Reset", search_placeholder: "Search for a part...", submit_ad: "Submit an Ad", ad_title_label: "Part Title *", ad_title_placeholder: "e.g., Front brake disc", brand_label: "Brand *", select_brand: "Select a brand", model_label: "Model", select_model: "Select a model", year_label: "Year", select_year: "Select a year", wilaya_label: "State *", select_wilaya: "Select a state", commune_label: "City", select_commune: "Select a city", condition_label: "Condition", price_label: "Price (DA) *", price_placeholder: "e.g., 15000", description_label: "Description", description_placeholder: "Additional information...", submit_ad_btn_text: "Submit", loading_text: "Submitting...", error_valid_title: "Please enter a valid title.", error_select_brand: "Please select a brand.", error_select_wilaya: "Please select a state.", error_select_category: "Please select a category.", error_valid_price: "Please enter a valid price.", login_text: "Log in to access all features.", google_login: "Sign in with Google", back_to_listings: "Back to listings", add_to_cart: "Add to cart", cart_title: "My Cart", cart_total: "Total", checkout_btn: "Proceed to Checkout", no_listings: "No listings found.", your_cart_is_empty: "Your cart is empty.", remove: "Remove", quantity: "Quantity", item_total: "Item Total", login_required: "Please log in to use this feature.", show_filters: "Show Filters", price_range: "Price Range", all_categories: "All Categories", category_label: "Category *", select_category: "Select a category", contact_seller: "Contact Seller", clear_cart: "Clear Cart", ad_posted: "Your ad has been posted successfully!", ad_post_failed: "Failed to post ad.", item_added_to_cart: "Item added to cart!", delete_ad_confirm: "Are you sure you want to delete this ad?", sold_by: "Sold by:", my_listings: "My Listings", seller_listings: "Listings from this seller", buyer_reviews: "Buyer Reviews", reviews_soon: "(Reviews coming soon)", reviews_soon_2: "Review functionality will be available soon.", messages: "Messages", loading_convos: "Loading conversations...", chat_with: "Chat with", type_message_placeholder: "Type a message...", recently_viewed: "Recently Viewed", chat: "Chat", load_more: "Load More"
+        page_title: "Piecety - Car Parts Marketplace in Algeria", meta_description: "Buy and sell car parts in Algeria with Piecety, the reliable marketplace for new and used parts.", fr_short: "FR", en_short: "EN", ar_short: "AR", menu: "Menu", sell: "Sell", connect: "Log In", language: "Language", logout: "Logout", dashboard: "Dashboard", nav_home: "Home", nav_search: "Search", nav_profile: "Profile", hero_title: "Find the right car part for your vehicle", hero_subtitle: "The most trusted Algerian car parts marketplace.", categories_title: "Parts Categories", brands_title: "Select a Brand", years_title: "Select a Year", filters_title: "Filter Listings", all_brands: "All brands", all_models: "All models", all_years: "All years", all_wilayas: "All wilayas", all_communes: "All communes", condition: "Condition", any_condition: "Any", new: "New", used: "Used", apply_filters: "Apply Filters", reset: "Reset", search_placeholder: "Search for a part...", submit_ad: "Submit an Ad", ad_title_label: "Part Title *", ad_title_placeholder: "e.g., Front brake disc", brand_label: "Brand *", select_brand: "Select a brand", model_label: "Model", select_model: "Select a model", year_label: "Year", select_year: "Select a year", wilaya_label: "State *", select_wilaya: "Select a state", commune_label: "City", select_commune: "Select a city", condition_label: "Condition", price_label: "Price (DA) *", price_placeholder: "e.g., 15000", description_label: "Description", description_placeholder: "Additional information...", submit_ad_btn_text: "Submit", loading_text: "Submitting...", error_valid_title: "Please enter a valid title.", error_select_brand: "Please select a brand.", error_select_wilaya: "Please select a state.", error_select_category: "Please select a category.", error_valid_price: "Please enter a valid price.", login_text: "Log in to access all features.", google_login: "Sign in with Google", back_to_listings: "Back to listings", add_to_cart: "Add to cart", cart_title: "My Cart", cart_total: "Total", checkout_btn: "Proceed to Checkout", no_listings: "No listings found.", your_cart_is_empty: "Your cart is empty.", remove: "Remove", quantity: "Quantity", item_total: "Item Total", login_required: "Please log in to use this feature.", show_filters: "Show Filters", price_range: "Price Range", all_categories: "All Categories", category_label: "Category *", select_category: "Select a category", contact_seller: "Contact Seller", clear_cart: "Clear Cart", ad_posted: "Your ad has been posted successfully!", ad_post_failed: "Failed to post ad.", item_added_to_cart: "Item added to cart!", delete_ad_confirm: "Are you sure you want to delete this ad?", sold_by: "Sold by:", my_listings: "My Listings", seller_listings: "Listings from this seller", buyer_reviews: "Buyer Reviews", reviews_soon: "(Reviews coming soon)", reviews_soon_2: "Review functionality will be available soon.", messages: "Messages", loading_convos: "Loading conversations...", chat_with: "Chat with", type_message_placeholder: "Type a message...", recently_viewed: "Recently Viewed", chat: "Chat", load_more: "Load More", ad_image_label: "Part Image *", facebook_login: "Sign in with Facebook", store_label: "Store Name", store_name_placeholder: "e.g., Abdelkader Auto Parts", store_profile: "Store Profile", setup_store_profile: "Set Up Store Profile", store_name_label: "Store Name", store_logo_label: "Store Logo", save: "Save", profile_pic_label: "Profile Picture", update_profile_pic: "Update Picture"
     },
     ar: {
-        page_title: "Piecety - سوق قطع غيار السيارات في الجزائر", meta_description: "بيع وشراء قطع غيار السيارات في الجزائر مع Piecety، السوق الموثوق للقطع الجديدة والمستعملة.", fr_short: "FR", en_short: "EN", ar_short: "AR", menu: "القائمة", sell: "بيع", connect: "تسجيل الدخول", language: "اللغة", logout: "تسجيل الخروج", dashboard: "لوحة التحكم", nav_home: "الرئيسية", nav_search: "بحث", nav_profile: "ملفي", hero_title: "ابحث عن قطعة الغيار المناسبة لسيارتك", hero_subtitle: "أكثر أسواق قطع غيار السيارات ثقة في الجزائر.", categories_title: "فئات القطع", brands_title: "اختر ماركة", years_title: "اختر سنة", filters_title: "تصفية الإعلانات", all_brands: "جميع الماركات", all_models: "جميع الموديلات", all_years: "جميع السنوات", all_wilayas: "جميع الولايات", all_communes: "جميع البلديات", condition: "الحالة", any_condition: "الكل", new: "جديد", used: "مستعمل", apply_filters: "تطبيق الفلاتر", reset: "إعادة تعيين", search_placeholder: "ابحث عن قطعة...", submit_ad: "إرسال إعلان", ad_title_label: "عنوان القطعة *", ad_title_placeholder: "مثال: قرص فرامل أمامي", brand_label: "الماركة *", select_brand: "اختر ماركة", model_label: "الموديل", select_model: "اختر موديل", year_label: "السنة", select_year: "اختر سنة", wilaya_label: "الولاية *", select_wilaya: "اختر ولاية", commune_label: "البلدية", select_commune: "اختر بلدية", condition_label: "الحالة", price_label: "السعر (دج) *", price_placeholder: "مثال: 15000", description_label: "الوصف", description_placeholder: "معلومات إضافية...", submit_ad_btn_text: "إرسال", loading_text: "جار الإرسال...", error_valid_title: "الرجاء إدخال عنوان صالح.", error_select_brand: "الرجاء اختيار ماركة.", error_select_wilaya: "الرجاء اختيار ولاية.", error_select_category: "الرجاء اختيار فئة.", error_valid_price: "الرجاء إدخال سعر صالح.", login_text: "تسجيل الدخول للوصول إلى جميع الميزات.", google_login: "تسجيل الدخول باستخدام Google", back_to_listings: "العودة إلى الإعلانات", add_to_cart: "أضف إلى السلة", cart_title: "سلة التسوق", cart_total: "الإجمالي", checkout_btn: "الدفع", no_listings: "لم يتم العثور على إعلانات.", your_cart_is_empty: "سلة التسوق فارغة.", remove: "حذف", quantity: "الكمية", item_total: "إجمالي السلعة", login_required: "يرجى تسجيل الدخول لاستخدام هذه الميزة.", show_filters: "إظهار الفلاتر", price_range: "نطاق السعر", all_categories: "جميع الفئات", category_label: "الفئة *", select_category: "اختر فئة", contact_seller: "اتصل بالبائع", clear_cart: "إفراغ السلة", ad_posted: "تم نشر إعلانك بنجاح!", ad_post_failed: "فشل نشر الإعلان.", item_added_to_cart: "تمت إضافة المنتج إلى السلة!", delete_ad_confirm: "هل أنت متأكد من أنك تريد حذف هذا الإعلان؟", sold_by: "البائع:", my_listings: "إعلاناتي", seller_listings: "إعلانات من هذا البائع", buyer_reviews: "تقييمات المشترين", reviews_soon: "(التقييمات قريبا)", reviews_soon_2: "ميزة التقييم ستكون متاحة قريبا.", messages: "الرسائل", loading_convos: "جاري تحميل المحادثات...", chat_with: "محادثة مع", type_message_placeholder: "اكتب رسالة...", recently_viewed: "شوهدت مؤخرا", chat: "محادثة", load_more: "تحميل المزيد"
+        page_title: "Piecety - سوق قطع غيار السيارات في الجزائر", meta_description: "بيع وشراء قطع غيار السيارات في الجزائر مع Piecety، السوق الموثوق للقطع الجديدة والمستعملة.", fr_short: "FR", en_short: "EN", ar_short: "AR", menu: "القائمة", sell: "بيع", connect: "تسجيل الدخول", language: "اللغة", logout: "تسجيل الخروج", dashboard: "لوحة التحكم", nav_home: "الرئيسية", nav_search: "بحث", nav_profile: "ملفي", hero_title: "ابحث عن قطعة الغيار المناسبة لسيارتك", hero_subtitle: "أكثر أسواق قطع غيار السيارات ثقة في الجزائر.", categories_title: "فئات القطع", brands_title: "اختر ماركة", years_title: "اختر سنة", filters_title: "تصفية الإعلانات", all_brands: "جميع الماركات", all_models: "جميع الموديلات", all_years: "جميع السنوات", all_wilayas: "جميع الولايات", all_communes: "جميع البلديات", condition: "الحالة", any_condition: "الكل", new: "جديد", used: "مستعمل", apply_filters: "تطبيق الفلاتر", reset: "إعادة تعيين", search_placeholder: "ابحث عن قطعة...", submit_ad: "إرسال إعلان", ad_title_label: "عنوان القطعة *", ad_title_placeholder: "مثال: قرص فرامل أمامي", brand_label: "الماركة *", select_brand: "اختر ماركة", model_label: "الموديل", select_model: "اختر موديل", year_label: "السنة", select_year: "اختر سنة", wilaya_label: "الولاية *", select_wilaya: "اختر ولاية", commune_label: "البلدية", select_commune: "اختر بلدية", condition_label: "الحالة", price_label: "السعر (دج) *", price_placeholder: "مثال: 15000", description_label: "الوصف", description_placeholder: "معلومات إضافية...", submit_ad_btn_text: "إرسال", loading_text: "جار الإرسال...", error_valid_title: "الرجاء إدخال عنوان صالح.", error_select_brand: "الرجاء اختيار ماركة.", error_select_wilaya: "الرجاء اختيار ولاية.", error_select_category: "الرجاء اختيار فئة.", error_valid_price: "الرجاء إدخال سعر صالح.", login_text: "تسجيل الدخول للوصول إلى جميع الميزات.", google_login: "تسجيل الدخول باستخدام Google", back_to_listings: "العودة إلى الإعلانات", add_to_cart: "أضف إلى السلة", cart_title: "سلة التسوق", cart_total: "الإجمالي", checkout_btn: "الدفع", no_listings: "لم يتم العثور على إعلانات.", your_cart_is_empty: "سلة التسوق فارغة.", remove: "حذف", quantity: "الكمية", item_total: "إجمالي السلعة", login_required: "يرجى تسجيل الدخول لاستخدام هذه الميزة.", show_filters: "إظهار الفلاتر", price_range: "نطاق السعر", all_categories: "جميع الفئات", category_label: "الفئة *", select_category: "اختر فئة", contact_seller: "اتصل بالبائع", clear_cart: "إفراغ السلة", ad_posted: "تم نشر إعلانك بنجاح!", ad_post_failed: "فشل نشر الإعلان.", item_added_to_cart: "تمت إضافة المنتج إلى السلة!", delete_ad_confirm: "هل أنت متأكد من أنك تريد حذف هذا الإعلان؟", sold_by: "البائع:", my_listings: "إعلاناتي", seller_listings: "إعلانات من هذا البائع", buyer_reviews: "تقييمات المشترين", reviews_soon: "(التقييمات قريبا)", reviews_soon_2: "ميزة التقييم ستكون متاحة قريبا.", messages: "الرسائل", loading_convos: "جاري تحميل المحادثات...", chat_with: "محادثة مع", type_message_placeholder: "اكتب رسالة...", recently_viewed: "شوهدت مؤخرا", chat: "محادثة", load_more: "تحميل المزيد", ad_image_label: "صورة القطعة *", facebook_login: "تسجيل الدخول باستخدام Facebook", store_label: "اسم المتجر", store_name_placeholder: "مثال: قطع غيار سيارات عبد القادر", store_profile: "ملف المتجر", setup_store_profile: "إعداد ملف المتجر", store_name_label: "اسم المتجر", store_logo_label: "شعار المتجر", save: "حفظ", profile_pic_label: "صورة الملف الشخصي", update_profile_pic: "تحديث الصورة"
     }
 };
 
@@ -83,6 +87,7 @@ const DOMElements = {
     authModal: document.getElementById("auth-modal"),
     authModalCloseBtn: document.getElementById("auth-modal-close-btn"),
     googleLoginBtn: document.getElementById("google-login-btn"),
+    facebookLoginBtn: document.getElementById("facebook-login-btn"),
     cartBtn: document.getElementById("cart-btn"),
     cartCountSpan: document.getElementById("cart-count"),
     authLinksContainer: document.getElementById("auth-links"),
@@ -96,6 +101,7 @@ const DOMElements = {
     postProductCommuneSelect: document.getElementById('product-commune'),
     postProductCategorySelect: document.getElementById('product-category'),
     postProductConditionSelect: document.getElementById('product-condition'),
+    postProductImageInput: document.getElementById('product-image'),
 };
 
 // --- UTILITY FUNCTIONS ---
@@ -196,7 +202,7 @@ const translatePage = (lang) => {
         if (translations[lang]?.[key]) el.innerHTML = translations[lang][key];
     });
     document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
-        const key = el.dataset.i18nPlaceholder;
+        const key = el.dataset.i18n-placeholder;
         if (translations[lang]?.[key]) el.placeholder = translations[lang][key];
     });
 };
@@ -324,7 +330,7 @@ window.renderHomePage = () => {
     };
 
     setupFilters(document.getElementById('filters-content'));
-    setupFilters(DOMElements.mobileFiltersContent);
+    setupFilters(DOMEElements.mobileFiltersContent);
 
     document.getElementById('show-filters-btn')?.addEventListener('click', () => {
         DOMElements.mobileFiltersModal.classList.remove('translate-x-full');
@@ -711,7 +717,33 @@ window.renderDashboardPage = async () => {
 
 window.renderProfilePage = async (data) => {
     if (!data?.userId) { renderView('home'); return; }
+    const userSnap = await getDoc(doc(db, "users", data.userId));
+    const profileData = userSnap.exists() ? userSnap.data() : { isStore: false };
+
     document.getElementById('profile-name').textContent = data.userName || 'Seller Profile';
+    document.getElementById('profile-pic').src = profileData.photoURL || 'https://via.placeholder.com/150';
+
+    const storeNameDisplay = document.getElementById('store-name-display');
+    const storeProfileLabel = document.getElementById('store-profile-label');
+    const setupStoreSection = document.getElementById('store-setup-section');
+    const isCurrentUserProfile = currentUser && currentUser.uid === data.userId;
+
+    if (profileData.isStore && profileData.storeName) {
+        storeNameDisplay.textContent = profileData.storeName;
+        storeNameDisplay.classList.remove('hidden');
+        storeProfileLabel.classList.remove('hidden');
+    } else {
+        storeNameDisplay.classList.add('hidden');
+        storeProfileLabel.classList.add('hidden');
+    }
+
+    if (isCurrentUserProfile && !profileData.isStore) {
+        setupStoreSection.classList.remove('hidden');
+    } else {
+        setupStoreSection.classList.add('hidden');
+    }
+
+    document.getElementById('store-setup-form')?.addEventListener('submit', setupStoreProfile);
     
     const grid = document.getElementById('user-products-grid');
     grid.innerHTML = `<div class="col-span-full text-center p-8"><i class="fas fa-spinner fa-spin text-3xl text-blue-500"></i></div>`;
@@ -816,6 +848,47 @@ window.renderChatPage = async (chatData) => {
     };
 };
 
+const setupStoreProfile = async (e) => {
+    e.preventDefault();
+    if (!currentUser) { return; }
+
+    const form = e.target;
+    const storeName = form.elements['storeName'].value.trim();
+    const storeLogoFile = form.elements['storeLogo'].files[0];
+
+    if (!storeName) {
+        showMessage('Please enter a store name.', 3000, 'error');
+        return;
+    }
+
+    const btn = form.querySelector('button[type="submit"]');
+    btn.disabled = true;
+
+    try {
+        let storeLogoUrl = userProfile?.storeLogoUrl || null;
+
+        if (storeLogoFile) {
+            const imageRef = ref(storage, `store_logos/${currentUser.uid}/${storeLogoFile.name}`);
+            const snapshot = await uploadBytes(imageRef, storeLogoFile);
+            storeLogoUrl = await getDownloadURL(snapshot.ref);
+        }
+
+        await updateDoc(doc(db, "users", currentUser.uid), {
+            isStore: true,
+            storeName: storeName,
+            storeLogoUrl: storeLogoUrl,
+        });
+
+        showMessage('Store profile created successfully!', 3000, 'success');
+        renderView('dashboard');
+    } catch (error) {
+        console.error("Error creating store profile:", error);
+        showMessage('Failed to create store profile.', 3000, 'error');
+    } finally {
+        btn.disabled = false;
+    }
+};
+
 // --- USER ACTIONS ---
 const handleSignOut = () => signOut(auth).catch(error => console.error("Sign out error", error));
 
@@ -899,10 +972,15 @@ const removeFromCart = async (productId) => {
 
 const validatePostForm = (form) => {
     let isValid = true;
-    ['title', 'brand', 'wilaya', 'category', 'price'].forEach(fieldName => {
+    ['title', 'brand', 'wilaya', 'category', 'price', 'image'].forEach(fieldName => {
         const input = form.elements[fieldName];
         const errorEl = document.getElementById(`${fieldName}-error`);
-        const isInvalid = !input.value.trim();
+        let isInvalid = false;
+        if (input.type === 'file') {
+            isInvalid = input.files.length === 0;
+        } else {
+            isInvalid = !input.value.trim();
+        }
         input.classList.toggle('border-red-500', isInvalid);
         errorEl?.classList.toggle('hidden', !isInvalid);
         if (isInvalid) isValid = false;
@@ -963,7 +1041,7 @@ const updateUnreadBadge = (count) => {
 
 // --- SETUP & INITIALIZATION ---
 const setupEventListeners = () => {
-    const { darkModeToggle, langDropdownBtn, langBtns, sellLink, cartBtn, homeLink, mobileMenuBtn, mobileMenuCloseBtn, authModalCloseBtn, googleLoginBtn, modalCloseBtn, searchInput, mobileFiltersCloseBtn, mobileApplyFiltersBtn } = DOMElements;
+    const { darkModeToggle, langDropdownBtn, langBtns, sellLink, cartBtn, homeLink, mobileMenuBtn, mobileMenuCloseBtn, authModalCloseBtn, googleLoginBtn, facebookLoginBtn, modalCloseBtn, searchInput, mobileFiltersCloseBtn, mobileApplyFiltersBtn } = DOMElements;
 
     darkModeToggle.onclick = () => setDarkMode(!DOMElements.html.classList.contains('dark'));
     langDropdownBtn.onclick = (e) => { e.stopPropagation(); DOMElements.langDropdown.classList.toggle('hidden'); };
@@ -1000,7 +1078,8 @@ const setupEventListeners = () => {
 
     authModalCloseBtn.onclick = () => toggleModal(DOMElements.authModal, false);
     modalCloseBtn.onclick = () => toggleModal(DOMElements.postProductModal, false);
-    googleLoginBtn.onclick = () => signInWithPopup(auth, provider).catch(error => console.error("Login error", error));
+    googleLoginBtn.onclick = () => signInWithPopup(auth, googleProvider).catch(error => console.error("Login error", error));
+    facebookLoginBtn.onclick = () => signInWithPopup(auth, facebookProvider).catch(error => console.error("Login error", error));
 
     DOMElements.postProductForm.onsubmit = async (e) => {
         e.preventDefault();
@@ -1011,9 +1090,22 @@ const setupEventListeners = () => {
         btn.querySelector('.btn-spinner').classList.remove('hidden');
 
         const formData = Object.fromEntries(new FormData(e.target).entries());
-        const productData = { ...formData, price: Number(formData.price), sellerId: currentUser.uid, sellerName: currentUser.displayName, createdAt: serverTimestamp() };
+        const imageFile = formData.image;
 
         try {
+            const imageRef = ref(storage, `product_images/${currentUser.uid}/${Date.now()}_${imageFile.name}`);
+            const snapshot = await uploadBytes(imageRef, imageFile);
+            const imageUrl = await getDownloadURL(snapshot.ref);
+
+            const productData = {
+                ...formData,
+                price: Number(formData.price),
+                sellerId: currentUser.uid,
+                sellerName: userProfile?.storeName || currentUser.displayName,
+                imageUrl: imageUrl,
+                createdAt: serverTimestamp()
+            };
+
             await addDoc(collection(db, "products"), productData);
             showMessage('ad_posted', 3000, 'success');
             e.target.reset();
@@ -1045,7 +1137,7 @@ const setupEventListeners = () => {
     document.getElementById('nav-search').onclick = (e) => { e.preventDefault(); DOMElements.searchInput.focus(); updateBottomNav('search'); };
     document.getElementById('nav-sell').onclick = (e) => { e.preventDefault(); DOMElements.sellLink.click(); };
     document.getElementById('nav-messages').onclick = (e) => { e.preventDefault(); currentUser ? renderView('inbox') : toggleModal(DOMElements.authModal, true); };
-    document.getElementById('nav-profile').onclick = (e) => { e.preventDefault(); currentUser ? renderView('dashboard') : toggleModal(DOMElements.authModal, true); };
+    document.getElementById('nav-profile').onclick = (e) => { e.preventDefault(); currentUser ? renderView('dashboard') : toggleModal(DOMEElements.authModal, true); };
 
     let lastScrollY = window.scrollY;
     const header = document.querySelector('header');
@@ -1075,10 +1167,25 @@ const bootApp = () => {
         updateAuthUI(user);
         listenForUnreadMessages(user);
         userCart = {};
+        userProfile = null;
         if (user) {
             toggleModal(DOMElements.authModal, false);
             const cartSnap = await getDoc(doc(db, "carts", user.uid));
             if (cartSnap.exists()) userCart = cartSnap.data();
+
+            const userDocRef = doc(db, "users", user.uid);
+            const userSnap = await getDoc(userDocRef);
+            userProfile = userSnap.exists() ? userSnap.data() : null;
+
+            if (!userSnap.exists()) {
+                await setDoc(userDocRef, {
+                    uid: user.uid,
+                    displayName: user.displayName,
+                    email: user.email,
+                    photoURL: user.photoURL,
+                    isStore: false
+                });
+            }
         }
         updateCartDisplay();
     });
