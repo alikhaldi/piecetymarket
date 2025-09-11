@@ -5,7 +5,7 @@ body {
     font-size: 1rem; /* Use relative units */
 }
 
-html.dark body {
+.dark body {
     background-color: #111827;
 }
 
@@ -16,7 +16,7 @@ html.dark body {
 ::-webkit-scrollbar-track {
     background: #f1f1f1;
 }
-html.dark ::-webkit-scrollbar-track {
+.dark ::-webkit-scrollbar-track {
     background: #2d3748;
 }
 ::-webkit-scrollbar-thumb {
@@ -36,8 +36,8 @@ html.dark ::-webkit-scrollbar-track {
 
 /* Improved Touch Feedback */
 button, a, [role="button"] {
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 /* --- Modal & Menu Transitions --- */
@@ -56,7 +56,7 @@ button, a, [role="button"] {
     transform: translateY(-5px);
     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
-html.dark .category-card:hover {
+.dark .category-card:hover {
     box-shadow: 0 10px 15px rgba(255, 255, 255, 0.1);
 }
 .category-card .category-icon {
@@ -66,19 +66,15 @@ html.dark .category-card:hover {
     transform: scale(1.1);
     background-color: #dbeafe; /* bg-blue-100 */
 }
-html.dark .category-card:hover .category-icon {
+.dark .category-card:hover .category-icon {
     background-color: #374151; /* dark:bg-gray-700 */
 }
 
 /* --- Mobile UX Enhancements --- */
-:root {
-    --bottom-nav-height: 5rem;
-}
-
 @media (max-width: 768px) {
     /* Prevent bottom nav overlap */
     main {
-        padding-bottom: var(--bottom-nav-height);
+        padding-bottom: 5rem;
     }
     
     /* Improve mobile form elements to prevent iOS zoom */
@@ -107,11 +103,11 @@ html.dark .category-card:hover .category-icon {
 /* Optimize search bar for small screens */
 @media (max-width: 480px) {
     #search-input {
-        padding: 0.6rem 2.5rem 0.6rem 2.2rem;
-        font-size: 15px;
+      padding: 0.6rem 2.5rem 0.6rem 2.2rem;
+      font-size: 15px;
     }
     .fa-search.absolute {
-        left: 0.8rem;
+      left: 0.8rem;
     }
 }
 
@@ -130,78 +126,4 @@ html[dir="rtl"] #search-input {
 html[dir="rtl"] .logo svg {
     margin-left: 0.5rem; /* ml-2 */
     margin-right: 0;
-}
-
-/* New CSS for added features */
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 50;
-}
-
-.modal-content {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    max-width: 500px;
-    width: 90%;
-}
-html.dark .modal-content {
-    background: #1f2937;
-    color: white;
-}
-
-.image-upload-preview {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 1rem;
-}
-
-.image-preview {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 8px;
-    border: 1px solid #e5e7eb;
-}
-
-.store-badge {
-    background-color: #2563eb;
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.875rem;
-    display: inline-block;
-    margin-left: 0.5rem;
-}
-
-.btn {
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    font-weight: 500;
-    transition: background-color 0.2s ease;
-}
-
-.btn-primary {
-    background-color: #2563eb;
-    color: white;
-}
-.btn-primary:hover {
-    background-color: #1d4ed8;
-}
-
-.btn-secondary {
-    background-color: #e5e7eb;
-    color: #1f2937;
-}
-.btn-secondary:hover {
-    background-color: #d1d5db;
 }
