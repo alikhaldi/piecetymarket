@@ -1,7 +1,7 @@
+// Firebase Imports
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
-import { getFirestore, collection, addDoc, query, onSnapshot, where, getDoc, doc, setDoc, updateDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
-import { getAuth, signInWithPopup, signOut, GoogleAuthProvider, FacebookAuthProvider, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-storage.js";
+import { getFirestore, collection, addDoc, query, onSnapshot, where, getDocs, doc, setDoc, getDoc, deleteDoc, updateDoc, increment, serverTimestamp, orderBy, limit, startAfter } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+import { getAuth, signInWithPopup, signOut, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 
 // --- GLOBAL STATE & CONSTANTS ---
 let currentUser = null;
@@ -28,460 +28,851 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
-const storage = getStorage(app);
-const googleProvider = new GoogleAuthProvider();
-const facebookProvider = new FacebookAuthProvider();
+const provider = new GoogleAuthProvider();
 
 // --- TRANSLATIONS ---
 const translations = {
     fr: {
-        page_title: "Piecety - Marché des Pièces Auto en Algérie",
-        meta_description: "Achetez et vendez des pièces automobiles en Algérie avec Piecety, le marché fiable pour les pièces neuves et d'occasion.",
-        fr_short: "FR",
-        en_short: "EN",
-        ar_short: "AR",
-        menu: "Menu",
-        sell: "Vendre",
-        connect: "Se connecter",
-        language: "Langue",
-        logout: "Déconnexion",
-        dashboard: "Tableau de Bord",
-        nav_home: "Accueil",
-        nav_search: "Recherche",
-        nav_profile: "Profil",
-        hero_title: "Trouvez la bonne pièce pour votre voiture",
-        hero_subtitle: "Le marché algérien des pièces automobiles le plus fiable.",
-        categories_title: "Catégories de Pièces",
-        brands_title: "Sélectionnez une Marque",
-        years_title: "Sélectionnez une Année",
-        filters_title: "Filtrer les annonces",
-        all_brands: "Toutes les marques",
-        all_models: "Tous les modèles",
-        all_years: "Toutes années",
-        all_wilayas: "Toutes wilayas",
-        all_communes: "Toutes communes",
-        condition: "État",
-        any_condition: "Tout",
-        new: "Neuf",
-        used: "Occasion",
-        apply_filters: "Appliquer les filtres",
-        reset: "Réinitialiser",
-        search_placeholder: "Rechercher une pièce...",
-        submit_ad: "Soumettre une annonce",
-        ad_title_label: "Titre de la pièce *",
-        ad_title_placeholder: "Ex: Disque de frein avant",
-        brand_label: "Marque *",
-        select_brand: "Sélectionnez une marque",
-        model_label: "Modèle",
-        select_model: "Sélectionnez un modèle",
-        year_label: "Année",
-        select_year: "Sélectionnez une année",
-        wilaya_label: "Wilaya *",
-        select_wilaya: "Sélectionnez une wilaya",
-        commune_label: "Commune",
-        select_commune: "Sélectionnez une commune",
-        condition_label: "État",
-        price_label: "Prix (DA) *",
-        price_placeholder: "Ex: 15000",
-        description_label: "Description",
-        description_placeholder: "Informations supplémentaires...",
-        images_label: "Images",
-        submit_ad_btn_text: "Soumettre",
-        loading_text: "Envoi...",
-        error_valid_title: "Veuillez entrer un titre valide.",
-        error_select_brand: "Veuillez sélectionner une marque.",
-        error_select_wilaya: "Veuillez sélectionner une wilaya.",
-        error_select_category: "Veuillez sélectionner une catégorie.",
-        error_valid_price: "Veuillez entrer un prix valide.",
-        login_text: "Connectez-vous pour accéder à toutes les fonctionnalités.",
-        google_login: "Se connecter avec Google",
-        facebook_login: "Se connecter avec Facebook",
-        back_to_listings: "Retour aux annonces",
-        add_to_cart: "Ajouter au panier",
-        cart_title: "Mon panier",
-        cart_total: "Total",
-        checkout_btn: "Passer à la caisse",
-        no_listings: "Aucune annonce trouvée.",
-        your_cart_is_empty: "Votre panier est vide.",
-        remove: "Supprimer",
-        quantity: "Quantité",
-        item_total: "Total de l'article",
-        login_required: "Veuillez vous connecter pour utiliser cette fonctionnalité.",
-        show_filters: "Afficher les filtres",
-        price_range: "Gamme de prix",
-        all_categories: "Toutes catégories",
-        category_label: "Catégorie *",
-        select_category: "Sélectionnez une catégorie",
-        contact_seller: "Contacter le vendeur",
-        clear_cart: "Vider le panier",
-        ad_posted: "Votre annonce a été publiée avec succès !",
-        ad_post_failed: "Échec de la publication de l'annonce.",
-        item_added_to_cart: "Article ajouté au panier!",
-        delete_ad_confirm: "Êtes-vous sûr de vouloir supprimer cette annonce ?",
-        sold_by: "Vendu par:",
-        my_listings: "Mes Annonces",
-        seller_listings: "Annonces de ce vendeur",
-        buyer_reviews: "Avis des acheteurs",
-        reviews_soon: "(Avis bientôt disponibles)",
-        reviews_soon_2: "La fonctionnalité d'avis sera bientôt disponible.",
-        messages: "Messages",
-        loading_convos: "Chargement des conversations...",
-        chat_with: "Chat avec",
-        type_message_placeholder: "Écrire un message...",
-        recently_viewed: "Récemment consultés",
-        chat: "Chat",
-        load_more: "Charger plus",
-        edit_ad: "Modifier l'annonce",
-        ad_updated: "Annonce mise à jour avec succès !",
-        create_store: "Créer une boutique",
-        store_created: "Boutique créée avec succès !",
-        edit_profile: "Modifier le profil",
-        profile_updated: "Profil mis à jour avec succès !",
-        store_name: "Nom de la boutique",
-        store_description: "Description de la boutique",
-        profile_name: "Nom",
-        profile_picture: "Photo de profil"
+        page_title: "Piecety - Marché des Pièces Auto en Algérie", meta_description: "Achetez et vendez des pièces automobiles en Algérie avec Piecety, le marché fiable pour les pièces neuves et d'occasion.", fr_short: "FR", en_short: "EN", ar_short: "AR", menu: "Menu", sell: "Vendre", connect: "Se connecter", language: "Langue", logout: "Déconnexion", dashboard: "Tableau de Bord", nav_home: "Accueil", nav_search: "Recherche", nav_profile: "Profil", hero_title: "Trouvez la bonne pièce pour votre voiture", hero_subtitle: "Le marché algérien des pièces automobiles le plus fiable.", categories_title: "Catégories de Pièces", brands_title: "Sélectionnez une Marque", years_title: "Sélectionnez une Année", filters_title: "Filtrer les annonces", all_brands: "Toutes les marques", all_models: "Tous les modèles", all_years: "Toutes années", all_wilayas: "Toutes wilayas", all_communes: "Toutes communes", condition: "État", any_condition: "Tout", new: "Neuf", used: "Occasion", apply_filters: "Appliquer les filtres", reset: "Réinitialiser", search_placeholder: "Rechercher une pièce...", submit_ad: "Soumettre une annonce", ad_title_label: "Titre de la pièce *", ad_title_placeholder: "Ex: Disque de frein avant", brand_label: "Marque *", select_brand: "Sélectionnez une marque", model_label: "Modèle", select_model: "Sélectionnez un modèle", year_label: "Année", select_year: "Sélectionnez une année", wilaya_label: "Wilaya *", select_wilaya: "Sélectionnez une wilaya", commune_label: "Commune", select_commune: "Sélectionnez une commune", condition_label: "État", price_label: "Prix (DA) *", price_placeholder: "Ex: 15000", description_label: "Description", description_placeholder: "Informations supplémentaires...", submit_ad_btn_text: "Soumettre", loading_text: "Envoi...", error_valid_title: "Veuillez entrer un titre valide.", error_select_brand: "Veuillez sélectionner une marque.", error_select_wilaya: "Veuillez sélectionner une wilaya.", error_select_category: "Veuillez sélectionner une catégorie.", error_valid_price: "Veuillez entrer un prix valide.", login_text: "Connectez-vous pour accéder à toutes les fonctionnalités.", google_login: "Se connecter avec Google", back_to_listings: "Retour aux annonces", add_to_cart: "Ajouter au panier", cart_title: "Mon panier", cart_total: "Total", checkout_btn: "Passer à la caisse", no_listings: "Aucune annonce trouvée.", your_cart_is_empty: "Votre panier est vide.", remove: "Supprimer", quantity: "Quantité", item_total: "Total de l'article", login_required: "Veuillez vous connecter pour utiliser cette fonctionnalité.", show_filters: "Afficher les filtres", price_range: "Gamme de prix", all_categories: "Toutes catégories", category_label: "Catégorie *", select_category: "Sélectionnez une catégorie", contact_seller: "Contacter le vendeur", clear_cart: "Vider le panier", ad_posted: "Votre annonce a été publiée avec succès !", ad_post_failed: "Échec de la publication de l'annonce.", item_added_to_cart: "Article ajouté au panier!", delete_ad_confirm: "Êtes-vous sûr de vouloir supprimer cette annonce ?", sold_by: "Vendu par:", my_listings: "Mes Annonces", seller_listings: "Annonces de ce vendeur", buyer_reviews: "Avis des acheteurs", reviews_soon: "(Avis bientôt disponibles)", reviews_soon_2: "La fonctionnalité d'avis sera bientôt disponible.", messages: "Messages", loading_convos: "Chargement des conversations...", chat_with: "Chat avec", type_message_placeholder: "Écrire un message...", recently_viewed: "Récemment consultés", chat: "Chat", load_more: "Charger plus"
     },
     en: {
-        page_title: "Piecety - Car Parts Marketplace in Algeria",
-        meta_description: "Buy and sell car parts in Algeria with Piecety, the reliable marketplace for new and used parts.",
-        fr_short: "FR",
-        en_short: "EN",
-        ar_short: "AR",
-        menu: "Menu",
-        sell: "Sell",
-        connect: "Log In",
-        language: "Language",
-        logout: "Logout",
-        dashboard: "Dashboard",
-        nav_home: "Home",
-        nav_search: "Search",
-        nav_profile: "Profile",
-        hero_title: "Find the right car part for your vehicle",
-        hero_subtitle: "The most trusted Algerian car parts marketplace.",
-        categories_title: "Parts Categories",
-        brands_title: "Select a Brand",
-        years_title: "Select a Year",
-        filters_title: "Filter Listings",
-        all_brands: "All brands",
-        all_models: "All models",
-        all_years: "All years",
-        all_wilayas: "All wilayas",
-        all_communes: "All communes",
-        condition: "Condition",
-        any_condition: "Any",
-        new: "New",
-        used: "Used",
-        apply_filters: "Apply Filters",
-        reset: "Reset",
-        search_placeholder: "Search for a part...",
-        submit_ad: "Submit an Ad",
-        ad_title_label: "Part Title *",
-        ad_title_placeholder: "e.g., Front brake disc",
-        brand_label: "Brand *",
-        select_brand: "Select a brand",
-        model_label: "Model",
-        select_model: "Select a model",
-        year_label: "Year",
-        select_year: "Select a year",
-        wilaya_label: "State *",
-        select_wilaya: "Select a state",
-        commune_label: "City",
-        select_commune: "Select a city",
-        condition_label: "Condition",
-        price_label: "Price (DA) *",
-        price_placeholder: "e.g., 15000",
-        description_label: "Description",
-        description_placeholder: "Additional information...",
-        images_label: "Images",
-        submit_ad_btn_text: "Submit",
-        loading_text: "Submitting...",
-        error_valid_title: "Please enter a valid title.",
-        error_select_brand: "Please select a brand.",
-        error_select_wilaya: "Please select a state.",
-        error_select_category: "Please select a category.",
-        error_valid_price: "Please enter a valid price.",
-        login_text: "Log in to access all features.",
-        google_login: "Sign in with Google",
-        facebook_login: "Sign in with Facebook",
-        back_to_listings: "Back to listings",
-        add_to_cart: "Add to cart",
-        cart_title: "My Cart",
-        cart_total: "Total",
-        checkout_btn: "Proceed to Checkout",
-        no_listings: "No listings found.",
-        your_cart_is_empty: "Your cart is empty.",
-        remove: "Remove",
-        quantity: "Quantity",
-        item_total: "Item Total",
-        login_required: "Please log in to use this feature.",
-        show_filters: "Show Filters",
-        price_range: "Price Range",
-        all_categories: "All Categories",
-        category_label: "Category *",
-        select_category: "Select a category",
-        contact_seller: "Contact Seller",
-        clear_cart: "Clear Cart",
-        ad_posted: "Your ad has been posted successfully!",
-        ad_post_failed: "Failed to post ad.",
-        item_added_to_cart: "Item added to cart!",
-        delete_ad_confirm: "Are you sure you want to delete this ad?",
-        sold_by: "Sold by:",
-        my_listings: "My Listings",
-        seller_listings: "Listings from this seller",
-        buyer_reviews: "Buyer Reviews",
-        reviews_soon: "(Reviews coming soon)",
-        reviews_soon_2: "Review functionality will be available soon.",
-        messages: "Messages",
-        loading_convos: "Loading conversations...",
-        chat_with: "Chat with",
-        type_message_placeholder: "Type a message...",
-        recently_viewed: "Recently Viewed",
-        chat: "Chat",
-        load_more: "Load More",
-        edit_ad: "Edit Ad",
-        ad_updated: "Ad updated successfully!",
-        create_store: "Create Store",
-        store_created: "Store created successfully!",
-        edit_profile: "Edit Profile",
-        profile_updated: "Profile updated successfully!",
-        store_name: "Store Name",
-        store_description: "Store Description",
-        profile_name: "Name",
-        profile_picture: "Profile Picture"
+        page_title: "Piecety - Car Parts Marketplace in Algeria", meta_description: "Buy and sell car parts in Algeria with Piecety, the reliable marketplace for new and used parts.", fr_short: "FR", en_short: "EN", ar_short: "AR", menu: "Menu", sell: "Sell", connect: "Log In", language: "Language", logout: "Logout", dashboard: "Dashboard", nav_home: "Home", nav_search: "Search", nav_profile: "Profile", hero_title: "Find the right car part for your vehicle", hero_subtitle: "The most trusted Algerian car parts marketplace.", categories_title: "Parts Categories", brands_title: "Select a Brand", years_title: "Select a Year", filters_title: "Filter Listings", all_brands: "All brands", all_models: "All models", all_years: "All years", all_wilayas: "All wilayas", all_communes: "All communes", condition: "Condition", any_condition: "Any", new: "New", used: "Used", apply_filters: "Apply Filters", reset: "Reset", search_placeholder: "Search for a part...", submit_ad: "Submit an Ad", ad_title_label: "Part Title *", ad_title_placeholder: "e.g., Front brake disc", brand_label: "Brand *", select_brand: "Select a brand", model_label: "Model", select_model: "Select a model", year_label: "Year", select_year: "Select a year", wilaya_label: "State *", select_wilaya: "Select a state", commune_label: "City", select_commune: "Select a city", condition_label: "Condition", price_label: "Price (DA) *", price_placeholder: "e.g., 15000", description_label: "Description", description_placeholder: "Additional information...", submit_ad_btn_text: "Submit", loading_text: "Submitting...", error_valid_title: "Please enter a valid title.", error_select_brand: "Please select a brand.", error_select_wilaya: "Please select a state.", error_select_category: "Please select a category.", error_valid_price: "Please enter a valid price.", login_text: "Log in to access all features.", google_login: "Sign in with Google", back_to_listings: "Back to listings", add_to_cart: "Add to cart", cart_title: "My Cart", cart_total: "Total", checkout_btn: "Proceed to Checkout", no_listings: "No listings found.", your_cart_is_empty: "Your cart is empty.", remove: "Remove", quantity: "Quantity", item_total: "Item Total", login_required: "Please log in to use this feature.", show_filters: "Show Filters", price_range: "Price Range", all_categories: "All Categories", category_label: "Category *", select_category: "Select a category", contact_seller: "Contact Seller", clear_cart: "Clear Cart", ad_posted: "Your ad has been posted successfully!", ad_post_failed: "Failed to post ad.", item_added_to_cart: "Item added to cart!", delete_ad_confirm: "Are you sure you want to delete this ad?", sold_by: "Sold by:", my_listings: "My Listings", seller_listings: "Listings from this seller", buyer_reviews: "Buyer Reviews", reviews_soon: "(Reviews coming soon)", reviews_soon_2: "Review functionality will be available soon.", messages: "Messages", loading_convos: "Loading conversations...", chat_with: "Chat with", type_message_placeholder: "Type a message...", recently_viewed: "Recently Viewed", chat: "Chat", load_more: "Load More"
     },
     ar: {
-        page_title: "Piecety - سوق قطع غيار السيارات في الجزائر",
-        meta_description: "بيع وشراء قطع غيار السيارات في الجزائر مع Piecety، السوق الموثوق للقطع الجديدة والمستعملة.",
-        fr_short: "FR",
-        en_short: "EN",
-        ar_short: "AR",
-        menu: "القائمة",
-        sell: "بيع",
-        connect: "تسجيل الدخول",
-        language: "اللغة",
-        logout: "تسجيل الخروج",
-        dashboard: "لوحة التحكم",
-        nav_home: "الرئيسية",
-        nav_search: "بحث",
-        nav_profile: "ملفي",
-        hero_title: "ابحث عن قطعة الغيار المناسبة لسيارتك",
-        hero_subtitle: "أكثر أسواق قطع غيار السيارات ثقة في الجزائر.",
-        categories_title: "فئات القطع",
-        brands_title: "اختر ماركة",
-        years_title: "اختر سنة",
-        filters_title: "تصفية الإعلانات",
-        all_brands: "جميع الماركات",
-        all_models: "جميع الموديلات",
-        all_years: "جميع السنوات",
-        all_wilayas: "جميع الولايات",
-        all_communes: "جميع البلديات",
-        condition: "الحالة",
-        any_condition: "الكل",
-        new: "جديد",
-        used: "مستعمل",
-        apply_filters: "تطبيق الفلاتر",
-        reset: "إعادة تعيين",
-        search_placeholder: "ابحث عن قطعة...",
-        submit_ad: "إرسال إعلان",
-        ad_title_label: "عنوان القطعة *",
-        ad_title_placeholder: "مثال: قرص فرامل أمامي",
-        brand_label: "الماركة *",
-        select_brand: "اختر ماركة",
-        model_label: "الموديل",
-        select_model: "اختر موديل",
-        year_label: "السنة",
-        select_year: "اختر سنة",
-        wilaya_label: "الولاية *",
-        select_wilaya: "اختر ولاية",
-        commune_label: "البلدية",
-        select_commune: "اختر بلدية",
-        condition_label: "الحالة",
-        price_label: "السعر (دج) *",
-        price_placeholder: "مثال: 15000",
-        description_label: "الوصف",
-        description_placeholder: "معلومات إضافية...",
-        images_label: "الصور",
-        submit_ad_btn_text: "إرسال",
-        loading_text: "جار الإرسال...",
-        error_valid_title: "الرجاء إدخال عنوان صالح.",
-        error_select_brand: "الرجاء اختيار ماركة.",
-        error_select_wilaya: "الرجاء اختيار ولاية.",
-        error_select_category: "الرجاء اختيار فئة.",
-        error_valid_price: "الرجاء إدخال سعر صالح.",
-        login_text: "تسجيل الدخول للوصول إلى جميع الميزات.",
-        google_login: "تسجيل الدخول باستخدام Google",
-        facebook_login: "تسجيل الدخول باستخدام Facebook",
-        back_to_listings: "العودة إلى الإعلانات",
-        add_to_cart: "أضف إلى السلة",
-        cart_title: "سلة التسوق",
-        cart_total: "الإجمالي",
-        checkout_btn: "الدفع",
-        no_listings: "لم يتم العثور على إعلانات.",
-        your_cart_is_empty: "سلة التسوق فارغة.",
-        remove: "حذف",
-        quantity: "الكمية",
-        item_total: "إجمالي السلعة",
-        login_required: "يرجى تسجيل الدخول لاستخدام هذه الميزة.",
-        show_filters: "إظهار الفلاتر",
-        price_range: "نطاق السعر",
-        all_categories: "جميع الفئات",
-        category_label: "الفئة *",
-        select_category: "اختر فئة",
-        contact_seller: "اتصل بالبائع",
-        clear_cart: "إفراغ السلة",
-        ad_posted: "تم نشر إعلانك بنجاح!",
-        ad_post_failed: "فشل نشر الإعلان.",
-        item_added_to_cart: "تمت إضافة المنتج إلى السلة!",
-        delete_ad_confirm: "هل أنت متأكد من أنك تريد حذف هذا الإعلان؟",
-        sold_by: "البائع:",
-        my_listings: "إعلاناتي",
-        seller_listings: "إعلانات من هذا البائع",
-        buyer_reviews: "تقييمات المشترين",
-        reviews_soon: "(التقييمات قريبا)",
-        reviews_soon_2: "ميزة التقييم ستكون متاحة قريبا.",
-        messages: "الرسائل",
-        loading_convos: "جاري تحميل المحادثات...",
-        chat_with: "محادثة مع",
-        type_message_placeholder: "اكتب رسالة...",
-        recently_viewed: "شوهدت مؤخرا",
-        chat: "محادثة",
-        load_more: "تحميل المزيد",
-        edit_ad: "تعديل الإعلان",
-        ad_updated: "تم تحديث الإعلان بنجاح!",
-        create_store: "إنشاء متجر",
-        store_created: "تم إنشاء المتجر بنجاح!",
-        edit_profile: "تعديل الملف الشخصي",
-        profile_updated: "تم تحديث الملف الشخصي بنجاح!",
-        store_name: "اسم المتجر",
-        store_description: "وصف المتجر",
-        profile_name: "الاسم",
-        profile_picture: "الصورة الشخصية"
+        page_title: "Piecety - سوق قطع غيار السيارات في الجزائر", meta_description: "بيع وشراء قطع غيار السيارات في الجزائر مع Piecety، السوق الموثوق للقطع الجديدة والمستعملة.", fr_short: "FR", en_short: "EN", ar_short: "AR", menu: "القائمة", sell: "بيع", connect: "تسجيل الدخول", language: "اللغة", logout: "تسجيل الخروج", dashboard: "لوحة التحكم", nav_home: "الرئيسية", nav_search: "بحث", nav_profile: "ملفي", hero_title: "ابحث عن قطعة الغيار المناسبة لسيارتك", hero_subtitle: "أكثر أسواق قطع غيار السيارات ثقة في الجزائر.", categories_title: "فئات القطع", brands_title: "اختر ماركة", years_title: "اختر سنة", filters_title: "تصفية الإعلانات", all_brands: "جميع الماركات", all_models: "جميع الموديلات", all_years: "جميع السنوات", all_wilayas: "جميع الولايات", all_communes: "جميع البلديات", condition: "الحالة", any_condition: "الكل", new: "جديد", used: "مستعمل", apply_filters: "تطبيق الفلاتر", reset: "إعادة تعيين", search_placeholder: "ابحث عن قطعة...", submit_ad: "إرسال إعلان", ad_title_label: "عنوان القطعة *", ad_title_placeholder: "مثال: قرص فرامل أمامي", brand_label: "الماركة *", select_brand: "اختر ماركة", model_label: "الموديل", select_model: "اختر موديل", year_label: "السنة", select_year: "اختر سنة", wilaya_label: "الولاية *", select_wilaya: "اختر ولاية", commune_label: "البلدية", select_commune: "اختر بلدية", condition_label: "الحالة", price_label: "السعر (دج) *", price_placeholder: "مثال: 15000", description_label: "الوصف", description_placeholder: "معلومات إضافية...", submit_ad_btn_text: "إرسال", loading_text: "جار الإرسال...", error_valid_title: "الرجاء إدخال عنوان صالح.", error_select_brand: "الرجاء اختيار ماركة.", error_select_wilaya: "الرجاء اختيار ولاية.", error_select_category: "الرجاء اختيار فئة.", error_valid_price: "الرجاء إدخال سعر صالح.", login_text: "تسجيل الدخول للوصول إلى جميع الميزات.", google_login: "تسجيل الدخول باستخدام Google", back_to_listings: "العودة إلى الإعلانات", add_to_cart: "أضف إلى السلة", cart_title: "سلة التسوق", cart_total: "الإجمالي", checkout_btn: "الدفع", no_listings: "لم يتم العثور على إعلانات.", your_cart_is_empty: "سلة التسوق فارغة.", remove: "حذف", quantity: "الكمية", item_total: "إجمالي السلعة", login_required: "يرجى تسجيل الدخول لاستخدام هذه الميزة.", show_filters: "إظهار الفلاتر", price_range: "نطاق السعر", all_categories: "جميع الفئات", category_label: "الفئة *", select_category: "اختر فئة", contact_seller: "اتصل بالبائع", clear_cart: "إفراغ السلة", ad_posted: "تم نشر إعلانك بنجاح!", ad_post_failed: "فشل نشر الإعلان.", item_added_to_cart: "تمت إضافة المنتج إلى السلة!", delete_ad_confirm: "هل أنت متأكد من أنك تريد حذف هذا الإعلان؟", sold_by: "البائع:", my_listings: "إعلاناتي", seller_listings: "إعلانات من هذا البائع", buyer_reviews: "تقييمات المشترين", reviews_soon: "(التقييمات قريبا)", reviews_soon_2: "ميزة التقييم ستكون متاحة قريبا.", messages: "الرسائل", loading_convos: "جاري تحميل المحادثات...", chat_with: "محادثة مع", type_message_placeholder: "اكتب رسالة...", recently_viewed: "شوهدت مؤخرا", chat: "محادثة", load_more: "تحميل المزيد"
     }
 };
 
 // --- DATA ---
 const categories = {
-    "engine": { fr: "Moteur", en: "Engine", ar: "محرك", icon: "fa-cogs" },
-    "brakes": { fr: "Freins", en: "Brakes", ar: "مكابح", icon: "fa-car" },
-    "fuel_system": { fr: "Système de carburant", en: "Fuel System", ar: "نظام الوقود", icon: "fa-gas-pump" },
-    "cooling": { fr: "Refroidissement", en: "Cooling", ar: "التبريد", icon: "fa-fan" },
-    "tires": { fr: "Pneus & Jantes", en: "Tires & Rims", ar: "إطارات وجنوط", icon: "fa-circle" }
+    "engine": { fr: "Moteur", en: "Engine", ar: "محرك", icon: "fa-cogs" }, "brakes": { fr: "Freins", en: "Brakes", ar: "مكابح", icon: "fa-car" }, "fuel_system": { fr: "Système de carburant", en: "Fuel System", ar: "نظام الوقود", icon: "fa-gas-pump" }, "cooling": { fr: "Refroidissement", en: "Cooling", ar: "التبريد", icon: "fa-fan" }, "tires": { fr: "Pneus & Jantes", en: "Tires & Rims", ar: "الإطارات والعجلات", icon: "fa-circle" }, "electrical": { fr: "Électrique", en: "Electrical", ar: "كهربائي", icon: "fa-bolt" }, "body": { fr: "Carrosserie", en: "Body", ar: "هيكل", icon: "fa-car-side" }, "tools": { fr: "Outillage", en: "Tools", ar: "أدوات", icon: "fa-wrench" },
 };
-
+const wilayas = {
+    "Adrar": ["Adrar", "Charouine", "Reggane", "Aoulef", "Timimoun", "Bordj Badji Mokhtar", "In Salah"], "Chlef": ["Chlef", "Ténès", "Ouled Farès", "El Marsa", "Oued Fodda"], "Laghouat": ["Laghouat", "Aflou", "Aïn Madhi", "Ksar El Hirane", "Hassi R'Mel"], "Oum El Bouaghi": ["Oum El Bouaghi", "Aïn Beïda", "Aïn M'lila", "F'kirina", "Souk Naamane"], "Batna": ["Batna", "Barika", "Arris", "Merouana", "Timgad"], "Béjaïa": ["Béjaïa", "Akbou", "El Kseur", "Sidi Aïch", "Aokas"], "Biskra": ["Biskra", "Tolga", "Sidi Okba", "El Kantara", "Ouled Djellal"], "Béchar": ["Béchar", "Kenadsa", "Beni Ounif", "Taghit", "Abadla"], "Blida": ["Blida", "Boufarik", "Larbaâ", "Meftah", "Mouzaia"], "Bouira": ["Bouira", "Lakhdaria", "Sour El Ghozlane", "Aïn Bessem", "M'chedallah"], "Tamanrasset": ["Tamanrasset", "In Salah", "In Guezzam", "Djanet"], "Tébessa": ["Tébessa", "Bir El Ater", "Cheria", "El Aouinet", "Ouenza"], "Tlemcen": ["Tlemcen", "Maghnia", "Ghazaouet", "Remchi", "Nedroma"], "Tiaret": ["Tiaret", "Frenda", "Sougueur", "Ksar Chellala", "Mahdia"], "Tizi Ouzou": ["Tizi Ouzou", "Azazga", "Draâ Ben Khedda", "Tigzirt", "Larbaâ Nath Irathen"], "Alger": ["Alger Centre", "Bab El Oued", "Hussein Dey", "Kouba", "El Harrach", "Dar El Beïda"], "Djelfa": ["Djelfa", "Messaad", "Aïn Oussera", "Hassi Bahbah", "El Idrissia"], "Jijel": ["Jijel", "Taher", "El Milia", "Chekfa", "Ziama Mansouriah"], "Sétif": ["Sétif", "El Eulma", "Aïn Oulmane", "Bougaâ", "Beni Ouartilane"], "Saïda": ["Saïda", "Aïn El Hadjar", "Sidi Boubkeur", "Youb", "Ouled Brahim"], "Skikda": ["Skikda", "Azzaba", "Collo", "El Harrouch", "Ramdane Djamel"], "Sidi Bel Abbès": ["Sidi Bel Abbès", "Telagh", "Sfisef", "Ras El Ma", "Ben Badis"], "Annaba": ["Annaba", "El Bouni", "El Hadjar", "Sidi Amar", "Berrahal"], "Guelma": ["Guelma", "Oued Zenati", "Héliopolis", "Bouchegouf", "Ain Reggada"], "Constantine": ["Constantine", "El Khroub", "Hamma Bouziane", "Didouche Mourad", "Aïn Smara"], "Médéa": ["Médéa", "Berrouaghia", "Ksar Boukhari", "Tablat", "Aïn Boucif"], "Mostaganem": ["Mostaganem", "Sidi Ali", "Achaacha", "Hassi Mameche", "Aïn Tédelès"], "M'Sila": ["M'Sila", "Bou Saâda", "Sidi Aïssa", "Aïn El Melh", "Magra"], "Mascara": ["Mascara", "Tighennif", "Sig", "Ghriss", "Mohammadia"], "Ouargla": ["Ouargla", "Hassi Messaoud", "Touggourt", "Rouissat", "N'Goussa"], "Oran": ["Oran", "Es Senia", "Arzew", "Bir El Djir", "Aïn El Turk"], "El Bayadh": ["El Bayadh", "Bougtob", "Brezina", "Rogassa", "El Abiodh Sidi Cheikh"], "Illizi": ["Illizi", "Djanet", "In Amenas", "Bordj Omar Driss"], "Bordj Bou Arréridj": ["Bordj Bou Arréridj", "Ras El Oued", "Mansoura", "Medjana", "El Achir"], "Boumerdès": ["Boumerdès", "Boudouaou", "Dellys", "Réghaïa", "Isser"], "El Tarf": ["El Tarf", "El Kala", "Ben M'Hidi", "Besbes", "Dréan"], "Tindouf": ["Tindouf", "Oum El Assel"], "Tissemsilt": ["Tissemsilt", "Théniet El Had", "Lardjem", "Bordj Bounaama", "Ammi Moussa"], "El Oued": ["El Oued", "Guemar", "Debila", "Robbah", "El M'Ghair"], "Khenchela": ["Khenchela", "Kais", "Chechar", "Ouled Rechache", "El Hamma"], "Souk Ahras": ["Souk Ahras", "M'daourouch", "Sedrata", "Taoura", "Heddada"], "Tipaza": ["Tipaza", "Cherchell", "Koléa", "Hadjout", "Fouka"], "Mila": ["Mila", "Ferdjioua", "Grarem Gouga", "Tadjenanet", "Chelghoum Laïd"], "Aïn Defla": ["Aïn Defla", "Khemis Miliana", "Miliana", "El Attaf", "Djelida"], "Naâma": ["Naâma", "Mécheria", "Aïn Sefra", "Sfissifa", "Moghrar"], "Aïn Témouchent": ["Aïn Témouchent", "Béni Saf", "Hammam Bou Hadjar", "El Malah", "Aghlal"], "Ghardaïa": ["Ghardaïa", "Metlili", "El Guerrara", "Berriane", "Bounoura"], "Relizane": ["Relizane", "Oued Rhiou", "Mazouna", "Ammi Moussa", "Zemmoura"], "El M'ghair": ["El M'ghair", "Djamaa", "Sidi Amrane", "Oum Toub"], "El Meniaa": ["El Meniaa", "Hassi Gara", "Mansourah"],
+};
+const car_data = {
+    "Toyota": ["Yaris", "Corolla", "Camry", "Land Cruiser", "Hilux"], "Peugeot": ["208", "308", "301", "2008", "3008", "508"], "Volkswagen": ["Golf", "Polo", "Passat", "Tiguan", "Touareg", "Jetta"], "Renault": ["Clio", "Megane", "Captur", "Duster", "Symbol"], "Hyundai": ["i10", "i20", "Accent", "Tucson", "Santa Fe"], "Nissan": ["Micra", "Sentra", "Qashqai", "X-Trail", "Juke"], "Fiat": ["Panda", "500", "Tipo", "Punto"], "Citroën": ["C3", "C4", "Berlingo", "C-Elysée"], "Kia": ["Picanto", "Rio", "Sportage", "Sorento"], "Mercedes-Benz": ["A-Class", "C-Class", "E-Class", "GLA", "GLC"]
+};
+const brand_icons = {
+    "Toyota": "icons/toyota.png", "Peugeot": "icons/peugeot.png", "Volkswagen": "icons/volkswagen.png", "Renault": "icons/renault.png", "Hyundai": "icons/hyundai.png", "Nissan": "icons/nissan.png", "Fiat": "icons/fiat.png", "Citroën": "icons/citroen.png", "Kia": "icons/kia.png", "Mercedes-Benz": "icons/mercedes.png"
+};
 const currentYear = new Date().getFullYear();
-const years = Array.from({length: currentYear - 1979 + 1}, (_, i) => (currentYear - i).toString());
+const years = Array.from({length: currentYear - 1979}, (_, i) => (currentYear - i).toString());
 
 // --- DOM ELEMENTS ---
 const DOMElements = {
     html: document.documentElement,
+    appContainer: document.getElementById("app-container"),
+    messageBox: document.getElementById("message-box"),
+    langDropdownBtn: document.getElementById("lang-dropdown-btn"),
+    langDropdown: document.getElementById("lang-dropdown"),
+    langBtns: document.querySelectorAll(".lang-btn"),
+    searchInput: document.getElementById("search-input"),
+    postProductModal: document.getElementById("post-product-modal"),
+    modalCloseBtn: document.getElementById("modal-close-btn"),
+    postProductForm: document.getElementById("post-product-form"),
+    mobileMenuBtn: document.getElementById("mobile-menu-btn"),
+    mobileMenu: document.getElementById("mobile-menu"),
+    mobileMenuBackdrop: document.getElementById("mobile-menu-backdrop"),
+    mobileMenuCloseBtn: document.getElementById("mobile-menu-close-btn"),
+    mobileNavLinks: document.getElementById("mobile-nav-links"),
+    mobileFiltersModal: document.getElementById("mobile-filters-modal"),
+    mobileFiltersContent: document.getElementById("mobile-filters-content"),
+    mobileFiltersCloseBtn: document.getElementById("mobile-filters-close-btn"),
+    mobileApplyFiltersBtn: document.getElementById("mobile-apply-filters-btn"),
+    authModal: document.getElementById("auth-modal"),
+    authModalCloseBtn: document.getElementById("auth-modal-close-btn"),
+    googleLoginBtn: document.getElementById("google-login-btn"),
+    cartBtn: document.getElementById("cart-btn"),
+    cartCountSpan: document.getElementById("cart-count"),
+    authLinksContainer: document.getElementById("auth-links"),
+    homeLink: document.getElementById("home-link"),
+    sellLink: document.getElementById("sell-link"),
     darkModeToggle: document.getElementById('dark-mode-toggle'),
-    langDropdownBtn: document.getElementById('lang-dropdown-btn'),
-    langDropdown: document.getElementById('lang-dropdown'),
-    langBtns: document.querySelectorAll('[data-lang]'),
-    sellLink: document.getElementById('sell-link'),
-    cartBtn: document.getElementById('cart-btn'),
-    homeLink: document.getElementById('home-link'),
-    mobileMenuBtn: document.getElementById('mobile-menu-btn'),
-    mobileMenuCloseBtn: document.getElementById('mobile-menu-close-btn'),
-    mobileMenuBackdrop: document.getElementById('mobile-menu-backdrop'),
-    mobileNavLinks: document.getElementById('mobile-nav-links'),
-    authModal: document.getElementById('auth-modal'),
-    authModalCloseBtn: document.getElementById('auth-modal-close-btn'),
-    googleLoginBtn: document.getElementById('google-login-btn'),
-    facebookLoginBtn: document.getElementById('facebook-login-btn'),
-    modalCloseBtn: document.getElementById('modal-close-btn'),
-    postProductModal: document.getElementById('post-product-modal'),
-    postProductForm: document.getElementById('post-product-form'),
-    searchInput: document.getElementById('search-input'),
-    mobileFiltersCloseBtn: document.getElementById('mobile-filters-close-btn'),
-    mobileApplyFiltersBtn: document.getElementById('mobile-apply-filters-btn'),
-    authLinksContainer: document.getElementById('auth-links-container'),
-    profileEditModal: document.getElementById('profile-edit-modal'),
-    storeCreateModal: document.getElementById('store-create-modal'),
-    adEditModal: document.getElementById('ad-edit-modal'),
-    mobileCartCount: document.getElementById('mobile-cart-count'),
-    content: document.getElementById('content')
+    postProductBrandSelect: document.getElementById('product-brand'),
+    postProductModelSelect: document.getElementById('product-model'),
+    postProductYearSelect: document.getElementById('product-year'),
+    postProductWilayaSelect: document.getElementById('product-wilaya'),
+    postProductCommuneSelect: document.getElementById('product-commune'),
+    postProductCategorySelect: document.getElementById('product-category'),
+    postProductConditionSelect: document.getElementById('product-condition'),
 };
 
 // --- UTILITY FUNCTIONS ---
+const showMessage = (msgKey, duration = 3500, type = "info") => {
+    const msg = translations[currentLang][msgKey] || msgKey;
+    const { messageBox } = DOMElements;
+    if (!messageBox) return;
+    messageBox.textContent = msg;
+    messageBox.className = `fixed top-5 right-5 z-[1000] p-4 rounded-lg shadow-lg transition-all duration-500 ease-in-out max-w-sm break-words`;
+    
+    let colors = type === 'success' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : type === 'error' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
+    messageBox.classList.add(...colors.split(' '));
+
+    requestAnimationFrame(() => {
+        messageBox.classList.remove('opacity-0', 'translate-x-full');
+        messageBox.classList.add('opacity-100', 'translate-x-0');
+    });
+
+    setTimeout(() => {
+        messageBox.classList.remove('opacity-100', 'translate-x-0');
+        messageBox.classList.add('opacity-0', 'translate-x-full');
+    }, duration);
+};
+
+const toggleModal = (modalElement, show) => {
+    if (show) {
+        modalElement.classList.remove('invisible', 'opacity-0');
+    } else {
+        modalElement.classList.add('invisible', 'opacity-0');
+    }
+};
+
+const updateCartDisplay = () => {
+   const { cartCountSpan } = DOMElements;
+   const mobileCartCount = document.getElementById('mobile-cart-count');
+   const cartItemCount = Object.values(userCart).reduce((sum, item) => sum + item.quantity, 0);
+
+   [cartCountSpan, mobileCartCount].forEach(el => {
+       if (el) {
+           el.textContent = cartItemCount;
+           el.classList.toggle('hidden', cartItemCount === 0);
+       }
+   });
+};
+
 const debounce = (func, delay) => {
     let timeout;
     return (...args) => {
         clearTimeout(timeout);
-        timeout = setTimeout(() => func(...args), delay);
+        timeout = setTimeout(() => func.apply(this, args), delay);
     };
 };
 
-const setDarkMode = (enable) => {
-    DOMElements.html.classList.toggle('dark', enable);
-    localStorage.setItem('piecety_dark_mode', enable);
-    const icon = DOMElements.darkModeToggle.querySelector('i');
-    icon.classList.replace(enable ? 'fa-moon' : 'fa-sun', enable ? 'fa-sun' : 'fa-moon');
+// --- MOBILE MENU CONTROL ---
+const openMobileMenu = () => {
+    DOMElements.mobileMenu.classList.remove('-translate-x-full');
+    DOMElements.mobileMenuBackdrop.classList.remove('invisible', 'opacity-0');
+};
+
+const closeMobileMenu = () => {
+    DOMElements.mobileMenu.classList.add('-translate-x-full');
+    DOMElements.mobileMenuBackdrop.classList.add('invisible', 'opacity-0');
+};
+
+// --- APP LOGIC ---
+const setDarkMode = (isDark) => {
+    DOMElements.html.classList.toggle('dark', isDark);
+    localStorage.setItem('piecety_dark_mode', isDark);
+    DOMElements.darkModeToggle.querySelector('i').className = isDark ? 'fas fa-sun text-xl' : 'fas fa-moon text-xl';
 };
 
 const setLanguage = (lang) => {
     currentLang = lang;
     localStorage.setItem("piecety_lang", lang);
     translatePage(lang);
-    DOMElements.html.setAttribute("lang", lang);
-    DOMElements.html.setAttribute("dir", lang === "ar" ? "rtl" : "ltr");
-    document.querySelector(`[data-lang="${lang}"]`).classList.add("font-bold");
-    document.querySelectorAll(`[data-lang]:not([data-lang="${lang}"])`).forEach(btn => btn.classList.remove("font-bold"));
+    updateTitle(currentView);
+    if (currentView) {
+        renderView(currentView);
+    }
+};
+
+const updateTitle = (view) => {
+    const titleKeyMap = { cart: "cart_title", dashboard: "dashboard", inbox: "messages", chat: "messages" };
+    const titleKey = titleKeyMap[view] || "page_title";
+    document.title = translations[currentLang][titleKey] || "Piecety";
+    document.querySelector('meta[name="description"]').setAttribute("content", translations[currentLang]["meta_description"]);
 };
 
 const translatePage = (lang) => {
+    const { html } = DOMElements;
+    html.setAttribute("dir", lang === "ar" ? "rtl" : "ltr");
+    html.setAttribute("lang", lang);
+
+    document.getElementById("current-lang").textContent = translations[lang][`${lang}_short`];
+    
     document.querySelectorAll("[data-i18n-key]").forEach(el => {
-        const key = el.getAttribute("data-i18n-key");
-        el.textContent = translations[lang][key] || el.textContent;
+        const key = el.dataset.i18nKey;
+        if (translations[lang]?.[key]) el.innerHTML = translations[lang][key];
     });
-    document.title = translations[lang].page_title;
-    document.querySelector('meta[name="description"]').setContent(translations[lang].meta_description);
+    document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+        const key = el.dataset.i18nPlaceholder;
+        if (translations[lang]?.[key]) el.placeholder = translations[lang][key];
+    });
 };
 
-const toggleModal = (modal, show) => {
-    modal.classList.toggle('hidden', !show);
-    modal.classList.toggle('opacity-0', !show);
-    modal.classList.toggle('invisible', !show);
+const populateSelect = (selectEl, options, defaultLabelKey, lang, valueAsKey = false) => {
+    if (!selectEl) return;
+    const currentValue = selectEl.value;
+    selectEl.innerHTML = `<option value="">${translations[lang][defaultLabelKey]}</option>`;
+    
+    const optionData = Array.isArray(options) ? options.sort() : Object.keys(options).sort();
+    
+    optionData.forEach(opt => {
+        const value = valueAsKey ? opt : opt;
+        const text = valueAsKey ? (options[opt][lang] || options[opt]['fr']) : opt;
+        selectEl.innerHTML += `<option value="${value}">${text}</option>`;
+    });
+    selectEl.value = currentValue;
 };
 
-const showMessage = (key, duration, type) => {
-    const msg = document.createElement('div');
-    msg.className = `fixed bottom-4 right-4 p-4 rounded-lg text-white ${type === 'error' ? 'bg-red-500' : 'bg-green-500'}`;
-    msg.textContent = translations[currentLang][key];
-    document.body.appendChild(msg);
-    setTimeout(() => msg.remove(), duration);
+const applyAndRenderFilters = () => {
+    const params = {};
+    const filtersContainer = document.getElementById('filters-content') || document;
+    
+    filtersContainer.querySelectorAll('.filter').forEach(el => {
+        const key = el.id.replace('-filter', '');
+        if (el.value && !(el.type === 'range' && el.value === el.max)) {
+            params[key] = el.value;
+        }
+    });
+    params.search = DOMElements.searchInput.value;
+
+    const newUrl = new URL(window.location);
+    newUrl.search = new URLSearchParams(params).toString();
+    window.history.replaceState({ path: newUrl.href }, '', newUrl.href);
+
+    renderListings();
 };
 
-const uploadImages = async (files, folder) => {
-    const urls = [];
-    for (const file of files) {
-        const storageRef = ref(storage, `${folder}/${Date.now()}_${file.name}`);
-        await uploadBytes(storageRef, file);
-        const url = await getDownloadURL(storageRef);
-        urls.push(url);
+const applyFiltersFromURL = (container = document) => {
+    const params = new URLSearchParams(window.location.search);
+    params.forEach((value, key) => {
+        const el = container.querySelector(`#${key}-filter`);
+        if (el) {
+            el.value = value;
+            if (key === 'brand' || key === 'wilaya') {
+                el.dispatchEvent(new Event('change'));
+                setTimeout(() => {
+                    const childKey = key === 'brand' ? 'model' : 'commune';
+                    const childVal = params.get(childKey);
+                    if (childVal) {
+                        const childEl = container.querySelector(`#${childKey}-filter`);
+                        if (childEl) childEl.value = childVal;
+                    }
+                }, 100);
+            }
+        }
+    });
+    DOMElements.searchInput.value = params.get('search') || '';
+};
+
+// --- VIEW RENDERING ---
+const updateBottomNav = (viewName) => {
+    const navLinks = {
+        home: document.getElementById('nav-home'),
+        search: document.getElementById('nav-search'),
+        sell: document.getElementById('nav-sell'),
+        inbox: document.getElementById('nav-messages'),
+        dashboard: document.getElementById('nav-profile'),
+        profile: document.getElementById('nav-profile') 
+    };
+    Object.values(navLinks).forEach(link => {
+        if (link) {
+            link.classList.remove('text-blue-600', 'dark:text-blue-400');
+            link.classList.add('text-gray-600', 'dark:text-gray-300');
+        }
+    });
+    const activeLink = navLinks[viewName];
+    if (activeLink) {
+        activeLink.classList.remove('text-gray-600', 'dark:text-gray-300');
+        activeLink.classList.add('text-blue-600', 'dark:text-blue-400');
     }
-    return urls;
 };
 
-// --- CART FUNCTIONS ---
-const addToCart = async (productId, quantity = 1) => {
-    if (!currentUser) return showMessage('login_required', 3000, 'error');
-    if (!userCart[productId]) userCart[productId] = { quantity: 0 };
-    userCart[productId].quantity += quantity;
+const renderView = (viewName, data = null) => {
+    if (productsUnsubscribe) productsUnsubscribe();
+    if (chatsUnsubscribe) chatsUnsubscribe();
+    DOMElements.appContainer.innerHTML = '';
+    
+    const route = viewName.split('/')[0];
+    updateTitle(route, data);
+
+    const templateId = `${route}-view-template`;
+    const template = document.getElementById(templateId);
+
+    if (template) {
+        DOMElements.appContainer.appendChild(template.content.cloneNode(true));
+        const renderFunction = window[`render${route.charAt(0).toUpperCase() + route.slice(1)}Page`];
+        if (typeof renderFunction === 'function') {
+            renderFunction(data);
+        }
+    } else {
+        renderView('home');
+        return;
+    }
+    
+    currentView = viewName;
+    updateBottomNav(route);
+    window.scrollTo(0, 0);
+    translatePage(currentLang);
+};
+
+window.renderHomePage = () => {
+    updateBreadcrumb();
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('brand')) renderYearCategories();
+    else if (params.get('category')) renderBrandCategories();
+    else renderPartCategories();
+    
+    renderRecentlyViewed();
+
+    const setupFilters = (container) => {
+        container.innerHTML = document.getElementById('filters-template').content.cloneNode(true).innerHTML;
+        setupFilterListeners(container);
+        applyFiltersFromURL(container);
+    };
+
+    setupFilters(document.getElementById('filters-content'));
+    setupFilters(DOMElements.mobileFiltersContent);
+
+    document.getElementById('show-filters-btn')?.addEventListener('click', () => {
+        DOMElements.mobileFiltersModal.classList.remove('translate-x-full');
+    });
+    
+    renderListings();
+};
+
+const updateBreadcrumb = () => {
+    const breadcrumbNav = document.getElementById('breadcrumb-nav');
+    if (!breadcrumbNav) return;
+
+    const params = new URLSearchParams(window.location.search);
+    const category = params.get('category');
+    const brand = params.get('brand');
+
+    let html = `<a href="#" class="hover:underline home-crumb">Home</a>`;
+    if (category) {
+        const categoryName = categories[category]?.[currentLang] || category;
+        html += ` <span class="mx-2">/</span> <a href="#" class="hover:underline category-crumb" data-category="${category}">${categoryName}</a>`;
+    }
+    if (brand) {
+        html += ` <span class="mx-2">/</span> <span class="font-semibold">${brand}</span>`;
+    }
+    breadcrumbNav.innerHTML = html;
+
+    breadcrumbNav.querySelector('.home-crumb')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.history.pushState({}, '', window.location.pathname);
+        renderView('home');
+    });
+    breadcrumbNav.querySelector('.category-crumb')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        const newUrl = new URL(window.location);
+        newUrl.searchParams.set('category', e.target.dataset.category);
+        newUrl.searchParams.delete('brand');
+        window.history.pushState({path: newUrl.href}, '', newUrl.href);
+        renderHomePage();
+    });
+};
+
+const renderDynamicGrid = (titleKey, items, cardGenerator, clickHandler) => {
+    const grid = document.getElementById('dynamic-grid');
+    const titleEl = document.getElementById('categories-title-heading');
+    if (!grid || !titleEl) return;
+
+    titleEl.textContent = translations[currentLang][titleKey];
+    grid.innerHTML = '';
+    items.forEach(item => {
+        const card = document.createElement('a');
+        card.href = "#";
+        card.className = "bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 text-center category-card flex flex-col items-center justify-center";
+        card.innerHTML = cardGenerator(item);
+        card.addEventListener('click', (e) => clickHandler(e, item));
+        grid.appendChild(card);
+    });
+};
+
+const renderPartCategories = () => {
+    renderDynamicGrid('categories_title', Object.entries(categories), 
+        ([key, cat]) => `
+            <div class="p-4 rounded-full bg-blue-50 dark:bg-gray-700 text-blue-600 dark:text-blue-400 mx-auto w-16 h-16 flex items-center justify-center mb-2 category-icon">
+                <i class="fas ${cat.icon} text-3xl"></i>
+            </div>
+            <h3 class="font-semibold text-sm md:text-base">${cat[currentLang]}</h3>`,
+        (e, [key]) => {
+            e.preventDefault();
+            const newUrl = new URL(window.location);
+            newUrl.searchParams.set('category', key);
+            window.history.pushState({ path: newUrl.href }, '', newUrl.href);
+            renderHomePage();
+        }
+    );
+};
+
+const renderBrandCategories = () => {
+    renderDynamicGrid('brands_title', Object.entries(car_data), 
+        ([brandName]) => `
+            <img src="${brand_icons[brandName] || 'icons/car-192.png'}" alt="${brandName}" class="h-16 object-contain mb-2" onerror="this.src='icons/car-192.png'">
+            <h3 class="font-semibold text-sm md:text-base">${brandName}</h3>`,
+        (e, [brandName]) => {
+            e.preventDefault();
+            const newUrl = new URL(window.location);
+            newUrl.searchParams.set('brand', brandName);
+            window.history.pushState({ path: newUrl.href }, '', newUrl.href);
+            renderHomePage();
+        }
+    );
+};
+
+const renderYearCategories = () => {
+    renderDynamicGrid('years_title', years, 
+        (year) => `<span class="font-semibold">${year}</span>`,
+        (e, year) => {
+            e.preventDefault();
+            ['#filters-content #year-filter', '#mobile-filters-content #year-filter'].forEach(selector => {
+                const el = document.querySelector(selector);
+                if (el) el.value = year;
+            });
+            applyAndRenderFilters();
+            document.getElementById('listings-section')?.scrollIntoView({ behavior: 'smooth' });
+        }
+    );
+};
+
+const setupFilterListeners = (container = document) => {
+    const debouncedApply = debounce(applyAndRenderFilters, 300);
+
+    const brandFilter = container.querySelector('#brand-filter');
+    brandFilter?.addEventListener('change', () => {
+        const modelContainer = container.querySelector('#model-filter-container');
+        const modelFilter = container.querySelector('#model-filter');
+        const selectedBrand = brandFilter.value;
+        if (selectedBrand && car_data[selectedBrand]) {
+            populateSelect(modelFilter, car_data[selectedBrand], 'all_models', currentLang);
+            modelContainer.classList.remove('hidden');
+        } else {
+            modelContainer.classList.add('hidden');
+            if(modelFilter) modelFilter.value = '';
+        }
+        debouncedApply();
+    });
+    
+    const wilayaFilter = container.querySelector('#wilaya-filter');
+    wilayaFilter?.addEventListener('change', () => {
+        const communeContainer = container.querySelector('#commune-filter-container');
+        const communeFilter = container.querySelector('#commune-filter');
+        const selectedWilaya = wilayaFilter.value;
+        if (selectedWilaya && wilayas[selectedWilaya]) {
+            populateSelect(communeFilter, wilayas[selectedWilaya], 'all_communes', currentLang);
+            communeContainer.classList.remove('hidden');
+        } else {
+            communeContainer.classList.add('hidden');
+            if(communeFilter) communeFilter.value = '';
+        }
+        debouncedApply();
+    });
+    
+    const priceFilter = container.querySelector('#price-range-filter');
+    if (priceFilter) {
+        priceFilter.addEventListener('input', () => {
+            container.querySelector('#price-range-value').textContent = `${Number(priceFilter.value).toLocaleString()} DA`;
+        });
+        priceFilter.addEventListener('change', debouncedApply);
+    }
+    
+    container.querySelectorAll('.filter:not(#brand-filter):not(#wilaya-filter):not(#price-range-filter)').forEach(el => {
+        el.addEventListener('change', debouncedApply);
+    });
+    
+    container.querySelector('#filter-reset-btn')?.addEventListener('click', () => {
+        window.history.pushState({}, '', window.location.pathname);
+        renderView('home');
+    });
+
+    populateSelect(brandFilter, car_data, 'all_brands', currentLang);
+    populateSelect(container.querySelector('#year-filter'), years, 'all_years', currentLang);
+    populateSelect(wilayaFilter, wilayas, 'all_wilayas', currentLang);
+    populateSelect(container.querySelector('#category-filter'), categories, 'all_categories', currentLang, true);
+};
+
+const renderListings = (loadMore = false) => {
+    const listingsSection = document.getElementById('listings-section');
+    const loadMoreContainer = document.getElementById('load-more-container');
+    if (!listingsSection || isFetching) return;
+
+    isFetching = true;
+    if (!loadMore) {
+        let skeletonHTML = '';
+        for (let i = 0; i < 8; i++) {
+            skeletonHTML += `
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 animate-pulse">
+                    <div class="bg-gray-300 dark:bg-gray-700 w-full h-40 rounded-md"></div>
+                    <div class="mt-4">
+                        <div class="bg-gray-300 dark:bg-gray-700 h-4 w-3/4 rounded"></div>
+                        <div class="bg-gray-300 dark:bg-gray-700 h-6 w-1/2 rounded mt-2"></div>
+                        <div class="bg-gray-300 dark:bg-gray-700 h-4 w-full rounded mt-4"></div>
+                    </div>
+                </div>
+            `;
+        }
+        listingsSection.innerHTML = skeletonHTML;
+        lastVisibleProduct = null;
+    }
+    if (loadMoreContainer) loadMoreContainer.innerHTML = '';
+
+    const params = new URLSearchParams(window.location.search);
+    let q = query(collection(db, "products"));
+    
+    params.forEach((value, key) => {
+        if (['category', 'brand', 'year', 'wilaya', 'condition'].includes(key)) {
+            q = query(q, where(key, "==", value));
+        }
+    });
+
+    q = query(q, orderBy("createdAt", "desc"));
+    if (loadMore && lastVisibleProduct) q = query(q, startAfter(lastVisibleProduct));
+    q = query(q, limit(12));
+
+    getDocs(q).then(snapshot => {
+        if (!loadMore) listingsSection.innerHTML = '';
+        if (snapshot.empty && !loadMore) {
+            listingsSection.innerHTML = `<p class="col-span-full text-center p-8 text-lg text-gray-500" data-i18n-key="no_listings"></p>`;
+        } else {
+            displayProducts(snapshot.docs, listingsSection);
+            lastVisibleProduct = snapshot.docs[snapshot.docs.length - 1];
+            if (snapshot.docs.length === 12 && loadMoreContainer) {
+                loadMoreContainer.innerHTML = `<button id="load-more-btn" class="px-6 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors" data-i18n-key="load_more"></button>`;
+                document.getElementById('load-more-btn').onclick = () => renderListings(true);
+            }
+        }
+        translatePage(currentLang);
+    }).catch(error => {
+        console.error("Error fetching products:", error);
+        listingsSection.innerHTML = `<p class="col-span-full text-center text-red-500">Error loading products.</p>`;
+    }).finally(() => {
+        isFetching = false;
+    });
+};
+
+const displayProducts = (docs, container) => {
+    if (!container) return;
+    if (docs.length === 0 && container.innerHTML === '') {
+        container.innerHTML = `<p class="col-span-full text-center p-8 text-lg text-gray-500" data-i18n-key="no_listings"></p>`;
+        return;
+    }
+    docs.forEach(doc => {
+        const product = { id: doc.id, ...doc.data() };
+        const card = document.createElement('div');
+        card.className = "listing-card bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex flex-col";
+        const isMyProduct = currentUser && currentUser.uid === product.sellerId;
+        card.innerHTML = `
+            <img src="${product.imageUrl || 'https://via.placeholder.com/300x200.png?text=Piecety'}" alt="${product.title}" class="w-full h-40 object-cover cursor-pointer product-image">
+            <div class="p-4 flex flex-col flex-grow">
+                <h3 class="font-bold text-lg truncate product-title cursor-pointer">${product.title}</h3>
+                <p class="text-blue-600 dark:text-blue-400 font-semibold text-xl my-2">${product.price.toLocaleString()} DA</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-4"><i class="fas fa-map-marker-alt mr-1"></i> ${product.wilaya}${product.commune ? `, ${product.commune}` : ''}</p>
+                <div class="mt-auto">
+                    ${!isMyProduct ? `<button class="w-full flex items-center justify-center gap-2 px-3 py-2 bg-gray-100 dark:bg-gray-700 text-sm rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 chat-btn"><i class="fas fa-comments"></i> <span data-i18n-key="chat"></span></button>` : ''}
+                </div>
+            </div>`;
+        card.querySelector('.product-image').onclick = () => renderView('product', product);
+        card.querySelector('.product-title').onclick = () => renderView('product', product);
+        if (!isMyProduct) {
+            card.querySelector('.chat-btn').onclick = () => startOrOpenChat(product.sellerId, product.sellerName);
+        }
+        container.appendChild(card);
+    });
+};
+
+window.renderProductPage = (product) => {
+    if (!product) { renderView('home'); return; }
+
+    recentlyViewed = [product.id, ...recentlyViewed.filter(id => id !== product.id)].slice(0, 4);
+    localStorage.setItem('piecety_recently_viewed', JSON.stringify(recentlyViewed));
+    
+    document.getElementById('product-title-detail').textContent = product.title;
+    document.getElementById('product-price-detail').textContent = `${product.price.toLocaleString()} DA`;
+    document.getElementById('product-image-detail').src = product.imageUrl || 'https://via.placeholder.com/600x400.png?text=Piecety';
+    document.getElementById('product-brand-detail').textContent = product.brand;
+    document.getElementById('product-model-detail').textContent = product.model || 'N/A';
+    document.getElementById('product-year-detail').textContent = product.year || 'N/A';
+    document.getElementById('product-wilaya-detail').textContent = product.wilaya;
+    document.getElementById('product-commune-detail').textContent = product.commune || 'N/A';
+    document.getElementById('product-description-detail').textContent = product.description || 'No description available.';
+
+    const sellerLink = document.getElementById('seller-profile-link');
+    sellerLink.textContent = product.sellerName || 'Anonymous';
+    sellerLink.onclick = (e) => {
+        e.preventDefault();
+        renderView('profile', { userId: product.sellerId, userName: product.sellerName });
+    };
+
+    document.getElementById('back-to-listings-btn').onclick = () => window.history.back();
+    document.getElementById('add-to-cart-btn').onclick = () => addToCart(product);
+    document.getElementById('contact-seller-btn').onclick = () => startOrOpenChat(product.sellerId, product.sellerName);
+};
+
+const renderRecentlyViewed = async () => {
+    const section = document.getElementById('recently-viewed-section');
+    const grid = document.getElementById('recently-viewed-grid');
+    if (!section || !grid || recentlyViewed.length === 0) return;
+
+    section.classList.remove('hidden');
+    grid.innerHTML = '';
+    
+    try {
+        const productRefs = recentlyViewed.map(id => doc(db, "products", id));
+        const productSnaps = await Promise.all(productRefs.map(ref => getDoc(ref)));
+        const viewedProducts = productSnaps.filter(snap => snap.exists()).map(snap => ({ id: snap.id, ...snap.data() }));
+        displayProducts(viewedProducts.map(p => ({ ...p, data: () => p })), grid);
+    } catch (error) {
+        console.error("Error fetching recently viewed products:", error);
+    }
+};
+
+window.renderCartPage = async () => {
+    if (!currentUser) {
+        showMessage('login_required', 3000, 'error');
+        renderView('home');
+        return;
+    }
+    const container = document.getElementById('cart-items-container');
+    const summary = document.getElementById('cart-summary');
+    container.innerHTML = `<div class="text-center p-8"><i class="fas fa-spinner fa-spin text-3xl text-blue-500"></i></div>`;
+
+    if (Object.keys(userCart).length === 0) {
+        container.innerHTML = `<p class="text-center p-8 text-lg text-gray-500" data-i18n-key="your_cart_is_empty"></p>`;
+        summary.classList.add('hidden');
+        translatePage(currentLang);
+        return;
+    } 
+    
+    summary.classList.remove('hidden');
+    
+    try {
+        const productIds = Object.keys(userCart);
+        const productRefs = productIds.map(id => doc(db, "products", id));
+        const productSnaps = await Promise.all(productRefs.map(ref => getDoc(ref)));
+        
+        let totalPrice = 0;
+        container.innerHTML = '';
+        productSnaps.forEach(snap => {
+            if (snap.exists()) {
+                const product = { id: snap.id, ...snap.data() };
+                const item = userCart[product.id];
+                totalPrice += product.price * item.quantity;
+                const itemEl = document.createElement('div');
+                itemEl.className = 'flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg';
+                itemEl.innerHTML = `
+                    <div class="flex items-center"><img src="${product.imageUrl || 'https://via.placeholder.com/100'}" alt="${product.title}" class="w-16 h-16 object-cover rounded-md mr-4"><div><h4 class="font-semibold">${product.title}</h4><p class="text-sm text-gray-500">${product.price.toLocaleString()} DA</p></div></div>
+                    <div class="flex items-center gap-4"><input type="number" min="1" value="${item.quantity}" class="w-16 p-1 border rounded-md dark:bg-gray-600 quantity-input" data-id="${product.id}"><button class="text-red-500 hover:text-red-700 remove-btn" data-id="${product.id}"><i class="fas fa-trash"></i></button></div>`;
+                container.appendChild(itemEl);
+            }
+        });
+        document.getElementById('cart-total-price').textContent = `${totalPrice.toLocaleString()} DA`;
+
+        container.querySelectorAll('.quantity-input').forEach(input => input.onchange = (e) => updateCartItem(e.target.dataset.id, parseInt(e.target.value)));
+        container.querySelectorAll('.remove-btn').forEach(btn => btn.onclick = (e) => removeFromCart(e.currentTarget.dataset.id));
+
+    } catch (error) {
+        console.error("Error rendering cart:", error);
+        container.innerHTML = `<p class="text-red-500">Could not load cart items.</p>`;
+    }
+
+    document.getElementById('back-from-cart-btn').onclick = () => renderView('home');
+    document.getElementById('clear-cart-btn').onclick = clearCart;
+};
+
+window.renderDashboardPage = async () => {
+    if (!currentUser) { renderView('home'); return; }
+    const grid = document.getElementById('my-listings-grid');
+    grid.innerHTML = `<div class="col-span-full text-center p-8"><i class="fas fa-spinner fa-spin text-3xl text-blue-500"></i></div>`;
+
+    try {
+        const q = query(collection(db, "products"), where("sellerId", "==", currentUser.uid), orderBy("createdAt", "desc"));
+        const snapshot = await getDocs(q);
+        grid.innerHTML = '';
+        if (snapshot.empty) {
+            grid.innerHTML = `<p class="col-span-full text-center p-8 text-lg text-gray-500">You have no active listings.</p>`;
+        } else {
+            snapshot.docs.forEach(doc => {
+                const product = { id: doc.id, ...doc.data() };
+                const card = document.createElement('div');
+                card.className = "relative bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden";
+                card.innerHTML = `
+                    <img src="${product.imageUrl || 'https://via.placeholder.com/300x200.png?text=Piecety'}" alt="${product.title}" class="w-full h-40 object-cover">
+                    <div class="p-4"><h3 class="font-bold text-lg truncate">${product.title}</h3><p class="text-blue-600 dark:text-blue-400 font-semibold text-xl my-2">${product.price.toLocaleString()} DA</p></div>
+                    <div class="absolute top-2 right-2"><button class="delete-ad-btn bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-red-600"><i class="fas fa-trash"></i></button></div>`;
+                card.querySelector('.delete-ad-btn').onclick = async () => {
+                    if (confirm(translations[currentLang].delete_ad_confirm)) {
+                        await deleteDoc(doc(db, "products", product.id));
+                        renderDashboardPage();
+                    }
+                };
+                grid.appendChild(card);
+            });
+        }
+    } catch (error) {
+        console.error("Error fetching dashboard listings:", error);
+        grid.innerHTML = `<p class="text-red-500">Could not load your listings.</p>`;
+    }
+};
+
+window.renderProfilePage = async (data) => {
+    if (!data?.userId) { renderView('home'); return; }
+    document.getElementById('profile-name').textContent = data.userName || 'Seller Profile';
+    
+    const grid = document.getElementById('user-products-grid');
+    grid.innerHTML = `<div class="col-span-full text-center p-8"><i class="fas fa-spinner fa-spin text-3xl text-blue-500"></i></div>`;
+    
+    try {
+        const q = query(collection(db, "products"), where("sellerId", "==", data.userId), orderBy("createdAt", "desc"));
+        const snapshot = await getDocs(q);
+        displayProducts(snapshot.docs, grid);
+    } catch (error) {
+        console.error("Error fetching user products:", error);
+        grid.innerHTML = `<p class="text-red-500">Could not load seller's products.</p>`;
+    }
+};
+
+window.renderInboxPage = () => {
+    if (!currentUser) { renderView('home'); return; }
+    const listContainer = document.getElementById('conversations-list');
+    const q = query(collection(db, "chats"), where("participants", "array-contains", currentUser.uid), orderBy("lastMessageTimestamp", "desc"));
+
+    chatsUnsubscribe = onSnapshot(q, (snapshot) => {
+        if (snapshot.empty) {
+            listContainer.innerHTML = `<p class="text-center text-gray-500">You have no messages.</p>`;
+            return;
+        }
+        listContainer.innerHTML = '';
+        snapshot.forEach(doc => {
+            const chat = doc.data();
+            const otherUserIndex = chat.participants.indexOf(currentUser.uid) === 0 ? 1 : 0;
+            const otherUserName = chat.participantNames[otherUserIndex];
+            
+            const convoEl = document.createElement('div');
+            convoEl.className = 'p-4 bg-gray-50 dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 flex justify-between items-center';
+            convoEl.innerHTML = `
+                <div><h4 class="font-bold">${otherUserName}</h4><p class="text-sm text-gray-500 dark:text-gray-400 truncate">${chat.lastMessage}</p></div>
+                ${chat.unreadCount?.[currentUser.uid] > 0 ? `<span class="bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">${chat.unreadCount[currentUser.uid]}</span>` : ''}`;
+            convoEl.onclick = () => renderView('chat', { chatId: doc.id, otherUserName });
+            listContainer.appendChild(convoEl);
+        });
+    }, (error) => {
+        console.error("Error listening to inbox:", error);
+        listContainer.innerHTML = `<p class="text-red-500">Could not load conversations.</p>`;
+    });
+};
+
+let messagesListener = null;
+window.renderChatPage = async (chatData) => {
+    if (!currentUser || !chatData) { renderView('home'); return; }
+    
+    const { chatId, otherUserName } = chatData;
+    const chatRef = doc(db, "chats", chatId);
+    try {
+        await updateDoc(chatRef, { [`unreadCount.${currentUser.uid}`]: 0 });
+    } catch (error) {
+        console.error("Error updating unread count:", error);
+    }
+
+    document.getElementById('chat-with-name').textContent = `${translations[currentLang].chat_with} ${otherUserName}`;
+    document.getElementById('back-to-inbox-btn').onclick = () => renderView('inbox');
+
+    const messagesContainer = document.getElementById('messages-container');
+    const messageForm = document.getElementById('send-message-form');
+    const messageInput = document.getElementById('message-input');
+    
+    const q = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "desc"), limit(25));
+    if(messagesListener) messagesListener();
+    messagesListener = onSnapshot(q, (snapshot) => {
+        messagesContainer.innerHTML = snapshot.empty ? '<p class="text-center text-gray-500">No messages yet. Say hi!</p>' : '';
+        snapshot.docs.reverse().forEach(doc => {
+            const msg = doc.data();
+            const msgEl = document.createElement('div');
+            msgEl.className = `p-3 rounded-lg max-w-xs ${msg.senderId === currentUser.uid ? 'bg-blue-500 text-white self-end' : 'bg-gray-200 dark:bg-gray-600 self-start'}`;
+            msgEl.textContent = msg.text;
+            messagesContainer.appendChild(msgEl);
+        });
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }, (error) => {
+        console.error("Error listening to messages:", error);
+        messagesContainer.innerHTML = `<p class="text-red-500">Could not load messages.</p>`;
+    });
+
+    messageForm.onsubmit = async (e) => {
+        e.preventDefault();
+        const text = messageInput.value.trim();
+        if (!text) return;
+        messageInput.value = '';
+        try {
+            await addDoc(collection(db, "chats", chatId, "messages"), {
+                senderId: currentUser.uid,
+                text: text,
+                timestamp: serverTimestamp()
+            });
+            const otherUserId = chatId.replace(currentUser.uid, '').replace('_', '');
+            await updateDoc(chatRef, { 
+                lastMessage: text, 
+                lastMessageTimestamp: serverTimestamp(),
+                [`unreadCount.${otherUserId}`]: increment(1)
+            });
+        } catch (error) {
+            console.error("Error sending message:", error);
+            showMessage("Failed to send message.", 3000, "error");
+        }
+    };
+};
+
+// --- USER ACTIONS ---
+const handleSignOut = () => signOut(auth).catch(error => console.error("Sign out error", error));
+
+const startOrOpenChat = async (sellerId, sellerName) => {
+    if (!currentUser) { showMessage('login_required', 3000, 'error'); return; }
+    if (currentUser.uid === sellerId) { showMessage("You cannot message yourself.", 3000, 'error'); return; }
+
+    const chatId = [currentUser.uid, sellerId].sort().join('_');
+    const chatRef = doc(db, "chats", chatId);
+    
+    try {
+        const chatSnap = await getDoc(chatRef);
+        if (!chatSnap.exists()) {
+            await setDoc(chatRef, {
+                participants: [currentUser.uid, sellerId],
+                participantNames: { [currentUser.uid]: currentUser.displayName, [sellerId]: sellerName },
+                lastMessage: "Chat started.",
+                lastMessageTimestamp: serverTimestamp(),
+                unreadCount: { [currentUser.uid]: 0, [sellerId]: 0 }
+            });
+        }
+        renderView('chat', { chatId, otherUserName: sellerName });
+    } catch (error) {
+        console.error("Error starting chat:", error);
+        showMessage("Could not open chat.", 3000, 'error');
+    }
+};
+
+const clearCart = async () => {
+    if (!currentUser) return;
+    try {
+        await setDoc(doc(db, "carts", currentUser.uid), {});
+        userCart = {};
+        updateCartDisplay();
+        if(currentView === 'cart') renderCartPage();
+    } catch (error) {
+        console.error("Error clearing cart:", error);
+        showMessage("Failed to clear cart.", 3000, "error");
+    }
+};
+
+const addToCart = async (product) => {
+    if (!currentUser) { showMessage('login_required', 3000, 'error'); return; }
+    userCart[product.id] = { productId: product.id, quantity: (userCart[product.id]?.quantity || 0) + 1 };
     try {
         await setDoc(doc(db, "carts", currentUser.uid), userCart);
         updateCartDisplay();
-        if (currentView === 'cart') renderCartPage();
-        showMessage('item_added_to_cart', 3000, 'success');
+        showMessage('item_added_to_cart', 2000, 'success');
     } catch (error) {
         console.error("Error adding to cart:", error);
-        showMessage('error', 3000, 'error');
+        showMessage("Failed to add item to cart.", 3000, "error");
     }
 };
 
 const updateCartItem = async (productId, quantity) => {
     if (!currentUser || !userCart[productId]) return;
+    if (quantity <= 0) { removeFromCart(productId); return; }
     userCart[productId].quantity = quantity;
     try {
         await setDoc(doc(db, "carts", currentUser.uid), userCart);
@@ -489,7 +880,7 @@ const updateCartItem = async (productId, quantity) => {
         if (currentView === 'cart') renderCartPage();
     } catch (error) {
         console.error("Error updating cart item:", error);
-        showMessage('error', 3000, 'error');
+        showMessage("Failed to update cart.", 3000, "error");
     }
 };
 
@@ -502,19 +893,8 @@ const removeFromCart = async (productId) => {
         if (currentView === 'cart') renderCartPage();
     } catch (error) {
         console.error("Error removing from cart:", error);
-        showMessage('error', 3000, 'error');
+        showMessage("Failed to remove item.", 3000, "error");
     }
-};
-
-const updateCartDisplay = () => {
-    const count = Object.values(userCart).reduce((sum, item) => sum + item.quantity, 0);
-    ['cart-count', 'mobile-cart-count'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
-            el.textContent = count;
-            el.classList.toggle('hidden', count === 0);
-        }
-    });
 };
 
 const validatePostForm = (form) => {
@@ -530,124 +910,19 @@ const validatePostForm = (form) => {
     return isValid;
 };
 
-// --- RENDER FUNCTIONS ---
-const renderView = async (view) => {
-    currentView = view;
-    DOMElements.content.innerHTML = ''; // Clear content
-    if (view === 'home') {
-        renderHomePage();
-    } else if (view === 'cart') {
-        renderCartPage();
-    } else if (view === 'dashboard') {
-        renderDashboardPage();
-    } else if (view === 'inbox') {
-        renderInboxPage();
-    }
-    updateBottomNav(view);
-};
-
-const renderHomePage = () => {
-    DOMElements.content.innerHTML = `
-        <section class="py-12">
-            <h1 class="text-3xl font-bold" data-i18n-key="hero_title">${translations[currentLang].hero_title}</h1>
-            <p class="mt-2 text-lg" data-i18n-key="hero_subtitle">${translations[currentLang].hero_subtitle}</p>
-            <!-- Add category grid, product listings, etc. -->
-        </section>
-    `;
-};
-
-const renderCartPage = () => {
-    DOMElements.content.innerHTML = `
-        <section class="py-12">
-            <h2 class="text-2xl font-bold" data-i18n-key="cart_title">${translations[currentLang].cart_title}</h2>
-            <!-- Cart items -->
-        </section>
-    `;
-};
-
-const renderDashboardPage = async () => {
-    const storeDoc = currentUser ? await getDoc(doc(db, "stores", currentUser.uid)) : null;
-    const storeExists = storeDoc?.exists();
-    DOMElements.content.innerHTML = `
-        <section class="py-12">
-            <h2 class="text-2xl font-bold" data-i18n-key="dashboard">${translations[currentLang].dashboard}</h2>
-            <div class="mt-4">
-                <button id="edit-profile-btn" class="btn btn-primary mr-2" data-i18n-key="edit_profile">${translations[currentLang].edit_profile}</button>
-                <button id="create-store-btn" class="btn btn-primary" data-i18n-key="create_store" ${storeExists ? 'disabled' : ''}>${translations[currentLang].create_store}</button>
-            </div>
-            <h3 class="mt-6 text-xl font-semibold" data-i18n-key="my_listings">${translations[currentLang].my_listings}</h3>
-            <div id="my-listings" class="mt-4"></div>
-        </section>
-    `;
-    document.getElementById('edit-profile-btn').onclick = () => editProfile();
-    if (!storeExists) document.getElementById('create-store-btn').onclick = () => createStore();
-    if (currentUser) {
-        const q = query(collection(db, "products"), where("sellerId", "==", currentUser.uid));
-        onSnapshot(q, (snapshot) => {
-            const listings = document.getElementById('my-listings');
-            listings.innerHTML = snapshot.docs.map(doc => `
-                <div class="p-4 border rounded-lg">
-                    <h4>${doc.data().title}</h4>
-                    <button class="btn btn-secondary edit-ad-btn" data-id="${doc.id}" data-i18n-key="edit_ad">${translations[currentLang].edit_ad}</button>
-                </div>
-            `).join('');
-            document.querySelectorAll('.edit-ad-btn').forEach(btn => {
-                btn.onclick = () => editAd(btn.dataset.id);
-            });
-        });
-    }
-};
-
-const renderInboxPage = () => {
-    DOMElements.content.innerHTML = `
-        <section class="py-12">
-            <h2 class="text-2xl font-bold" data-i18n-key="messages">${translations[currentLang].messages}</h2>
-            <!-- Inbox content -->
-        </section>
-    `;
-};
-
-const updateBottomNav = (activeView) => {
-    ['nav-home', 'nav-search', 'nav-sell', 'nav-messages', 'nav-profile'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.classList.toggle('text-blue-600', id === `nav-${activeView}`);
-    });
-};
-
 // --- AUTHENTICATION & UI UPDATES ---
 const updateAuthUI = (user) => {
     const { authLinksContainer, mobileNavLinks } = DOMElements;
     authLinksContainer.innerHTML = '';
     
     let mobileLinksHTML = `
-        <a href="#" id="mobile-home-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg" data-i18n-key="nav_home">${translations[currentLang].nav_home}</a>
-        <a href="#" id="mobile-sell-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg" data-i18n-key="sell">${translations[currentLang].sell}</a>
-        <a href="#" id="mobile-cart-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg relative">
-            <span data-i18n-key="cart_title">${translations[currentLang].cart_title}</span>
-            <span id="mobile-cart-count" class="absolute top-0 ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full ${Object.keys(userCart).length ? '' : 'hidden'}">0</span>
-        </a>`;
+        <a href="#" id="mobile-home-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg" data-i18n-key="nav_home"></a>
+        <a href="#" id="mobile-sell-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg" data-i18n-key="sell"></a>
+        <a href="#" id="mobile-cart-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg relative"><span data-i18n-key="cart_title"></span><span id="mobile-cart-count" class="absolute top-0 ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full hidden">0</span></a>`;
 
     if (user) {
-        authLinksContainer.innerHTML = `
-            <div class="relative" id="user-menu">
-                <button id="user-menu-btn" class="flex items-center">
-                    <img src="${user.photoURL || 'https://via.placeholder.com/32'}" alt="User" class="w-8 h-8 rounded-full">
-                </button>
-                <div id="user-menu-dropdown" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-lg shadow-lg py-1 hidden z-20">
-                    <a href="#" id="dashboard-link" class="block px-4 py-2 text-sm" data-i18n-key="dashboard">${translations[currentLang].dashboard}</a>
-                    <a href="#" id="messages-link" class="relative block px-4 py-2 text-sm" data-i18n-key="messages">
-                        <span id="unread-badge" class="hidden absolute right-2 top-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"></span>
-                    </a>
-                    <button id="logout-btn" class="w-full text-left px-4 py-2 text-sm" data-i18n-key="logout">${translations[currentLang].logout}</button>
-                </div>
-            </div>`;
-        mobileLinksHTML += `
-            <a href="#" id="mobile-dashboard-link" class="p-2 text-lg" data-i18n-key="dashboard">${translations[currentLang].dashboard}</a>
-            <a href="#" id="mobile-messages-link" class="p-2 text-lg relative">
-                <span data-i18n-key="messages">${translations[currentLang].messages}</span>
-                <span id="mobile-unread-badge" class="hidden absolute top-0 ml-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"></span>
-            </a>
-            <button id="mobile-logout-btn" class="p-2 text-lg text-left" data-i18n-key="logout">${translations[currentLang].logout}</button>`;
+        authLinksContainer.innerHTML = `<div class="relative" id="user-menu"><button id="user-menu-btn" class="flex items-center"><img src="${user.photoURL}" alt="User" class="w-8 h-8 rounded-full"></button><div id="user-menu-dropdown" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-lg shadow-lg py-1 hidden z-20"><a href="#" id="dashboard-link" class="block px-4 py-2 text-sm" data-i18n-key="dashboard"></a><a href="#" id="messages-link" class="relative block px-4 py-2 text-sm" data-i18n-key="messages"><span id="unread-badge" class="hidden absolute right-2 top-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"></span></a><button id="logout-btn" class="w-full text-left px-4 py-2 text-sm" data-i18n-key="logout"></button></div></div>`;
+        mobileLinksHTML += `<a href="#" id="mobile-dashboard-link" class="p-2 text-lg" data-i18n-key="dashboard"></a><a href="#" id="mobile-messages-link" class="p-2 text-lg relative"><span data-i18n-key="messages"></span><span id="mobile-unread-badge" class="hidden absolute top-0 ml-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"></span></a><button id="mobile-logout-btn" class="p-2 text-lg text-left" data-i18n-key="logout"></button>`;
         
         const toggleUserMenu = () => document.getElementById('user-menu-dropdown').classList.toggle('hidden');
         document.getElementById('user-menu-btn').onclick = toggleUserMenu;
@@ -655,25 +930,14 @@ const updateAuthUI = (user) => {
         document.getElementById('dashboard-link').onclick = (e) => { e.preventDefault(); renderView('dashboard'); };
         document.getElementById('messages-link').onclick = (e) => { e.preventDefault(); renderView('inbox'); };
     } else {
-        authLinksContainer.innerHTML = `
-            <button id="login-btn" class="px-4 py-2 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors" data-i18n-key="connect">${translations[currentLang].connect}</button>`;
-        mobileLinksHTML += `
-            <button id="mobile-login-btn" class="p-2 text-lg text-left" data-i18n-key="connect">${translations[currentLang].connect}</button>`;
+        authLinksContainer.innerHTML = `<button id="login-btn" class="px-4 py-2 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors" data-i18n-key="connect"></button>`;
+        mobileLinksHTML += `<button id="mobile-login-btn" class="p-2 text-lg text-left" data-i18n-key="connect"></button>`;
         document.getElementById('login-btn').onclick = () => toggleModal(DOMElements.authModal, true);
     }
 
     mobileNavLinks.innerHTML = mobileLinksHTML;
     updateCartDisplay();
     translatePage(currentLang);
-};
-
-const handleSignOut = () => {
-    signOut(auth).then(() => {
-        currentUser = null;
-        userCart = {};
-        updateAuthUI(null);
-        renderView('home');
-    });
 };
 
 const listenForUnreadMessages = (user) => {
@@ -688,7 +952,7 @@ const listenForUnreadMessages = (user) => {
 };
 
 const updateUnreadBadge = (count) => {
-    ['unread-badge', 'mobile-unread-badge'].forEach(id => {
+    ['unread-badge', 'mobile-unread-badge', 'nav-unread-badge'].forEach(id => {
         const el = document.getElementById(id);
         if (el) {
             el.textContent = count > 9 ? '9+' : count;
@@ -697,168 +961,24 @@ const updateUnreadBadge = (count) => {
     });
 };
 
-// --- NEW FEATURES ---
-const editAd = async (adId) => {
-    if (!currentUser) return showMessage('login_required', 3000, 'error');
-    const adDoc = await getDoc(doc(db, "products", adId));
-    if (adDoc.exists() && adDoc.data().sellerId === currentUser.uid) {
-        const data = adDoc.data();
-        DOMElements.adEditModal.querySelector('form').innerHTML = `
-            <div class="mb-4">
-                <label class="block" data-i18n-key="ad_title_label">${translations[currentLang].ad_title_label}</label>
-                <input type="text" name="title" value="${data.title}" class="w-full p-2 border rounded">
-                <p id="title-error" class="text-red-500 hidden" data-i18n-key="error_valid_title">${translations[currentLang].error_valid_title}</p>
-            </div>
-            <div class="mb-4">
-                <label class="block" data-i18n-key="category_label">${translations[currentLang].category_label}</label>
-                <select name="category" class="w-full p-2 border rounded">
-                    <option value="" data-i18n-key="select_category">${translations[currentLang].select_category}</option>
-                    ${Object.keys(categories).map(key => `<option value="${key}" ${data.category === key ? 'selected' : ''}>${categories[key][currentLang]}</option>`).join('')}
-                </select>
-                <p id="category-error" class="text-red-500 hidden" data-i18n-key="error_select_category">${translations[currentLang].error_select_category}</p>
-            </div>
-            <div class="mb-4">
-                <label class="block" data-i18n-key="images_label">${translations[currentLang].images_label}</label>
-                <input type="file" name="images" multiple accept="image/*" class="w-full p-2 border rounded">
-                <div class="image-upload-preview">${data.images?.map(url => `<img src="${url}" class="image-preview" alt="Ad image">`).join('') || ''}</div>
-            </div>
-            <button type="submit" class="btn btn-primary" data-i18n-key="submit_ad_btn_text">${translations[currentLang].submit_ad_btn_text}</button>
-        `;
-        toggleModal(DOMElements.adEditModal, true);
-        DOMElements.adEditModal.querySelector('form').onsubmit = async (e) => {
-            e.preventDefault();
-            if (!validatePostForm(e.target)) return;
-            const btn = e.target.querySelector('button[type="submit"]');
-            btn.disabled = true;
-            const formData = Object.fromEntries(new FormData(e.target).entries());
-            const images = e.target.elements['images'].files;
-            if (images.length > 0) {
-                formData.images = await uploadImages(images, `ads/${adId}`);
-            } else {
-                formData.images = data.images || [];
-            }
-            try {
-                await updateDoc(doc(db, "products", adId), { ...formData, price: Number(formData.price), updatedAt: serverTimestamp() });
-                toggleModal(DOMElements.adEditModal, false);
-                showMessage('ad_updated', 3000, 'success');
-            } catch (error) {
-                console.error("Error updating ad:", error);
-                showMessage('ad_post_failed', 3000, 'error');
-            } finally {
-                btn.disabled = false;
-            }
-        };
-    }
-};
-
-const editProfile = async () => {
-    if (!currentUser) return showMessage('login_required', 3000, 'error');
-    DOMElements.profileEditModal.querySelector('form').innerHTML = `
-        <div class="mb-4">
-            <label class="block" data-i18n-key="profile_name">${translations[currentLang].profile_name}</label>
-            <input type="text" name="displayName" value="${currentUser.displayName || ''}" class="w-full p-2 border rounded">
-        </div>
-        <div class="mb-4">
-            <label class="block" data-i18n-key="profile_picture">${translations[currentLang].profile_picture}</label>
-            <input type="file" name="profilePic" accept="image/*" class="w-full p-2 border rounded">
-            <div class="image-upload-preview">
-                ${currentUser.photoURL ? `<img src="${currentUser.photoURL}" class="image-preview" alt="Profile picture">` : ''}
-            </div>
-        </div>
-        <button type="submit" class="btn btn-primary" data-i18n-key="submit_ad_btn_text">${translations[currentLang].submit_ad_btn_text}</button>
-    `;
-    toggleModal(DOMElements.profileEditModal, true);
-    DOMElements.profileEditModal.querySelector('form').onsubmit = async (e) => {
-        e.preventDefault();
-        const btn = e.target.querySelector('button[type="submit"]');
-        btn.disabled = true;
-        const formData = Object.fromEntries(new FormData(e.target).entries());
-        let photoURL = currentUser.photoURL;
-        const photo = e.target.elements['profilePic'].files[0];
-        if (photo) {
-            photoURL = (await uploadImages([photo], `profiles/${currentUser.uid}`))[0];
-        }
-        try {
-            await updateProfile(currentUser, { displayName: formData.displayName, photoURL });
-            toggleModal(DOMElements.profileEditModal, false);
-            showMessage('profile_updated', 3000, 'success');
-            updateAuthUI(currentUser);
-        } catch (error) {
-            console.error("Error updating profile:", error);
-            showMessage('error', 3000, 'error');
-        } finally {
-            btn.disabled = false;
-        }
-    };
-};
-
-const createStore = async () => {
-    if (!currentUser) return showMessage('login_required', 3000, 'error');
-    DOMElements.storeCreateModal.querySelector('form').innerHTML = `
-        <div class="mb-4">
-            <label class="block" data-i18n-key="store_name">${translations[currentLang].store_name}</label>
-            <input type="text" name="name" class="w-full p-2 border rounded">
-            <p id="name-error" class="text-red-500 hidden">Please enter a valid store name.</p>
-        </div>
-        <div class="mb-4">
-            <label class="block" data-i18n-key="store_description">${translations[currentLang].store_description}</label>
-            <textarea name="description" class="w-full p-2 border rounded"></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary" data-i18n-key="submit_ad_btn_text">${translations[currentLang].submit_ad_btn_text}</button>
-    `;
-    toggleModal(DOMElements.storeCreateModal, true);
-    DOMElements.storeCreateModal.querySelector('form').onsubmit = async (e) => {
-        e.preventDefault();
-        const btn = e.target.querySelector('button[type="submit"]');
-        btn.disabled = true;
-        const formData = Object.fromEntries(new FormData(e.target).entries());
-        if (!formData.name.trim()) {
-            document.getElementById('name-error').classList.remove('hidden');
-            btn.disabled = false;
-            return;
-        }
-        try {
-            await setDoc(doc(db, "stores", currentUser.uid), {
-                name: formData.name,
-                description: formData.description,
-                ownerId: currentUser.uid,
-                createdAt: serverTimestamp()
-            });
-            toggleModal(DOMElements.storeCreateModal, false);
-            showMessage('store_created', 3000, 'success');
-            renderView('dashboard');
-        } catch (error) {
-            console.error("Error creating store:", error);
-            showMessage('error', 3000, 'error');
-        } finally {
-            btn.disabled = false;
-        }
-    };
-};
-
-// --- SETUP & EVENT LISTENERS ---
+// --- SETUP & INITIALIZATION ---
 const setupEventListeners = () => {
-    const { darkModeToggle, langDropdownBtn, langBtns, sellLink, cartBtn, homeLink, mobileMenuBtn, mobileMenuCloseBtn, authModalCloseBtn, googleLoginBtn, facebookLoginBtn, modalCloseBtn, searchInput, mobileFiltersCloseBtn, mobileApplyFiltersBtn } = DOMElements;
+    const { darkModeToggle, langDropdownBtn, langBtns, sellLink, cartBtn, homeLink, mobileMenuBtn, mobileMenuCloseBtn, authModalCloseBtn, googleLoginBtn, modalCloseBtn, searchInput, mobileFiltersCloseBtn, mobileApplyFiltersBtn } = DOMElements;
 
     darkModeToggle.onclick = () => setDarkMode(!DOMElements.html.classList.contains('dark'));
     langDropdownBtn.onclick = (e) => { e.stopPropagation(); DOMElements.langDropdown.classList.toggle('hidden'); };
-    langBtns.forEach(btn => btn.onclick = () => {
-        setLanguage(btn.dataset.lang);
-        DOMElements.langDropdown.classList.add('hidden');
-        closeMobileMenu();
-    });
+    langBtns.forEach(btn => btn.onclick = () => { setLanguage(btn.dataset.lang); DOMElements.langDropdown.classList.add('hidden'); closeMobileMenu(); });
 
     sellLink.onclick = (e) => { e.preventDefault(); toggleModal(currentUser ? DOMElements.postProductModal : DOMElements.authModal, true); };
     cartBtn.onclick = () => renderView('cart');
     homeLink.onclick = (e) => { e.preventDefault(); window.history.pushState({}, '', window.location.pathname); renderView('home'); };
 
-    mobileMenuBtn.onclick = () => {
-        DOMElements.mobileMenuBackdrop.classList.remove('hidden', 'opacity-0', 'invisible');
-        DOMElements.mobileMenu.classList.remove('translate-x-full');
-    };
+    // Mobile Menu Handlers
+    mobileMenuBtn.onclick = openMobileMenu;
     mobileMenuCloseBtn.onclick = closeMobileMenu;
     DOMElements.mobileMenuBackdrop.onclick = closeMobileMenu;
 
+    // Mobile Menu Event Delegation
     DOMElements.mobileNavLinks.addEventListener('click', (e) => {
         const target = e.target.closest('a, button');
         if (!target) return;
@@ -880,28 +1000,18 @@ const setupEventListeners = () => {
 
     authModalCloseBtn.onclick = () => toggleModal(DOMElements.authModal, false);
     modalCloseBtn.onclick = () => toggleModal(DOMElements.postProductModal, false);
-    DOMElements.profileEditModal.querySelector('.modal-close-btn').onclick = () => toggleModal(DOMElements.profileEditModal, false);
-    DOMElements.storeCreateModal.querySelector('.modal-close-btn').onclick = () => toggleModal(DOMElements.storeCreateModal, false);
-    DOMElements.adEditModal.querySelector('.modal-close-btn').onclick = () => toggleModal(DOMElements.adEditModal, false);
-
-    googleLoginBtn.onclick = () => signInWithPopup(auth, googleProvider).catch(error => console.error("Google login error:", error));
-    facebookLoginBtn.onclick = () => signInWithPopup(auth, facebookProvider).catch(error => console.error("Facebook login error:", error));
+    googleLoginBtn.onclick = () => signInWithPopup(auth, provider).catch(error => console.error("Login error", error));
 
     DOMElements.postProductForm.onsubmit = async (e) => {
         e.preventDefault();
-        if (!currentUser || !validatePostForm(e.target)) return;
+        if (!validatePostForm(e.target) || !currentUser) return;
         
         const btn = e.target.querySelector('button[type="submit"]');
         btn.disabled = true;
-        btn.querySelector('.btn-spinner')?.classList.remove('hidden');
+        btn.querySelector('.btn-spinner').classList.remove('hidden');
 
         const formData = Object.fromEntries(new FormData(e.target).entries());
-        const images = e.target.elements['images'].files;
         const productData = { ...formData, price: Number(formData.price), sellerId: currentUser.uid, sellerName: currentUser.displayName, createdAt: serverTimestamp() };
-
-        if (images.length > 0) {
-            productData.images = await uploadImages(images, 'ads');
-        }
 
         try {
             await addDoc(collection(db, "products"), productData);
@@ -909,14 +1019,14 @@ const setupEventListeners = () => {
             e.target.reset();
             toggleModal(DOMElements.postProductModal, false);
         } catch (error) {
-            console.error("Error adding document:", error);
+            console.error("Error adding document: ", error);
             showMessage('ad_post_failed', 3000, 'error');
         } finally {
             btn.disabled = false;
-            btn.querySelector('.btn-spinner')?.classList.add('hidden');
+            btn.querySelector('.btn-spinner').classList.add('hidden');
         }
     };
-
+    
     searchInput.oninput = debounce(applyAndRenderFilters, 500);
     mobileFiltersCloseBtn.onclick = () => DOMElements.mobileFiltersModal.classList.add('translate-x-full');
     mobileApplyFiltersBtn.onclick = () => { applyAndRenderFilters(); DOMElements.mobileFiltersModal.classList.add('translate-x-full'); };
@@ -926,7 +1036,7 @@ const setupEventListeners = () => {
         const userMenu = document.getElementById('user-menu');
         if (userMenu && !userMenu.contains(e.target)) document.getElementById('user-menu-dropdown').classList.add('hidden');
     };
-
+    
     document.getElementById('nav-home').onclick = (e) => { 
         e.preventDefault(); 
         window.history.pushState({}, '', window.location.pathname);
@@ -949,17 +1059,6 @@ const setupEventListeners = () => {
     }, { passive: true });
 };
 
-const applyAndRenderFilters = () => {
-    // Implement filter logic
-    console.log('Applying filters');
-};
-
-const closeMobileMenu = () => {
-    DOMElements.mobileMenuBackdrop.classList.add('hidden', 'opacity-0', 'invisible');
-    DOMElements.mobileMenu.classList.add('translate-x-full');
-};
-
-// --- BOOTSTRAP ---
 const bootApp = () => {
     setDarkMode(localStorage.getItem('piecety_dark_mode') === 'true');
     document.getElementById('current-year').textContent = new Date().getFullYear();
@@ -982,10 +1081,10 @@ const bootApp = () => {
             if (cartSnap.exists()) userCart = cartSnap.data();
         }
         updateCartDisplay();
-        renderView('home');
     });
-
+    
     window.onpopstate = () => renderView('home');
+    renderView('home');
     setLanguage(currentLang);
 };
 
