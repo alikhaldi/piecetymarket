@@ -657,7 +657,7 @@ const renderListings = (loadMore = false) => {
     let q = query(collection(db, "products"));
     
     params.forEach((value, key) => {
-        if (['category', 'brand', 'year', 'wilaya', 'condition'].includes(key)) {
+        if (['category', 'sub_category', 'brand', 'model', 'year', 'wilaya', 'condition'].includes(key)) {
             q = query(q, where(key, "==", value));
         }
     });
@@ -921,7 +921,7 @@ window.renderInboxPage = () => {
             convoEl.innerHTML = `
                 <div><h4 class="font-bold">${otherUserName}</h4><p class="text-sm text-gray-500 dark:text-gray-400 truncate">${chat.lastMessage}</p></div>
                 ${chat.unreadCount?.[currentUser.uid] > 0 ? `<span class="bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">${chat.unreadCount[currentUser.uid]}</span>` : ''}`;
-            convoEl.onclick = () => renderView('chat', { chatId: doc.id, otherUserName });
+            convoEl.onclick = () => renderView('chat', { chatId, otherUserName });
             listContainer.appendChild(convoEl);
         });
     }, (error) => {
