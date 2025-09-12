@@ -448,6 +448,25 @@
             </div>
         </div>
         
+        <div id="profile-edit-section" class="mt-8 p-6 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md hidden">
+            <h3 class="text-xl font-semibold mb-4" data-i18n-key="edit_profile"></h3>
+            <form id="profile-edit-form" class="space-y-4">
+                <div>
+                    <label for="profile-name-input" class="block font-medium mb-1" data-i18n-key="name_label"></label>
+                    <input type="text" id="profile-name-input" name="displayName" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                <div>
+                    <label for="profile-pic-upload" class="block font-medium mb-1" data-i18n-key="profile_pic_label"></label>
+                    <input type="file" id="profile-pic-upload" name="profilePic" accept="image/*" class="w-full text-gray-700 dark:text-gray-200">
+                </div>
+                <div class="text-center">
+                    <button type="submit" id="submit-profile-btn" class="mt-4 px-8 py-3 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition-colors duration-200 shadow-md flex items-center justify-center disabled:bg-green-400 disabled:cursor-not-allowed">
+                        <span class="btn-text" data-i18n-key="save"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
         <div id="store-setup-section" class="mt-8 p-6 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md hidden">
              <h3 class="text-xl font-semibold mb-4" data-i18n-key="setup_store_profile"></h3>
              <form id="store-setup-form" class="space-y-4">
@@ -534,5 +553,3 @@
 
 </body>
 </html>
-
-}
