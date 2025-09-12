@@ -79,7 +79,7 @@ const translations = {
         terms_content_title: "4. User Content",
         terms_content_text: "You are solely responsible for the content (ads, photos, messages) you post on the app. You warrant that you have the necessary rights to post this content and that it is not unlawful, threatening, defamatory, or obscene. Piecety reserves the right to remove any content deemed inappropriate.",
         terms_liability_title: "5. Limitation of Liability",
-        terms_liability_text: "Piecety is provided 'as is'. We do not warrant that the service will be uninterrupted or error-free. In no event shall Piecety be liable for any direct or indirect damages resulting from your use of the service.",
+        terms_liability_text: "Piecety is provided 'as is'. We do not warrant that the service will be uninterrupted or without error. In no event shall Piecety be liable for any direct or indirect damages resulting from your use of the service.",
         terms_termination_title: "6. Account Termination",
         terms_termination_text: "We may terminate or suspend your account and access to the app, without prior notice or liability, for any reason whatsoever, including if you breach the Terms. You may delete your account at any time from your dashboard.",
         danger_zone: "Danger Zone",
@@ -478,7 +478,7 @@ const updateBreadcrumb = () => {
         link.onclick = (e) => {
             e.preventDefault();
             const newUrl = new URL(window.location.origin + window.location.pathname);
-            if (e.target.dataset.category) newUrl.searchParams.set('category', e.target.dataset.dataset.category);
+            if (e.target.dataset.category) newUrl.searchParams.set('category', e.target.dataset.category);
             if (e.target.dataset.subCategory) newUrl.searchParams.set('sub_category', e.target.dataset.subCategory);
             if (e.target.dataset.brand) newUrl.searchParams.set('brand', e.target.dataset.brand);
             if (e.target.dataset.model) newUrl.searchParams.set('model', e.target.dataset.model);
@@ -1286,30 +1286,51 @@ const setupEventListeners = () => {
                 return;
             }
 
+            // Show and reset progress bar
+            const progressBar = document.getElementById("uploadProgress");
+            progressBar.style.display = "block";
+            progressBar.value = 0;
+
             // Create a storage ref with a unique path
             const storageRef = ref(storage, `product_images/${Date.now()}_${imageFile.name}`);
 
-            // Upload the file
-            await uploadBytes(storageRef, imageFile);
-            console.log("✅ File uploaded successfully!");
+            // Upload the file using uploadBytesResumable
+            const uploadTask = uploadBytesResumable(storageRef, imageFile);
 
-            // Get the download URL
-            const imageUrl = await getDownloadURL(storageRef);
-            console.log("✅ File available at:", imageUrl);
+            // Listen for state changes
+            uploadTask.on("state_changed",
+                (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    progressBar.value = progress;
+                },
+                (error) => {
+                    console.error("❌ Upload failed:", error);
+                    showMessage("Upload failed: " + error.message, 5000, "error");
+                    progressBar.style.display = "none";
+                },
+                async () => {
+                    // Upload complete, get the download URL
+                    const imageUrl = await getDownloadURL(uploadTask.snapshot.ref);
+                    console.log("✅ File available at:", imageUrl);
 
-            const productData = {
-                ...formData,
-                price: Number(formData.price),
-                sellerId: currentUser.uid,
-                sellerName: userProfile?.storeName || currentUser.displayName,
-                imageUrl: imageUrl,
-                createdAt: serverTimestamp()
-            };
+                    // Hide progress bar
+                    progressBar.style.display = "none";
 
-            await addDoc(collection(db, "products"), productData);
-            showMessage('ad_posted', 3000, 'success');
-            e.target.reset();
-            toggleModal(DOMElements.postProductModal, false);
+                    const productData = {
+                        ...formData,
+                        price: Number(formData.price),
+                        sellerId: currentUser.uid,
+                        sellerName: userProfile?.storeName || currentUser.displayName,
+                        imageUrl: imageUrl,
+                        createdAt: serverTimestamp()
+                    };
+
+                    await addDoc(collection(db, "products"), productData);
+                    showMessage('ad_posted', 3000, 'success');
+                    e.target.reset();
+                    toggleModal(DOMElements.postProductModal, false);
+                }
+            );
         } catch (error) {
             console.error("❌ Upload or Firestore write failed:", error);
             showMessage('ad_post_failed', 3000, 'error');
