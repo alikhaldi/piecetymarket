@@ -2,7 +2,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
 import { getFirestore, collection, addDoc, query, onSnapshot, where, getDocs, doc, setDoc, getDoc, deleteDoc, updateDoc, increment, serverTimestamp, orderBy, limit, startAfter } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 import { getAuth, signInWithPopup, signOut, GoogleAuthProvider, FacebookAuthProvider, onAuthStateChanged, deleteUser } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-storage.js";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-storage.js";
 
 // --- GLOBAL STATE & CONSTANTS ---
 let currentUser = null;
@@ -91,28 +91,54 @@ const translations = {
     ar: {
         page_title: "Piecety - سوق قطع غيار السيارات في الجزائر", meta_description: "بيع وشراء قطع غيار السيارات في الجزائر مع Piecety، السوق الموثوق للقطع الجديدة والمستعملة.", fr_short: "FR", en_short: "EN", ar_short: "AR", menu: "القائمة", sell: "بيع", connect: "تسجيل الدخول", language: "اللغة", logout: "تسجيل الخروج", dashboard: "لوحة التحكم", nav_home: "الرئيسية", nav_search: "بحث", nav_profile: "ملفي", hero_title: "ابحث عن قطعة الغيار المناسبة لسيارتك", hero_subtitle: "أكثر أسواق قطع غيار السيارات ثقة في الجزائر.", categories_title: "فئات القطع", brands_title: "اختر ماركة", years_title: "اختر سنة", filters_title: "تصفية الإعلانات", all_brands: "جميع الماركات", all_models: "جميع الموديلات", all_years: "جميع السنوات", all_wilayas: "جميع الولايات", all_communes: "جميع البلديات", condition: "الحالة", any_condition: "الكل", new: "جديد", used: "مستعمل", apply_filters: "تطبيق الفلاتر", reset: "إعادة تعيين", search_placeholder: "ابحث عن قطعة...", submit_ad: "إرسال إعلان", ad_title_label: "عنوان القطعة *", ad_title_placeholder: "مثال: قرص فرامل أمامي", brand_label: "الماركة *", select_brand: "اختر ماركة", model_label: "الموديل", select_model: "اختر موديل", year_label: "السنة", select_year: "اختر سنة", wilaya_label: "الولاية *", select_wilaya: "اختر ولاية", commune_label: "البلدية", select_commune: "اختر بلدية", condition_label: "الحالة", price_label: "السعر (دج) *", price_placeholder: "مثال: 15000", description_label: "الوصف", description_placeholder: "معلومات إضافية...", submit_ad_btn_text: "إرسال", loading_text: "جار الإرسال...", error_valid_title: "الرجاء إدخال عنوان صالح.", error_select_brand: "الرجاء اختيار ماركة.", error_select_wilaya: "الرجاء اختيار ولاية.", error_select_category: "الرجاء اختيار فئة.", error_valid_price: "الرجاء إدخال سعر صالح.", login_text: "تسجيل الدخول للوصول إلى جميع الميزات.", google_login: "تسجيل الدخول باستخدام Google", back_to_listings: "العودة إلى الإعلانات", add_to_cart: "أضف إلى السلة", cart_title: "سلة التسوق", cart_total: "الإجمالي", checkout_btn: "الدفع", no_listings: "لم يتم العثور على إعلانات.", your_cart_is_empty: "سلة التسوق فارغة.", remove: "حذف", quantity: "الكمية", item_total: "إجمالي السلعة", login_required: "يرجى تسجيل الدخول لاستخدام هذه الميزة.", show_filters: "إظهار الفلاتر", price_range: "نطاق السعر", all_categories: "جميع الفئات", category_label: "الفئة *", select_category: "اختر فئة", contact_seller: "اتصل بالبائع", clear_cart: "إفراغ السلة", ad_posted: "تم نشر إعلانك بنجاح!", ad_post_failed: "فشل نشر الإعلان.", item_added_to_cart: "تمت إضافة المنتج إلى السلة!", delete_ad_confirm: "هل أنت متأكد من أنك تريد حذف هذا الإعلان؟", sold_by: "البائع:", my_listings: "إعلاناتي", seller_listings: "إعلانات من هذا البائع", buyer_reviews: "تقييمات المشترين", reviews_soon: "(التقييمات قريبا)", reviews_soon_2: "ميزة التقييم ستكون متاحة قريبا.", messages: "الرسائل", loading_convos: "جاري تحميل المحادثات...", chat_with: "محادثة مع", type_message_placeholder: "اكتب رسالة...", recently_viewed: "شوهدت مؤخرا", chat: "محادثة", load_more: "تحميل المزيد", ad_image_label: "صورة القطعة *", facebook_login: "تسجيل الدخول باستخدام Facebook", store_label: "اسم المتجر", store_name_placeholder: "مثال: قطع غيار سيارات عبد القادر", store_profile: "ملف المتجر", setup_store_profile: "إعداد ملف المتجر", store_name_label: "اسم المتجر", store_logo_label: "شعار المتجر", save: "حفظ", profile_pic_label: "صورة الملف الشخصي", update_profile_pic: "تحديث الصورة",
         // New translations
-        contact_us: "اتصل بنا",
-        terms_of_service: "شروط الخدمة",
-        terms_title: "شروط الخدمة",
-        terms_last_updated: "آخر تحديث:",
-        terms_intro_title: "1. مقدمة",
-        terms_intro_text: "أهلاً بك في Piecety. عند دخولك أو استخدامك لتطبيقنا، فإنك توافق على الالتزام بهذه الشروط. إذا كنت لا توافق على أي جزء من هذه الشروط، يرجى عدم استخدام خدمتنا.",
-        terms_delete_account_policy: "يمكنك حذف حسابك في أي وقت. سيؤدي حذف حسابك إلى الحذف الدائم لجميع إعلاناتك ورسائلك وبياناتك الشخصية.",
-        terms_use_title: "2. استخدام التطبيق",
-        terms_use_text: "Piecety هو سوق إلكتروني لبيع وشراء قطع غيار السيارات. أنت مسؤول عن جميع الأنشطة التي تتم تحت حسابك. يمكن استخدام التطبيق فقط لأغراض قانونية وبطريقة لا تنتهك حقوق الآخرين.",
-        terms_account_title: "3. حسابات المستخدمين",
-        terms_account_text: "يجب أن يكون عمرك 18 عامًا على الأقل لإنشاء حساب. أنت مسؤول عن الحفاظ على أمان كلمة المرور وحسابك. أنت توافق على عدم مشاركة معلومات حسابك أو استخدامها لأشخاص آخرين.",
-        terms_content_title: "4. محتوى المستخدم",
-        terms_content_text: "أنت وحدك المسؤول عن المحتوى (الإعلانات، الصور، الرسائل) الذي تنشره في التطبيق. أنت تضمن أن لديك الحقوق اللازمة لنشر هذا المحتوى وأنه ليس غير قانوني أو تهديدًا أو تشهيرًا أو فاحشًا. تحتفظ Piecety بالحق في إزالة أي محتوى يعتبر غير لائق.",
-        terms_liability_title: "5. تحديد المسؤولية",
-        terms_liability_text: "يتم تقديم Piecety 'كما هو'. نحن لا نضمن أن تكون الخدمة دون انقطاع أو خالية من الأخطاء. في أي حال، لن تكون Piecety مسؤولة عن أي أضرار مباشرة أو غير مباشرة ناتجة عن استخدامك للخدمة.",
-        terms_termination_title: "6. إنهاء الحساب",
-        terms_termination_text: "يجوز لنا إنهاء أو تعليق حسابك ووصولك إلى التطبيق، دون إشعار مسبق أو مسؤولية، لأي سبب كان، بما في ذلك إذا انتهكت الشروط. يمكنك حذف حسابك في أي وقت من لوحة التحكم الخاصة بك.",
-        danger_zone: "منطقة الخطر",
-        delete_account: "حذف حسابي",
-        delete_account_confirm: "هل أنت متأكد أنك تريد حذف حسابك؟ هذا الإجراء لا يمكن التراجع عنه وسيحذف بشكل دائم جميع إعلاناتك ورسائلك وبياناتك الشخصية. هذا الإجراء لا يمكن التراجع عنه!",
-        sub_categories_title: "الفئات الفرعية لـ",
-        back: "رجوع"
+        contact_us: "Contact Us",
+        terms_of_service: "Terms of Service",
+        terms_title: "Terms of Service",
+        terms_last_updated: "Last Updated:",
+        terms_intro_title: "1. Introduction",
+        terms_intro_text: "Welcome to Piecety. By accessing or using our app, you agree to be bound by these terms. If you disagree with any part of these terms, please do not use our service.",
+        terms_delete_account_policy: "You can delete your account at any time. Deleting your account will result in the permanent deletion of all your ads, messages, and personal data.",
+        terms_use_title: "2. Use of the App",
+        terms_use_text: "Piecety is an online marketplace for buying and selling car parts. You are responsible for all activity under your account. The app may only be used for lawful purposes and in a way that does not infringe on the rights of others.",
+        terms_account_title: "3. User Accounts",
+        terms_account_text: "You must be at least 18 years old to create an account. You are responsible for keeping your password and account secure. You agree not to share your account information or use it for any other person.",
+        terms_content_title: "4. User Content",
+        terms_content_text: "You are solely responsible for the content (ads, photos, messages) you post on the app. You warrant that you have the necessary rights to post this content and that it is not unlawful, threatening, defamatory, or obscene. Piecety reserves the right to remove any content deemed inappropriate.",
+        terms_liability_title: "5. Limitation of Liability",
+        terms_liability_text: "Piecety is provided 'as is'. We do not warrant that the service will be uninterrupted or without error. In no event shall Piecety be liable for any direct or indirect damages resulting from your use of the service.",
+        terms_termination_title: "6. Account Termination",
+        terms_termination_text: "We may terminate or suspend your account and access to the app, without prior notice or liability, for any reason whatsoever, including if you breach the Terms. You may delete your account at any time from your dashboard.",
+        danger_zone: "Danger Zone",
+        delete_account: "Delete My Account",
+        delete_account_confirm: "Are you sure you want to delete your account? This action is irreversible and will permanently delete all your ads, messages, and personal data. This action is IRREVERSIBLE!",
+        sub_categories_title: "Sub-categories for",
+        back: "Back"
+    },
+    ar: {
+        page_title: "Piecety - سوق قطع غيار السيارات في الجزائر", meta_description: "بيع وشراء قطع غيار السيارات في الجزائر مع Piecety، السوق الموثوق للقطع الجديدة والمستعملة.", fr_short: "FR", en_short: "EN", ar_short: "AR", menu: "القائمة", sell: "بيع", connect: "تسجيل الدخول", language: "اللغة", logout: "تسجيل الخروج", dashboard: "لوحة التحكم", nav_home: "الرئيسية", nav_search: "بحث", nav_profile: "ملفي", hero_title: "ابحث عن قطعة الغيار المناسبة لسيارتك", hero_subtitle: "أكثر أسواق قطع غيار السيارات ثقة في الجزائر.", categories_title: "فئات القطع", brands_title: "اختر ماركة", years_title: "اختر سنة", filters_title: "تصفية الإعلانات", all_brands: "جميع الماركات", all_models: "جميع الموديلات", all_years: "جميع السنوات", all_wilayas: "جميع الولايات", all_communes: "جميع البلديات", condition: "الحالة", any_condition: "الكل", new: "جديد", used: "مستعمل", apply_filters: "تطبيق الفلاتر", reset: "إعادة تعيين", search_placeholder: "ابحث عن قطعة...", submit_ad: "إرسال إعلان", ad_title_label: "عنوان القطعة *", ad_title_placeholder: "مثال: قرص فرامل أمامي", brand_label: "الماركة *", select_brand: "اختر ماركة", model_label: "الموديل", select_model: "اختر موديل", year_label: "السنة", select_year: "اختر سنة", wilaya_label: "الولاية *", select_wilaya: "اختر ولاية", commune_label: "البلدية", select_commune: "اختر بلدية", condition_label: "الحالة", price_label: "السعر (دج) *", price_placeholder: "مثال: 15000", description_label: "الوصف", description_placeholder: "معلومات إضافية...", submit_ad_btn_text: "إرسال", loading_text: "جار الإرسال...", error_valid_title: "الرجاء إدخال عنوان صالح.", error_select_brand: "الرجاء اختيار ماركة.", error_select_wilaya: "الرجاء اختيار ولاية.", error_select_category: "الرجاء اختيار فئة.", error_valid_price: "الرجاء إدخال سعر صالح.", login_text: "تسجيل الدخول للوصول إلى جميع الميزات.", google_login: "تسجيل الدخول باستخدام Google", back_to_listings: "العودة إلى الإعلانات", add_to_cart: "أضف إلى السلة", cart_title: "سلة التسوق", cart_total: "الإجمالي", checkout_btn: "الدفع", no_listings: "لم يتم العثور على إعلانات.", your_cart_is_empty: "سلة التسوق فارغة.", remove: "حذف", quantity: "الكمية", item_total: "إجمالي السلعة", login_required: "يرجى تسجيل الدخول لاستخدام هذه الميزة.", show_filters: "إظهار الفلاتر", price_range: "نطاق السعر", all_categories: "جميع الفئات", category_label: "الفئة *", select_category: "اختر فئة", contact_seller: "اتصل بالبائع", clear_cart: "إفراغ السلة", ad_posted: "تم نشر إعلانك بنجاح!", ad_post_failed: "فشل نشر الإعلان.", item_added_to_cart: "تمت إضافة المنتج إلى السلة!", delete_ad_confirm: "هل أنت متأكد من أنك تريد حذف هذا الإعلان؟", sold_by: "البائع:", my_listings: "إعلاناتي", seller_listings: "إعلانات من هذا البائع", buyer_reviews: "تقييمات المشترين", reviews_soon: "(التقييمات قريبا)", reviews_soon_2: "ميزة التقييم ستكون متاحة قريبا.", messages: "الرسائل", loading_convos: "جاري تحميل المحادثات...", chat_with: "محادثة مع", type_message_placeholder: "اكتب رسالة...", recently_viewed: "شوهدت مؤخرا", chat: "محادثة", load_more: "تحميل المزيد", ad_image_label: "صورة القطعة *", facebook_login: "تسجيل الدخول باستخدام Facebook", store_label: "اسم المتجر", store_name_placeholder: "مثال: قطع غيار سيارات عبد القادر", store_profile: "ملف المتجر", setup_store_profile: "إعداد ملف المتجر", store_name_label: "اسم المتجر", store_logo_label: "شعار المتجر", save: "حفظ", profile_pic_label: "صورة الملف الشخصي", update_profile_pic: "تحديث الصورة",
+        // New translations
+        contact_us: "Contact Us",
+        terms_of_service: "Terms of Service",
+        terms_title: "Terms of Service",
+        terms_last_updated: "Last Updated:",
+        terms_intro_title: "1. Introduction",
+        terms_intro_text: "Welcome to Piecety. By accessing or using our app, you agree to be bound by these terms. If you disagree with any part of these terms, please do not use our service.",
+        terms_delete_account_policy: "You can delete your account at any time. Deleting your account will result in the permanent deletion of all your ads, messages, and personal data.",
+        terms_use_title: "2. Use of the App",
+        terms_use_text: "Piecety is an online marketplace for buying and selling car parts. You are responsible for all activity under your account. The app may only be used for lawful purposes and in a way that does not infringe on the rights of others.",
+        terms_account_title: "3. User Accounts",
+        terms_account_text: "You must be at least 18 years old to create an account. You are responsible for keeping your password and account secure. You agree not to share your account information or use it for any other person.",
+        terms_content_title: "4. User Content",
+        terms_content_text: "You are solely responsible for the content (ads, photos, messages) you post on the app. You warrant that you have the necessary rights to post this content and that it is not unlawful, threatening, defamatory, or obscene. Piecety reserves the right to remove any content deemed inappropriate.",
+        terms_liability_title: "5. Limitation of Liability",
+        terms_liability_text: "Piecety is provided 'as is'. We do not warrant that the service will be uninterrupted or without error. In no event shall Piecety be liable for any direct or indirect damages resulting from your use of the service.",
+        terms_termination_title: "6. Account Termination",
+        terms_termination_text: "We may terminate or suspend your account and access to the app, without prior notice or liability, for any reason whatsoever, including if you breach the Terms. You may delete your account at any time from your dashboard.",
+        danger_zone: "Danger Zone",
+        delete_account: "Delete My Account",
+        delete_account_confirm: "Are you sure you want to delete your account? This action is irreversible and will permanently delete all your ads, messages, and personal data. This action is IRREVERSIBLE!",
+        sub_categories_title: "Sub-categories for",
+        back: "Back"
     }
 };
 
