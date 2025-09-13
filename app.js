@@ -772,7 +772,7 @@ window.renderProductPage = (product) => {
     
     document.getElementById('product-title-detail').textContent = product.title;
     document.getElementById('product-price-detail').textContent = `${product.price.toLocaleString()} DA`;
-    document.getElementById('product-image-detail').src = product.imageUrl || 'https://via.placeholder.com/600x400.png?text=Piecety';
+    document.getElementById('product-image-detail').src = product.imageUrl || './assets/placeholder.png';
     document.getElementById('product-brand-detail').textContent = product.brand;
     document.getElementById('product-model-detail').textContent = product.model || 'N/A';
     document.getElementById('product-year-detail').textContent = product.year || 'N/A';
@@ -844,7 +844,7 @@ window.renderCartPage = async () => {
                 const itemEl = document.createElement('div');
                 itemEl.className = 'flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg';
                 itemEl.innerHTML = `
-                    <div class="flex items-center"><img src="${product.imageUrl || 'https://via.placeholder.com/100'}" alt="${product.title}" class="w-16 h-16 object-cover rounded-md mr-4"><div><h4 class="font-semibold">${product.title}</h4><p class="text-sm text-gray-500">${product.price.toLocaleString()} DA</p></div></div>
+                    <div class="flex items-center"><img src="${product.imageUrl || './assets/placeholder.png'}" alt="${product.title}" class="w-16 h-16 object-cover rounded-md mr-4"><div><h4 class="font-semibold">${product.title}</h4><p class="text-sm text-gray-500">${product.price.toLocaleString()} DA</p></div></div>
                     <div class="flex items-center gap-4"><input type="number" min="1" value="${item.quantity}" class="w-16 p-1 border rounded-md dark:bg-gray-600 quantity-input" data-id="${product.id}"><button class="text-red-500 hover:text-red-700 remove-btn" data-id="${product.id}"><i class="fas fa-trash"></i></button></div>`;
                 container.appendChild(itemEl);
             }
@@ -880,7 +880,7 @@ window.renderDashboardPage = async () => {
                 const card = document.createElement('div');
                 card.className = "relative bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden";
                 card.innerHTML = `
-                    <img src="${product.imageUrl || 'https://via.placeholder.com/300x200.png?text=Piecety'}" alt="${product.title}" class="w-full h-40 object-cover">
+                    <img src="${product.imageUrl || './assets/placeholder.png'}" alt="${product.title}" class="w-full h-40 object-cover">
                     <div class="p-4"><h3 class="font-bold text-lg truncate">${product.title}</h3><p class="text-blue-600 dark:text-blue-400 font-semibold text-xl my-2">${product.price.toLocaleString()} DA</p></div>
                     <div class="absolute top-2 right-2"><button class="delete-ad-btn bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-red-600"><i class="fas fa-trash"></i></button></div>`;
                 card.querySelector('.delete-ad-btn').onclick = async () => {
