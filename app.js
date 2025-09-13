@@ -5,16 +5,19 @@ import { getAuth, signInWithPopup, signOut, GoogleAuthProvider, FacebookAuthProv
 import { getStorage, ref, uploadBytes, getDownloadURL, uploadBytesResumable } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-storage.js";
 
 // --- GLOBAL STATE & CONSTANTS ---
+const PRODUCTS_PER_PAGE = 12;
 let currentUser = null;
 let currentLang = localStorage.getItem("piecety_lang") || "fr";
 let currentView = 'home';
 let userCart = {};
 let productsUnsubscribe = null;
 let chatsUnsubscribe = null;
+let messagesListener = null;
 let lastVisibleProduct = null;
 let isFetching = false;
 let recentlyViewed = JSON.parse(localStorage.getItem('piecety_recently_viewed')) || [];
 let userProfile = null;
+let userInteractions = JSON.parse(localStorage.getItem('userInteractions') || '{}');
 
 // --- FIREBASE CONFIGURATION ---
 const firebaseConfig = {
@@ -63,6 +66,13 @@ const translations = {
         back: "Retour",
         edit_profile: "Modifier le profil",
         name_label: "Nom",
+        write_review_placeholder: "Écrivez votre avis ici...",
+        add_review: "Ajouter un avis",
+        submit_review: "Soumettre l'avis",
+        offer_btn_text: "Faire une offre",
+        offer_prompt: "Entrez votre prix d'offre :",
+        offer_sent: "Votre offre a été envoyée.",
+        recommendations: "Recommandations pour vous",
     },
     en: {
         page_title: "Piecety - Car Parts Marketplace in Algeria", meta_description: "Buy and sell car parts in Algeria with Piecety, the reliable marketplace for new and used parts.", fr_short: "FR", en_short: "EN", ar_short: "AR", menu: "Menu", sell: "Sell", connect: "Log In", language: "Language", logout: "Logout", dashboard: "Dashboard", nav_home: "Home", nav_search: "Search", nav_profile: "Profile", hero_title: "Find the right car part for your vehicle", hero_subtitle: "The most trusted Algerian car parts marketplace.", categories_title: "Parts Categories", brands_title: "Select a Brand", years_title: "Select a Year", filters_title: "Filter Listings", all_brands: "All brands", all_models: "All models", all_years: "All years", all_wilayas: "All wilayas", all_communes: "All communes", condition: "Condition", any_condition: "Any", new: "New", used: "Used", apply_filters: "Apply Filters", reset: "Reset", search_placeholder: "Search for a part...", submit_ad: "Submit an Ad", ad_title_label: "Part Title *", ad_title_placeholder: "e.g., Front brake disc", brand_label: "Brand *", select_brand: "Select a brand", model_label: "Model", select_model: "Select a model", year_label: "Year", select_year: "Select a year", wilaya_label: "State *", select_wilaya: "Select a state", commune_label: "City", select_commune: "Select a city", condition_label: "Condition", price_label: "Price (DA) *", price_placeholder: "e.g., 15000", description_label: "Description", description_placeholder: "Additional information...", submit_ad_btn_text: "Submit", loading_text: "Submitting...", error_valid_title: "Please enter a valid title.", error_select_brand: "Please select a brand.", error_select_wilaya: "Please select a state.", error_select_category: "Please select a category.", error_valid_price: "Please enter a valid price.", login_text: "Log in to access all features.", google_login: "Sign in with Google", back_to_listings: "Back to listings", add_to_cart: "Add to cart", cart_title: "My Cart", cart_total: "Total", checkout_btn: "Proceed to Checkout", no_listings: "No listings found.", your_cart_is_empty: "Your cart is empty.", remove: "Remove", quantity: "Quantity", item_total: "Item Total", login_required: "Please log in to use this feature.", show_filters: "Show Filters", price_range: "Price Range", all_categories: "All Categories", category_label: "Category *", select_category: "Select a category", contact_seller: "Contact Seller", clear_cart: "Clear Cart", ad_posted: "Your ad has been posted successfully!", ad_post_failed: "Failed to post ad.", item_added_to_cart: "Item added to cart!", delete_ad_confirm: "Are you sure you want to delete this ad?", sold_by: "Sold by:", my_listings: "My Listings", seller_listings: "Listings from this seller", buyer_reviews: "Buyer Reviews", reviews_soon: "(Reviews coming soon)", reviews_soon_2: "Review functionality will be available soon.", messages: "Messages", loading_convos: "Loading conversations...", chat_with: "Chat with", type_message_placeholder: "Type a message...", recently_viewed: "Recently Viewed", chat: "Chat", load_more: "Load More", ad_image_label: "Part Image *", facebook_login: "Sign in with Facebook", store_label: "Store Name", store_name_placeholder: "e.g., Abdelkader Auto Parts", store_profile: "Store Profile", setup_store_profile: "Set Up Store Profile", store_name_label: "Store Name", store_logo_label: "Store Logo", save: "Save", profile_pic_label: "Profile Picture", update_profile_pic: "Update Picture",
@@ -91,6 +101,13 @@ const translations = {
         back: "Back",
         edit_profile: "Edit Profile",
         name_label: "Name",
+        write_review_placeholder: "Write your review here...",
+        add_review: "Add a review",
+        submit_review: "Submit Review",
+        offer_btn_text: "Make Offer",
+        offer_prompt: "Enter your offer price:",
+        offer_sent: "Your offer has been sent.",
+        recommendations: "Recommendations for you",
     },
     ar: {
         page_title: "Piecety - سوق قطع غيار السيارات في الجزائر", meta_description: "بيع وشراء قطع غيار السيارات في الجزائر مع Piecety، السوق الموثوق للقطع الجديدة والمستعملة.", fr_short: "FR", en_short: "EN", ar_short: "AR", menu: "القائمة", sell: "بيع", connect: "تسجيل الدخول", language: "اللغة", logout: "تسجيل الخروج", dashboard: "لوحة التحكم", nav_home: "الرئيسية", nav_search: "بحث", nav_profile: "ملفي", hero_title: "ابحث عن قطعة الغيار المناسبة لسيارتك", hero_subtitle: "أكثر أسواق قطع غيار السيارات ثقة في الجزائر.", categories_title: "فئات القطع", brands_title: "اختر ماركة", years_title: "اختر سنة", filters_title: "تصفية الإعلانات", all_brands: "جميع الماركات", all_models: "جميع الموديلات", all_years: "جميع السنوات", all_wilayas: "جميع الولايات", all_communes: "جميع البلديات", condition: "الحالة", any_condition: "الكل", new: "جديد", used: "مستعمل", apply_filters: "تطبيق الفلاتر", reset: "إعادة تعيين", search_placeholder: "ابحث عن قطعة...", submit_ad: "إرسال إعلان", ad_title_label: "عنوان القطعة *", ad_title_placeholder: "مثال: قرص فرامل أمامي", brand_label: "الماركة *", select_brand: "اختر ماركة", model_label: "الموديل", select_model: "اختر موديل", year_label: "السنة", select_year: "اختر سنة", wilaya_label: "الولاية *", select_wilaya: "اختر ولاية", commune_label: "البلدية", select_commune: "اختر بلدية", condition_label: "الحالة", price_label: "السعر (دج) *", price_placeholder: "مثال: 15000", description_label: "الوصف", description_placeholder: "معلومات إضافية...", submit_ad_btn_text: "إرسال", loading_text: "جاري الإرسال...", error_valid_title: "الرجاء إدخال عنوان صالح.", error_select_brand: "الرجاء اختيار ماركة.", error_select_wilaya: "الرجاء اختيار ولاية.", error_select_category: "الرجاء اختيار فئة.", error_valid_price: "الرجاء إدخال سعر صالح.", login_text: "تسجيل الدخول للوصول إلى جميع الميزات.", google_login: "تسجيل الدخول باستخدام Google", back_to_listings: "العودة إلى الإعلانات", add_to_cart: "أضف إلى السلة", cart_title: "سلة التسوق", cart_total: "الإجمالي", checkout_btn: "الدفع", no_listings: "لم يتم العثور على إعلانات.", your_cart_is_empty: "سلة التسوق فارغة.", remove: "حذف", quantity: "الكمية", item_total: "إجمالي السلعة", login_required: "يرجى تسجيل الدخول لاستخدام هذه الميزة.", show_filters: "إظهار الفلاتر", price_range: "نطاق السعر", all_categories: "جميع الفئات", category_label: "الفئة *", select_category: "اختر فئة", contact_seller: "اتصل بالبائع", clear_cart: "إفراغ السلة", ad_posted: "تم نشر إعلانك بنجاح!", ad_post_failed: "فشل نشر الإعلان.", item_added_to_cart: "تمت إضافة المنتج إلى السلة!", delete_ad_confirm: "هل أنت متأكد من أنك تريد حذف هذا الإعلان؟", sold_by: "البائع:", my_listings: "إعلاناتي", seller_listings: "إعلانات من هذا البائع", buyer_reviews: "تقييمات المشترين", reviews_soon: "(التقييمات قريبا)", reviews_soon_2: "ميزة التقييم ستكون متاحة قريبا.", messages: "الرسائل", loading_convos: "جاري تحميل المحادثات...", chat_with: "محادثة مع", type_message_placeholder: "اكتب رسالة...", recently_viewed: "شوهدت مؤخرا", chat: "محادثة", load_more: "تحميل المزيد", ad_image_label: "صورة القطعة *", facebook_login: "تسجيل الدخول باستخدام Facebook", store_label: "اسم المتجر", store_name_placeholder: "مثال: قطع غيار سيارات عبد القادر", store_profile: "ملف المتجر", setup_store_profile: "إعداد ملف المتجر", store_name_label: "اسم المتجر", store_logo_label: "شعار المتجر", save: "حفظ", profile_pic_label: "صورة الملف الشخصي", update_profile_pic: "تحديث الصورة",
@@ -119,6 +136,13 @@ const translations = {
         back: "Back",
         edit_profile: "Edit Profile",
         name_label: "Name",
+        write_review_placeholder: "Write your review here...",
+        add_review: "Add a review",
+        submit_review: "Submit Review",
+        offer_btn_text: "Make Offer",
+        offer_prompt: "Enter your offer price:",
+        offer_sent: "Your offer has been sent.",
+        recommendations: "Recommandations for you",
     }
 };
 
@@ -210,14 +234,27 @@ const DOMElements = {
     postProductCategorySelect: document.getElementById('product-category'),
     postProductConditionSelect: document.getElementById('product-condition'),
     postProductImageInput: document.getElementById('product-image'),
+    liveRegion: document.getElementById('live-region'),
+    searchSuggestions: document.getElementById('search-suggestions')
 };
 
 // --- UTILITY FUNCTIONS ---
+const announceToScreenReader = (message) => {
+  if (DOMElements.liveRegion) {
+    DOMElements.liveRegion.textContent = message;
+    setTimeout(() => {
+      DOMElements.liveRegion.textContent = '';
+    }, 1000);
+  }
+};
+
 const showMessage = (msgKey, duration = 3500, type = "info") => {
     const msg = translations[currentLang][msgKey] || msgKey;
     const { messageBox } = DOMElements;
     if (!messageBox) return;
     messageBox.textContent = msg;
+    announceToScreenReader(msg);
+
     messageBox.className = `fixed top-5 right-5 z-[1000] p-4 rounded-lg shadow-lg transition-all duration-500 ease-in-out max-w-sm break-words`;
     
     let colors = type === 'success' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : type === 'error' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
@@ -263,7 +300,57 @@ const debounce = (func, delay) => {
     };
 };
 
+const trackUserInteraction = (productId, interactionType) => {
+  if (!currentUser) return;
+  
+  if (!userInteractions[currentUser.uid]) {
+    userInteractions[currentUser.uid] = {
+      viewed: [],
+      searched: [],
+      purchased: []
+    };
+  }
+  
+  const interactionData = { productId, timestamp: Date.now() };
+  userInteractions[currentUser.uid][interactionType].push(interactionData);
+  localStorage.setItem('userInteractions', JSON.stringify(userInteractions));
+};
+
+const getRecommendations = async () => {
+  if (!currentUser || !userInteractions[currentUser.uid]) return [];
+  
+  const userData = userInteractions[currentUser.uid];
+  const viewedProducts = userData.viewed || [];
+  if (viewedProducts.length === 0) return [];
+
+  const viewedProductIds = viewedProducts.map(i => i.productId);
+  const q = query(collection(db, "products"), 
+    where("id", "in", viewedProductIds));
+  
+  try {
+    const snapshots = await getDocs(q);
+    const categories = [...new Set(snapshots.docs.map(doc => doc.data().category).filter(Boolean))];
+    
+    if (categories.length === 0) return [];
+
+    const recsQuery = query(collection(db, "products"), 
+      where("category", "in", categories.slice(0, 10)),
+      orderBy("createdAt", "desc"),
+      limit(10));
+    
+    const recsSnapshot = await getDocs(recsQuery);
+    return recsSnapshot.docs.filter(doc => !viewedProductIds.includes(doc.id)).map(doc => ({ id: doc.id, ...doc.data() }));
+
+  } catch (error) {
+    console.error("Error fetching recommendations:", error);
+    return [];
+  }
+};
+
 // --- MOBILE MENU CONTROL ---
+let touchStartX = 0;
+let touchEndX = 0;
+
 const openMobileMenu = () => {
     DOMElements.mobileMenu.classList.remove('-translate-x-full');
     DOMElements.mobileMenuBackdrop.classList.remove('invisible', 'opacity-0');
@@ -272,6 +359,19 @@ const openMobileMenu = () => {
 const closeMobileMenu = () => {
     DOMElements.mobileMenu.classList.add('-translate-x-full');
     DOMElements.mobileMenuBackdrop.classList.add('invisible', 'opacity-0');
+};
+
+const handleSwipe = () => {
+    if (touchEndX < touchStartX - 50) {
+        if (!DOMElements.mobileMenu.classList.contains('-translate-x-full')) {
+            closeMobileMenu();
+        }
+    }
+    if (touchEndX > touchStartX + 50) {
+        if (DOMElements.mobileMenu.classList.contains('-translate-x-full')) {
+            openMobileMenu();
+        }
+    }
 };
 
 // --- APP LOGIC ---
@@ -341,6 +441,8 @@ const applyAndRenderFilters = () => {
         }
     });
     params.search = DOMElements.searchInput.value;
+    
+    trackUserInteraction(null, 'searched');
 
     const newUrl = new URL(window.location);
     newUrl.search = new URLSearchParams(params).toString();
@@ -398,6 +500,7 @@ const updateBottomNav = (viewName) => {
 const renderView = (viewName, data = null) => {
     if (productsUnsubscribe) productsUnsubscribe();
     if (chatsUnsubscribe) chatsUnsubscribe();
+    if (messagesListener) messagesListener();
     DOMElements.appContainer.innerHTML = '';
     
     const route = viewName.split('/')[0];
@@ -423,7 +526,7 @@ const renderView = (viewName, data = null) => {
     translatePage(currentLang);
 };
 
-window.renderHomePage = () => {
+window.renderHomePage = async () => {
     updateBreadcrumb();
     const params = new URLSearchParams(window.location.search);
     if (params.get('brand')) renderYearCategories(params.get('brand'), params.get('model'), params.get('category'));
@@ -432,6 +535,7 @@ window.renderHomePage = () => {
     else renderPartCategories();
     
     renderRecentlyViewed();
+    renderRecommendations();
 
     const setupFilters = (container) => {
         container.innerHTML = document.getElementById('filters-template').content.cloneNode(true).innerHTML;
@@ -638,31 +742,23 @@ const setupFilterListeners = (container = document) => {
 const renderListings = async (loadMore = false) => {
     const listingsSection = document.getElementById('listings-section');
     const loadMoreContainer = document.getElementById('load-more-container');
+    const recommendationsSection = document.getElementById('recommendations-section');
     if (!listingsSection || isFetching) return;
 
     isFetching = true;
     if (!loadMore) {
-        let skeletonHTML = '';
-        for (let i = 0; i < 8; i++) {
-            skeletonHTML += `
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 animate-pulse">
-                    <div class="bg-gray-300 dark:bg-gray-700 w-full h-40 rounded-md"></div>
-                    <div class="mt-4">
-                        <div class="bg-gray-300 dark:bg-gray-700 h-4 w-3/4 rounded"></div>
-                        <div class="bg-gray-300 dark:bg-gray-700 h-6 w-1/2 rounded mt-2"></div>
-                        <div class="bg-gray-300 dark:bg-gray-700 h-4 w-full rounded mt-4"></div>
-                    </div>
-                </div>
-            `;
-        }
-        listingsSection.innerHTML = skeletonHTML;
+        listingsSection.innerHTML = `
+            <div class="skeleton-card">
+                <div class="skeleton-image"></div>
+                <div class="skeleton-text"></div>
+                <div class="skeleton-text short"></div>
+            </div>`.repeat(8);
         lastVisibleProduct = null;
+        if (recommendationsSection) recommendationsSection.classList.add('hidden');
     }
     if (loadMoreContainer) loadMoreContainer.innerHTML = '';
 
     const params = new URLSearchParams(window.location.search);
-    
-    // Apply filters
     const filters = {};
     params.forEach((value, key) => {
         if (['category', 'sub_category', 'brand', 'model', 'year', 'wilaya', 'condition'].includes(key)) {
@@ -670,27 +766,24 @@ const renderListings = async (loadMore = false) => {
         }
     });
 
-    // Check for search query
     const searchQuery = DOMElements.searchInput.value.trim().toLowerCase();
     
-    // Create the base query with filters
-    let baseQuery = query(collection(db, "products"));
+    let baseQuery = collection(db, "products");
+    
     for (const key in filters) {
         baseQuery = query(baseQuery, where(key, "==", filters[key]));
     }
-
-    // Add ordering and pagination
+    
     let finalQuery = query(baseQuery, orderBy("createdAt", "desc"));
     if (loadMore && lastVisibleProduct) {
         finalQuery = query(finalQuery, startAfter(lastVisibleProduct));
     }
-    finalQuery = query(finalQuery, limit(12));
+    finalQuery = query(finalQuery, limit(PRODUCTS_PER_PAGE));
 
     try {
         const snapshot = await getDocs(finalQuery);
         let productsToShow = snapshot.docs;
 
-        // In-memory filtering for search query
         if (searchQuery) {
             productsToShow = productsToShow.filter(doc => {
                 const product = doc.data();
@@ -702,10 +795,15 @@ const renderListings = async (loadMore = false) => {
         if (!loadMore) listingsSection.innerHTML = '';
         if (productsToShow.length === 0 && !loadMore) {
             listingsSection.innerHTML = `<p class="col-span-full text-center p-8 text-lg text-gray-500" data-i18n-key="no_listings"></p>`;
+            const recs = await getRecommendations();
+            if (recs.length > 0 && recommendationsSection) {
+                recommendationsSection.classList.remove('hidden');
+                displayProducts(recs, document.getElementById('recommendations-grid'));
+            }
         } else {
-            displayProducts(productsToShow, listingsSection);
+            displayProducts(productsToShow.map(p => ({ id: p.id, ...p.data() })), listingsSection);
             lastVisibleProduct = snapshot.docs[snapshot.docs.length - 1];
-            if (snapshot.docs.length === 12 && loadMoreContainer) {
+            if (snapshot.docs.length === PRODUCTS_PER_PAGE && loadMoreContainer) {
                 loadMoreContainer.innerHTML = `<button id="load-more-btn" class="px-6 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors" data-i18n-key="load_more"></button>`;
                 document.getElementById('load-more-btn').onclick = () => renderListings(true);
             }
@@ -725,19 +823,19 @@ const displayProducts = (docs, container) => {
     container.innerHTML = `<p class="col-span-full text-center p-8 text-lg text-gray-500" data-i18n-key="no_listings"></p>`;
     return;
   }
-
-  docs.forEach(doc => {
-    const docData = typeof doc.data === 'function' ? doc.data() : (doc || {});
-    const id = typeof doc.id === 'string' ? doc.id : (docData.id || '');
-    const product = { id, ...docData };
-
+  
+  docs.forEach(product => {
+    const id = product.id;
     const card = document.createElement('div');
     card.className = "listing-card bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex flex-col";
 
     const isMyProduct = currentUser && currentUser.uid === product.sellerId;
 
     card.innerHTML = `
-      <img loading="lazy" src="${product.imageUrl || './assets/placeholder.png'}" alt="${product.title || ''}" class="w-full h-40 object-cover cursor-pointer product-image">
+      <picture>
+        <source srcset="${product.imageUrl.replace(/\.(png|jpe?g)$/i, '.webp')}" type="image/webp">
+        <img loading="lazy" src="${product.imageUrl || './assets/placeholder.png'}" alt="${product.title || ''}" class="w-full h-40 object-cover cursor-pointer product-image">
+      </picture>
       <div class="p-4 flex flex-col flex-grow">
         <h3 class="font-bold text-lg truncate product-title cursor-pointer">${product.title || ''}</h3>
         <p class="text-blue-600 dark:text-blue-400 font-semibold text-xl my-2">${(product.price||0).toLocaleString()} DA</p>
@@ -756,16 +854,32 @@ const displayProducts = (docs, container) => {
 
     if (!isMyProduct) {
       const chatBtn = card.querySelector('.chat-btn');
-      if (chatBtn) chatBtn.onclick = () => startOrOpenChat(product.sellerId, product.sellerName);
+      if (chatBtn) chatBtn.onclick = () => startOrOpenChat(product.sellerId, product.sellerName, product.id);
     }
 
     container.appendChild(card);
   });
 };
 
+const renderRecommendations = async () => {
+    const section = document.getElementById('recommendations-section');
+    const grid = document.getElementById('recommendations-grid');
+    if (!section || !grid) return;
 
-window.renderProductPage = (product) => {
+    grid.innerHTML = '';
+    const recommendations = await getRecommendations();
+    if (recommendations.length > 0) {
+        section.classList.remove('hidden');
+        displayProducts(recommendations, grid);
+    } else {
+        section.classList.add('hidden');
+    }
+};
+
+window.renderProductPage = async (product) => {
     if (!product) { renderView('home'); return; }
+    
+    trackUserInteraction(product.id, 'viewed');
 
     recentlyViewed = [product.id, ...recentlyViewed.filter(id => id !== product.id)].slice(0, 4);
     localStorage.setItem('piecety_recently_viewed', JSON.stringify(recentlyViewed));
@@ -773,6 +887,7 @@ window.renderProductPage = (product) => {
     document.getElementById('product-title-detail').textContent = product.title;
     document.getElementById('product-price-detail').textContent = `${product.price.toLocaleString()} DA`;
     document.getElementById('product-image-detail').src = product.imageUrl || './assets/placeholder.png';
+    document.getElementById('product-image-webp').srcset = product.imageUrl.replace(/\.(png|jpe?g)$/i, '.webp');
     document.getElementById('product-brand-detail').textContent = product.brand;
     document.getElementById('product-model-detail').textContent = product.model || 'N/A';
     document.getElementById('product-year-detail').textContent = product.year || 'N/A';
@@ -789,25 +904,110 @@ window.renderProductPage = (product) => {
 
     document.getElementById('back-to-listings-btn').onclick = () => window.history.back();
     document.getElementById('add-to-cart-btn').onclick = () => addToCart(product);
-    document.getElementById('contact-seller-btn').onclick = () => startOrOpenChat(product.sellerId, product.sellerName);
+    document.getElementById('contact-seller-btn').onclick = () => startOrOpenChat(product.sellerId, product.sellerName, product.id);
+
+    renderProductReviews(product.id);
+    if(currentUser) {
+        renderAddReviewSection(product.id);
+    }
 };
 
-const renderRecentlyViewed = async () => {
-    const section = document.getElementById('recently-viewed-section');
-    const grid = document.getElementById('recently-viewed-grid');
-    if (!section || !grid || recentlyViewed.length === 0) return;
-
-    section.classList.remove('hidden');
-    grid.innerHTML = '';
+const renderProductReviews = async (productId) => {
+    const reviewsList = document.getElementById('reviews-list');
+    if (!reviewsList) return;
+    reviewsList.innerHTML = `<p class="text-center text-gray-500">Loading reviews...</p>`;
     
     try {
-        const productRefs = recentlyViewed.map(id => doc(db, "products", id));
-        const productSnaps = await Promise.all(productRefs.map(ref => getDoc(ref)));
-        const viewedProducts = productSnaps.filter(snap => snap.exists()).map(snap => ({ id: snap.id, ...snap.data() }));
-        displayProducts(viewedProducts.map(p => ({ ...p, data: () => p })), grid);
+        const q = query(collection(db, "reviews"), where("productId", "==", productId), orderBy("createdAt", "desc"));
+        const snapshot = await getDocs(q);
+        reviewsList.innerHTML = '';
+        if (snapshot.empty) {
+            reviewsList.innerHTML = `<p class="text-gray-500 dark:text-gray-400" data-i18n-key="reviews_soon_2"></p>`;
+        } else {
+            snapshot.forEach(doc => {
+                const review = doc.data();
+                const reviewEl = document.createElement('div');
+                reviewEl.className = 'border-b dark:border-gray-700 pb-2 mb-2';
+                reviewEl.innerHTML = `
+                    <div class="flex items-center text-sm font-semibold mb-1">
+                        <span>${review.reviewerName}</span>
+                        <span class="ml-2">${renderStarRating(review.rating).outerHTML}</span>
+                    </div>
+                    <p class="text-sm">${review.review}</p>
+                `;
+                reviewsList.appendChild(reviewEl);
+            });
+        }
     } catch (error) {
-        console.error("Error fetching recently viewed products:", error);
+        console.error("Error fetching reviews:", error);
+        reviewsList.innerHTML = `<p class="text-red-500">Could not load reviews.</p>`;
     }
+    translatePage(currentLang);
+};
+
+const renderStarRating = (rating) => {
+    const container = document.createElement('span');
+    container.className = 'flex items-center text-yellow-500';
+    for (let i = 1; i <= 5; i++) {
+        const star = document.createElement('i');
+        star.className = `fas fa-star ${i > rating ? 'text-gray-300 dark:text-gray-600' : ''}`;
+        container.appendChild(star);
+    }
+    return container;
+};
+
+const renderAddReviewSection = (productId) => {
+    const section = document.getElementById('add-review-section');
+    if (!section) return;
+    section.classList.remove('hidden');
+
+    const starsContainer = document.getElementById('rating-stars');
+    const reviewTextarea = document.getElementById('review-text');
+    const submitBtn = document.getElementById('submit-review-btn');
+    let selectedRating = 0;
+
+    starsContainer.innerHTML = '';
+    for (let i = 1; i <= 5; i++) {
+        const star = document.createElement('i');
+        star.className = 'fas fa-star text-2xl text-gray-300 cursor-pointer hover:text-yellow-400 transition-colors';
+        star.dataset.rating = i;
+        star.onclick = () => {
+            selectedRating = i;
+            starsContainer.querySelectorAll('i').forEach(s => s.classList.toggle('text-yellow-500', s.dataset.rating <= selectedRating));
+        };
+        starsContainer.appendChild(star);
+    }
+
+    submitBtn.onclick = async () => {
+        if (selectedRating === 0) {
+            showMessage("Please select a rating.", 3000, "error");
+            return;
+        }
+        if (reviewTextarea.value.trim().length < 10) {
+            showMessage("Please write a more detailed review.", 3000, "error");
+            return;
+        }
+
+        submitBtn.disabled = true;
+        try {
+            await addDoc(collection(db, "reviews"), {
+                productId,
+                userId: currentUser.uid,
+                reviewerName: currentUser.displayName,
+                rating: selectedRating,
+                review: reviewTextarea.value.trim(),
+                createdAt: serverTimestamp()
+            });
+            showMessage("Review submitted!", 3000, "success");
+            renderProductReviews(productId);
+            section.classList.add('hidden');
+        } catch (error) {
+            console.error("Error submitting review:", error);
+            showMessage("Failed to submit review.", 3000, "error");
+        } finally {
+            submitBtn.disabled = false;
+        }
+    };
 };
 
 window.renderCartPage = async () => {
@@ -882,7 +1082,7 @@ window.renderDashboardPage = async () => {
                 card.innerHTML = `
                     <img src="${product.imageUrl || './assets/placeholder.png'}" alt="${product.title}" class="w-full h-40 object-cover">
                     <div class="p-4"><h3 class="font-bold text-lg truncate">${product.title}</h3><p class="text-blue-600 dark:text-blue-400 font-semibold text-xl my-2">${product.price.toLocaleString()} DA</p></div>
-                    <div class="absolute top-2 right-2"><button class="delete-ad-btn bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-red-600"><i class="fas fa-trash"></i></button></div>`;
+                    <div class="absolute top-2 right-2"><button class="delete-ad-btn bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-red-600 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"><i class="fas fa-trash"></i></button></div>`;
                 card.querySelector('.delete-ad-btn').onclick = async () => {
                     const shouldDelete = new Promise((resolve) => {
                         const modal = document.createElement('div');
@@ -989,11 +1189,14 @@ window.renderProfilePage = async (data) => {
     try {
         const q = query(collection(db, "products"), where("sellerId", "==", data.userId), orderBy("createdAt", "desc"));
         const snapshot = await getDocs(q);
-        displayProducts(snapshot.docs, grid);
+        displayProducts(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })), grid);
     } catch (error) {
         console.error("Error fetching user products:", error);
         grid.innerHTML = `<p class="text-red-500">Could not load seller's products.</p>`;
     }
+
+    const reviewsList = document.getElementById('user-reviews-list');
+    reviewsList.innerHTML = `<p class="text-gray-500 dark:text-gray-400" data-i18n-key="reviews_soon_2"></p>`;
 };
 
 const updateProfileData = async (e) => {
@@ -1038,7 +1241,6 @@ const updateProfileData = async (e) => {
     }
 };
 
-
 window.renderInboxPage = () => {
     if (!currentUser) { renderView('home'); return; }
     const listContainer = document.getElementById('conversations-list');
@@ -1069,11 +1271,10 @@ window.renderInboxPage = () => {
     });
 };
 
-let messagesListener = null;
 window.renderChatPage = async (chatData) => {
     if (!currentUser || !chatData) { renderView('home'); return; }
     
-    const { chatId, otherUserName } = chatData;
+    const { chatId, otherUserName, productId } = chatData;
     const chatRef = doc(db, "chats", chatId);
     try {
         await updateDoc(chatRef, { [`unreadCount.${currentUser.uid}`]: 0 });
@@ -1087,6 +1288,26 @@ window.renderChatPage = async (chatData) => {
     const messagesContainer = document.getElementById('messages-container');
     const messageForm = document.getElementById('send-message-form');
     const messageInput = document.getElementById('message-input');
+    const chatActions = document.getElementById('chat-actions');
+    
+    if (productId) {
+        const productSnap = await getDoc(doc(db, "products", productId));
+        if (productSnap.exists()) {
+            const product = productSnap.data();
+            const offerBtn = document.createElement('button');
+            offerBtn.textContent = translations[currentLang].offer_btn_text;
+            offerBtn.className = 'px-4 py-2 bg-yellow-500 text-white rounded-md font-semibold hover:bg-yellow-600 transition-colors shadow-md';
+            offerBtn.onclick = () => {
+                const offeredPrice = prompt(translations[currentLang].offer_prompt);
+                if (offeredPrice && !isNaN(offeredPrice) && parseFloat(offeredPrice) > 0) {
+                    const offerMessage = `${currentUser.displayName} has offered you ${offeredPrice} DA for "${product.title}".`;
+                    sendMessage(offerMessage, true);
+                    showMessage(translations[currentLang].offer_sent, 3000, "success");
+                }
+            };
+            chatActions.appendChild(offerBtn);
+        }
+    }
     
     const q = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "desc"), limit(25));
     if(messagesListener) messagesListener();
@@ -1105,16 +1326,14 @@ window.renderChatPage = async (chatData) => {
         messagesContainer.innerHTML = `<p class="text-red-500">Could not load messages.</p>`;
     });
 
-    messageForm.onsubmit = async (e) => {
-        e.preventDefault();
-        const text = messageInput.value.trim();
+    const sendMessage = async (text, isOffer = false) => {
         if (!text) return;
-        messageInput.value = '';
         try {
             await addDoc(collection(db, "chats", chatId, "messages"), {
                 senderId: currentUser.uid,
                 text: text,
-                timestamp: serverTimestamp()
+                timestamp: serverTimestamp(),
+                isOffer: isOffer
             });
             const otherUserId = chatId.replace(currentUser.uid, '').replace('_', '');
             await updateDoc(chatRef, { 
@@ -1127,10 +1346,17 @@ window.renderChatPage = async (chatData) => {
             showMessage("Failed to send message.", 3000, "error");
         }
     };
+
+    messageForm.onsubmit = async (e) => {
+        e.preventDefault();
+        const text = messageInput.value.trim();
+        messageInput.value = '';
+        await sendMessage(text);
+    };
 };
 
 window.renderTermsPage = () => {
-    document.getElementById('last-updated').textContent = "September 11, 2025";
+    document.getElementById('last-updated').textContent = "September 13, 2025";
 };
 
 const setupStoreProfile = async (e) => {
@@ -1181,19 +1407,14 @@ const deleteUserData = async () => {
     }
 
     try {
-        // Delete user's products
         const productsQuery = query(collection(db, "products"), where("sellerId", "==", currentUser.uid));
         const productsSnapshot = await getDocs(productsQuery);
         const deleteProductPromises = productsSnapshot.docs.map(docToDelete => deleteDoc(doc(db, "products", docToDelete.id)));
         await Promise.all(deleteProductPromises);
 
-        // Delete user's cart
         await deleteDoc(doc(db, "carts", currentUser.uid));
-
-        // Delete user's profile from 'users' collection
         await deleteDoc(doc(db, "users", currentUser.uid));
 
-        // Delete user's authentication data
         await deleteUser(auth.currentUser);
 
         showMessage("Your account and all associated data have been deleted.", 5000, 'success');
@@ -1207,7 +1428,7 @@ const deleteUserData = async () => {
 // --- USER ACTIONS ---
 const handleSignOut = () => signOut(auth).catch(error => console.error("Sign out error", error));
 
-const startOrOpenChat = async (sellerId, sellerName) => {
+const startOrOpenChat = async (sellerId, sellerName, productId = null) => {
     if (!currentUser) { showMessage('login_required', 3000, 'error'); return; }
     if (currentUser.uid === sellerId) { showMessage("You cannot message yourself.", 3000, 'error'); return; }
 
@@ -1225,7 +1446,7 @@ const startOrOpenChat = async (sellerId, sellerName) => {
                 unreadCount: { [currentUser.uid]: 0, [sellerId]: 0 }
             });
         }
-        renderView('chat', { chatId, otherUserName: sellerName });
+        renderView('chat', { chatId, otherUserName: sellerName, productId });
     } catch (error) {
         console.error("Error starting chat:", error);
         showMessage("Could not open chat.", 3000, 'error');
@@ -1292,7 +1513,6 @@ const validatePostForm = (form) => {
         const errorEl = document.getElementById(`${fieldName}-error`);
         let isInvalid = false;
         if (input.type === 'file') {
-             // File input is not required, as it's an optional update
              return;
         } else {
             isInvalid = !input.value.trim();
@@ -1326,7 +1546,7 @@ const updateAuthUI = (user) => {
         document.getElementById('dashboard-link').onclick = (e) => { e.preventDefault(); renderView('dashboard'); };
         document.getElementById('messages-link').onclick = (e) => { e.preventDefault(); currentUser ? renderView('inbox') : toggleModal(DOMElements.authModal, true); };
     } else {
-        authLinksContainer.innerHTML = `<button id="login-btn" class="px-4 py-2 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors" data-i18n-key="connect"></button>`;
+        authLinksContainer.innerHTML = `<button id="login-btn" class="px-4 py-2 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none" data-i18n-key="connect"></button>`;
         mobileLinksHTML += `<button id="mobile-login-btn" class="p-2 text-lg text-left" data-i18n-key="connect"></button>`;
         document.getElementById('login-btn').onclick = () => toggleModal(DOMElements.authModal, true);
     }
@@ -1369,12 +1589,13 @@ const setupEventListeners = () => {
     cartBtn.onclick = () => renderView('cart');
     homeLink.onclick = (e) => { e.preventDefault(); window.history.pushState({}, '', window.location.pathname); renderView('home'); };
 
-    // Mobile Menu Handlers
     mobileMenuBtn.onclick = openMobileMenu;
     mobileMenuCloseBtn.onclick = closeMobileMenu;
     DOMElements.mobileMenuBackdrop.onclick = closeMobileMenu;
 
-    // Mobile Menu Event Delegation
+    document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+    document.addEventListener('touchend', e => { touchEndX = e.changedTouches[0].screenX; handleSwipe(); }, { passive: true });
+
     DOMElements.mobileNavLinks.addEventListener('click', (e) => {
         const target = e.target.closest('a, button');
         if (!target) return;
@@ -1459,7 +1680,8 @@ const setupEventListeners = () => {
                 sellerId: currentUser.uid,
                 sellerName: userProfile?.storeName || currentUser.displayName || 'Anonymous',
                 imageUrl: imageUrl,
-                createdAt: serverTimestamp()
+                createdAt: serverTimestamp(),
+                keywords: formData.title.toLowerCase().split(' ')
             };
 
             await addDoc(collection(db, "products"), productData);
@@ -1509,8 +1731,41 @@ const setupEventListeners = () => {
         if (!langDropdownBtn.contains(e.target)) DOMElements.langDropdown.classList.add('hidden');
         const userMenu = document.getElementById('user-menu');
         if (userMenu && !userMenu.contains(e.target)) document.getElementById('user-menu-dropdown').classList.add('hidden');
+        if (DOMElements.searchSuggestions && !DOMElements.searchInput.contains(e.target)) DOMElements.searchSuggestions.classList.add('hidden');
     };
-    
+
+    DOMElements.searchInput.addEventListener('input', debounce(async (e) => {
+      const queryText = e.target.value.trim();
+      if (queryText.length < 2) {
+        DOMElements.searchSuggestions.classList.add('hidden');
+        return;
+      }
+      
+      const q = query(collection(db, "products"), 
+        where("keywords", "array-contains", queryText.toLowerCase()),
+        limit(5));
+      
+      const snapshot = await getDocs(q);
+      if (!snapshot.empty) {
+        DOMElements.searchSuggestions.innerHTML = '';
+        snapshot.forEach(doc => {
+          const product = doc.data();
+          const suggestion = document.createElement('div');
+          suggestion.className = 'p-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer';
+          suggestion.textContent = product.title;
+          suggestion.onclick = () => {
+            DOMElements.searchInput.value = product.title;
+            DOMElements.searchSuggestions.classList.add('hidden');
+            applyAndRenderFilters();
+          };
+          DOMElements.searchSuggestions.appendChild(suggestion);
+        });
+        DOMElements.searchSuggestions.classList.remove('hidden');
+      } else {
+        DOMElements.searchSuggestions.classList.add('hidden');
+      }
+    }, 300));
+
     document.getElementById('nav-home').onclick = (e) => { 
         e.preventDefault(); 
         window.history.pushState({}, '', window.location.pathname);
