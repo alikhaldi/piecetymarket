@@ -70,6 +70,53 @@ button, a, [role="button"] {
     background-color: #374151; /* dark:bg-gray-700 */
 }
 
+/* Skeleton Loading Effect */
+.skeleton-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+.dark .skeleton-card {
+    background: #1f2937;
+}
+
+.skeleton-image {
+    height: 200px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    border-radius: 4px;
+}
+.dark .skeleton-image {
+    background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+    background-size: 200% 100%;
+}
+
+.skeleton-text {
+    height: 16px;
+    background: #f0f0f0;
+    margin: 12px 0;
+    border-radius: 4px;
+    animation: loading 1.5s infinite;
+}
+.dark .skeleton-text {
+    background: #4b5563;
+}
+
+.skeleton-text.short {
+    width: 60%;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
 /* --- Mobile UX Enhancements --- */
 @media (max-width: 768px) {
     /* Prevent bottom nav overlap */
