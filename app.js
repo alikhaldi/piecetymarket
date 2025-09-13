@@ -2,7 +2,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
 import { getFirestore, collection, addDoc, query, onSnapshot, where, getDocs, doc, setDoc, getDoc, deleteDoc, updateDoc, increment, serverTimestamp, orderBy, limit, startAfter } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 import { getAuth, signInWithPopup, signOut, GoogleAuthProvider, FacebookAuthProvider, onAuthStateChanged, deleteUser, updateProfile } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-storage.js";
+import { getStorage, ref, uploadBytes, getDownloadURL, uploadBytesResumable } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-storage.js";
 
 // --- GLOBAL STATE & CONSTANTS ---
 let currentUser = null;
@@ -720,34 +720,49 @@ const renderListings = async (loadMore = false) => {
 };
 
 const displayProducts = (docs, container) => {
-    if (!container) return;
-    if (docs.length === 0 && container.innerHTML === '') {
-        container.innerHTML = `<p class="col-span-full text-center p-8 text-lg text-gray-500" data-i18n-key="no_listings"></p>`;
-        return;
+  if (!container) return;
+  if (docs.length === 0 && container.innerHTML === '') {
+    container.innerHTML = `<p class="col-span-full text-center p-8 text-lg text-gray-500" data-i18n-key="no_listings"></p>`;
+    return;
+  }
+
+  docs.forEach(doc => {
+    const docData = typeof doc.data === 'function' ? doc.data() : (doc || {});
+    const id = typeof doc.id === 'string' ? doc.id : (docData.id || '');
+    const product = { id, ...docData };
+
+    const card = document.createElement('div');
+    card.className = "listing-card bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex flex-col";
+
+    const isMyProduct = currentUser && currentUser.uid === product.sellerId;
+
+    card.innerHTML = `
+      <img loading="lazy" src="${product.imageUrl || './assets/placeholder.png'}" alt="${product.title || ''}" class="w-full h-40 object-cover cursor-pointer product-image">
+      <div class="p-4 flex flex-col flex-grow">
+        <h3 class="font-bold text-lg truncate product-title cursor-pointer">${product.title || ''}</h3>
+        <p class="text-blue-600 dark:text-blue-400 font-semibold text-xl my-2">${(product.price||0).toLocaleString()} DA</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4"><i class="fas fa-map-marker-alt mr-1"></i> ${product.wilaya || ''}${product.commune ? `, ${product.commune}` : ''}</p>
+        <div class="mt-auto">
+          ${!isMyProduct ? `<button class="w-full flex items-center justify-center gap-2 px-3 py-2 bg-gray-100 dark:bg-gray-700 text-sm rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 chat-btn"><i class="fas fa-comments"></i> <span data-i18n-key="chat"></span></button>` : ''}
+        </div>
+      </div>
+    `;
+
+    const imgEl = card.querySelector('.product-image');
+    const titleEl = card.querySelector('.product-title');
+
+    if (imgEl) imgEl.onclick = () => renderView('product', product);
+    if (titleEl) titleEl.onclick = () => renderView('product', product);
+
+    if (!isMyProduct) {
+      const chatBtn = card.querySelector('.chat-btn');
+      if (chatBtn) chatBtn.onclick = () => startOrOpenChat(product.sellerId, product.sellerName);
     }
-    docs.forEach(doc => {
-        const product = { id: doc.id, ...doc.data() };
-        const card = document.createElement('div');
-        card.className = "listing-card bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex flex-col";
-        const isMyProduct = currentUser && currentUser.uid === product.sellerId;
-        card.innerHTML = `
-            <img src="${product.imageUrl || 'https://via.placeholder.com/300x200.png?text=Piecety'}" alt="${product.title}" class="w-full h-40 object-cover cursor-pointer product-image">
-            <div class="p-4 flex flex-col flex-grow">
-                <h3 class="font-bold text-lg truncate product-title cursor-pointer">${product.title}</h3>
-                <p class="text-blue-600 dark:text-blue-400 font-semibold text-xl my-2">${product.price.toLocaleString()} DA</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mb-4"><i class="fas fa-map-marker-alt mr-1"></i> ${product.wilaya}${product.commune ? `, ${product.commune}` : ''}</p>
-                <div class="mt-auto">
-                    ${!isMyProduct ? `<button class="w-full flex items-center justify-center gap-2 px-3 py-2 bg-gray-100 dark:bg-gray-700 text-sm rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 chat-btn"><i class="fas fa-comments"></i> <span data-i18n-key="chat"></span></button>` : ''}
-                </div>
-            </div>`;
-        card.querySelector('.product-image').onclick = () => renderView('product', product);
-        card.querySelector('.product-title').onclick = () => renderView('product', product);
-        if (!isMyProduct) {
-            card.querySelector('.chat-btn').onclick = () => startOrOpenChat(product.sellerId, product.sellerName);
-        }
-        container.appendChild(card);
-    });
+
+    container.appendChild(card);
+  });
 };
+
 
 window.renderProductPage = (product) => {
     if (!product) { renderView('home'); return; }
@@ -1406,9 +1421,6 @@ const setupEventListeners = () => {
 
         const formData = Object.fromEntries(new FormData(form).entries());
         const imageFile = DOMElements.postProductImageInput.files[0];
-
-        // Remove the image field from the form data object before saving
-        delete formData.image;
         
         try {
             if (!imageFile) {
@@ -1423,40 +1435,45 @@ const setupEventListeners = () => {
             progressBar.value = 0;
 
             const storageRef = ref(storage, `product_images/${Date.now()}_${imageFile.name}`);
-            const uploadTask = uploadBytes(storageRef, imageFile);
+            const uploadTask = uploadBytesResumable(storageRef, imageFile);
 
-            uploadTask.then(async (snapshot) => {
-                const imageUrl = await getDownloadURL(snapshot.ref);
-                
-                progressBar.style.display = "none";
-
-                // Now, create the final productData object without the File object
-                const productData = {
-                    ...formData,
-                    price: Number(formData.price),
-                    sellerId: currentUser.uid,
-                    sellerName: userProfile?.storeName || currentUser.displayName,
-                    imageUrl: imageUrl,
-                    createdAt: serverTimestamp()
-                };
-
-                await addDoc(collection(db, "products"), productData);
-                showMessage('ad_posted', 3000, 'success');
-                form.reset();
-                toggleModal(DOMElements.postProductModal, false);
-            }).catch((error) => {
-                console.error("❌ Upload failed:", error);
-                showMessage("Upload failed: " + error.message, 5000, "error");
-                progressBar.style.display = "none";
-            }).finally(() => {
-                btn.disabled = false;
-                btn.querySelector('.btn-spinner').classList.add('hidden');
+            await new Promise((resolve, reject) => {
+              uploadTask.on('state_changed',
+                snapshot => {
+                  if (progressBar && snapshot.totalBytes) {
+                    progressBar.value = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                  }
+                },
+                err => reject(err),
+                () => resolve()
+              );
             });
+
+            const imageUrl = await getDownloadURL(storageRef);
+            
+            progressBar.style.display = "none";
+
+            const productData = {
+                ...formData,
+                price: Number(formData.price) || 0,
+                sellerId: currentUser.uid,
+                sellerName: userProfile?.storeName || currentUser.displayName || 'Anonymous',
+                imageUrl: imageUrl,
+                createdAt: serverTimestamp()
+            };
+
+            await addDoc(collection(db, "products"), productData);
+            showMessage('ad_posted', 3000, 'success');
+            form.reset();
+            toggleModal(DOMElements.postProductModal, false);
         } catch (error) {
-            console.error("❌ Firestore write failed:", error);
+            console.error("❌ Upload or Firestore write failed:", error);
             showMessage('ad_post_failed', 3000, 'error');
+        } finally {
             btn.disabled = false;
             btn.querySelector('.btn-spinner').classList.add('hidden');
+            const progressBar = document.getElementById('uploadProgress');
+            if (progressBar) progressBar.style.display = 'none';
         }
     };
     
@@ -1540,9 +1557,13 @@ const bootApp = () => {
         userProfile = null;
         if (user) {
             toggleModal(DOMElements.authModal, false);
-            const cartSnap = await getDoc(doc(db, "carts", user.uid));
-            if (cartSnap.exists()) userCart = cartSnap.data();
-
+            try {
+                const cartSnap = await getDoc(doc(db, "carts", user.uid));
+                if (cartSnap.exists()) userCart = cartSnap.data();
+            } catch (error) {
+                console.error("Error fetching cart:", error);
+            }
+            
             const userDocRef = doc(db, "users", user.uid);
             const userSnap = await getDoc(userDocRef);
             userProfile = userSnap.exists() ? userSnap.data() : null;
