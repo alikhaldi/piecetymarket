@@ -32,7 +32,7 @@
     <link rel="stylesheet" href="style.css" />
 </head>
 <body class="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
-
+<div role="alert" aria-live="polite" id="live-region" class="sr-only"></div>
 <div id="message-box" class="fixed top-5 right-5 z-[1000] p-4 rounded-lg shadow-lg transition-all duration-500 ease-in-out opacity-0 translate-x-full max-w-sm break-words"></div>
 
 <header class="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-50 transition-transform duration-300" role="banner">
@@ -46,6 +46,7 @@
             <div class="relative">
                 <input id="search-input" type="text" class="w-full p-3 pl-10 rounded-full border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 shadow-inner" data-i18n-placeholder="search_placeholder" aria-label="Search for parts" />
                 <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                <div id="search-suggestions" class="absolute w-full mt-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg z-10 hidden"></div>
             </div>
         </div>
 
@@ -62,12 +63,12 @@
                 </div>
             </div>
 
-            <button id="dark-mode-toggle" class="p-3 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none" aria-label="Toggle Dark Mode">
+            <button id="dark-mode-toggle" class="p-3 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none" aria-label="Toggle Dark Mode">
                 <i class="fas fa-moon text-xl"></i>
             </button>
-            <a href="#" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors duration-200 px-3 py-2" data-i18n-key="sell" id="sell-link"></a>
+            <a href="#" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors duration-200 px-3 py-2 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none rounded-full" data-i18n-key="sell" id="sell-link"></a>
             
-            <button id="cart-btn" class="relative p-3 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none" aria-label="Shopping Cart">
+            <button id="cart-btn" class="relative p-3 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none" aria-label="Shopping Cart">
                 <i class="fas fa-shopping-cart text-xl"></i>
                 <span id="cart-count" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full hidden">0</span>
             </button>
@@ -75,7 +76,7 @@
             <div id="auth-links" class="flex items-center space-x-2"></div>
         </nav>
 
-        <button id="mobile-menu-btn" class="md:hidden p-3 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+        <button id="mobile-menu-btn" class="md:hidden p-3 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
             <i class="fas fa-bars text-xl"></i>
         </button>
     </div>
@@ -86,7 +87,7 @@
 <div id="mobile-menu" class="fixed top-0 left-0 h-full bg-white dark:bg-gray-900 z-40 flex flex-col p-6 space-y-4 md:hidden transform -translate-x-full" role="dialog" aria-modal="true">
     <div class="flex justify-between items-center">
         <h2 class="text-2xl font-bold text-blue-600 dark:text-blue-400" data-i18n-key="menu"></h2>
-        <button id="mobile-menu-close-btn" class="p-3 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400" aria-label="Close menu">
+        <button id="mobile-menu-close-btn" class="p-3 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none" aria-label="Close menu">
             <i class="fas fa-times text-2xl"></i>
         </button>
     </div>
@@ -101,16 +102,16 @@
     </div>
 </div>
 
-<div id="mobile-filters-modal" class="fixed top-0 right-0 h-full w-full max-w-md bg-white dark:bg-gray-900 z-[60] shadow-xl p-6 transform translate-x-full md:hidden">
+<div id="mobile-filters-modal" class="modal fixed top-0 right-0 h-full w-full max-w-md bg-white dark:bg-gray-900 z-[60] shadow-xl p-6 transform translate-x-full md:hidden">
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold" data-i18n-key="filters_title"></h2>
-        <button id="mobile-filters-close-btn" class="p-2" aria-label="Close filters">
+        <button id="mobile-filters-close-btn" class="p-2 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none" aria-label="Close filters">
             <i class="fas fa-times text-2xl"></i>
         </button>
     </div>
     <div id="mobile-filters-content" class="h-[calc(100%-100px)] overflow-y-auto"></div>
     <div class="absolute bottom-0 left-0 w-full p-4 bg-white dark:bg-gray-900 border-t dark:border-gray-700">
-        <button id="mobile-apply-filters-btn" class="w-full px-6 py-3 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md" data-i18n-key="apply_filters"></button>
+        <button id="mobile-apply-filters-btn" class="w-full px-6 py-3 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none" data-i18n-key="apply_filters"></button>
     </div>
 </div>
 
@@ -118,35 +119,35 @@
 
 <footer class="bg-gray-800 dark:bg-gray-900 text-white p-6 md:p-8 mt-auto text-center pb-24 md:pb-8">
     <div class="flex justify-center space-x-6 mb-4">
-        <a href="#" class="text-gray-400 hover:text-white transition" aria-label="Facebook"><i class="fab fa-facebook-f text-xl"></i></a>
-        <a href="#" class="text-gray-400 hover:text-white transition" aria-label="Instagram"><i class="fab fa-instagram text-xl"></i></a>
-        <a href="#" class="text-gray-400 hover:text-white transition" aria-label="Twitter"><i class="fab fa-twitter text-xl"></i></a>
+        <a href="#" class="text-gray-400 hover:text-white transition focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none rounded-full" aria-label="Facebook"><i class="fab fa-facebook-f text-xl"></i></a>
+        <a href="#" class="text-gray-400 hover:text-white transition focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none rounded-full" aria-label="Instagram"><i class="fab fa-instagram text-xl"></i></a>
+        <a href="#" class="text-gray-400 hover:text-white transition focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none rounded-full" aria-label="Twitter"><i class="fab fa-twitter text-xl"></i></a>
     </div>
     <p class="text-sm font-light">
         &copy; <span id="current-year"></span> Piecety - Marché des Pièces Auto en Algérie.
     </p>
-    <p class="text-xs mt-2 text-gray-400"><a href="#" id="contact-us-link" class="hover:underline" data-i18n-key="contact_us"></a> | <a href="#" id="terms-link" class="hover:underline" data-i18n-key="terms_of_service"></a></p>
+    <p class="text-xs mt-2 text-gray-400"><a href="#" id="contact-us-link" class="hover:underline focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none rounded-sm" data-i18n-key="contact_us"></a> | <a href="#" id="terms-link" class="hover:underline focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none rounded-sm" data-i18n-key="terms_of_service"></a></p>
 </footer>
 
 <nav id="bottom-nav" class="fixed bottom-0 w-full bg-white dark:bg-gray-800 shadow-lg flex justify-around py-2 md:hidden z-50 border-t dark:border-gray-700">
-    <a href="#" id="nav-home" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" aria-label="Home">
+    <a href="#" id="nav-home" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none rounded-full" aria-label="Home">
         <i class="fas fa-home text-xl"></i>
         <span class="text-xs" data-i18n-key="nav_home"></span>
     </a>
-    <a href="#" id="nav-search" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" aria-label="Search">
+    <a href="#" id="nav-search" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none rounded-full" aria-label="Search">
         <i class="fas fa-search text-xl"></i>
         <span class="text-xs" data-i18n-key="nav_search"></span>
     </a>
-    <a href="#" id="nav-sell" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" aria-label="Sell">
+    <a href="#" id="nav-sell" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none rounded-full" aria-label="Sell">
         <i class="fas fa-plus-circle text-xl"></i>
         <span class="text-xs" data-i18n-key="sell"></span>
     </a>
-    <a href="#" id="nav-messages" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors relative" aria-label="Messages">
+    <a href="#" id="nav-messages" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors relative focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none rounded-full" aria-label="Messages">
         <i class="fas fa-comments text-xl"></i>
         <span class="text-xs" data-i18n-key="messages"></span>
         <span id="nav-unread-badge" class="hidden absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center text-[10px]"></span>
     </a>
-    <a href="#" id="nav-profile" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" aria-label="Profile">
+    <a href="#" id="nav-profile" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none rounded-full" aria-label="Profile">
         <i class="fas fa-user-circle text-xl"></i>
         <span class="text-xs" data-i18n-key="nav_profile"></span>
     </a>
@@ -155,7 +156,7 @@
 <div id="post-product-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-0 sm:p-4 invisible opacity-0" role="dialog" aria-modal="true">
     <div class="bg-white dark:bg-gray-800 shadow-lg w-full h-full flex flex-col sm:h-auto sm:max-h-[90vh] sm:max-w-2xl sm:rounded-lg">
         <div class="overflow-y-auto p-6 relative">
-            <button id="modal-close-btn" class="absolute top-4 right-4 text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 focus:outline-none" aria-label="Close form">
+            <button id="modal-close-btn" class="absolute top-4 right-4 text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none rounded-full" aria-label="Close form">
                 <i class="fas fa-times text-2xl"></i>
             </button>
             <h3 class="text-2xl font-bold mb-6 text-center" data-i18n-key="submit_ad"></h3>
@@ -163,67 +164,67 @@
                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="product-title" class="block font-medium mb-1" data-i18n-key="ad_title_label"></label>
-                        <input type="text" id="product-title" name="title" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" data-i18n-placeholder="ad_title_placeholder" />
+                        <input type="text" id="product-title" name="title" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none" data-i18n-placeholder="ad_title_placeholder" aria-required="true" />
                         <p id="title-error" class="text-red-500 text-sm mt-1 hidden" role="alert" data-i18n-key="error_valid_title"></p>
                     </div>
                     <div>
                         <label for="product-brand" class="block font-medium mb-1" data-i18n-key="brand_label"></label>
-                        <select id="product-brand" name="brand" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
+                        <select id="product-brand" name="brand" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none" aria-required="true"></select>
                         <p id="brand-error" class="text-red-500 text-sm mt-1 hidden" role="alert" data-i18n-key="error_select_brand"></p>
                     </div>
                     <div>
                         <label for="product-model" class="block font-medium mb-1" data-i18n-key="model_label"></label>
-                        <select id="product-model" name="model" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" disabled></select>
+                        <select id="product-model" name="model" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none" disabled></select>
                     </div>
                     <div>
                         <label for="product-year" class="block font-medium mb-1" data-i18n-key="year_label"></label>
-                        <select id="product-year" name="year" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
+                        <select id="product-year" name="year" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"></select>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="product-wilaya" class="block font-medium mb-1" data-i18n-key="wilaya_label"></label>
-                        <select id="product-wilaya" name="wilaya" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
+                        <select id="product-wilaya" name="wilaya" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none" aria-required="true"></select>
                         <p id="wilaya-error" class="text-red-500 text-sm mt-1 hidden" role="alert" data-i18n-key="error_select_wilaya"></p>
                     </div>
                     <div>
                         <label for="product-commune" class="block font-medium mb-1" data-i18n-key="commune_label"></label>
-                        <select id="product-commune" name="commune" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" disabled></select>
+                        <select id="product-commune" name="commune" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none" disabled></select>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label for="product-category" class="block font-medium mb-1" data-i18n-key="category_label"></label>
-                        <select id="product-category" name="category" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
+                        <select id="product-category" name="category" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none" aria-required="true"></select>
                         <p id="category-error" class="text-red-500 text-sm mt-1 hidden" role="alert" data-i18n-key="error_select_category"></p>
                     </div>
                     <div>
                         <label for="product-condition" class="block font-medium mb-1" data-i18n-key="condition_label"></label>
-                        <select id="product-condition" name="condition" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
+                        <select id="product-condition" name="condition" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"></select>
                     </div>
                     <div>
                         <label for="product-price" class="block font-medium mb-1" data-i18n-key="price_label"></label>
-                        <input type="number" id="product-price" name="price" min="0" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" data-i18n-placeholder="price_placeholder" />
+                        <input type="number" id="product-price" name="price" min="0" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none" data-i18n-placeholder="price_placeholder" aria-required="true" />
                         <p id="price-error" class="text-red-500 text-sm mt-1 hidden" role="alert" data-i18n-key="error_valid_price"></p>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="product-image" class="block font-medium mb-1" data-i18n-key="ad_image_label"></label>
-                        <input type="file" id="product-image" name="image" accept="image/*" class="w-full text-gray-700 dark:text-gray-200" required>
+                        <input type="file" id="product-image" name="image" accept="image/*" class="w-full text-gray-700 dark:text-gray-200" required aria-required="true">
                         <progress id="uploadProgress" value="0" max="100" class="w-full mt-2" style="display:none;"></progress>
                     </div>
                     <div class="hidden">
                         <label for="product-store" class="block font-medium mb-1" data-i18n-key="store_label"></label>
-                        <input type="text" id="product-store" name="storeName" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" data-i18n-placeholder="store_name_placeholder" />
+                        <input type="text" id="product-store" name="storeName" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none" data-i18n-placeholder="store_name_placeholder" />
                     </div>
                 </div>
                 <div>
                     <label for="product-description" class="block font-medium mb-1" data-i18n-key="description_label"></label>
-                    <textarea id="product-description" name="description" rows="3" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" data-i18n-placeholder="description_placeholder"></textarea>
+                    <textarea id="product-description" name="description" rows="3" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none resize-none" data-i18n-placeholder="description_placeholder"></textarea>
                 </div>
                 <div class="text-center">
-                    <button type="submit" id="submit-ad-btn" class="mt-4 px-8 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md flex items-center justify-center disabled:bg-blue-400 disabled:cursor-not-allowed">
+                    <button type="submit" id="submit-ad-btn" class="mt-4 px-8 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md flex items-center justify-center disabled:bg-blue-400 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none">
                         <span class="btn-text" data-i18n-key="submit_ad_btn_text"></span>
                         <svg class="animate-spin ml-3 h-5 w-5 text-white hidden btn-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -238,17 +239,17 @@
 
 <div id="auth-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 invisible opacity-0" role="dialog" aria-modal="true">
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-sm w-full p-6 relative">
-        <button id="auth-modal-close-btn" class="absolute top-4 right-4 text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 focus:outline-none" aria-label="Close login form">
+        <button id="auth-modal-close-btn" class="absolute top-4 right-4 text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none rounded-full" aria-label="Close login form">
             <i class="fas fa-times text-2xl"></i>
         </button>
         <h3 class="text-2xl font-bold mb-6 text-center" data-i18n-key="connect"></h3>
         <div class="space-y-4">
             <p class="text-center text-gray-600 dark:text-gray-400" data-i18n-key="login_text"></p>
-            <button id="google-login-btn" class="w-full flex items-center justify-center px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-full text-gray-700 dark:text-gray-200 font-semibold hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200 shadow-sm">
+            <button id="google-login-btn" class="w-full flex items-center justify-center px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-full text-gray-700 dark:text-gray-200 font-semibold hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200 shadow-sm focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none">
                 <i class="fab fa-google text-xl mr-2"></i>
                 <span data-i18n-key="google_login"></span>
             </button>
-             <button id="facebook-login-btn" class="w-full flex items-center justify-center px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-full text-gray-700 dark:text-gray-200 font-semibold hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200 shadow-sm">
+             <button id="facebook-login-btn" class="w-full flex items-center justify-center px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-full text-gray-700 dark:text-gray-200 font-semibold hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200 shadow-sm focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none">
                 <i class="fab fa-facebook text-xl mr-2"></i>
                 <span data-i18n-key="facebook_login"></span>
             </button>
@@ -261,7 +262,7 @@
         <h1 class="text-3xl md:text-5xl font-extrabold mb-4" data-i18n-key="hero_title"></h1>
         <p class="text-lg md:text-xl font-light mb-8 max-w-3xl mx-auto" data-i18n-key="hero_subtitle"></p>
     </section>
-
+    
     <section class="mb-8 md:mb-12" aria-labelledby="categories-title-heading">
         <div id="breadcrumb-nav" class="mb-4 text-sm text-gray-500 dark:text-gray-400"></div>
         <h2 id="categories-title-heading" class="text-2xl md:text-3xl font-bold mb-6 text-center"></h2>
@@ -280,11 +281,15 @@
 
         <section class="w-full md:w-3/4 lg:w-4/5">
              <div class="flex justify-between items-center mb-6">
-                <button id="show-filters-btn" class="md:hidden w-full px-6 py-3 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-md font-semibold hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200 shadow-md" data-i18n-key="show_filters">
+                <button id="show-filters-btn" class="md:hidden w-full px-6 py-3 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-md font-semibold hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200 shadow-md focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none" data-i18n-key="show_filters">
                 </button>
             </div>
             <div id="listings-section" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
             <div id="load-more-container" class="text-center mt-8"></div>
+            <section id="recommendations-section" class="mt-8 hidden">
+                <h2 class="text-2xl md:text-3xl font-bold mb-6" data-i18n-key="recommendations"></h2>
+                <div id="recommendations-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+            </section>
         </section>
     </div>
 </template>
@@ -317,35 +322,35 @@
     <h2 class="text-2xl font-bold mb-4" data-i18n-key="filters_title"></h2>
     <div>
         <label for="brand-filter" class="block text-sm font-medium" data-i18n-key="brand_label"></label>
-        <select id="brand-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm"></select>
+        <select id="brand-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none sm:text-sm rounded-md shadow-sm"></select>
     </div>
     <div id="model-filter-container" class="hidden">
         <label for="model-filter" class="block text-sm font-medium" data-i18n-key="model_label"></label>
-        <select id="model-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm"></select>
+        <select id="model-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none sm:text-sm rounded-md shadow-sm"></select>
     </div>
     <div>
         <label for="year-filter" class="block text-sm font-medium" data-i18n-key="year_label"></label>
-        <select id="year-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm"></select>
+        <select id="year-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none sm:text-sm rounded-md shadow-sm"></select>
     </div>
     <div>
         <label for="wilaya-filter" class="block text-sm font-medium" data-i18n-key="wilaya_label"></label>
-        <select id="wilaya-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm"></select>
+        <select id="wilaya-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none sm:text-sm rounded-md shadow-sm"></select>
     </div>
     <div id="commune-filter-container" class="hidden">
         <label for="commune-filter" class="block text-sm font-medium" data-i18n-key="commune_label"></label>
-        <select id="commune-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm"></select>
+        <select id="commune-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none sm:text-sm rounded-md shadow-sm"></select>
     </div>
     <div>
         <label for="category-filter" class="block text-sm font-medium" data-i18n-key="category_label"></label>
-        <select id="category-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm"></select>
+        <select id="category-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none sm:text-sm rounded-md shadow-sm"></select>
     </div>
     <div>
         <label for="condition-filter" class="block text-sm font-medium" data-i18n-key="condition_label"></label>
-        <select id="condition-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md shadow-sm"></select>
+        <select id="condition-filter" class="filter mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none sm:text-sm rounded-md shadow-sm"></select>
     </div>
     <div>
         <label for="price-range-filter" class="block text-sm font-medium" data-i18n-key="price_range"></label>
-        <input type="range" id="price-range-filter" min="0" max="100000" step="1000" class="filter w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer">
+        <input type="range" id="price-range-filter" min="0" max="100000" step="1000" class="filter w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none">
         <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
             <span>0 DA</span>
             <span id="price-range-value">50000 DA</span>
@@ -353,20 +358,24 @@
         </div>
     </div>
     <div class="mt-6 flex flex-col space-y-4">
-        <button id="filter-reset-btn" class="w-full px-6 py-3 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-md font-semibold hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors duration-200 shadow-md" data-i18n-key="reset"></button>
+        <button id="filter-reset-btn" class="w-full px-6 py-3 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-md font-semibold hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors duration-200 shadow-md focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none" data-i18n-key="reset"></button>
     </div>
 </template>
 
 <template id="product-detail-view-template">
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6 md:p-8">
-        <button id="back-to-listings-btn" class="mb-4 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-semibold flex items-center">
+        <button id="back-to-listings-btn" class="mb-4 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-semibold flex items-center focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none rounded-sm">
             <i class="fas fa-arrow-left mr-2"></i>
             <span data-i18n-key="back_to_listings"></span>
         </button>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <img id="product-image-detail" src="" alt="" class="w-full h-80 md:h-96 object-cover rounded-lg shadow-md" />
+            <picture>
+                <source id="product-image-webp" srcset="" type="image/webp">
+                <img id="product-image-detail" src="" alt="" class="w-full h-80 md:h-96 object-cover rounded-lg shadow-md" />
+            </picture>
             <div>
                 <h2 id="product-title-detail" class="text-2xl md:text-3xl font-bold mb-2"></h2>
+                <div id="product-rating-detail" class="my-2 flex items-center"></div>
                 <p id="product-price-detail" class="text-blue-600 dark:text-blue-400 font-bold text-2xl mb-4"></p>
                 <div class="space-y-2 text-sm mb-6 border-t border-b dark:border-gray-700 py-4">
                     <p><strong><span data-i18n-key="brand_label"></span>:</strong> <span id="product-brand-detail"></span></p>
@@ -374,18 +383,28 @@
                     <p><strong><span data-i18n-key="year_label"></span>:</strong> <span id="product-year-detail"></span></p>
                     <p><strong><span data-i18n-key="wilaya_label"></span>:</strong> <span id="product-wilaya-detail"></span></p>
                     <p><strong><span data-i18n-key="commune_label"></span>:</strong> <span id="product-commune-detail"></span></p>
-                    <p><strong><span data-i18n-key="sold_by"></span></strong> <a href="#" id="seller-profile-link" class="text-blue-600 dark:text-blue-400 hover:underline"></a></p>
+                    <p><strong><span data-i18n-key="sold_by"></span></strong> <a href="#" id="seller-profile-link" class="text-blue-600 dark:text-blue-400 hover:underline focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none rounded-sm"></a></p>
                 </div>
                 <p id="product-description-detail" class="leading-relaxed mb-6"></p>
                 <div class="flex flex-col space-y-4">
-                     <button id="add-to-cart-btn" class="w-full px-6 py-3 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition-colors duration-200 shadow-md flex items-center justify-center">
+                     <button id="add-to-cart-btn" class="w-full px-6 py-3 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition-colors duration-200 shadow-md flex items-center justify-center focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none">
                         <i class="fas fa-cart-plus mr-2"></i>
                         <span data-i18n-key="add_to_cart"></span>
                     </button>
-                    <button id="contact-seller-btn" class="w-full px-6 py-3 bg-gray-600 text-white rounded-full font-semibold hover:bg-gray-700 transition-colors duration-200 shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center">
+                    <button id="contact-seller-btn" class="w-full px-6 py-3 bg-gray-600 text-white rounded-full font-semibold hover:bg-gray-700 transition-colors duration-200 shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none">
                         <i class="fas fa-comments mr-2"></i>
                         <span data-i18n-key="contact_seller"></span>
                     </button>
+                </div>
+                <div id="product-reviews" class="mt-8">
+                    <h3 class="text-xl font-bold mb-4" data-i18n-key="buyer_reviews"></h3>
+                    <div id="reviews-list" class="space-y-4"></div>
+                    <div id="add-review-section" class="mt-4 hidden">
+                        <h4 class="text-lg font-semibold" data-i18n-key="add_review"></h4>
+                        <div id="rating-stars" class="flex items-center space-x-1 my-2"></div>
+                        <textarea id="review-text" rows="3" class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none resize-none" data-i18n-placeholder="write_review_placeholder"></textarea>
+                        <button id="submit-review-btn" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none" data-i18n-key="submit_review"></button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -394,13 +413,13 @@
 
 <template id="cart-view-template">
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 md:p-8">
-        <button id="back-from-cart-btn" class="mb-4 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-semibold flex items-center">
+        <button id="back-from-cart-btn" class="mb-4 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-semibold flex items-center focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none rounded-sm">
             <i class="fas fa-arrow-left mr-2"></i>
             <span data-i18n-key="back_to_listings"></span>
         </button>
         <div class="flex justify-between items-center mb-6">
              <h2 class="text-2xl md:text-3xl font-bold" data-i18n-key="cart_title"></h2>
-             <button id="clear-cart-btn" class="px-4 py-2 bg-red-600 text-white text-sm rounded-md font-semibold hover:bg-red-700 transition-colors duration-200 shadow-md" data-i18n-key="clear_cart"></button>
+             <button id="clear-cart-btn" class="px-4 py-2 bg-red-600 text-white text-sm rounded-md font-semibold hover:bg-red-700 transition-colors duration-200 shadow-md focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none" data-i18n-key="clear_cart"></button>
         </div>
         <div id="cart-items-container" class="space-y-4"></div>
         <div id="cart-summary" class="mt-8 pt-4 border-t border-gray-200 dark:border-gray-700">
@@ -408,7 +427,7 @@
                 <span data-i18n-key="cart_total"></span>:
                 <span id="cart-total-price">0 DA</span>
             </p>
-            <button id="checkout-btn" class="w-full mt-4 px-6 py-3 bg-green-600 text-white rounded-md font-semibold hover:bg-green-700 transition-colors duration-200 shadow-md">
+            <button id="checkout-btn" class="w-full mt-4 px-6 py-3 bg-green-600 text-white rounded-md font-semibold hover:bg-green-700 transition-colors duration-200 shadow-md focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none">
                 <span data-i18n-key="checkout_btn"></span>
             </button>
         </div>
@@ -424,7 +443,7 @@
         </div>
         <div class="mt-8 pt-4 border-t dark:border-gray-700">
             <h3 class="text-xl font-semibold text-red-600 mb-4" data-i18n-key="danger_zone"></h3>
-            <button id="delete-account-btn" class="px-6 py-3 bg-red-600 text-white rounded-md font-semibold hover:bg-red-700 transition-colors duration-200 shadow-md">
+            <button id="delete-account-btn" class="px-6 py-3 bg-red-600 text-white rounded-md font-semibold hover:bg-red-700 transition-colors duration-200 shadow-md focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none">
                 <span data-i18n-key="delete_account"></span>
             </button>
         </div>
@@ -442,7 +461,7 @@
                     <p id="store-profile-label" class="text-sm font-semibold text-blue-600 dark:text-blue-400 hidden" data-i18n-key="store_profile"></p>
                 </div>
                 <div id="profile-rating" class="flex items-center justify-center md:justify-start text-yellow-500 mt-2">
-                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+                    <span id="star-rating-display"></span>
                     <span class="text-gray-600 dark:text-gray-400 ml-2 text-sm" data-i18n-key="reviews_soon"></span>
                 </div>
             </div>
@@ -453,14 +472,14 @@
             <form id="profile-edit-form" class="space-y-4">
                 <div>
                     <label for="profile-name-input" class="block font-medium mb-1" data-i18n-key="name_label"></label>
-                    <input type="text" id="profile-name-input" name="displayName" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    <input type="text" id="profile-name-input" name="displayName" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none" />
                 </div>
                 <div>
                     <label for="profile-pic-upload" class="block font-medium mb-1" data-i18n-key="profile_pic_label"></label>
                     <input type="file" id="profile-pic-upload" name="profilePic" accept="image/*" class="w-full text-gray-700 dark:text-gray-200">
                 </div>
                 <div class="text-center">
-                    <button type="submit" id="submit-profile-btn" class="mt-4 px-8 py-3 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition-colors duration-200 shadow-md flex items-center justify-center disabled:bg-green-400 disabled:cursor-not-allowed">
+                    <button type="submit" id="submit-profile-btn" class="mt-4 px-8 py-3 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition-colors duration-200 shadow-md flex items-center justify-center disabled:bg-green-400 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none">
                         <span class="btn-text" data-i18n-key="save"></span>
                     </button>
                 </div>
@@ -472,14 +491,14 @@
              <form id="store-setup-form" class="space-y-4">
                  <div>
                     <label for="store-name-input" class="block font-medium mb-1" data-i18n-key="store_name_label"></label>
-                    <input type="text" id="store-name-input" name="storeName" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" data-i18n-placeholder="store_name_placeholder" />
+                    <input type="text" id="store-name-input" name="storeName" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-3 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none" data-i18n-placeholder="store_name_placeholder" />
                  </div>
                  <div>
                     <label for="store-logo-upload" class="block font-medium mb-1" data-i18n-key="store_logo_label"></label>
                     <input type="file" id="store-logo-upload" name="storeLogo" accept="image/*" class="w-full text-gray-700 dark:text-gray-200">
                  </div>
                  <div class="text-center">
-                    <button type="submit" id="submit-store-btn" class="mt-4 px-8 py-3 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition-colors duration-200 shadow-md flex items-center justify-center disabled:bg-green-400 disabled:cursor-not-allowed">
+                    <button type="submit" id="submit-store-btn" class="mt-4 px-8 py-3 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition-colors duration-200 shadow-md flex items-center justify-center disabled:bg-green-400 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none">
                         <span class="btn-text" data-i18n-key="save"></span>
                     </button>
                  </div>
@@ -518,9 +537,10 @@
             <h2 id="chat-with-name" class="text-xl font-bold"></h2>
         </div>
         <div id="messages-container" class="flex-1 overflow-y-auto space-y-4 p-2 flex flex-col"></div>
-        <form id="send-message-form" class="mt-4 flex gap-4 border-t dark:border-gray-700 p-4 flex-shrink-0">
-            <input type="text" id="message-input" class="flex-1 p-3 rounded-full border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" required data-i18n-placeholder="type_message_placeholder">
-            <button type="submit" class="bg-blue-600 text-white rounded-full w-12 h-12 flex-shrink-0 flex items-center justify-center" aria-label="Send Message">
+        <div id="chat-actions" class="p-4 border-t dark:border-gray-700 flex flex-shrink-0 justify-end gap-2"></div>
+        <form id="send-message-form" class="flex gap-4 p-4 flex-shrink-0">
+            <input type="text" id="message-input" class="flex-1 p-3 rounded-full border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none" required data-i18n-placeholder="type_message_placeholder">
+            <button type="submit" class="bg-blue-600 text-white rounded-full w-12 h-12 flex-shrink-0 flex items-center justify-center focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none" aria-label="Send Message">
                 <i class="fas fa-paper-plane"></i>
             </button>
         </form>
