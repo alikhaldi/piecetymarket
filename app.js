@@ -712,8 +712,8 @@ const renderListings = async (loadMore = false) => {
         }
         translatePage(currentLang);
     } catch (error) {
-        console.error("Error fetching products:", error);
-        listingsSection.innerHTML = `<p class="col-span-full text-center text-red-500">Error loading products.</p>`;
+        console.error("❌ Error loading products:", error);
+        listingsSection.innerHTML = `<p class="col-span-full text-center text-red-500">Error loading products: ${error.message}</p>`;
     } finally {
         isFetching = false;
     }
