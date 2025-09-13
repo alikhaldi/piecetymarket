@@ -58,7 +58,7 @@ const translations = {
         terms_liability_title: "5. Limitation de responsabilité",
         terms_liability_text: "Piecety est fourni 'tel quel'. Nous ne garantissons pas que le service sera ininterrompu ou sans erreur. En aucun cas, Piecety ne sera responsable des dommages directs ou indirects résultant de votre utilisation du service.",
         terms_termination_title: "6. Résiliation du compte",
-        terms_termination_text: "Nous pouvons résilier ou suspendre votre compte et votre accès à l'application, sans préavis ni responsabilité, pour quelque raison que ce soit, y compris si vous enfreignez les Conditions. Vous pouvez supprimer votre compte à tout moment depuis votre tableau de bord.",
+        terms_termination_text: "Nous pouvons résilier ou suspendre votre compte et votre accès à l'application, sans préavis ni responsabilité, pour quelque raison que ce soit, y inclus si vous enfreignez les Conditions. Vous pouvez supprimer votre compte à tout moment depuis votre tableau de bord.",
         danger_zone: "Zone de danger",
         delete_account: "Supprimer mon compte",
         delete_account_confirm: "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible et supprimera toutes vos annonces, messages et données personnelles. Cette action est IRREVERSIBLE!",
@@ -406,11 +406,11 @@ const translatePage = (lang) => {
     document.getElementById("current-lang").textContent = translations[lang]?.[`${lang}_short`] || lang.toUpperCase();
     
     document.querySelectorAll("[data-i18n-key]").forEach(el => {
-        const key = el.dataset.i18nKey;
+        const key = el.dataset.i18n-key;
         if (translations[lang]?.[key]) el.innerHTML = translations[lang][key];
     });
     document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
-        const key = el.dataset.i18nPlaceholder;
+        const key = el.dataset.i18n-placeholder;
         if (translations[lang]?.[key]) el.placeholder = translations[lang][key];
     });
 };
@@ -728,7 +728,8 @@ const setupFilterListeners = (container = document) => {
         el.addEventListener('change', debouncedApply);
     });
     
-    container.querySelector('#filter-reset-btn')?.addEventListener('click', () => {
+    container.querySelector('#filter-reset-btn')?.addEventListener('click', (e) => {
+        e.preventDefault();
         window.history.pushState({}, '', window.location.pathname);
         renderView('home');
     });
@@ -830,11 +831,13 @@ const displayProducts = (docs, container) => {
     card.className = "listing-card bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex flex-col";
 
     const isMyProduct = currentUser && currentUser.uid === product.sellerId;
+    const imageUrl = product.imageUrl || './assets/placeholder.png';
+    const webpUrl = imageUrl.replace(/\.(png|jpe?g)$/i, '.webp');
 
     card.innerHTML = `
       <picture>
-        <source srcset="${product.imageUrl.replace(/\.(png|jpe?g)$/i, '.webp')}" type="image/webp">
-        <img loading="lazy" src="${product.imageUrl || './assets/placeholder.png'}" alt="${product.title || ''}" class="w-full h-40 object-cover cursor-pointer product-image">
+        <source srcset="${webpUrl}" type="image/webp">
+        <img loading="lazy" src="${imageUrl}" alt="${product.title || ''}" class="w-full h-40 object-cover cursor-pointer product-image">
       </picture>
       <div class="p-4 flex flex-col flex-grow">
         <h3 class="font-bold text-lg truncate product-title cursor-pointer">${product.title || ''}</h3>
@@ -859,6 +862,31 @@ const displayProducts = (docs, container) => {
 
     container.appendChild(card);
   });
+};
+
+const renderRecentlyViewed = async () => {
+    const section = document.getElementById('recently-viewed-section');
+    const grid = document.getElementById('recently-viewed-grid');
+    if (!section || !grid || recentlyViewed.length === 0) {
+        if(section) section.classList.add('hidden');
+        return;
+    }
+    
+    try {
+        const q = query(collection(db, "products"), where(documentId(), "in", recentlyViewed.slice(0, 4)));
+        const snapshots = await getDocs(q);
+        const products = snapshots.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        if (products.length > 0) {
+            section.classList.remove('hidden');
+            grid.innerHTML = '';
+            displayProducts(products, grid);
+        } else {
+            section.classList.add('hidden');
+        }
+    } catch(error) {
+        console.error("Error fetching recently viewed products:", error);
+    }
 };
 
 const renderRecommendations = async () => {
@@ -886,8 +914,9 @@ window.renderProductPage = async (product) => {
     
     document.getElementById('product-title-detail').textContent = product.title;
     document.getElementById('product-price-detail').textContent = `${product.price.toLocaleString()} DA`;
-    document.getElementById('product-image-detail').src = product.imageUrl || './assets/placeholder.png';
-    document.getElementById('product-image-webp').srcset = product.imageUrl.replace(/\.(png|jpe?g)$/i, '.webp');
+    const imageUrl = product.imageUrl || './assets/placeholder.png';
+    document.getElementById('product-image-detail').src = imageUrl;
+    document.getElementById('product-image-webp').srcset = imageUrl.replace(/\.(png|jpe?g)$/i, '.webp');
     document.getElementById('product-brand-detail').textContent = product.brand;
     document.getElementById('product-model-detail').textContent = product.model || 'N/A';
     document.getElementById('product-year-detail').textContent = product.year || 'N/A';
@@ -1232,7 +1261,7 @@ const updateProfileData = async (e) => {
         });
 
         showMessage('Profile updated successfully!', 3000, 'success');
-        renderView('profile', { userId: currentUser.uid, userName: displayName });
+        renderView('profile', { userId: currentUser.uid, userName: currentUser.displayName });
     } catch (error) {
         console.error("Error updating profile:", error);
         showMessage("Failed to update profile.", 3000, "error");
@@ -1539,7 +1568,7 @@ const updateAuthUI = (user) => {
         authLinksContainer.innerHTML = `<div class="relative" id="user-menu"><button id="user-menu-btn" class="flex items-center"><img src="${user.photoURL}" alt="User" class="w-8 h-8 rounded-full border-2 border-transparent hover:border-blue-500 transition-colors"></button><div id="user-menu-dropdown" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-lg shadow-lg py-1 hidden z-20"><a href="#" id="profile-link" class="block px-4 py-2 text-sm" data-i18n-key="nav_profile"></a><a href="#" id="dashboard-link" class="block px-4 py-2 text-sm" data-i18n-key="dashboard"></a><a href="#" id="messages-link" class="relative block px-4 py-2 text-sm" data-i18n-key="messages"><span id="unread-badge" class="hidden absolute right-2 top-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"></span></a><button id="logout-btn" class="w-full text-left px-4 py-2 text-sm" data-i18n-key="logout"></button></div></div>`;
         mobileLinksHTML += `<a href="#" id="mobile-profile-link" class="p-2 text-lg" data-i18n-key="nav_profile"></a><a href="#" id="mobile-dashboard-link" class="p-2 text-lg" data-i18n-key="dashboard"></a><a href="#" id="mobile-messages-link" class="p-2 text-lg relative"><span data-i18n-key="messages"></span><span id="mobile-unread-badge" class="hidden absolute top-0 ml-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"></span></a><button id="mobile-logout-btn" class="p-2 text-lg text-left" data-i18n-key="logout"></button>`;
         
-        const toggleUserMenu = () => document.getElementById('user-menu-dropdown').classList.toggle('hidden');
+        const toggleUserMenu = (e) => { e.preventDefault(); document.getElementById('user-menu-dropdown').classList.toggle('hidden'); };
         document.getElementById('user-menu-btn').onclick = toggleUserMenu;
         document.getElementById('logout-btn').onclick = handleSignOut;
         document.getElementById('profile-link').onclick = (e) => { e.preventDefault(); renderView('profile', { userId: currentUser.uid, userName: currentUser.displayName }); };
@@ -1583,10 +1612,10 @@ const setupEventListeners = () => {
 
     darkModeToggle.onclick = () => setDarkMode(!DOMElements.html.classList.contains('dark'));
     langDropdownBtn.onclick = (e) => { e.stopPropagation(); DOMElements.langDropdown.classList.toggle('hidden'); };
-    langBtns.forEach(btn => btn.onclick = () => { setLanguage(btn.dataset.lang); DOMElements.langDropdown.classList.add('hidden'); closeMobileMenu(); });
+    langBtns.forEach(btn => btn.onclick = (e) => { e.preventDefault(); setLanguage(btn.dataset.lang); DOMElements.langDropdown.classList.add('hidden'); closeMobileMenu(); });
 
     sellLink.onclick = (e) => { e.preventDefault(); toggleModal(currentUser ? DOMElements.postProductModal : DOMElements.authModal, true); };
-    cartBtn.onclick = () => renderView('cart');
+    cartBtn.onclick = (e) => { e.preventDefault(); renderView('cart'); };
     homeLink.onclick = (e) => { e.preventDefault(); window.history.pushState({}, '', window.location.pathname); renderView('home'); };
 
     mobileMenuBtn.onclick = openMobileMenu;
