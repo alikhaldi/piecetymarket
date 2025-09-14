@@ -74,6 +74,9 @@ body.dark .category-card:hover {
     box-shadow: 0 10px 15px var(--color-card-hover-dark);
 }
 .category-card .category-icon {
+    /* Changed the container size from h-16 w-16 to h-24 w-24 to accommodate a larger image */
+    height: 96px; /* Increased from 64px to 96px for the container */
+    width: 96px;  /* Increased from 64px to 96px for the container */
     transition: transform 0.2s ease, background-color 0.2s ease;
 }
 .category-card:hover .category-icon {
@@ -86,8 +89,9 @@ body.dark .category-card:hover .category-icon {
 
 /* Adjustments for the new image-based icons */
 .category-card .category-icon img {
-    height: 96px; /* Increased from 64px to 96px */
-    width: 96px;  /* Increased from 64px to 96px */
+    /* Increased the size of the image to fill more of the container */
+    height: 100%;
+    width: 100%;
 }
 
 /* Skeleton Loading Effect */
