@@ -380,9 +380,17 @@ const handleSwipe = () => {
 
 // --- APP LOGIC ---
 const setDarkMode = (isDark) => {
-    DOMElements.html.classList.toggle('dark', isDark);
-    localStorage.setItem('piecety_dark_mode', isDark);
-    DOMElements.darkModeToggle.querySelector('i').className = isDark ? 'fas fa-sun text-xl' : 'fas fa-moon text-xl';
+  DOMElements.html.classList.toggle('dark', !!isDark);
+  localStorage.setItem('piecety_dark_mode', !!isDark);
+  
+  const desktopIcon = DOMElements.darkModeToggle?.querySelector('i');
+  if (desktopIcon) desktopIcon.className = isDark ? 'fas fa-sun text-xl' : 'fas fa-moon text-xl';
+  
+  const mobileDarkModeToggle = document.getElementById('mobile-dark-mode-toggle');
+  if (mobileDarkModeToggle) {
+    const mobileIcon = mobileDarkModeToggle.querySelector('i');
+    if (mobileIcon) mobileIcon.className = isDark ? 'fas fa-sun text-xl' : 'fas fa-moon text-xl';
+  }
 };
 
 const setLanguage = (lang) => {
@@ -390,9 +398,7 @@ const setLanguage = (lang) => {
     localStorage.setItem("piecety_lang", lang);
     translatePage(lang);
     updateTitle(currentView);
-    if (currentView) {
-        renderView(currentView);
-    }
+    if (currentView) { renderView(currentView); }
 };
 
 const updateTitle = (view) => {
@@ -403,7 +409,7 @@ const updateTitle = (view) => {
 };
 
 const translatePage = (lang) => {
-    const { html } = DOMElements;
+    const html = DOMElements.html;
     html.setAttribute("dir", lang === "ar" ? "rtl" : "ltr");
     html.setAttribute("lang", lang);
 
@@ -411,12 +417,17 @@ const translatePage = (lang) => {
     
     document.querySelectorAll("[data-i18n-key]").forEach(el => {
         const key = el.dataset.i18nKey;
-        if (translations[lang]?.[key]) el.innerHTML = translations[lang][key];
+        if (translations[lang]?.[key]) el.textContent = translations[lang][key];
     });
     document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
         const key = el.dataset.i18nPlaceholder;
         if (translations[lang]?.[key]) el.placeholder = translations[lang][key];
     });
+    
+    const mobileDarkModeToggle = document.getElementById('mobile-dark-mode-toggle');
+    if (mobileDarkModeToggle) {
+        mobileDarkModeToggle.setAttribute('aria-label', lang === "ar" ? "تغيير الوضع الليلي" : (lang === "fr" ? "Changer le mode sombre" : "Toggle dark mode"));
+    }
 };
 
 const populateSelect = (selectEl, options, defaultLabelKey, lang, valueAsKey = false) => {
@@ -476,6 +487,35 @@ const applyFiltersFromURL = (container = document) => {
         }
     });
     DOMElements.searchInput.value = params.get('search') || '';
+};
+
+const trapModalFocus = (modalId) => {
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
+    const focusableEls = modal.querySelectorAll('a, button, textarea, input, select, [tabindex]:not([tabindex="-1"])');
+    if (focusableEls.length === 0) return;
+    
+    const firstEl = focusableEls[0];
+    const lastEl = focusableEls[focusableEls.length - 1];
+
+    modal.addEventListener('keydown', (e) => {
+        if (e.key === 'Tab') {
+            if (e.shiftKey) { // backward
+                if (document.activeElement === firstEl) {
+                    lastEl.focus();
+                    e.preventDefault();
+                }
+            } else { // forward
+                if (document.activeElement === lastEl) {
+                    firstEl.focus();
+                    e.preventDefault();
+                }
+            }
+        }
+        if (e.key === 'Escape') {
+            toggleModal(modal, false);
+        }
+    });
 };
 
 // --- VIEW RENDERING ---
@@ -1640,16 +1680,14 @@ const setupEventListeners = () => {
     const mobileDarkModeToggle = document.getElementById('mobile-dark-mode-toggle');
     if (mobileDarkModeToggle) {
         mobileDarkModeToggle.onclick = () => {
-            const isDark = DOMElements.html.classList.toggle('dark');
-            localStorage.setItem('piecety_dark_mode', isDark);
-            mobileDarkModeToggle.querySelector('i').className = isDark ? 'fas fa-sun text-xl' : 'fas fa-moon text-xl';
+            setDarkMode(!DOMElements.html.classList.contains('dark'));
         };
     }
 
     langDropdownBtn.onclick = (e) => { e.stopPropagation(); DOMElements.langDropdown.classList.toggle('hidden'); };
     langBtns.forEach(btn => btn.onclick = (e) => { e.preventDefault(); setLanguage(btn.dataset.lang); DOMElements.langDropdown.classList.add('hidden'); closeMobileMenu(); });
 
-    sellLink.onclick = (e) => { e.preventDefault(); toggleModal(currentUser ? DOMElements.postProductModal : DOMElements.authModal, true); };
+    sellLink.onclick = (e) => { e.preventDefault(); toggleModal(currentUser ? DOMElements.postProductModal : DOMElements.authModal, true); if(currentUser) trapModalFocus('post-product-modal'); };
     cartBtn.onclick = (e) => { e.preventDefault(); renderView('cart'); };
     homeLink.onclick = (e) => { e.preventDefault(); window.history.pushState({}, '', window.location.pathname); renderView('home'); };
 
@@ -1700,76 +1738,9 @@ const setupEventListeners = () => {
                 conditionSelect.innerHTML += `<option value="new">${translations[currentLang]['new']}</option>`;
                 conditionSelect.innerHTML += `<option value="used">${translations[currentLang]['used']}</option>`;
             }
+            trapModalFocus('post-product-modal');
         }
     });
-
-    DOMElements.postProductForm.onsubmit = async (e) => {
-        e.preventDefault();
-        const form = e.target;
-        if (!validatePostForm(form) || !currentUser) return;
-        
-        const btn = form.querySelector('button[type="submit"]');
-        btn.disabled = true;
-        btn.querySelector('.btn-spinner').classList.remove('hidden');
-
-        const formData = Object.fromEntries(new FormData(form).entries());
-        const imageFile = DOMElements.postProductImageInput.files[0];
-        
-        try {
-            if (!imageFile) {
-                showMessage("Please select an image first!", 3000, "error");
-                btn.disabled = false;
-                btn.querySelector('.btn-spinner').classList.add('hidden');
-                return;
-            }
-
-            const progressBar = document.getElementById("uploadProgress");
-            progressBar.style.display = "block";
-            progressBar.value = 0;
-
-            const storageRef = ref(storage, `product_images/${Date.now()}_${imageFile.name}`);
-            const uploadTask = uploadBytesResumable(storageRef, imageFile);
-
-            await new Promise((resolve, reject) => {
-              uploadTask.on('state_changed',
-                snapshot => {
-                  if (progressBar && snapshot.totalBytes) {
-                    progressBar.value = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                  }
-                },
-                err => reject(err),
-                () => resolve()
-              );
-            });
-
-            const imageUrl = await getDownloadURL(storageRef);
-            
-            progressBar.style.display = "none";
-
-            const productData = {
-                ...formData,
-                price: Number(formData.price) || 0,
-                sellerId: currentUser.uid,
-                sellerName: userProfile?.storeName || currentUser.displayName || 'Anonymous',
-                imageUrl: imageUrl,
-                createdAt: serverTimestamp(),
-                keywords: formData.title.toLowerCase().split(' ')
-            };
-
-            await addDoc(collection(db, "products"), productData);
-            showMessage('ad_posted', 3000, 'success');
-            form.reset();
-            toggleModal(DOMElements.postProductModal, false);
-        } catch (error) {
-            console.error("❌ Upload or Firestore write failed:", error);
-            showMessage('ad_post_failed', 3000, 'error');
-        } finally {
-            btn.disabled = false;
-            btn.querySelector('.btn-spinner').classList.add('hidden');
-            const progressBar = document.getElementById('uploadProgress');
-            if (progressBar) progressBar.style.display = 'none';
-        }
-    };
     
     DOMElements.postProductBrandSelect.onchange = () => {
         const modelSelect = DOMElements.postProductModelSelect;
