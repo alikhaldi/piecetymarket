@@ -19,6 +19,9 @@ let isFetching = false;
 let recentlyViewed = JSON.parse(localStorage.getItem('piecety_recently_viewed')) || [];
 let userProfile = null;
 let userInteractions = JSON.parse(localStorage.getItem('userInteractions') || '{}');
+let listingsCache = null;
+let cacheTimestamp = null;
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 // --- FIREBASE CONFIGURATION ---
 const firebaseConfig = {
@@ -770,53 +773,69 @@ const renderListings = async (loadMore = false) => {
 
     const searchQuery = DOMElements.searchInput.value.trim().toLowerCase();
     
-    let baseQuery = collection(db, "products");
+    let productsToShow = [];
+    let fromCache = false;
     
-    for (const key in filters) {
-        baseQuery = query(baseQuery, where(key, "==", filters[key]));
-    }
-    
-    let finalQuery = query(baseQuery, orderBy("createdAt", "desc"));
-    if (loadMore && lastVisibleProduct) {
-        finalQuery = query(finalQuery, startAfter(lastVisibleProduct));
-    }
-    finalQuery = query(finalQuery, limit(PRODUCTS_PER_PAGE));
-
-    try {
-        const snapshot = await getDocs(finalQuery);
-        let productsToShow = snapshot.docs;
-
-        if (searchQuery) {
-            productsToShow = productsToShow.filter(doc => {
-                const product = doc.data();
-                return product.title.toLowerCase().includes(searchQuery) || 
-                       (product.description && product.description.toLowerCase().includes(searchQuery));
-            });
+    if (listingsCache && (Date.now() - cacheTimestamp) < CACHE_DURATION && !loadMore && !searchQuery) {
+        productsToShow = listingsCache;
+        fromCache = true;
+    } else {
+        let baseQuery = collection(db, "products");
+        
+        for (const key in filters) {
+            baseQuery = query(baseQuery, where(key, "==", filters[key]));
         }
         
-        if (!loadMore) listingsSection.innerHTML = '';
-        if (productsToShow.length === 0 && !loadMore) {
-            listingsSection.innerHTML = `<p class="col-span-full text-center p-8 text-lg text-gray-500" data-i18n-key="no_listings"></p>`;
-            const recs = await getRecommendations();
-            if (recs.length > 0 && recommendationsSection) {
-                recommendationsSection.classList.remove('hidden');
-                displayProducts(recs, document.getElementById('recommendations-grid'));
+        let finalQuery = query(baseQuery, orderBy("createdAt", "desc"));
+        if (loadMore && lastVisibleProduct) {
+            finalQuery = query(finalQuery, startAfter(lastVisibleProduct));
+        }
+        finalQuery = query(finalQuery, limit(PRODUCTS_PER_PAGE));
+
+        try {
+            const snapshot = await getDocs(finalQuery);
+            productsToShow = snapshot.docs.map(p => ({ id: p.id, ...p.data() }));
+
+            if (searchQuery) {
+                productsToShow = productsToShow.filter(doc => {
+                    return doc.title.toLowerCase().includes(searchQuery) || 
+                           (doc.description && doc.description.toLowerCase().includes(searchQuery));
+                });
             }
-        } else {
-            displayProducts(productsToShow.map(p => ({ id: p.id, ...p.data() })), listingsSection);
+            
+            if (!loadMore && !searchQuery && productsToShow.length > 0) {
+                listingsCache = productsToShow;
+                cacheTimestamp = Date.now();
+            }
+
             lastVisibleProduct = snapshot.docs[snapshot.docs.length - 1];
             if (snapshot.docs.length === PRODUCTS_PER_PAGE && loadMoreContainer) {
                 loadMoreContainer.innerHTML = `<button id="load-more-btn" class="px-6 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors" data-i18n-key="load_more"></button>`;
                 document.getElementById('load-more-btn').onclick = () => renderListings(true);
             }
+
+        } catch (error) {
+            console.error("❌ Error loading products:", error);
+            listingsSection.innerHTML = `<p class="col-span-full text-center text-red-500">Error loading products: ${error.message}</p>`;
+            isFetching = false;
+            return;
         }
-        translatePage(currentLang);
-    } catch (error) {
-        console.error("❌ Error loading products:", error);
-        listingsSection.innerHTML = `<p class="col-span-full text-center text-red-500">Error loading products: ${error.message}</p>`;
-    } finally {
-        isFetching = false;
     }
+
+    if (!loadMore) listingsSection.innerHTML = '';
+    
+    if (productsToShow.length === 0 && !loadMore) {
+        listingsSection.innerHTML = `<p class="col-span-full text-center p-8 text-lg text-gray-500" data-i18n-key="no_listings"></p>`;
+        const recs = await getRecommendations();
+        if (recs.length > 0 && recommendationsSection) {
+            recommendationsSection.classList.remove('hidden');
+            displayProducts(recs, document.getElementById('recommendations-grid'));
+        }
+    } else {
+        displayProducts(productsToShow, listingsSection);
+    }
+    translatePage(currentLang);
+    isFetching = false;
 };
 
 const displayProducts = (docs, container) => {
