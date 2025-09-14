@@ -84,6 +84,12 @@ body.dark .category-card:hover .category-icon {
     background-color: var(--color-accent-dark);
 }
 
+/* Adjustments for the new image-based icons */
+.category-card .category-icon img {
+    height: 96px; /* Increased from 64px to 96px */
+    width: 96px;  /* Increased from 64px to 96px */
+}
+
 /* Skeleton Loading Effect */
 .skeleton-card {
     background: #fff;
