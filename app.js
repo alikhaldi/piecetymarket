@@ -57,7 +57,7 @@ const translations = {
 };
 
 const categories = {
-    "braking-system": { fr: "Système de Freinage", en: "Braking System", ar: "نظام الفرملة", icon: "fa-car-burst", sub: {
+    "braking-system": { fr: "Système de Freinage", en: "Braking System", ar: "نظام الفرملة", icon: "icons/brake.png", sub: {
         "brake-pads": { fr: "Plaquettes de frein", en: "Brake Pads", ar: "وسادات الفرامل" },
         "brake-discs": { fr: "Disques de frein", en: "Brake Discs", ar: "أقراص الفرامل" },
         "brake-calipers": { fr: "Étrier de frein", en: "Brake Calipers", ar: "فكي الفرامل" },
@@ -608,11 +608,16 @@ const renderDynamicGrid = (titleKey, items, cardGenerator, clickHandler) => {
 
 const renderPartCategories = () => {
     renderDynamicGrid('categories_title', Object.entries(categories), 
-        ([key, cat]) => `
-            <div class="p-4 rounded-full bg-blue-50 dark:bg-gray-700 text-blue-600 dark:text-blue-400 mx-auto w-16 h-16 flex items-center justify-center mb-2 category-icon">
-                <i class="fas ${cat.icon} text-3xl"></i>
-            </div>
-            <h3 class="font-semibold text-sm md:text-base">${cat[currentLang]}</h3>`,
+        ([key, cat]) => {
+            const isImage = cat.icon.endsWith('.png') || cat.icon.endsWith('.jpg');
+            const iconContent = isImage ? `<img src="${cat.icon}" alt="${cat[currentLang]}" class="h-10 w-10 object-contain">` : `<i class="fas ${cat.icon} text-3xl"></i>`;
+            return `
+                <div class="p-4 rounded-full bg-blue-50 dark:bg-gray-700 text-blue-600 dark:text-blue-400 mx-auto w-16 h-16 flex items-center justify-center mb-2 category-icon">
+                    ${iconContent}
+                </div>
+                <h3 class="font-semibold text-sm md:text-base">${cat[currentLang]}</h3>
+            `;
+        },
         (e, [key]) => {
             e.preventDefault();
             const newUrl = new URL(window.location);
