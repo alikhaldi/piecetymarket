@@ -74,9 +74,6 @@ body.dark .category-card:hover {
     box-shadow: 0 10px 15px var(--color-card-hover-dark);
 }
 .category-card .category-icon {
-    /* Adjusted container size for a better fit */
-    height: 128px;
-    width: 128px;
     transition: transform 0.2s ease, background-color 0.2s ease;
 }
 .category-card:hover .category-icon {
@@ -89,9 +86,9 @@ body.dark .category-card:hover .category-icon {
 
 /* Adjustments for the new image-based icons */
 .category-card .category-icon img {
-    /* Set the image to fill 100% of its parent container */
-    height: 100%;
-    width: 100%;
+    height: 64px;
+    width: 64px;
+    object-fit: contain;
 }
 
 /* Skeleton Loading Effect */
@@ -160,14 +157,16 @@ body.dark .skeleton-text {
         gap: 12px;
     }
 
+    /* Fixed mobile menu width */
     #mobile-menu {
-        width: 80%; /* Wider for better touch targets */
+        width: 80%;
         max-width: 320px;
     }
 
+    /* Fixed mobile link padding */
     #mobile-nav-links a, #mobile-nav-links button {
-        padding: 1rem; 
-        font-size: 1.125rem; /* Larger tap areas */
+        padding: 1rem;
+        font-size: 1.125rem;
     }
 }
 
