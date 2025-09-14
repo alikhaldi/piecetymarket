@@ -845,42 +845,45 @@ const displayProducts = (docs, container) => {
     return;
   }
   
+  let htmlString = "";
   docs.forEach(product => {
     const id = product.id;
-    const card = document.createElement('div');
-    card.className = "listing-card bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex flex-col";
-
     const isMyProduct = currentUser && currentUser.uid === product.sellerId;
     const imageUrl = product.imageUrl || './assets/placeholder.png';
     const webpUrl = imageUrl.replace(/\.(png|jpe?g)$/i, '.webp');
 
-    card.innerHTML = `
-      <picture>
-        <source srcset="${webpUrl}" type="image/webp">
-        <img loading="lazy" src="${imageUrl}" alt="${product.title || ''}" class="w-full h-40 object-cover cursor-pointer product-image">
-      </picture>
-      <div class="p-4 flex flex-col flex-grow">
-        <h3 class="font-bold text-lg truncate product-title cursor-pointer">${product.title || ''}</h3>
-        <p class="text-blue-600 dark:text-blue-400 font-semibold text-xl my-2">${(product.price||0).toLocaleString()} DA</p>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4"><i class="fas fa-map-marker-alt mr-1"></i> ${product.wilaya || ''}${product.commune ? `, ${product.commune}` : ''}</p>
-        <div class="mt-auto">
-          ${!isMyProduct ? `<button class="w-full flex items-center justify-center gap-2 px-3 py-2 bg-gray-100 dark:bg-gray-700 text-sm rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 chat-btn"><i class="fas fa-comments"></i> <span data-i18n-key="chat"></span></button>` : ''}
+    htmlString += `
+      <div class="listing-card bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex flex-col" data-id="${id}">
+        <picture>
+          <source srcset="${webpUrl}" type="image/webp">
+          <img loading="lazy" src="${imageUrl}" alt="${product.title || ''}" class="w-full h-40 object-cover cursor-pointer product-image">
+        </picture>
+        <div class="p-4 flex flex-col flex-grow">
+          <h3 class="font-bold text-lg truncate product-title cursor-pointer">${product.title || ''}</h3>
+          <p class="text-blue-600 dark:text-blue-400 font-semibold text-xl my-2">${(product.price||0).toLocaleString()} DA</p>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-4"><i class="fas fa-map-marker-alt mr-1"></i> ${product.wilaya || ''}${product.commune ? `, ${product.commune}` : ''}</p>
+          <div class="mt-auto">
+            ${!isMyProduct ? `<button class="w-full flex items-center justify-center gap-2 px-3 py-2 bg-gray-100 dark:bg-gray-700 text-sm rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 chat-btn"><i class="fas fa-comments"></i> <span data-i18n-key="chat"></span></button>` : ''}
+          </div>
         </div>
       </div>
     `;
-
+  });
+  
+  container.innerHTML += htmlString;
+  
+  // Attach event listeners after rendering
+  container.querySelectorAll('.listing-card').forEach(card => {
+    const id = card.dataset.id;
+    const product = docs.find(p => p.id === id);
+    
     const imgEl = card.querySelector('.product-image');
     const titleEl = card.querySelector('.product-title');
-
+    const chatBtn = card.querySelector('.chat-btn');
+    
     if (imgEl) imgEl.onclick = () => renderView('product', product);
     if (titleEl) titleEl.onclick = () => renderView('product', product);
-
-    if (!isMyProduct) {
-      const chatBtn = card.querySelector('.chat-btn');
-      if (chatBtn) chatBtn.onclick = () => startOrOpenChat(product.sellerId, product.sellerName, product.id);
-    }
-
-    container.appendChild(card);
+    if (chatBtn && product) chatBtn.onclick = () => startOrOpenChat(product.sellerId, product.sellerName, product.id);
   });
 };
 
@@ -1689,6 +1692,14 @@ const setupEventListeners = () => {
             populateSelect(DOMElements.postProductYearSelect, years, 'select_year', currentLang);
             populateSelect(DOMElements.postProductWilayaSelect, wilayas, 'select_wilaya', currentLang);
             populateSelect(DOMElements.postProductCategorySelect, categories, 'select_category', currentLang, true);
+            
+            // Fix: Populate condition select dropdown
+            const conditionSelect = DOMElements.postProductConditionSelect;
+            if (conditionSelect) {
+                conditionSelect.innerHTML = `<option value="">${translations[currentLang]['any_condition']}</option>`;
+                conditionSelect.innerHTML += `<option value="new">${translations[currentLang]['new']}</option>`;
+                conditionSelect.innerHTML += `<option value="used">${translations[currentLang]['used']}</option>`;
+            }
         }
     });
 
