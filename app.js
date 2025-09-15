@@ -186,9 +186,9 @@ const DOMElements = {
     postProductImageInput: document.getElementById('product-image'),
     liveRegion: document.getElementById('live-region'),
     searchSuggestions: document.getElementById('search-suggestions'),
-    roleModal: document.getElementById('roleModal'),
-    chooseUserBtn: document.getElementById('chooseUser'),
-    chooseStoreBtn: document.getElementById('chooseStore')
+    // roleModal: document.getElementById('roleModal'), // REMOVED
+    // chooseUserBtn: document.getElementById('chooseUser'), // REMOVED
+    // chooseStoreBtn: document.getElementById('chooseStore') // REMOVED
 };
 
 // --- UTILITY FUNCTIONS ---
@@ -365,11 +365,11 @@ const translatePage = (lang) => {
     document.getElementById("current-lang").textContent = translations[lang]?.[`${lang}_short`] || lang.toUpperCase();
     
     document.querySelectorAll("[data-i18n-key]").forEach(el => {
-        const key = el.dataset.i18nKey;
+        const key = el.dataset.i18n-key;
         if (translations[lang]?.[key]) el.textContent = translations[lang][key];
     });
     document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
-        const key = el.dataset.i18nPlaceholder;
+        const key = el.dataset.i18n-placeholder;
         if (translations[lang]?.[key]) el.placeholder = translations[lang][key];
     });
     
@@ -1127,6 +1127,17 @@ window.renderCartPage = async () => {
 
 window.renderDashboardPage = async () => {
     if (!currentUser) { renderView('home'); return; }
+    
+    const becomeStoreCard = document.getElementById('become-store-card');
+    if (userProfile?.role === "store") {
+        if (becomeStoreCard) becomeStoreCard.classList.add('hidden');
+    } else {
+        if (becomeStoreCard) becomeStoreCard.classList.remove('hidden');
+        document.getElementById('becomeStoreBtn').onclick = () => {
+             window.location.href = 'store-setup.html';
+        };
+    }
+
     const grid = document.getElementById('my-listings-grid');
     grid.innerHTML = `<div class="col-span-full text-center p-8"><i class="fas fa-spinner fa-spin text-3xl text-blue-500"></i></div>`;
 
@@ -1212,38 +1223,43 @@ window.renderProfilePage = async (data) => {
     const userSnap = await getDoc(doc(db, "users", data.userId));
     const profileData = userSnap.exists() ? userSnap.data() : { isStore: false };
 
-    document.getElementById('profile-name').textContent = isCurrentUserProfile ? currentUser.displayName : data.userName || 'Seller Profile';
     document.getElementById('profile-pic').src = (isCurrentUserProfile ? currentUser.photoURL : profileData.photoURL) || './assets/placeholder.png';
-
+    document.getElementById('profile-name').textContent = isCurrentUserProfile ? currentUser.displayName : data.userName || 'Seller Profile';
+    
     const storeNameDisplay = document.getElementById('store-name-display');
     const storeProfileLabel = document.getElementById('store-profile-label');
-    const setupStoreSection = document.getElementById('store-setup-section');
+    const becomeStoreCard = document.getElementById('become-store-card');
     const editProfileSection = document.getElementById('profile-edit-section');
-
+    
     if (isCurrentUserProfile) {
         editProfileSection.classList.remove('hidden');
         document.getElementById('profile-name-input').value = currentUser.displayName || '';
+        if (profileData.role === 'store') {
+            if (becomeStoreCard) becomeStoreCard.classList.add('hidden');
+        } else {
+            if (becomeStoreCard) becomeStoreCard.classList.remove('hidden');
+            document.getElementById('becomeStoreBtn').onclick = () => {
+                window.location.href = 'store-setup.html';
+            };
+        }
     } else {
         editProfileSection.classList.add('hidden');
+        if (becomeStoreCard) becomeStoreCard.classList.add('hidden');
     }
+    
+    const userStoreSnap = await getDoc(doc(db, "stores", data.userId));
+    const userStoreData = userStoreSnap.exists() ? userStoreSnap.data() : null;
 
-    if (profileData.isStore && profileData.storeName) {
-        storeNameDisplay.textContent = profileData.storeName;
+    if (userStoreData) {
+        storeNameDisplay.textContent = userStoreData.name;
         storeNameDisplay.classList.remove('hidden');
         storeProfileLabel.classList.remove('hidden');
     } else {
         storeNameDisplay.classList.add('hidden');
         storeProfileLabel.classList.add('hidden');
     }
-
-    if (isCurrentUserProfile && !profileData.isStore) {
-        setupStoreSection.classList.remove('hidden');
-    } else {
-        setupStoreSection.classList.add('hidden');
-    }
     
     document.getElementById('profile-edit-form')?.addEventListener('submit', updateProfileData);
-    document.getElementById('store-setup-form')?.addEventListener('submit', setupStoreProfile);
     
     const grid = document.getElementById('user-products-grid');
     grid.innerHTML = `<div class="col-span-full text-center p-8"><i class="fas fa-spinner fa-spin text-3xl text-blue-500"></i></div>`;
@@ -1421,47 +1437,8 @@ window.renderTermsPage = () => {
     document.getElementById('last-updated').textContent = "September 13, 2025";
 };
 
-const setupStoreProfile = async (e) => {
-    e.preventDefault();
-    if (!currentUser) { return; }
-
-    const form = e.target;
-    const storeName = form.elements['storeName'].value.trim();
-    const storeLogoFile = form.elements['storeLogo'].files[0];
-
-    if (!storeName) {
-        showMessage('Please enter a store name.', 3000, 'error');
-        return;
-    }
-
-    const btn = form.querySelector('button[type="submit"]');
-    btn.disabled = true;
-
-    try {
-        let storeLogoUrl = userProfile?.storeLogoUrl || null;
-
-        if (storeLogoFile) {
-            const imageRef = ref(storage, `store_logos/${currentUser.uid}/${storeLogoFile.name}`);
-            const snapshot = await uploadBytes(imageRef, storeLogoFile);
-            storeLogoUrl = await getDownloadURL(snapshot.ref);
-        }
-
-        await updateDoc(doc(db, "users", currentUser.uid), {
-            isStore: true,
-            storeName: storeName,
-            storeLogoUrl: storeLogoUrl,
-        });
-
-        showMessage('Store profile created successfully!', 3000, 'success');
-        renderView('dashboard');
-    } catch (error) {
-        console.error("Error creating store profile:", error);
-        showMessage('Failed to create store profile.', 3000, 'error');
-    } finally {
-        btn.disabled = false;
-    }
-};
-
+// REMOVED store setup function from here, it's now in store-setup.js
+// REMOVED deleteUserData function, it's now in store-setup.js
 const deleteUserData = async () => {
     if (!currentUser) {
         showMessage("You must be logged in to delete your account.", 3000, 'error');
@@ -1475,6 +1452,14 @@ const deleteUserData = async () => {
         await Promise.all(deleteProductPromises);
 
         await deleteDoc(doc(db, "carts", currentUser.uid));
+        
+        // Also delete the store profile if it exists
+        const storeRef = doc(db, "stores", currentUser.uid);
+        const storeSnap = await getDoc(storeRef);
+        if (storeSnap.exists()) {
+            await deleteDoc(storeRef);
+        }
+
         await deleteDoc(doc(db, "users", currentUser.uid));
 
         await deleteUser(auth.currentUser);
@@ -1641,7 +1626,7 @@ const updateUnreadBadge = (count) => {
 
 // --- SETUP & INITIALIZATION ---
 const setupEventListeners = () => {
-    const { darkModeToggle, langDropdownBtn, langBtns, sellLink, cartBtn, homeLink, mobileMenuBtn, mobileMenuCloseBtn, authModalCloseBtn, googleLoginBtn, facebookLoginBtn, modalCloseBtn, searchInput, mobileFiltersCloseBtn, mobileApplyFiltersBtn, chooseUserBtn, chooseStoreBtn } = DOMElements;
+    const { darkModeToggle, langDropdownBtn, langBtns, sellLink, cartBtn, homeLink, mobileMenuBtn, mobileMenuCloseBtn, authModalCloseBtn, googleLoginBtn, facebookLoginBtn, modalCloseBtn, searchInput, mobileFiltersCloseBtn, mobileApplyFiltersBtn } = DOMElements;
     
     // Desktop Dark Mode Toggle
     darkModeToggle.onclick = () => setDarkMode(!DOMElements.html.classList.contains('dark'));
@@ -1767,7 +1752,7 @@ const setupEventListeners = () => {
           suggestion.className = 'p-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer';
           suggestion.textContent = product.title;
           suggestion.onclick = () => {
-            DOMElements.searchInput.value = product.title;
+            DOMEElements.searchInput.value = product.title;
             DOMElements.searchSuggestions.classList.add('hidden');
             applyAndRenderFilters();
           };
@@ -1793,6 +1778,15 @@ const setupEventListeners = () => {
         e.preventDefault();
         renderView('terms');
     };
+    
+    // New: Handle the 'Become a Store' button click
+    const becomeStoreBtn = document.getElementById('becomeStoreBtn');
+    if (becomeStoreBtn) {
+      becomeStoreBtn.onclick = (e) => {
+        e.preventDefault();
+        window.location.href = 'store-setup.html';
+      };
+    }
 
     let lastScrollY = window.scrollY;
     const header = document.querySelector('header');
@@ -1805,27 +1799,6 @@ const setupEventListeners = () => {
         lastScrollY = window.scrollY;
     }, { passive: true });
 
-    // Role selection modal event listeners
-    chooseUserBtn.onclick = async () => {
-        if (currentUser) {
-            const userRef = doc(db, "users", currentUser.uid);
-            await updateDoc(userRef, { role: "user" });
-            DOMElements.roleModal.style.display = "none";
-            showMessage("✅ Profile set as User", 3000, "success");
-            // Reload the view to update UI for user role
-            window.location.reload(); 
-        }
-    };
-
-    chooseStoreBtn.onclick = async () => {
-        if (currentUser) {
-            const userRef = doc(db, "users", currentUser.uid);
-            await updateDoc(userRef, { role: "store" });
-            DOMElements.roleModal.style.display = "none";
-            showMessage("✅ Profile set as Store", 3000, "success");
-            window.location.href = "store-setup.html";
-        }
-    };
 };
 
 const bootApp = () => {
@@ -1856,19 +1829,18 @@ const bootApp = () => {
             
             const userDocRef = doc(db, "users", user.uid);
             const userSnap = await getDoc(userDocRef);
-            userProfile = userSnap.exists() ? userSnap.data() : null;
-
-            // Check if user is new or has no role assigned
-            if (!userSnap.exists() || !userProfile.role) {
+            
+            if (!userSnap.exists()) {
                 await setDoc(userDocRef, {
                     uid: user.uid,
                     displayName: user.displayName,
                     email: user.email,
                     photoURL: user.photoURL,
-                    isStore: false,
-                    role: null // Set role to null for new users
+                    role: "user" // Default to user role on first login
                 });
-                DOMElements.roleModal.style.display = "block";
+                userProfile = { role: "user" };
+            } else {
+                 userProfile = userSnap.data();
             }
         }
         updateCartDisplay();
