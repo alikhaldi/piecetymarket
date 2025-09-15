@@ -185,7 +185,10 @@ const DOMElements = {
     postProductConditionSelect: document.getElementById('product-condition'),
     postProductImageInput: document.getElementById('product-image'),
     liveRegion: document.getElementById('live-region'),
-    searchSuggestions: document.getElementById('search-suggestions')
+    searchSuggestions: document.getElementById('search-suggestions'),
+    roleModal: document.getElementById('roleModal'),
+    chooseUserBtn: document.getElementById('chooseUser'),
+    chooseStoreBtn: document.getElementById('chooseStore')
 };
 
 // --- UTILITY FUNCTIONS ---
@@ -1638,7 +1641,7 @@ const updateUnreadBadge = (count) => {
 
 // --- SETUP & INITIALIZATION ---
 const setupEventListeners = () => {
-    const { darkModeToggle, langDropdownBtn, langBtns, sellLink, cartBtn, homeLink, mobileMenuBtn, mobileMenuCloseBtn, authModalCloseBtn, googleLoginBtn, facebookLoginBtn, modalCloseBtn, searchInput, mobileFiltersCloseBtn, mobileApplyFiltersBtn } = DOMElements;
+    const { darkModeToggle, langDropdownBtn, langBtns, sellLink, cartBtn, homeLink, mobileMenuBtn, mobileMenuCloseBtn, authModalCloseBtn, googleLoginBtn, facebookLoginBtn, modalCloseBtn, searchInput, mobileFiltersCloseBtn, mobileApplyFiltersBtn, chooseUserBtn, chooseStoreBtn } = DOMElements;
     
     // Desktop Dark Mode Toggle
     darkModeToggle.onclick = () => setDarkMode(!DOMElements.html.classList.contains('dark'));
@@ -1665,7 +1668,7 @@ const setupEventListeners = () => {
     document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
     document.addEventListener('touchend', e => { touchEndX = e.changedTouches[0].screenX; handleSwipe(); }, { passive: true });
 
-    DOMElements.mobileNavLinks.addEventListener('click', (e) => {
+    document.getElementById('mobile-nav-links').addEventListener('click', (e) => {
         const target = e.target.closest('a, button');
         if (!target) return;
         e.preventDefault();
@@ -1801,6 +1804,28 @@ const setupEventListeners = () => {
         }
         lastScrollY = window.scrollY;
     }, { passive: true });
+
+    // Role selection modal event listeners
+    chooseUserBtn.onclick = async () => {
+        if (currentUser) {
+            const userRef = doc(db, "users", currentUser.uid);
+            await updateDoc(userRef, { role: "user" });
+            DOMElements.roleModal.style.display = "none";
+            showMessage("✅ Profile set as User", 3000, "success");
+            // Reload the view to update UI for user role
+            window.location.reload(); 
+        }
+    };
+
+    chooseStoreBtn.onclick = async () => {
+        if (currentUser) {
+            const userRef = doc(db, "users", currentUser.uid);
+            await updateDoc(userRef, { role: "store" });
+            DOMElements.roleModal.style.display = "none";
+            showMessage("✅ Profile set as Store", 3000, "success");
+            window.location.href = "store-setup.html";
+        }
+    };
 };
 
 const bootApp = () => {
@@ -1833,14 +1858,17 @@ const bootApp = () => {
             const userSnap = await getDoc(userDocRef);
             userProfile = userSnap.exists() ? userSnap.data() : null;
 
-            if (!userSnap.exists()) {
+            // Check if user is new or has no role assigned
+            if (!userSnap.exists() || !userProfile.role) {
                 await setDoc(userDocRef, {
                     uid: user.uid,
                     displayName: user.displayName,
                     email: user.email,
                     photoURL: user.photoURL,
-                    isStore: false
+                    isStore: false,
+                    role: null // Set role to null for new users
                 });
+                DOMElements.roleModal.style.display = "block";
             }
         }
         updateCartDisplay();
