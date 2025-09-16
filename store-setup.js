@@ -40,7 +40,8 @@ const firebaseConfig = {
   apiKey: "AIzaSyBIptEskV2soajxRYPDfwYFYyz9pWQvZL0",
   authDomain: "piecety-app-b39c4.firebaseapp.com",
   projectId: "piecety-app-b39c4",
-  storageBucket: "piecety-app-b39c4.firebasestorage.app",
+  // FIXED: Corrected storage bucket URL
+  storageBucket: "piecety-app-b39c4.appspot.com",
   messagingSenderId: "265795860915",
   appId: "1:265795860915:web:aa10241788cce42f6373c6"
 };
@@ -63,68 +64,79 @@ if (isDarkMode) {
 }
 
 // Render all categories as checkboxes (top-level only)
-Object.entries(categories).forEach(([key, cat]) => {
-  const label = document.createElement('label');
-  label.className = 'flex gap-2 items-center';
-  label.innerHTML = `
-    <input type="checkbox" value="${key}" class="form-checkbox h-4 w-4 text-blue-600 dark:bg-gray-700 dark:border-gray-600 rounded" />
-    <span class="text-gray-800 dark:text-gray-200">${cat.en || key}</span>
-  `;
-  categoriesContainer.appendChild(label);
-});
+if (categoriesContainer) {
+    Object.entries(categories).forEach(([key, cat]) => {
+      const label = document.createElement('label');
+      label.className = 'flex gap-2 items-center';
+      label.innerHTML = `
+        <input type="checkbox" value="${key}" class="form-checkbox h-4 w-4 text-blue-600 dark:bg-gray-700 dark:border-gray-600 rounded" />
+        <span class="text-gray-800 dark:text-gray-200">${cat.en || key}</span>
+      `;
+      categoriesContainer.appendChild(label);
+    });
+}
 
 // Render all brands as checkboxes
-Object.keys(car_data).forEach(brand => {
-  const label = document.createElement('label');
-  label.className = 'flex gap-2 items-center';
-  label.innerHTML = `
-    <input type="checkbox" value="${brand}" class="form-checkbox h-4 w-4 text-blue-600 dark:bg-gray-700 dark:border-gray-600 rounded" />
-    <span class="text-gray-800 dark:text-gray-200">${brand}</span>
-  `;
-  brandsContainer.appendChild(label);
-});
+if (brandsContainer) {
+    Object.keys(car_data).forEach(brand => {
+      const label = document.createElement('label');
+      label.className = 'flex gap-2 items-center';
+      label.innerHTML = `
+        <input type="checkbox" value="${brand}" class="form-checkbox h-4 w-4 text-blue-600 dark:bg-gray-700 dark:border-gray-600 rounded" />
+        <span class="text-gray-800 dark:text-gray-200">${brand}</span>
+      `;
+      brandsContainer.appendChild(label);
+    });
+}
 
 // Store form submission
-storeForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const user = auth.currentUser;
-  if (!user) {
-    alert("You must be logged in to create a store profile.");
-    window.location.href = "index.html";
-    return;
-  }
-
-  const storeName = document.getElementById("storeName").value.trim();
-  const storeAddress = document.getElementById("storeAddress").value.trim();
-
-  // Collect selected categories
-  const selectedCategories = Array.from(document.querySelectorAll('#storeCategories input:checked'))
-    .map(cb => cb.value);
-
-  // Collect selected brands
-  const selectedBrands = Array.from(document.querySelectorAll('#storeBrands input:checked'))
-    .map(cb => cb.value);
-
-  try {
-    await setDoc(doc(db, "stores", user.uid), {
-      ownerId: user.uid,
-      name: storeName,
-      address: storeAddress,
-      categories: selectedCategories,
-      brands: selectedBrands,
-      createdAt: serverTimestamp()
+if (storeForm) {
+    storeForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+    
+      const user = auth.currentUser;
+      if (!user) {
+        alert("You must be logged in to create a store profile.");
+        window.location.href = "index.html";
+        return;
+      }
+    
+      const storeName = document.getElementById("storeName")?.value.trim();
+      const storeAddress = document.getElementById("storeAddress")?.value.trim();
+    
+      if (!storeName) {
+        alert("Store name is required.");
+        return;
+      }
+    
+      // Collect selected categories
+      const selectedCategories = Array.from(document.querySelectorAll('#storeCategories input:checked'))
+        .map(cb => cb.value);
+    
+      // Collect selected brands
+      const selectedBrands = Array.from(document.querySelectorAll('#storeBrands input:checked'))
+        .map(cb => cb.value);
+    
+      try {
+        await setDoc(doc(db, "stores", user.uid), {
+          ownerId: user.uid,
+          name: storeName,
+          address: storeAddress,
+          categories: selectedCategories,
+          brands: selectedBrands,
+          createdAt: serverTimestamp()
+        });
+    
+        // Update user role to "store" after successful setup
+        await updateDoc(doc(db, "users", user.uid), {
+          role: "store"
+        });
+    
+        alert("✅ Store profile created successfully!");
+        window.location.href = "index.html"; // Redirect to homepage
+      } catch (error) {
+        console.error("Error saving store profile:", error);
+        alert("❌ Error saving store profile.");
+      }
     });
-
-    // Update user role to "store" after successful setup
-    await updateDoc(doc(db, "users", user.uid), {
-      role: "store"
-    });
-
-    alert("✅ Store profile created successfully!");
-    window.location.href = "index.html"; // Redirect to homepage
-  } catch (error) {
-    console.error("Error saving store profile:", error);
-    alert("❌ Error saving store profile.");
-  }
-});
+}
