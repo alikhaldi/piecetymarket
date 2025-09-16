@@ -28,7 +28,8 @@ const firebaseConfig = {
     apiKey: "AIzaSyBIptEskV2soajxRYPDfwYFYyz9pWQvZL0",
     authDomain: "piecety-app-b39c4.firebaseapp.com",
     projectId: "piecety-app-b39c4",
-    storageBucket: "piecety-app-b39c4.firebasestorage.app",
+    // FIXED: Corrected storage bucket URL
+    storageBucket: "piecety-app-b39c4.appspot.com",
     messagingSenderId: "265795860915",
     appId: "1:265795860915:web:aa10241788cce42f6373c6"
 };
@@ -316,12 +317,12 @@ const closeMobileMenu = () => {
 
 const handleSwipe = () => {
     if (touchEndX < touchStartX - 50) {
-        if (!DOMElements.mobileMenu.classList.contains('-translate-x-full')) {
+        if (DOMElements.mobileMenu && !DOMElements.mobileMenu.classList.contains('-translate-x-full')) {
             closeMobileMenu();
         }
     }
     if (touchEndX > touchStartX + 50) {
-        if (DOMElements.mobileMenu.classList.contains('-translate-x-full')) {
+        if (DOMElements.mobileMenu && DOMElements.mobileMenu.classList.contains('-translate-x-full')) {
             openMobileMenu();
         }
     }
@@ -362,14 +363,17 @@ const translatePage = (lang) => {
     html.setAttribute("dir", lang === "ar" ? "rtl" : "ltr");
     html.setAttribute("lang", lang);
 
-    document.getElementById("current-lang").textContent = translations[lang]?.[`${lang}_short`] || lang.toUpperCase();
+    const currentLangEl = document.getElementById("current-lang");
+    if (currentLangEl) {
+        currentLangEl.textContent = translations[lang]?.[`${lang}_short`] || lang.toUpperCase();
+    }
     
     document.querySelectorAll("[data-i18n-key]").forEach(el => {
-        const key = el.dataset.i18n-key;
+        const key = el.dataset.i18nKey;
         if (translations[lang]?.[key]) el.textContent = translations[lang][key];
     });
     document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
-        const key = el.dataset.i18n-placeholder;
+        const key = el.dataset.i18nPlaceholder;
         if (translations[lang]?.[key]) el.placeholder = translations[lang][key];
     });
     
@@ -435,7 +439,9 @@ const applyFiltersFromURL = (container = document) => {
             }
         }
     });
-    DOMElements.searchInput.value = params.get('search') || '';
+    if (DOMElements.searchInput) {
+      DOMElements.searchInput.value = params.get('search') || '';
+    }
 };
 
 const trapModalFocus = (modalId) => {
@@ -494,7 +500,9 @@ const renderView = (viewName, data = null) => {
     if (productsUnsubscribe) productsUnsubscribe();
     if (chatsUnsubscribe) chatsUnsubscribe();
     if (messagesListener) messagesListener();
-    DOMElements.appContainer.innerHTML = '';
+    if (DOMElements.appContainer) {
+      DOMElements.appContainer.innerHTML = '';
+    }
     
     const route = viewName.split('/')[0];
     updateTitle(route, data);
@@ -503,11 +511,13 @@ const renderView = (viewName, data = null) => {
     const template = document.getElementById(templateId);
 
     if (template) {
+      if (DOMElements.appContainer) {
         DOMElements.appContainer.appendChild(template.content.cloneNode(true));
-        const renderFunction = window[`render${route.charAt(0).toUpperCase() + route.slice(1)}Page`];
-        if (typeof renderFunction === 'function') {
-            renderFunction(data);
-        }
+      }
+      const renderFunction = window[`render${route.charAt(0).toUpperCase() + route.slice(1)}Page`];
+      if (typeof renderFunction === 'function') {
+          renderFunction(data);
+      }
     } else {
         renderView('home');
         return;
@@ -522,25 +532,35 @@ const renderView = (viewName, data = null) => {
 window.renderHomePage = async () => {
     updateBreadcrumb();
     const params = new URLSearchParams(window.location.search);
-    if (params.get('brand')) renderModels(params.get('brand'), params.get('category'), params.get('sub_category'));
-    else if (params.get('sub_category')) renderBrands(params.get('sub_category'));
-    else if (params.get('category')) renderSubCategories(params.get('category'));
+    const category = params.get('category');
+    const sub_category = params.get('sub_category');
+    const brand = params.get('brand');
+    const model = params.get('model');
+
+    if (model) renderYears(model, brand, category, sub_category);
+    else if (brand) renderModels(brand, category, sub_category);
+    else if (sub_category) renderBrands(sub_category);
+    else if (category) renderSubCategories(category);
     else renderPartCategories();
     
     renderRecentlyViewed();
     renderRecommendations();
 
     const setupFilters = (container) => {
-        container.innerHTML = document.getElementById('filters-template').content.cloneNode(true).innerHTML;
-        setupFilterListeners(container);
-        applyFiltersFromURL(container);
+        if (!container) return;
+        const template = document.getElementById('filters-template');
+        if (template) {
+            container.innerHTML = template.content.cloneNode(true).innerHTML;
+            setupFilterListeners(container);
+            applyFiltersFromURL(container);
+        }
     };
 
     setupFilters(document.getElementById('filters-content'));
     setupFilters(DOMElements.mobileFiltersContent);
 
     document.getElementById('show-filters-btn')?.addEventListener('click', () => {
-        DOMElements.mobileFiltersModal.classList.remove('translate-x-full');
+        DOMElements.mobileFiltersModal?.classList.remove('translate-x-full');
     });
     
     renderListings();
@@ -705,12 +725,14 @@ const setupFilterListeners = (container = document) => {
         const modelContainer = container.querySelector('#model-filter-container');
         const modelFilter = container.querySelector('#model-filter');
         const selectedBrand = brandFilter.value;
-        if (selectedBrand && car_data[selectedBrand]) {
-            populateSelect(modelFilter, car_data[selectedBrand], 'all_models', currentLang);
-            modelContainer.classList.remove('hidden');
-        } else {
-            modelContainer.classList.add('hidden');
-            if(modelFilter) modelFilter.value = '';
+        if (modelContainer && modelFilter) {
+            if (selectedBrand && car_data[selectedBrand]) {
+                populateSelect(modelFilter, car_data[selectedBrand], 'all_models', currentLang);
+                modelContainer.classList.remove('hidden');
+            } else {
+                modelContainer.classList.add('hidden');
+                modelFilter.value = '';
+            }
         }
         debouncedApply();
     });
@@ -720,20 +742,25 @@ const setupFilterListeners = (container = document) => {
         const communeContainer = container.querySelector('#commune-filter-container');
         const communeFilter = container.querySelector('#commune-filter');
         const selectedWilaya = wilayaFilter.value;
-        if (selectedWilaya && wilayas[selectedWilaya]) {
-            populateSelect(communeFilter, wilayas[selectedWilaya], 'all_communes', currentLang);
-            communeContainer.classList.remove('hidden');
-        } else {
-            communeContainer.classList.add('hidden');
-            if(communeFilter) communeFilter.value = '';
+        if (communeContainer && communeFilter) {
+            if (selectedWilaya && wilayas[selectedWilaya]) {
+                populateSelect(communeFilter, wilayas[selectedWilaya], 'all_communes', currentLang);
+                communeContainer.classList.remove('hidden');
+            } else {
+                communeContainer.classList.add('hidden');
+                communeFilter.value = '';
+            }
         }
         debouncedApply();
     });
     
     const priceFilter = container.querySelector('#price-range-filter');
     if (priceFilter) {
+        const priceValueEl = container.querySelector('#price-range-value');
         priceFilter.addEventListener('input', () => {
-            container.querySelector('#price-range-value').textContent = `${Number(priceFilter.value).toLocaleString()} DA`;
+            if (priceValueEl) {
+              priceValueEl.textContent = `${Number(priceFilter.value).toLocaleString()} DA`;
+            }
         });
         priceFilter.addEventListener('change', debouncedApply);
     }
@@ -958,15 +985,20 @@ window.renderProductPage = async (product) => {
     document.getElementById('product-description-detail').textContent = product.description || 'No description available.';
 
     const sellerLink = document.getElementById('seller-profile-link');
-    sellerLink.textContent = product.sellerName || 'Anonymous';
-    sellerLink.onclick = (e) => {
-        e.preventDefault();
-        renderView('profile', { userId: product.sellerId, userName: product.sellerName });
-    };
+    if (sellerLink) {
+        sellerLink.textContent = product.sellerName || 'Anonymous';
+        sellerLink.onclick = (e) => {
+            e.preventDefault();
+            renderView('profile', { userId: product.sellerId, userName: product.sellerName });
+        };
+    }
 
-    document.getElementById('back-to-listings-btn').onclick = () => window.history.back();
-    document.getElementById('add-to-cart-btn').onclick = () => addToCart(product);
-    document.getElementById('contact-seller-btn').onclick = () => startOrOpenChat(product.sellerId, product.sellerName, product.id);
+    const backBtn = document.getElementById('back-to-listings-btn');
+    if (backBtn) backBtn.onclick = () => window.history.back();
+    const cartBtn = document.getElementById('add-to-cart-btn');
+    if (cartBtn) cartBtn.onclick = () => addToCart(product);
+    const contactBtn = document.getElementById('contact-seller-btn');
+    if (contactBtn) contactBtn.onclick = () => startOrOpenChat(product.sellerId, product.sellerName, product.id);
 
     renderProductReviews(product.id);
     if(currentUser) {
@@ -1028,48 +1060,52 @@ const renderAddReviewSection = (productId) => {
     const submitBtn = document.getElementById('submit-review-btn');
     let selectedRating = 0;
 
-    starsContainer.innerHTML = '';
-    for (let i = 1; i <= 5; i++) {
-        const star = document.createElement('i');
-        star.className = 'fas fa-star text-2xl text-gray-300 cursor-pointer hover:text-yellow-400 transition-colors';
-        star.dataset.rating = i;
-        star.onclick = () => {
-            selectedRating = i;
-            starsContainer.querySelectorAll('i').forEach(s => s.classList.toggle('text-yellow-500', s.dataset.rating <= selectedRating));
-        };
-        starsContainer.appendChild(star);
+    if (starsContainer) {
+      starsContainer.innerHTML = '';
+      for (let i = 1; i <= 5; i++) {
+          const star = document.createElement('i');
+          star.className = 'fas fa-star text-2xl text-gray-300 cursor-pointer hover:text-yellow-400 transition-colors';
+          star.dataset.rating = i;
+          star.onclick = () => {
+              selectedRating = i;
+              starsContainer.querySelectorAll('i').forEach(s => s.classList.toggle('text-yellow-500', s.dataset.rating <= selectedRating));
+          };
+          starsContainer.appendChild(star);
+      }
     }
 
-    submitBtn.onclick = async () => {
-        if (selectedRating === 0) {
-            showMessage("Please select a rating.", 3000, "error");
-            return;
-        }
-        if (reviewTextarea.value.trim().length < 10) {
-            showMessage("Please write a more detailed review.", 3000, "error");
-            return;
-        }
-
-        submitBtn.disabled = true;
-        try {
-            await addDoc(collection(db, "reviews"), {
-                productId,
-                userId: currentUser.uid,
-                reviewerName: currentUser.displayName,
-                rating: selectedRating,
-                review: reviewTextarea.value.trim(),
-                createdAt: serverTimestamp()
-            });
-            showMessage("Review submitted!", 3000, "success");
-            renderProductReviews(productId);
-            section.classList.add('hidden');
-        } catch (error) {
-            console.error("Error submitting review:", error);
-            showMessage("Failed to submit review.", 3000, "error");
-        } finally {
-            submitBtn.disabled = false;
-        }
-    };
+    if (submitBtn && reviewTextarea) {
+      submitBtn.onclick = async () => {
+          if (selectedRating === 0) {
+              showMessage("Please select a rating.", 3000, "error");
+              return;
+          }
+          if (reviewTextarea.value.trim().length < 10) {
+              showMessage("Please write a more detailed review.", 3000, "error");
+              return;
+          }
+  
+          submitBtn.disabled = true;
+          try {
+              await addDoc(collection(db, "reviews"), {
+                  productId,
+                  userId: currentUser.uid,
+                  reviewerName: currentUser.displayName,
+                  rating: selectedRating,
+                  review: reviewTextarea.value.trim(),
+                  createdAt: serverTimestamp()
+              });
+              showMessage("Review submitted!", 3000, "success");
+              renderProductReviews(productId);
+              section.classList.add('hidden');
+          } catch (error) {
+              console.error("Error submitting review:", error);
+              showMessage("Failed to submit review.", 3000, "error");
+          } finally {
+              submitBtn.disabled = false;
+          }
+      };
+    }
 };
 
 window.renderCartPage = async () => {
@@ -1080,6 +1116,7 @@ window.renderCartPage = async () => {
     }
     const container = document.getElementById('cart-items-container');
     const summary = document.getElementById('cart-summary');
+    if (!container || !summary) return;
     container.innerHTML = `<div class="text-center p-8"><i class="fas fa-spinner fa-spin text-3xl text-blue-500"></i></div>`;
 
     if (Object.keys(userCart).length === 0) {
@@ -1121,8 +1158,10 @@ window.renderCartPage = async () => {
         container.innerHTML = `<p class="text-red-500">Could not load cart items.</p>`;
     }
 
-    document.getElementById('back-from-cart-btn').onclick = () => window.history.back();
-    document.getElementById('clear-cart-btn').onclick = clearCart;
+    const backBtn = document.getElementById('back-from-cart-btn');
+    if (backBtn) backBtn.onclick = () => window.history.back();
+    const clearBtn = document.getElementById('clear-cart-btn');
+    if (clearBtn) clearBtn.onclick = clearCart;
 };
 
 window.renderDashboardPage = async () => {
@@ -1133,12 +1172,16 @@ window.renderDashboardPage = async () => {
         if (becomeStoreCard) becomeStoreCard.classList.add('hidden');
     } else {
         if (becomeStoreCard) becomeStoreCard.classList.remove('hidden');
-        document.getElementById('becomeStoreBtn').onclick = () => {
-             window.location.href = 'store-setup.html';
-        };
+        const becomeStoreBtn = document.getElementById('becomeStoreBtn');
+        if (becomeStoreBtn) {
+            becomeStoreBtn.onclick = () => {
+                 window.location.href = 'store-setup.html';
+            };
+        }
     }
 
     const grid = document.getElementById('my-listings-grid');
+    if (!grid) return;
     grid.innerHTML = `<div class="col-span-full text-center p-8"><i class="fas fa-spinner fa-spin text-3xl text-blue-500"></i></div>`;
 
     try {
@@ -1192,28 +1235,31 @@ window.renderDashboardPage = async () => {
         grid.innerHTML = `<p class="text-red-500">Could not load your listings.</p>`;
     }
     
-    document.getElementById('delete-account-btn').onclick = () => {
-        const shouldDelete = new Promise((resolve) => {
-            const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
-            modal.innerHTML = `
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-sm w-full p-6 text-center">
-                    <p class="text-lg font-semibold mb-4 text-red-500">${translations[currentLang].danger_zone}</p>
-                    <p class="mb-4">${translations[currentLang].delete_account_confirm}</p>
-                    <div class="flex justify-center space-x-4">
-                        <button id="cancel-delete" class="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded-md hover:bg-gray-400 dark:hover:bg-gray-500">${translations[currentLang].back}</button>
-                        <button id="confirm-delete" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">${translations[currentLang].delete_account}</button>
+    const deleteBtn = document.getElementById('delete-account-btn');
+    if (deleteBtn) {
+        deleteBtn.onclick = () => {
+            const shouldDelete = new Promise((resolve) => {
+                const modal = document.createElement('div');
+                modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+                modal.innerHTML = `
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-sm w-full p-6 text-center">
+                        <p class="text-lg font-semibold mb-4 text-red-500">${translations[currentLang].danger_zone}</p>
+                        <p class="mb-4">${translations[currentLang].delete_account_confirm}</p>
+                        <div class="flex justify-center space-x-4">
+                            <button id="cancel-delete" class="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded-md hover:bg-gray-400 dark:hover:bg-gray-500">${translations[currentLang].back}</button>
+                            <button id="confirm-delete" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">${translations[currentLang].delete_account}</button>
+                        </div>
                     </div>
-                </div>
-            `;
-            document.body.appendChild(modal);
-            modal.querySelector('#cancel-delete').onclick = () => { document.body.removeChild(modal); resolve(false); };
-            modal.querySelector('#confirm-delete').onclick = () => { document.body.removeChild(modal); resolve(true); };
-        });
-        shouldDelete.then(result => {
-            if (result) deleteUserData();
-        });
-    };
+                `;
+                document.body.appendChild(modal);
+                modal.querySelector('#cancel-delete').onclick = () => { document.body.removeChild(modal); resolve(false); };
+                modal.querySelector('#confirm-delete').onclick = () => { document.body.removeChild(modal); resolve(true); };
+            });
+            shouldDelete.then(result => {
+                if (result) deleteUserData();
+            });
+        };
+    }
 };
 
 window.renderProfilePage = async (data) => {
@@ -1223,8 +1269,14 @@ window.renderProfilePage = async (data) => {
     const userSnap = await getDoc(doc(db, "users", data.userId));
     const profileData = userSnap.exists() ? userSnap.data() : { isStore: false };
 
-    document.getElementById('profile-pic').src = (isCurrentUserProfile ? currentUser.photoURL : profileData.photoURL) || './assets/placeholder.png';
-    document.getElementById('profile-name').textContent = isCurrentUserProfile ? currentUser.displayName : data.userName || 'Seller Profile';
+    const profilePicEl = document.getElementById('profile-pic');
+    if (profilePicEl) {
+        profilePicEl.src = (isCurrentUserProfile ? currentUser?.photoURL : profileData.photoURL) || './assets/placeholder.png';
+    }
+    const profileNameEl = document.getElementById('profile-name');
+    if (profileNameEl) {
+        profileNameEl.textContent = isCurrentUserProfile ? currentUser?.displayName : data.userName || 'Seller Profile';
+    }
     
     const storeNameDisplay = document.getElementById('store-name-display');
     const storeProfileLabel = document.getElementById('store-profile-label');
@@ -1232,18 +1284,22 @@ window.renderProfilePage = async (data) => {
     const editProfileSection = document.getElementById('profile-edit-section');
     
     if (isCurrentUserProfile) {
-        editProfileSection.classList.remove('hidden');
-        document.getElementById('profile-name-input').value = currentUser.displayName || '';
+        if (editProfileSection) editProfileSection.classList.remove('hidden');
+        const profileNameInput = document.getElementById('profile-name-input');
+        if (profileNameInput) profileNameInput.value = currentUser?.displayName || '';
         if (profileData.role === 'store') {
             if (becomeStoreCard) becomeStoreCard.classList.add('hidden');
         } else {
             if (becomeStoreCard) becomeStoreCard.classList.remove('hidden');
-            document.getElementById('becomeStoreBtn').onclick = () => {
-                window.location.href = 'store-setup.html';
-            };
+            const becomeStoreBtn = document.getElementById('becomeStoreBtn');
+            if (becomeStoreBtn) {
+              becomeStoreBtn.onclick = () => {
+                  window.location.href = 'store-setup.html';
+              };
+            }
         }
     } else {
-        editProfileSection.classList.add('hidden');
+        if (editProfileSection) editProfileSection.classList.add('hidden');
         if (becomeStoreCard) becomeStoreCard.classList.add('hidden');
     }
     
@@ -1251,17 +1307,23 @@ window.renderProfilePage = async (data) => {
     const userStoreData = userStoreSnap.exists() ? userStoreSnap.data() : null;
 
     if (userStoreData) {
-        storeNameDisplay.textContent = userStoreData.name;
-        storeNameDisplay.classList.remove('hidden');
-        storeProfileLabel.classList.remove('hidden');
+        if (storeNameDisplay) {
+            storeNameDisplay.textContent = userStoreData.name;
+            storeNameDisplay.classList.remove('hidden');
+        }
+        if (storeProfileLabel) storeProfileLabel.classList.remove('hidden');
     } else {
-        storeNameDisplay.classList.add('hidden');
-        storeProfileLabel.classList.add('hidden');
+        if (storeNameDisplay) storeNameDisplay.classList.add('hidden');
+        if (storeProfileLabel) storeProfileLabel.classList.add('hidden');
     }
     
-    document.getElementById('profile-edit-form')?.addEventListener('submit', updateProfileData);
+    const profileEditForm = document.getElementById('profile-edit-form');
+    if (profileEditForm) {
+      profileEditForm.addEventListener('submit', updateProfileData);
+    }
     
     const grid = document.getElementById('user-products-grid');
+    if (!grid) return;
     grid.innerHTML = `<div class="col-span-full text-center p-8"><i class="fas fa-spinner fa-spin text-3xl text-blue-500"></i></div>`;
     
     try {
@@ -1274,7 +1336,9 @@ window.renderProfilePage = async (data) => {
     }
 
     const reviewsList = document.getElementById('user-reviews-list');
-    reviewsList.innerHTML = `<p class="text-gray-500 dark:text-gray-400" data-i18n-key="reviews_soon_2"></p>`;
+    if (reviewsList) {
+      reviewsList.innerHTML = `<p class="text-gray-500 dark:text-gray-400" data-i18n-key="reviews_soon_2"></p>`;
+    }
 };
 
 const updateProfileData = async (e) => {
@@ -1282,8 +1346,8 @@ const updateProfileData = async (e) => {
     if (!currentUser) { showMessage('login_required', 3000, 'error'); return; }
 
     const form = e.target;
-    const displayName = form.elements['displayName'].value.trim();
-    const profilePicFile = form.elements['profilePic'].files[0];
+    const displayName = form.elements['displayName']?.value.trim();
+    const profilePicFile = form.elements['profilePic']?.files?.[0];
 
     if (!displayName) {
         showMessage('Please enter a name.', 3000, 'error');
@@ -1291,7 +1355,7 @@ const updateProfileData = async (e) => {
     }
     
     const btn = form.querySelector('button[type="submit"]');
-    btn.disabled = true;
+    if (btn) btn.disabled = true;
 
     try {
         let newPhotoURL = currentUser.photoURL;
@@ -1315,13 +1379,14 @@ const updateProfileData = async (e) => {
         console.error("Error updating profile:", error);
         showMessage("Failed to update profile.", 3000, "error");
     } finally {
-        btn.disabled = false;
+        if (btn) btn.disabled = false;
     }
 };
 
 window.renderInboxPage = () => {
     if (!currentUser) { renderView('home'); return; }
     const listContainer = document.getElementById('conversations-list');
+    if (!listContainer) return;
     const q = query(collection(db, "chats"), where("participants", "array-contains", currentUser.uid), orderBy("lastMessageTimestamp", "desc"));
 
     chatsUnsubscribe = onSnapshot(q, (snapshot) => {
@@ -1339,7 +1404,7 @@ window.renderInboxPage = () => {
             convoEl.className = 'p-4 bg-gray-50 dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 flex justify-between items-center';
             convoEl.innerHTML = `
                 <div><h4 class="font-bold">${otherUserName}</h4><p class="text-sm text-gray-500 dark:text-gray-400 truncate">${chat.lastMessage}</p></div>
-                ${chat.unreadCount?.[currentUser.uid] > 0 ? `<span class="bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">${chat.unreadCount[currentUser.uid]}</span>` : ''}`;
+                ${(chat.unreadCount?.[currentUser.uid] || 0) > 0 ? `<span class="bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">${chat.unreadCount[currentUser.uid]}</span>` : ''}`;
             convoEl.onclick = () => renderView('chat', { chatId: doc.id, otherUserName });
             listContainer.appendChild(convoEl);
         });
@@ -1360,15 +1425,19 @@ window.renderChatPage = async (chatData) => {
         console.error("Error updating unread count:", error);
     }
 
-    document.getElementById('chat-with-name').textContent = `${translations[currentLang].chat_with} ${otherUserName}`;
-    document.getElementById('back-to-inbox-btn').onclick = () => renderView('inbox');
+    const chatWithNameEl = document.getElementById('chat-with-name');
+    if (chatWithNameEl) {
+      chatWithNameEl.textContent = `${translations[currentLang].chat_with} ${otherUserName}`;
+    }
+    const backBtn = document.getElementById('back-to-inbox-btn');
+    if (backBtn) backBtn.onclick = () => renderView('inbox');
 
     const messagesContainer = document.getElementById('messages-container');
     const messageForm = document.getElementById('send-message-form');
     const messageInput = document.getElementById('message-input');
     const chatActions = document.getElementById('chat-actions');
     
-    if (productId) {
+    if (productId && chatActions) {
         const productSnap = await getDoc(doc(db, "products", productId));
         if (productSnap.exists()) {
             const product = productSnap.data();
@@ -1389,20 +1458,22 @@ window.renderChatPage = async (chatData) => {
     
     const q = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "desc"), limit(25));
     if(messagesListener) messagesListener();
-    messagesListener = onSnapshot(q, (snapshot) => {
-        messagesContainer.innerHTML = snapshot.empty ? '<p class="text-center text-gray-500">No messages yet. Say hi!</p>' : '';
-        snapshot.docs.reverse().forEach(doc => {
-            const msg = doc.data();
-            const msgEl = document.createElement('div');
-            msgEl.className = `p-3 rounded-lg max-w-xs ${msg.senderId === currentUser.uid ? 'bg-blue-500 text-white self-end' : 'bg-gray-200 dark:bg-gray-600 self-start'}`;
-            msgEl.textContent = msg.text;
-            messagesContainer.appendChild(msgEl);
-        });
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }, (error) => {
-        console.error("Error listening to messages:", error);
-        messagesContainer.innerHTML = `<p class="text-red-500">Could not load messages.</p>`;
-    });
+    if(messagesContainer) {
+      messagesListener = onSnapshot(q, (snapshot) => {
+          messagesContainer.innerHTML = snapshot.empty ? '<p class="text-center text-gray-500">No messages yet. Say hi!</p>' : '';
+          snapshot.docs.reverse().forEach(doc => {
+              const msg = doc.data();
+              const msgEl = document.createElement('div');
+              msgEl.className = `p-3 rounded-lg max-w-xs ${msg.senderId === currentUser?.uid ? 'bg-blue-500 text-white self-end' : 'bg-gray-200 dark:bg-gray-600 self-start'}`;
+              msgEl.textContent = msg.text;
+              messagesContainer.appendChild(msgEl);
+          });
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }, (error) => {
+          console.error("Error listening to messages:", error);
+          messagesContainer.innerHTML = `<p class="text-red-500">Could not load messages.</p>`;
+      });
+    }
 
     const sendMessage = async (text, isOffer = false) => {
         if (!text) return;
@@ -1425,20 +1496,24 @@ window.renderChatPage = async (chatData) => {
         }
     };
 
-    messageForm.onsubmit = async (e) => {
-        e.preventDefault();
-        const text = messageInput.value.trim();
-        messageInput.value = '';
-        await sendMessage(text);
-    };
+    if (messageForm && messageInput) {
+      messageForm.onsubmit = async (e) => {
+          e.preventDefault();
+          const text = messageInput.value.trim();
+          messageInput.value = '';
+          await sendMessage(text);
+      };
+    }
 };
 
 window.renderTermsPage = () => {
-    document.getElementById('last-updated').textContent = "September 13, 2025";
+    const lastUpdatedEl = document.getElementById('last-updated');
+    if (lastUpdatedEl) {
+      lastUpdatedEl.textContent = "September 13, 2025";
+    }
 };
 
 // REMOVED store setup function from here, it's now in store-setup.js
-// REMOVED deleteUserData function, it's now in store-setup.js
 const deleteUserData = async () => {
     if (!currentUser) {
         showMessage("You must be logged in to delete your account.", 3000, 'error');
@@ -1560,12 +1635,14 @@ const validatePostForm = (form) => {
         const errorEl = document.getElementById(`${fieldName}-error`);
         let isInvalid = false;
         if (input.type === 'file') {
+             // File input doesn't have a value property in the same way, skip validation here.
+             // It's better to validate if a file exists before upload.
              return;
         } else {
-            isInvalid = !input.value.trim();
+            isInvalid = !input?.value?.trim();
         }
-        input.classList.toggle('border-red-500', isInvalid);
-        errorEl?.classList.toggle('hidden', !isInvalid);
+        if (input) input.classList.toggle('border-red-500', isInvalid);
+        if (errorEl) errorEl.classList.toggle('hidden', !isInvalid);
         if (isInvalid) isValid = false;
     });
     return isValid;
@@ -1574,6 +1651,7 @@ const validatePostForm = (form) => {
 // --- AUTHENTICATION & UI UPDATES ---
 const updateAuthUI = (user) => {
     const { authLinksContainer, mobileNavLinks } = DOMElements;
+    if (!authLinksContainer || !mobileNavLinks) return;
     authLinksContainer.innerHTML = '';
     
     let mobileLinksHTML = `
@@ -1583,19 +1661,26 @@ const updateAuthUI = (user) => {
         <a href="#" id="mobile-cart-link" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-lg relative"><span data-i18n-key="cart_title"></span><span id="mobile-cart-count" class="absolute top-0 ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full hidden">0</span></a>`;
 
     if (user) {
-        authLinksContainer.innerHTML = `<div class="relative" id="user-menu"><button id="user-menu-btn" class="flex items-center"><img src="${user.photoURL}" alt="User" class="w-8 h-8 rounded-full border-2 border-transparent hover:border-blue-500 transition-colors"></button><div id="user-menu-dropdown" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-lg shadow-lg py-1 hidden z-20"><a href="#" id="profile-link" class="block px-4 py-2 text-sm" data-i18n-key="nav_profile"></a><a href="#" id="dashboard-link" class="block px-4 py-2 text-sm" data-i18n-key="dashboard"></a><a href="#" id="messages-link" class="relative block px-4 py-2 text-sm" data-i18n-key="messages"><span id="unread-badge" class="hidden absolute right-2 top-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"></span></a><button id="logout-btn" class="w-full text-left px-4 py-2 text-sm" data-i18n-key="logout"></button></div></div>`;
+        authLinksContainer.innerHTML = `<div class="relative" id="user-menu"><button id="user-menu-btn" class="flex items-center"><img src="${user.photoURL || './assets/placeholder.png'}" alt="User" class="w-8 h-8 rounded-full border-2 border-transparent hover:border-blue-500 transition-colors"></button><div id="user-menu-dropdown" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-lg shadow-lg py-1 hidden z-20"><a href="#" id="profile-link" class="block px-4 py-2 text-sm" data-i18n-key="nav_profile"></a><a href="#" id="dashboard-link" class="block px-4 py-2 text-sm" data-i18n-key="dashboard"></a><a href="#" id="messages-link" class="relative block px-4 py-2 text-sm" data-i18n-key="messages"><span id="unread-badge" class="hidden absolute right-2 top-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"></span></a><button id="logout-btn" class="w-full text-left px-4 py-2 text-sm" data-i18n-key="logout"></button></div></div>`;
         mobileLinksHTML += `<a href="#" id="mobile-profile-link" class="p-2 text-lg" data-i18n-key="nav_profile"></a><a href="#" id="mobile-dashboard-link" class="p-2 text-lg" data-i18n-key="dashboard"></a><a href="#" id="mobile-messages-link" class="p-2 text-lg relative"><span data-i18n-key="messages"></span><span id="mobile-unread-badge" class="hidden absolute top-0 ml-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"></span></a><button id="mobile-logout-btn" class="p-2 text-lg text-left" data-i18n-key="logout"></button>`;
         
-        const toggleUserMenu = (e) => { e.preventDefault(); document.getElementById('user-menu-dropdown').classList.toggle('hidden'); };
-        document.getElementById('user-menu-btn').onclick = toggleUserMenu;
-        document.getElementById('logout-btn').onclick = handleSignOut;
-        document.getElementById('profile-link').onclick = (e) => { e.preventDefault(); renderView('profile', { userId: currentUser.uid, userName: currentUser.displayName }); };
-        document.getElementById('dashboard-link').onclick = (e) => { e.preventDefault(); renderView('dashboard'); };
-        document.getElementById('messages-link').onclick = (e) => { e.preventDefault(); currentUser ? renderView('inbox') : toggleModal(DOMElements.authModal, true); };
+        const userMenuBtn = document.getElementById('user-menu-btn');
+        if (userMenuBtn) {
+            userMenuBtn.onclick = (e) => { e.preventDefault(); document.getElementById('user-menu-dropdown')?.classList.toggle('hidden'); };
+        }
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) logoutBtn.onclick = handleSignOut;
+        const profileLink = document.getElementById('profile-link');
+        if (profileLink) profileLink.onclick = (e) => { e.preventDefault(); renderView('profile', { userId: currentUser.uid, userName: currentUser.displayName }); };
+        const dashboardLink = document.getElementById('dashboard-link');
+        if (dashboardLink) dashboardLink.onclick = (e) => { e.preventDefault(); renderView('dashboard'); };
+        const messagesLink = document.getElementById('messages-link');
+        if (messagesLink) messagesLink.onclick = (e) => { e.preventDefault(); currentUser ? renderView('inbox') : toggleModal(DOMElements.authModal, true); };
     } else {
         authLinksContainer.innerHTML = `<button id="login-btn" class="px-4 py-2 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none" data-i18n-key="connect"></button>`;
         mobileLinksHTML += `<button id="mobile-login-btn" class="p-2 text-lg text-left" data-i18n-key="connect"></button>`;
-        document.getElementById('login-btn').onclick = () => toggleModal(DOMElements.authModal, true);
+        const loginBtn = document.getElementById('login-btn');
+        if (loginBtn) loginBtn.onclick = () => toggleModal(DOMElements.authModal, true);
     }
 
     mobileNavLinks.innerHTML = mobileLinksHTML;
@@ -1629,7 +1714,9 @@ const setupEventListeners = () => {
     const { darkModeToggle, langDropdownBtn, langBtns, sellLink, cartBtn, homeLink, mobileMenuBtn, mobileMenuCloseBtn, authModalCloseBtn, googleLoginBtn, facebookLoginBtn, modalCloseBtn, searchInput, mobileFiltersCloseBtn, mobileApplyFiltersBtn } = DOMElements;
     
     // Desktop Dark Mode Toggle
-    darkModeToggle.onclick = () => setDarkMode(!DOMElements.html.classList.contains('dark'));
+    if (darkModeToggle) {
+        darkModeToggle.onclick = () => setDarkMode(!DOMElements.html.classList.contains('dark'));
+    }
     
     // Mobile Dark Mode Toggle (New)
     const mobileDarkModeToggle = document.getElementById('mobile-dark-mode-toggle');
@@ -1639,147 +1726,188 @@ const setupEventListeners = () => {
         };
     }
 
-    langDropdownBtn.onclick = (e) => { e.stopPropagation(); DOMElements.langDropdown.classList.toggle('hidden'); };
-    langBtns.forEach(btn => btn.onclick = (e) => { e.preventDefault(); setLanguage(btn.dataset.lang); DOMElements.langDropdown.classList.add('hidden'); closeMobileMenu(); });
+    if (langDropdownBtn) {
+        langDropdownBtn.onclick = (e) => { e.stopPropagation(); DOMElements.langDropdown?.classList.toggle('hidden'); };
+    }
+    langBtns.forEach(btn => {
+        btn.onclick = (e) => { e.preventDefault(); setLanguage(btn.dataset.lang); DOMElements.langDropdown?.classList.add('hidden'); closeMobileMenu(); };
+    });
 
-    sellLink.onclick = (e) => { e.preventDefault(); toggleModal(currentUser ? DOMElements.postProductModal : DOMElements.authModal, true); if(currentUser) trapModalFocus('post-product-modal'); };
-    cartBtn.onclick = (e) => { e.preventDefault(); renderView('cart'); };
-    homeLink.onclick = (e) => { e.preventDefault(); window.history.pushState({}, '', window.location.pathname); renderView('home'); };
+    if (sellLink) {
+        sellLink.onclick = (e) => { e.preventDefault(); toggleModal(currentUser ? DOMElements.postProductModal : DOMElements.authModal, true); if(currentUser && DOMElements.postProductModal) trapModalFocus('post-product-modal'); };
+    }
+    if (cartBtn) {
+        cartBtn.onclick = (e) => { e.preventDefault(); renderView('cart'); };
+    }
+    if (homeLink) {
+        homeLink.onclick = (e) => { e.preventDefault(); window.history.pushState({}, '', window.location.pathname); renderView('home'); };
+    }
 
-    mobileMenuBtn.onclick = openMobileMenu;
-    mobileMenuCloseBtn.onclick = closeMobileMenu;
-    DOMElements.mobileMenuBackdrop.onclick = closeMobileMenu;
+    if (mobileMenuBtn) mobileMenuBtn.onclick = openMobileMenu;
+    if (mobileMenuCloseBtn) mobileMenuCloseBtn.onclick = closeMobileMenu;
+    if (DOMElements.mobileMenuBackdrop) DOMEElements.mobileMenuBackdrop.onclick = closeMobileMenu;
 
     document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
     document.addEventListener('touchend', e => { touchEndX = e.changedTouches[0].screenX; handleSwipe(); }, { passive: true });
 
-    document.getElementById('mobile-nav-links').addEventListener('click', (e) => {
-        const target = e.target.closest('a, button');
-        if (!target) return;
-        e.preventDefault();
-        
-        const actions = {
-            'mobile-home-link': () => { window.history.pushState({}, '', window.location.pathname); renderView('home'); },
-            'mobile-search-link': () => DOMElements.searchInput.focus(),
-            'mobile-sell-link': () => sellLink.click(),
-            'mobile-cart-link': () => renderView('cart'),
-            'mobile-profile-link': () => renderView('profile', { userId: currentUser.uid, userName: currentUser.displayName }),
-            'mobile-dashboard-link': () => renderView('dashboard'),
-            'mobile-messages-link': () => renderView('inbox'),
-            'mobile-logout-btn': handleSignOut,
-            'mobile-login-btn': () => toggleModal(DOMElements.authModal, true)
-        };
-        
-        actions[target.id]?.();
-        closeMobileMenu();
-    });
-
-    authModalCloseBtn.onclick = () => toggleModal(DOMElements.authModal, false);
-    modalCloseBtn.onclick = () => toggleModal(DOMElements.postProductModal, false);
-    googleLoginBtn.onclick = () => signInWithPopup(auth, googleProvider).catch(error => console.error("Login error", error));
-    facebookLoginBtn.onclick = () => signInWithPopup(auth, facebookProvider).catch(error => console.error("Login error", error));
-    
-    DOMElements.postProductModal.addEventListener('transitionend', (e) => {
-        if (!DOMElements.postProductModal.classList.contains('invisible')) {
-            populateSelect(DOMElements.postProductBrandSelect, car_data, 'select_brand', currentLang);
-            populateSelect(DOMElements.postProductYearSelect, years, 'select_year', currentLang);
-            populateSelect(DOMElements.postProductWilayaSelect, wilayas, 'select_wilaya', currentLang);
-            populateSelect(DOMElements.postProductCategorySelect, categories, 'select_category', currentLang, true);
+    const mobileNavLinksEl = document.getElementById('mobile-nav-links');
+    if (mobileNavLinksEl) {
+        mobileNavLinksEl.addEventListener('click', (e) => {
+            const target = e.target.closest('a, button');
+            if (!target) return;
+            e.preventDefault();
             
-            // Fix: Populate condition select dropdown
-            const conditionSelect = DOMElements.postProductConditionSelect;
-            if (conditionSelect) {
-                conditionSelect.innerHTML = `<option value="">${translations[currentLang]['any_condition']}</option>`;
-                conditionSelect.innerHTML += `<option value="new">${translations[currentLang]['new']}</option>`;
-                conditionSelect.innerHTML += `<option value="used">${translations[currentLang]['used']}</option>`;
+            const actions = {
+                'mobile-home-link': () => { window.history.pushState({}, '', window.location.pathname); renderView('home'); },
+                'mobile-search-link': () => DOMElements.searchInput?.focus(),
+                'mobile-sell-link': () => sellLink?.click(),
+                'mobile-cart-link': () => renderView('cart'),
+                'mobile-profile-link': () => renderView('profile', { userId: currentUser.uid, userName: currentUser.displayName }),
+                'mobile-dashboard-link': () => renderView('dashboard'),
+                'mobile-messages-link': () => renderView('inbox'),
+                'mobile-logout-btn': handleSignOut,
+                'mobile-login-btn': () => toggleModal(DOMElements.authModal, true)
+            };
+            
+            actions[target.id]?.();
+            closeMobileMenu();
+        });
+    }
+
+    if (authModalCloseBtn) authModalCloseBtn.onclick = () => toggleModal(DOMElements.authModal, false);
+    if (modalCloseBtn) modalCloseBtn.onclick = () => toggleModal(DOMElements.postProductModal, false);
+    if (googleLoginBtn) googleLoginBtn.onclick = () => signInWithPopup(auth, googleProvider).catch(error => console.error("Login error", error));
+    if (facebookLoginBtn) facebookLoginBtn.onclick = () => signInWithPopup(auth, facebookProvider).catch(error => console.error("Login error", error));
+    
+    if (DOMElements.postProductModal) {
+      DOMElements.postProductModal.addEventListener('transitionend', (e) => {
+          if (!DOMElements.postProductModal.classList.contains('invisible')) {
+              populateSelect(DOMElements.postProductBrandSelect, car_data, 'select_brand', currentLang);
+              populateSelect(DOMElements.postProductYearSelect, years, 'select_year', currentLang);
+              populateSelect(DOMElements.postProductWilayaSelect, wilayas, 'select_wilaya', currentLang);
+              populateSelect(DOMElements.postProductCategorySelect, categories, 'select_category', currentLang, true);
+              
+              // Populate condition select dropdown
+              const conditionSelect = DOMElements.postProductConditionSelect;
+              if (conditionSelect) {
+                  conditionSelect.innerHTML = `<option value="">${translations[currentLang]['any_condition']}</option>`;
+                  conditionSelect.innerHTML += `<option value="new">${translations[currentLang]['new']}</option>`;
+                  conditionSelect.innerHTML += `<option value="used">${translations[currentLang]['used']}</option>`;
+              }
+              trapModalFocus('post-product-modal');
+          }
+      });
+    }
+    
+    if (DOMElements.postProductBrandSelect) {
+      DOMElements.postProductBrandSelect.onchange = () => {
+          const modelSelect = DOMElements.postProductModelSelect;
+          const selectedBrand = DOMElements.postProductBrandSelect.value;
+          if (modelSelect) {
+            if (selectedBrand && car_data[selectedBrand]) {
+                populateSelect(modelSelect, car_data[selectedBrand], 'select_model', currentLang);
+                modelSelect.disabled = false;
+            } else {
+                modelSelect.disabled = true;
+                modelSelect.innerHTML = `<option value="">${translations[currentLang].select_model}</option>`;
             }
-            trapModalFocus('post-product-modal');
-        }
-    });
+          }
+      };
+    }
     
-    DOMElements.postProductBrandSelect.onchange = () => {
-        const modelSelect = DOMElements.postProductModelSelect;
-        const selectedBrand = DOMElements.postProductBrandSelect.value;
-        if (selectedBrand && car_data[selectedBrand]) {
-            populateSelect(modelSelect, car_data[selectedBrand], 'select_model', currentLang);
-            modelSelect.disabled = false;
-        } else {
-            modelSelect.disabled = true;
-            modelSelect.innerHTML = `<option value="">${translations[currentLang].select_model}</option>`;
-        }
-    };
+    if (DOMElements.postProductWilayaSelect) {
+      DOMElements.postProductWilayaSelect.onchange = () => {
+          const communeSelect = DOMElements.postProductCommuneSelect;
+          const selectedWilaya = DOMElements.postProductWilayaSelect.value;
+          if (communeSelect) {
+            if (selectedWilaya && wilayas[selectedWilaya]) {
+                populateSelect(communeSelect, wilayas[selectedWilaya], 'select_commune', currentLang);
+                communeSelect.disabled = false;
+            } else {
+                communeSelect.disabled = true;
+                communeSelect.innerHTML = `<option value="">${translations[currentLang].select_commune}</option>`;
+            }
+          }
+      };
+    }
     
-    DOMElements.postProductWilayaSelect.onchange = () => {
-        const communeSelect = DOMElements.postProductCommuneSelect;
-        const selectedWilaya = DOMElements.postProductWilayaSelect.value;
-        if (selectedWilaya && wilayas[selectedWilaya]) {
-            populateSelect(communeSelect, wilayas[selectedWilaya], 'select_commune', currentLang);
-            communeSelect.disabled = false;
-        } else {
-            communeSelect.disabled = true;
-            communeSelect.innerHTML = `<option value="">${translations[currentLang].select_commune}</option>`;
-        }
-    };
-    
-    searchInput.oninput = debounce(applyAndRenderFilters, 500);
-    mobileFiltersCloseBtn.onclick = () => DOMElements.mobileFiltersModal.classList.add('translate-x-full');
-    mobileApplyFiltersBtn.onclick = () => { applyAndRenderFilters(); DOMElements.mobileFiltersModal.classList.add('translate-x-full'); };
+    if (searchInput) {
+      searchInput.oninput = debounce(applyAndRenderFilters, 500);
+    }
+    if (mobileFiltersCloseBtn) {
+      mobileFiltersCloseBtn.onclick = () => DOMElements.mobileFiltersModal?.classList.add('translate-x-full');
+    }
+    if (mobileApplyFiltersBtn) {
+      mobileApplyFiltersBtn.onclick = () => { applyAndRenderFilters(); DOMElements.mobileFiltersModal?.classList.add('translate-x-full'); };
+    }
 
     document.onclick = (e) => {
-        if (!langDropdownBtn.contains(e.target)) DOMElements.langDropdown.classList.add('hidden');
+        if (langDropdownBtn && !langDropdownBtn.contains(e.target)) DOMElements.langDropdown?.classList.add('hidden');
         const userMenu = document.getElementById('user-menu');
-        if (userMenu && !userMenu.contains(e.target)) document.getElementById('user-menu-dropdown').classList.add('hidden');
-        if (DOMElements.searchSuggestions && !DOMElements.searchInput.contains(e.target)) DOMElements.searchSuggestions.classList.add('hidden');
+        if (userMenu && !userMenu.contains(e.target)) document.getElementById('user-menu-dropdown')?.classList.add('hidden');
+        if (DOMElements.searchSuggestions && !DOMElements.searchInput?.contains(e.target)) DOMElements.searchSuggestions.classList.add('hidden');
     };
 
-    DOMElements.searchInput.addEventListener('input', debounce(async (e) => {
-      const queryText = e.target.value.trim();
-      if (queryText.length < 2) {
-        DOMElements.searchSuggestions.classList.add('hidden');
-        return;
-      }
-      
-      const q = query(collection(db, "products"), 
-        where("keywords", "array-contains", queryText.toLowerCase()),
-        limit(5));
-      
-      const snapshot = await getDocs(q);
-      if (!snapshot.empty) {
-        DOMElements.searchSuggestions.innerHTML = '';
-        snapshot.forEach(doc => {
-          const product = doc.data();
-          const suggestion = document.createElement('div');
-          suggestion.className = 'p-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer';
-          suggestion.textContent = product.title;
-          suggestion.onclick = () => {
-            DOMEElements.searchInput.value = product.title;
-            DOMElements.searchSuggestions.classList.add('hidden');
-            applyAndRenderFilters();
-          };
-          DOMElements.searchSuggestions.appendChild(suggestion);
-        });
-        DOMElements.searchSuggestions.classList.remove('hidden');
-      } else {
-        DOMElements.searchSuggestions.classList.add('hidden');
-      }
-    }, 300));
+    if (DOMElements.searchInput) {
+      DOMElements.searchInput.addEventListener('input', debounce(async (e) => {
+        const queryText = e.target.value.trim();
+        if (queryText.length < 2) {
+          DOMElements.searchSuggestions?.classList.add('hidden');
+          return;
+        }
+        
+        const q = query(collection(db, "products"), 
+          where("keywords", "array-contains", queryText.toLowerCase()),
+          limit(5));
+        
+        const snapshot = await getDocs(q);
+        const searchSuggestionsEl = DOMElements.searchSuggestions;
+        if (searchSuggestionsEl) {
+            if (!snapshot.empty) {
+                searchSuggestionsEl.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const product = doc.data();
+                    const suggestion = document.createElement('div');
+                    suggestion.className = 'p-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer';
+                    suggestion.textContent = product.title;
+                    suggestion.onclick = () => {
+                        DOMElements.searchInput.value = product.title;
+                        searchSuggestionsEl.classList.add('hidden');
+                        applyAndRenderFilters();
+                    };
+                    searchSuggestionsEl.appendChild(suggestion);
+                });
+                searchSuggestionsEl.classList.remove('hidden');
+            } else {
+                searchSuggestionsEl.classList.add('hidden');
+            }
+        }
+      }, 300));
+    }
 
-    document.getElementById('nav-home').onclick = (e) => { 
+    const navHome = document.getElementById('nav-home');
+    if (navHome) navHome.onclick = (e) => { 
         e.preventDefault(); 
         window.history.pushState({}, '', window.location.pathname);
         renderView('home'); 
     };
-    document.getElementById('nav-search').onclick = (e) => { e.preventDefault(); DOMElements.searchInput.focus(); updateBottomNav('search'); };
-    document.getElementById('nav-sell').onclick = (e) => { e.preventDefault(); DOMElements.sellLink.click(); };
-    document.getElementById('nav-messages').onclick = (e) => { e.preventDefault(); currentUser ? renderView('inbox') : toggleModal(DOMElements.authModal, true); };
-    document.getElementById('nav-profile').onclick = (e) => { e.preventDefault(); currentUser ? renderView('profile', { userId: currentUser.uid, userName: currentUser.displayName }) : toggleModal(DOMElements.authModal, true); };
+    const navSearch = document.getElementById('nav-search');
+    if (navSearch) navSearch.onclick = (e) => { e.preventDefault(); DOMElements.searchInput?.focus(); updateBottomNav('search'); };
+    const navSell = document.getElementById('nav-sell');
+    if (navSell) navSell.onclick = (e) => { e.preventDefault(); DOMElements.sellLink?.click(); };
+    const navMessages = document.getElementById('nav-messages');
+    if (navMessages) navMessages.onclick = (e) => { e.preventDefault(); currentUser ? renderView('inbox') : toggleModal(DOMElements.authModal, true); };
+    const navProfile = document.getElementById('nav-profile');
+    if (navProfile) navProfile.onclick = (e) => { e.preventDefault(); currentUser ? renderView('profile', { userId: currentUser.uid, userName: currentUser.displayName }) : toggleModal(DOMElements.authModal, true); };
     
-    document.getElementById('terms-link').onclick = (e) => {
-        e.preventDefault();
-        renderView('terms');
-    };
+    const termsLink = document.getElementById('terms-link');
+    if (termsLink) {
+        termsLink.onclick = (e) => {
+            e.preventDefault();
+            renderView('terms');
+        };
+    }
     
-    // New: Handle the 'Become a Store' button click
     const becomeStoreBtn = document.getElementById('becomeStoreBtn');
     if (becomeStoreBtn) {
       becomeStoreBtn.onclick = (e) => {
@@ -1790,20 +1918,24 @@ const setupEventListeners = () => {
 
     let lastScrollY = window.scrollY;
     const header = document.querySelector('header');
-    window.addEventListener('scroll', () => {
-        if (lastScrollY < window.scrollY && window.scrollY > 100) {
-            header.classList.add('-translate-y-full');
-        } else {
-            header.classList.remove('-translate-y-full');
-        }
-        lastScrollY = window.scrollY;
-    }, { passive: true });
-
+    if (header) {
+      window.addEventListener('scroll', () => {
+          if (lastScrollY < window.scrollY && window.scrollY > 100) {
+              header.classList.add('-translate-y-full');
+          } else {
+              header.classList.remove('-translate-y-full');
+          }
+          lastScrollY = window.scrollY;
+      }, { passive: true });
+    }
 };
 
 const bootApp = () => {
     setDarkMode(localStorage.getItem('piecety_dark_mode') === 'true');
-    document.getElementById('current-year').textContent = new Date().getFullYear();
+    const currentYearEl = document.getElementById('current-year');
+    if (currentYearEl) {
+      currentYearEl.textContent = new Date().getFullYear();
+    }
     setupEventListeners();
 
     if ('serviceWorker' in navigator) {
@@ -1846,7 +1978,25 @@ const bootApp = () => {
         updateCartDisplay();
     });
     
-    window.onpopstate = () => renderView('home');
+    // CORRECTED: Handle popstate to re-render based on URL state
+    window.onpopstate = () => {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('productId')) {
+            // Re-render product page if a product ID is in the URL
+            const productId = params.get('productId');
+            const productRef = doc(db, "products", productId);
+            getDoc(productRef).then(snap => {
+                if (snap.exists()) {
+                    renderView('product', { id: snap.id, ...snap.data() });
+                } else {
+                    renderView('home');
+                }
+            }).catch(() => renderView('home'));
+        } else {
+            // Re-render home page with current filters
+            renderView('home');
+        }
+    };
     renderView('home');
     setLanguage(currentLang);
 };
