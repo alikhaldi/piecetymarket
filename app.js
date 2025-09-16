@@ -187,9 +187,6 @@ const DOMElements = {
     postProductImageInput: document.getElementById('product-image'),
     liveRegion: document.getElementById('live-region'),
     searchSuggestions: document.getElementById('search-suggestions'),
-    // roleModal: document.getElementById('roleModal'), // REMOVED
-    // chooseUserBtn: document.getElementById('chooseUser'), // REMOVED
-    // chooseStoreBtn: document.getElementById('chooseStore') // REMOVED
 };
 
 // --- UTILITY FUNCTIONS ---
@@ -1745,7 +1742,8 @@ const setupEventListeners = () => {
 
     if (mobileMenuBtn) mobileMenuBtn.onclick = openMobileMenu;
     if (mobileMenuCloseBtn) mobileMenuCloseBtn.onclick = closeMobileMenu;
-    if (DOMElements.mobileMenuBackdrop) DOMEElements.mobileMenuBackdrop.onclick = closeMobileMenu;
+    // CORRECTED: Fixed the typo from DOMEElements to DOMElements
+    if (DOMElements.mobileMenuBackdrop) DOMElements.mobileMenuBackdrop.onclick = closeMobileMenu;
 
     document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
     document.addEventListener('touchend', e => { touchEndX = e.changedTouches[0].screenX; handleSwipe(); }, { passive: true });
