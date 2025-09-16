@@ -19,7 +19,8 @@ body {
     font-size: 1rem;
 }
 
-body.dark {
+/* CORRECTED: Use html.dark to target the body correctly */
+html.dark body {
     background-color: var(--color-bg-dark);
 }
 
@@ -30,7 +31,7 @@ body.dark {
 ::-webkit-scrollbar-track {
     background: var(--color-scroll-track);
 }
-body.dark ::-webkit-scrollbar-track {
+html.dark ::-webkit-scrollbar-track {
     background: var(--color-scroll-track-dark);
 }
 ::-webkit-scrollbar-thumb {
@@ -70,7 +71,7 @@ button, a, [role="button"] {
     transform: translateY(-5px);
     box-shadow: 0 10px 15px var(--color-card-hover);
 }
-body.dark .category-card:hover {
+html.dark .category-card:hover {
     box-shadow: 0 10px 15px var(--color-card-hover-dark);
 }
 .category-card .category-icon {
@@ -80,7 +81,7 @@ body.dark .category-card:hover {
     transform: scale(1.1);
     background-color: var(--color-accent);
 }
-body.dark .category-card:hover .category-icon {
+html.dark .category-card:hover .category-icon {
     background-color: var(--color-accent-dark);
 }
 
@@ -98,7 +99,7 @@ body.dark .category-card:hover .category-icon {
     padding: 16px;
     margin-bottom: 16px;
 }
-body.dark .skeleton-card {
+html.dark .skeleton-card {
     background: #1f2937;
 }
 
@@ -109,7 +110,7 @@ body.dark .skeleton-card {
     animation: loading 1.5s infinite;
     border-radius: 4px;
 }
-body.dark .skeleton-image {
+html.dark .skeleton-image {
     background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
     background-size: 200% 100%;
 }
@@ -121,7 +122,7 @@ body.dark .skeleton-image {
     border-radius: 4px;
     animation: loading 1.5s infinite;
 }
-body.dark .skeleton-text {
+html.dark .skeleton-text {
     background: #4b5563;
 }
 
