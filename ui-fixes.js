@@ -47,12 +47,21 @@
   function $(id) { return document.getElementById(id); }
   function addClass(el, cls) { if (el) el.classList.add(cls); }
   function removeClass(el, cls) { if (el) el.classList.remove(cls); }
-
+  
+  // Helper function to check if the document is in RTL mode
+  function isRTL() {
+    return document.documentElement.getAttribute('dir') === 'rtl';
+  }
+  
   function openMobileMenu() {
     const mobileMenu = $('mobile-menu');
     const mobileBackdrop = $('mobile-menu-backdrop');
     if (!mobileMenu) return;
-    removeClass(mobileMenu, '-translate-x-full');
+
+    // Use a conditional class based on the text direction
+    const translateClass = isRTL() ? 'translate-x-full' : '-translate-x-full';
+    removeClass(mobileMenu, translateClass);
+    
     removeClass(mobileMenu, 'invisible');
     removeClass(mobileMenu, 'opacity-0');
     mobileMenu.setAttribute('aria-hidden', 'false');
@@ -63,7 +72,11 @@
     const mobileMenu = $('mobile-menu');
     const mobileBackdrop = $('mobile-menu-backdrop');
     if (!mobileMenu) return;
-    addClass(mobileMenu, '-translate-x-full');
+
+    // Use a conditional class based on the text direction
+    const translateClass = isRTL() ? 'translate-x-full' : '-translate-x-full';
+    addClass(mobileMenu, translateClass);
+    
     addClass(mobileMenu, 'invisible');
     addClass(mobileMenu, 'opacity-0');
     mobileMenu.setAttribute('aria-hidden', 'true');
@@ -74,14 +87,23 @@
   function openMobileFilters() {
     const modal = $('mobile-filters-modal');
     if (!modal) return;
-    removeClass(modal, 'translate-x-full');
+
+    // The modal is off-screen to the right in LTR, so we remove the `translate-x-full` class to show it.
+    // For RTL, the CSS should place it off-screen to the left using a different class, e.g., `-translate-x-full`.
+    // The JS should simply remove the appropriate class.
+    const translateClass = isRTL() ? '-translate-x-full' : 'translate-x-full';
+    removeClass(modal, translateClass);
+
     removeClass(modal, 'invisible');
     modal.setAttribute('aria-hidden','false');
   }
   function closeMobileFilters() {
     const modal = $('mobile-filters-modal');
     if (!modal) return;
-    addClass(modal, 'translate-x-full');
+
+    const translateClass = isRTL() ? '-translate-x-full' : 'translate-x-full';
+    addClass(modal, translateClass);
+
     addClass(modal, 'invisible');
     modal.setAttribute('aria-hidden','true');
   }
