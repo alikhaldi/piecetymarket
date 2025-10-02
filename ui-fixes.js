@@ -1,7 +1,7 @@
 // UI Fixes: placeholder fallback, mobile toggles, global error banner
 (function () {
   // Safe placeholder SVG data URI (No external asset needed)
-  const PLACEHOLDER_IMG = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400"><rect width="100%" height="100%" fill="%23f3f4f6"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%23999" font-family="Arial" font-size="20">No Image</text></svg>';
+  const PLACEHOLDER_IMG = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400"><rect width="100%" height="100%" fill="%23f3f4f6"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%23999" font-family="Arial" font-size="20">No Image</text></svg>';
 
   // Utility to set image with fallback
   function setImageWithFallback(imgEl, src) {
@@ -38,8 +38,8 @@
     if (document.getElementById('js-error-banner')) return;
     const banner = document.createElement('div');
     banner.id = 'js-error-banner';
-    banner.style = 'position:fixed;left:8px;bottom:8px;z-index:9999;padding:10px;background:#fee;border:1px solid #f99;color:#900;font-family:Arial,Helvetica,sans-serif;font-size:13px;border-radius:6px';
-    banner.textContent = 'JS error â€” open DevTools Console for details';
+    banner.style = 'position:fixed;left:8px;bottom:8px;z-index:9999;padding:10px;background:#fee;border:1px solid #f99;color:#900;font-family:Arial,Helvetica,sans-serif;font-size:13px;border-radius:6px;display:flex;align-items:center;gap:10px;';
+    banner.innerHTML = '<span>JS error — open DevTools Console for details</span><button onclick="this.parentElement.remove()" style="background:none;border:none;color:inherit;font-size:16px;cursor:pointer;">&times;</button>';
     document.body.appendChild(banner);
   });
 
