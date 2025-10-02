@@ -1746,7 +1746,7 @@ const setupEventListeners = () => {
     if (mobileMenuBtn) mobileMenuBtn.onclick = openMobileMenu;
     if (mobileMenuCloseBtn) mobileMenuCloseBtn.onclick = closeMobileMenu;
     // CORRECTED: Fixed the typo from DOMEElements to DOMElements
-    if (DOMElements.mobileMenuBackdrop) DOMEElements.mobileMenuBackdrop.onclick = closeMobileMenu;
+    if (DOMElements.mobileMenuBackdrop) DOMElements.mobileMenuBackdrop.onclick = closeMobileMenu;
 
     document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
     document.addEventListener('touchend', e => { touchEndX = e.changedTouches[0].screenX; handleSwipe(); }, { passive: true });
@@ -2003,3 +2003,4 @@ const bootApp = () => {
 };
 
 bootApp();
+
