@@ -22,7 +22,6 @@ let recentlyViewed = JSON.parse(localStorage.getItem('piecety_recently_viewed'))
 let userProfile = null;
 let userInteractions = JSON.parse(localStorage.getItem('userInteractions') || '{}');
 let listingsCache = null;
-let cacheTimestamp = null;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 // --- FIREBASE CONFIGURATION ---
@@ -197,7 +196,8 @@ const announceToScreenReader = (message) => {
   if (DOMElements.liveRegion) {
     DOMElements.liveRegion.textContent = message;
     setTimeout(() => {
-      DOMEElements.liveRegion.textContent = '';
+      // FIX 2: Corrected DOMEElements to DOMElements
+      DOMElements.liveRegion.textContent = '';
     }, 1000);
   }
 };
@@ -368,12 +368,15 @@ const translatePage = (lang) => {
         currentLangEl.textContent = translations[lang]?.[`${lang}_short`] || lang.toUpperCase();
     }
     
+    // FIX 1: Corrected data-i18n-key access to use camelCase (i18nKey)
     document.querySelectorAll("[data-i18n-key]").forEach(el => {
-        const key = el.dataset.i18n-key;
+        const key = el.dataset.i18nKey;
         if (translations[lang]?.[key]) el.textContent = translations[lang][key];
     });
+    
+    // FIX 1: Corrected data-i18n-placeholder access to use camelCase (i18nPlaceholder)
     document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
-        const key = el.dataset.i18n-placeholder;
+        const key = el.dataset.i18nPlaceholder;
         if (translations[lang]?.[key]) el.placeholder = translations[lang][key];
     });
     
@@ -1636,7 +1639,6 @@ const validatePostForm = (form) => {
         let isInvalid = false;
         if (input.type === 'file') {
              // File input doesn't have a value property in the same way, skip validation here.
-             // It's better to validate if a file exists before upload.
              return;
         } else {
             isInvalid = !input?.value?.trim();
@@ -1745,7 +1747,8 @@ const setupEventListeners = () => {
 
     if (mobileMenuBtn) mobileMenuBtn.onclick = openMobileMenu;
     if (mobileMenuCloseBtn) mobileMenuCloseBtn.onclick = closeMobileMenu;
-    // CORRECTED: Fixed the typo from DOMEElements to DOMElements
+    
+    // FIX 2: Corrected the typo from DOMEElements to DOMElements
     if (DOMElements.mobileMenuBackdrop) DOMElements.mobileMenuBackdrop.onclick = closeMobileMenu;
 
     document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
@@ -2003,4 +2006,3 @@ const bootApp = () => {
 };
 
 bootApp();
-
