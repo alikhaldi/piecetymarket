@@ -896,8 +896,21 @@ button, a, [role="button"] {
   }
 }
 
-/* RTL support for Arabic */
+/* === Architectural Fixes === */
+
+/* High-priority z-index fix for the 'Create Store Profile' button */
+/* This class ensures the button is positioned above other elements, restoring click functionality. */
+.z-fix-btn-container {
+  position: relative;
+  z-index: 999;
+}
+
+/* Correcting RTL Layout Inversion with Logical Properties */
+/* The layout inversion ("upside down") is caused by a reliance on physical CSS properties.
+   This section overrides those properties with flow-relative logical properties for RTL languages. */
 html[dir="rtl"] {
+  /* Establishes the core right-to-left directional context. */
+  direction: rtl;
   text-align: right;
 }
 
@@ -909,20 +922,43 @@ html[dir="rtl"] .flex-col {
   flex-direction: column-reverse;
 }
 
-html[dir="rtl"] .fa-search.absolute {
-  right: var(--space-12);
-  left: auto;
+/* Logical property overrides to fix horizontal spacing */
+html[dir="rtl"] .px-8 {
+  padding-inline-start: var(--space-8);
+  padding-inline-end: var(--space-8);
+}
+html[dir="rtl"] .px-16 {
+  padding-inline-start: var(--space-16);
+  padding-inline-end: var(--space-16);
 }
 
-html[dir="rtl"] #search-input {
-  padding-right: 2.5rem;
-  padding-left: var(--space-12);
+html[dir="rtl"] .mx-8 {
+  margin-inline-start: var(--space-8);
+  margin-inline-end: var(--space-8);
+}
+html[dir="rtl"] .mx-auto {
+  margin-inline-start: auto;
+  margin-inline-end: auto;
 }
 
-html[dir="rtl"] .logo svg {
-  margin-left: var(--space-8);
-  margin-right: 0;
+/* Fixes for form elements and icons */
+html[dir="rtl"] .form-label {
+  text-align: right;
 }
+
+html[dir="rtl"] select.form-control {
+  background-position: left var(--space-12) center;
+  padding-right: var(--space-12);
+  padding-left: var(--space-32);
+}
+
+/* RTL-specific image asset for the caret */
+.dark html[dir="rtl"] select.form-control, [data-color-scheme="dark"] html[dir="rtl"] select.form-control {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23f5f5f5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+}
+
+/* === End Architectural Fixes === */
+
 
 /* Accessibility Improvements */
 .sr-only {
