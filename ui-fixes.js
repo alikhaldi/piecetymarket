@@ -39,7 +39,7 @@
     const banner = document.createElement('div');
     banner.id = 'js-error-banner';
     banner.style = 'position:fixed;left:8px;bottom:8px;z-index:9999;padding:10px;background:#fee;border:1px solid #f99;color:#900;font-family:Arial,Helvetica,sans-serif;font-size:13px;border-radius:6px';
-    banner.textContent = 'JS error — open DevTools Console for details';
+    banner.textContent = 'JS error â€” open DevTools Console for details';
     document.body.appendChild(banner);
   });
 
