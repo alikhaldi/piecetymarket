@@ -147,10 +147,16 @@ const handleFormSubmission = async (e) => {
         const selectedCategories = Array.from(document.querySelectorAll('#storeCategories input:checked')).map(cb => cb.value);
         const selectedBrands = Array.from(document.querySelectorAll('#storeBrands input:checked')).map(cb => cb.value);
 
+        // Security hardening:
+        // Client-side validation is NOT enough to prevent XSS. Server-side validation is required.
+        // We can add a simple client-side check here as a first layer, though.
+        const sanitizedStoreName = sanitizeInput(storeName);
+        const sanitizedStoreAddress = sanitizeInput(storeAddress);
+
         await setDoc(doc(db, "stores", user.uid), {
             ownerId: user.uid,
-            name: storeName,
-            address: storeAddress,
+            name: sanitizedStoreName,
+            address: sanitizedStoreAddress,
             categories: selectedCategories,
             brands: selectedBrands,
             createdAt: serverTimestamp()
@@ -174,6 +180,14 @@ const handleFormSubmission = async (e) => {
             submitBtn.innerHTML = originalText;
         }
     }
+};
+
+// New function to sanitize input on the client-side
+// This is a basic example; a robust solution requires server-side validation and encoding.
+const sanitizeInput = (input) => {
+    const element = document.createElement('div');
+    element.innerText = input;
+    return element.innerHTML;
 };
 
 // Handle network status
