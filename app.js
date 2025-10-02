@@ -21,7 +21,10 @@ let isFetching = false;
 let recentlyViewed = JSON.parse(localStorage.getItem('piecety_recently_viewed')) || [];
 let userProfile = null;
 let userInteractions = JSON.parse(localStorage.getItem('userInteractions') || '{}');
+
+// Fix: Declared caching variables in global scope
 let listingsCache = null;
+let cacheTimestamp = 0;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 // --- FIREBASE CONFIGURATION ---
@@ -814,11 +817,9 @@ const renderListings = async (loadMore = false) => {
     const searchQuery = DOMElements.searchInput.value.trim().toLowerCase();
     
     let productsToShow = [];
-    let fromCache = false;
     
     if (listingsCache && (Date.now() - cacheTimestamp) < CACHE_DURATION && !loadMore && !searchQuery) {
         productsToShow = listingsCache;
-        fromCache = true;
     } else {
         let baseQuery = collection(db, "products");
         
@@ -1749,7 +1750,7 @@ const setupEventListeners = () => {
     if (mobileMenuCloseBtn) mobileMenuCloseBtn.onclick = closeMobileMenu;
     
     // FIX 2: Corrected the typo from DOMEElements to DOMElements
-    if (DOMElements.mobileMenuBackdrop) DOMElements.mobileMenuBackdrop.onclick = closeMobileMenu;
+    if (DOMElements.mobileMenuBackdrop) DOMEElements.mobileMenuBackdrop.onclick = closeMobileMenu;
 
     document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
     document.addEventListener('touchend', e => { touchEndX = e.changedTouches[0].screenX; handleSwipe(); }, { passive: true });
