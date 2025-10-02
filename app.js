@@ -192,6 +192,10 @@ const DOMElements = {
     searchSuggestions: document.getElementById('search-suggestions'),
     // NEW: Offline banner element
     offlineBanner: document.getElementById('offline-banner'),
+    // NEW: Role selection modal
+    roleModal: document.getElementById('roleModal'),
+    chooseUserBtn: document.getElementById('chooseUser'),
+    chooseStoreBtn: document.getElementById('chooseStore')
 };
 
 // --- UTILITY FUNCTIONS ---
@@ -255,6 +259,16 @@ const debounce = (func, delay) => {
         clearTimeout(timeout);
         timeout = setTimeout(() => func.apply(this, args), delay);
     };
+};
+
+// New: Client-side sanitization to mitigate XSS vulnerabilities
+const sanitizeInput = (input) => {
+    if (typeof input !== 'string') {
+        return input;
+    }
+    const element = document.createElement('div');
+    element.textContent = input;
+    return element.innerHTML;
 };
 
 const trackUserInteraction = (productId, interactionType) => {
@@ -1091,12 +1105,16 @@ const renderAddReviewSection = (productId) => {
   
           submitBtn.disabled = true;
           try {
+              // Note: review content is user-generated and should be sanitized.
+              // Client-side sanitization is a first line of defense.
+              const sanitizedReview = sanitizeInput(reviewTextarea.value.trim());
+
               await addDoc(collection(db, "reviews"), {
                   productId,
                   userId: currentUser.uid,
                   reviewerName: currentUser.displayName,
                   rating: selectedRating,
-                  review: reviewTextarea.value.trim(),
+                  review: sanitizedReview,
                   createdAt: serverTimestamp()
               });
               showMessage("Review submitted!", 3000, "success");
@@ -1350,7 +1368,7 @@ const updateProfileData = async (e) => {
     if (!currentUser) { showMessage('login_required', 3000, 'error'); return; }
 
     const form = e.target;
-    const displayName = form.elements['displayName']?.value.trim();
+    const displayName = sanitizeInput(form.elements['displayName']?.value.trim()); // Sanitize display name
     const profilePicFile = form.elements['profilePic']?.files?.[0];
 
     if (!displayName) {
@@ -1712,6 +1730,19 @@ const updateUnreadBadge = (count) => {
     });
 };
 
+// New: Function to handle the role selection modal display
+const showRoleModal = () => {
+    if (DOMElements.roleModal) {
+      toggleModal(DOMElements.roleModal, true);
+      trapModalFocus('roleModal');
+    }
+};
+const hideRoleModal = () => {
+    if (DOMEElements.roleModal) {
+      toggleModal(DOMElements.roleModal, false);
+    }
+};
+
 // --- SETUP & INITIALIZATION ---
 const setupEventListeners = () => {
     const { darkModeToggle, langDropdownBtn, langBtns, sellLink, cartBtn, homeLink, mobileMenuBtn, mobileMenuCloseBtn, authModalCloseBtn, googleLoginBtn, facebookLoginBtn, modalCloseBtn, searchInput, mobileFiltersCloseBtn, mobileApplyFiltersBtn } = DOMElements;
@@ -1968,14 +1999,16 @@ const bootApp = () => {
             const userSnap = await getDoc(userDocRef);
             
             if (!userSnap.exists()) {
+                // If this is the user's first login, show the role selection modal.
+                showRoleModal();
                 await setDoc(userDocRef, {
                     uid: user.uid,
                     displayName: user.displayName,
                     email: user.email,
                     photoURL: user.photoURL,
-                    role: "user" // Default to user role on first login
+                    role: "pending"
                 });
-                userProfile = { role: "user" };
+                userProfile = { role: "pending" };
             } else {
                  userProfile = userSnap.data();
             }
