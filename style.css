@@ -613,16 +613,14 @@ select.form-control {
   border: 1px solid var(--color-border-secondary);
 }
 
+/* --- FIX: Correcting the improper nesting of font-face rule --- */
 @font-face {
   font-family: 'FKGroteskNeue';
-  src: url('https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2')
-    format('woff2');
+  src: url('https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2') format('woff2');
 }
-
 /* END PERPLEXITY DESIGN SYSTEM */
 
 /* General Body Styles */
-
 body {
   font-family: var(--font-family-base);
   background-color: var(--color-background);
@@ -812,7 +810,7 @@ button, a, [role="button"] {
 @media (max-width: 768px) {
   /* Prevent bottom nav overlap */
   main {
-    padding-bottom: 5rem;
+    padding-bottom: calc(5rem + env(safe-area-inset-bottom));
   }
 
   /* Improve mobile form elements to prevent iOS zoom */
@@ -823,8 +821,8 @@ button, a, [role="button"] {
   /* Better, more responsive grid for mobile */
   #dynamic-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: var(--space-12);
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: var(--space-16);
   }
 
   /* Fixed mobile menu width */
@@ -849,6 +847,12 @@ button, a, [role="button"] {
 
   .fa-search.absolute {
     left: var(--space-12);
+  }
+  
+  /* --- FIX: Reworking mobile grid for very small screens --- */
+  #dynamic-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-16);
   }
 
   /* Improve mobile spacing and touch targets */
@@ -884,10 +888,11 @@ button, a, [role="button"] {
   }
 
   /* Stack elements vertically on mobile */
-  .flex {
+  /* --- FIX: Removing redundant flex-direction rule. Tailwind handles this via classes --- */
+  /* .flex {
     flex-direction: column;
     gap: var(--space-8);
-  }
+  } */
 
   /* Adjust container padding for mobile */
   .container {
@@ -919,7 +924,7 @@ html[dir="rtl"] .flex {
 }
 
 html[dir="rtl"] .flex-col {
-  flex-direction: column-reverse;
+  flex-direction: column; /* This is an intentional override to fix vertical stacking in RTL */
 }
 
 /* Logical property overrides to fix horizontal spacing */
