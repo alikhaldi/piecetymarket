@@ -131,6 +131,42 @@
         closeMobileFilters();
       }
     });
+    
+    // --- FIX: Add swipe gesture event listeners ---
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    const handleSwipe = () => {
+        if (isRTL()) {
+            // Swipe right to open
+            if (touchEndX < touchStartX && touchStartX - touchEndX > 50) {
+                openMobileMenu();
+            }
+            // Swipe left to close
+            if (touchEndX > touchStartX && touchEndX - touchStartX > 50) {
+                closeMobileMenu();
+            }
+        } else {
+            // LTR logic
+            // Swipe right to open (from left edge)
+            if (touchEndX > touchStartX && touchEndX - touchStartX > 50) {
+                openMobileMenu();
+            }
+            // Swipe left to close
+            if (touchEndX < touchStartX && touchStartX - touchEndX > 50) {
+                closeMobileMenu();
+            }
+        }
+    };
+
+    document.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+
+    document.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    });
   });
 
   // Expose helper (optional)
