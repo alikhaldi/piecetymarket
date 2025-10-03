@@ -12,8 +12,14 @@
         }
     </script>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
-  <main class="max-w-lg mx-auto my-10 p-6 bg-white dark:bg-gray-800 rounded-xl shadow-md">
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 flex flex-col items-center justify-center min-h-screen">
+  
+  <div id="loading-spinner" class="hidden flex-col items-center justify-center space-y-4">
+    <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+    <p class="text-xl font-semibold text-gray-600 dark:text-gray-400">Loading...</p>
+  </div>
+  
+  <main id="main-content" class="max-w-lg mx-auto my-10 p-6 bg-white dark:bg-gray-800 rounded-xl shadow-md w-full">
     <h1 class="text-xl font-bold mb-5">Create Your Store Profile</h1>
     <form id="storeForm">
       <div class="mb-4">
