@@ -8,24 +8,36 @@ import { getStorage, ref, uploadBytes, getDownloadURL, uploadBytesResumable } fr
 import { documentId } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
 // --- GLOBAL STATE & CONSTANTS ---
-const PRODUCTS_PER_PAGE = 12;
-let currentUser = null;
-let currentLang = localStorage.getItem("piecety_lang") || "fr";
-let currentView = 'home';
-let userCart = {};
-let productsUnsubscribe = null;
-let chatsUnsubscribe = null;
-let messagesListener = null;
-let lastVisibleProduct = null;
-let isFetching = false;
-let recentlyViewed = JSON.parse(localStorage.getItem('piecety_recently_viewed')) || [];
-let userProfile = null;
-let userInteractions = JSON.parse(localStorage.getItem('userInteractions') || '{}');
+// FIX: Consolidated global state into a single AppState object
+const AppState = {
+    PRODUCTS_PER_PAGE: 12,
+    currentUser: null,
+    currentLang: localStorage.getItem("piecety_lang") || "fr",
+    currentView: 'home',
+    userCart: {},
+    productsUnsubscribe: null,
+    chatsUnsubscribe: null,
+    messagesListener: null,
+    lastVisibleProduct: null,
+    isFetching: false,
+    recentlyViewed: JSON.parse(localStorage.getItem('piecety_recently_viewed')) || [],
+    userProfile: null,
+    userInteractions: JSON.parse(localStorage.getItem('userInteractions') || '{}'),
+    listingsCache: null,
+    cacheTimestamp: 0,
+    CACHE_DURATION: 5 * 60 * 1000, // 5 minutes
+    setState(updates) {
+      Object.assign(this, updates);
+      this.notifyListeners();
+    },
+    listeners: new Set(),
+    notifyListeners() {
+      this.listeners.forEach(fn => fn(this));
+    },
+};
 
-// Fix: Declared caching variables in global scope
-let listingsCache = null;
-let cacheTimestamp = 0;
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+// FIX: Renamed global variables to use AppState
+const { PRODUCTS_PER_PAGE, CACHE_DURATION, recentlyViewed, userInteractions } = AppState;
 
 // --- FIREBASE CONFIGURATION ---
 const firebaseConfig = {
@@ -203,14 +215,13 @@ const announceToScreenReader = (message) => {
   if (DOMElements.liveRegion) {
     DOMElements.liveRegion.textContent = message;
     setTimeout(() => {
-      // FIX 2: Corrected DOMEElements to DOMElements
       DOMElements.liveRegion.textContent = '';
     }, 1000);
   }
 };
 
 const showMessage = (msgKey, duration = 3500, type = "info") => {
-    const msg = translations[currentLang][msgKey] || msgKey;
+    const msg = translations[AppState.currentLang][msgKey] || msgKey;
     const { messageBox } = DOMElements;
     if (!messageBox) return;
     messageBox.textContent = msg;
@@ -243,7 +254,7 @@ const toggleModal = (modalElement, show) => {
 const updateCartDisplay = () => {
    const { cartCountSpan } = DOMElements;
    const mobileCartCount = document.getElementById('mobile-cart-count');
-   const cartItemCount = Object.values(userCart).reduce((sum, item) => sum + item.quantity, 0);
+   const cartItemCount = Object.values(AppState.userCart).reduce((sum, item) => sum + item.quantity, 0);
 
    [cartCountSpan, mobileCartCount].forEach(el => {
        if (el) {
@@ -272,10 +283,10 @@ const sanitizeInput = (input) => {
 };
 
 const trackUserInteraction = (productId, interactionType) => {
-  if (!currentUser) return;
+  if (!AppState.currentUser) return;
   
-  if (!userInteractions[currentUser.uid]) {
-    userInteractions[currentUser.uid] = {
+  if (!AppState.userInteractions[AppState.currentUser.uid]) {
+    AppState.userInteractions[AppState.currentUser.uid] = {
       viewed: [],
       searched: [],
       purchased: []
@@ -283,14 +294,14 @@ const trackUserInteraction = (productId, interactionType) => {
   }
   
   const interactionData = { productId, timestamp: Date.now() };
-  userInteractions[currentUser.uid][interactionType].push(interactionData);
-  localStorage.setItem('userInteractions', JSON.stringify(userInteractions));
+  AppState.userInteractions[AppState.currentUser.uid][interactionType].push(interactionData);
+  localStorage.setItem('userInteractions', JSON.stringify(AppState.userInteractions));
 };
 
 const getRecommendations = async () => {
-  if (!currentUser || !userInteractions[currentUser.uid]) return [];
+  if (!AppState.currentUser || !AppState.userInteractions[AppState.currentUser.uid]) return [];
   
-  const userData = userInteractions[currentUser.uid];
+  const userData = AppState.userInteractions[AppState.currentUser.uid];
   const viewedProducts = userData.viewed || [];
   if (viewedProducts.length === 0) return [];
 
@@ -318,32 +329,18 @@ const getRecommendations = async () => {
   }
 };
 
-// --- MOBILE MENU CONTROL ---
-let touchStartX = 0;
-let touchEndX = 0;
-
+// --- MOBILE MENU CONTROL (Now handled by ui-fixes.js) ---
 const openMobileMenu = () => {
-    DOMElements.mobileMenu.classList.remove('-translate-x-full');
-    DOMElements.mobileMenuBackdrop.classList.remove('invisible', 'opacity-0');
+  DOMElements.mobileMenu.classList.remove('-translate-x-full');
+  DOMElements.mobileMenuBackdrop.classList.remove('invisible', 'opacity-0');
 };
 
 const closeMobileMenu = () => {
-    DOMElements.mobileMenu.classList.add('-translate-x-full');
-    DOMElements.mobileMenuBackdrop.classList.add('invisible', 'opacity-0');
+  DOMElements.mobileMenu.classList.add('-translate-x-full');
+  DOMElements.mobileMenuBackdrop.classList.add('invisible', 'opacity-0');
 };
 
-const handleSwipe = () => {
-    if (touchEndX < touchStartX - 50) {
-        if (DOMElements.mobileMenu && !DOMElements.mobileMenu.classList.contains('-translate-x-full')) {
-            closeMobileMenu();
-        }
-    }
-    if (touchEndX > touchStartX + 50) {
-        if (DOMElements.mobileMenu && DOMElements.mobileMenu.classList.contains('-translate-x-full')) {
-            openMobileMenu();
-        }
-    }
-};
+// --- FIX: Removed duplicated swipe logic, ui-fixes.js will handle this ---
 
 // --- APP LOGIC ---
 const setDarkMode = (isDark) => {
@@ -361,18 +358,18 @@ const setDarkMode = (isDark) => {
 };
 
 const setLanguage = (lang) => {
-    currentLang = lang;
+    AppState.currentLang = lang;
     localStorage.setItem("piecety_lang", lang);
     translatePage(lang);
-    updateTitle(currentView);
-    if (currentView) { renderView(currentView); }
+    updateTitle(AppState.currentView);
+    if (AppState.currentView) { renderView(AppState.currentView); }
 };
 
 const updateTitle = (view) => {
     const titleKeyMap = { cart: "cart_title", dashboard: "dashboard", inbox: "messages", chat: "messages", terms: "terms_title" };
     const titleKey = titleKeyMap[view] || "page_title";
-    document.title = translations[currentLang][titleKey] || "Piecety";
-    document.querySelector('meta[name="description"]').setAttribute("content", translations[currentLang]["meta_description"]);
+    document.title = translations[AppState.currentLang][titleKey] || "Piecety";
+    document.querySelector('meta[name="description"]').setAttribute("content", translations[AppState.currentLang]["meta_description"]);
 };
 
 const translatePage = (lang) => {
@@ -385,13 +382,13 @@ const translatePage = (lang) => {
         currentLangEl.textContent = translations[lang]?.[`${lang}_short`] || lang.toUpperCase();
     }
     
-    // FIX 1: Corrected data-i18n-key access to use camelCase (i18nKey)
+    // FIX: Corrected data-i18n-key access to use camelCase (i18nKey)
     document.querySelectorAll("[data-i18n-key]").forEach(el => {
         const key = el.dataset.i18nKey;
         if (translations[lang]?.[key]) el.textContent = translations[lang][key];
     });
     
-    // FIX 1: Corrected data-i18n-placeholder access to use camelCase (i18nPlaceholder)
+    // FIX: Corrected data-i18n-placeholder access to use camelCase (i18nPlaceholder)
     document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
         const key = el.dataset.i18nPlaceholder;
         if (translations[lang]?.[key]) el.placeholder = translations[lang][key];
@@ -436,7 +433,7 @@ const applyAndRenderFilters = () => {
     newUrl.search = new URLSearchParams(params).toString();
     window.history.replaceState({ path: newUrl.href }, '', newUrl.href);
     
-    lastVisibleProduct = null;
+    AppState.lastVisibleProduct = null;
     renderListings();
 };
 
@@ -517,9 +514,9 @@ const updateBottomNav = (viewName) => {
 };
 
 const renderView = (viewName, data = null) => {
-    if (productsUnsubscribe) productsUnsubscribe();
-    if (chatsUnsubscribe) chatsUnsubscribe();
-    if (messagesListener) messagesListener();
+    if (AppState.productsUnsubscribe) AppState.productsUnsubscribe();
+    if (AppState.chatsUnsubscribe) AppState.chatsUnsubscribe();
+    if (AppState.messagesListener) AppState.messagesListener();
     if (DOMElements.appContainer) {
       DOMElements.appContainer.innerHTML = '';
     }
@@ -543,10 +540,10 @@ const renderView = (viewName, data = null) => {
         return;
     }
     
-    currentView = viewName;
+    AppState.currentView = viewName;
     updateBottomNav(route);
     window.scrollTo(0, 0);
-    translatePage(currentLang);
+    translatePage(AppState.currentLang);
 };
 
 window.renderHomePage = async () => {
@@ -597,13 +594,13 @@ const updateBreadcrumb = () => {
     const model = params.get('model');
     const year = params.get('year');
 
-    let html = `<a href="#" class="hover:underline home-crumb" data-route="home">${translations[currentLang].nav_home}</a>`;
+    let html = `<a href="#" class="hover:underline home-crumb" data-route="home">${translations[AppState.currentLang].nav_home}</a>`;
     if (category) {
-        const catName = categories[category]?.[currentLang] || category;
+        const catName = categories[category]?.[AppState.currentLang] || category;
         html += ` <span class="mx-2">/</span> <a href="#" class="hover:underline category-crumb" data-route="home" data-category="${category}">${catName}</a>`;
     }
     if (sub_category) {
-        const subCatName = categories[category]?.sub[sub_category]?.[currentLang] || sub_category;
+        const subCatName = categories[category]?.sub[sub_category]?.[AppState.currentLang] || sub_category;
         html += ` <span class="mx-2">/</span> <a href="#" class="hover:underline sub-category-crumb" data-route="home" data-category="${category}" data-sub-category="${sub_category}">${subCatName}</a>`;
     }
     if (brand) {
@@ -637,7 +634,7 @@ const renderDynamicGrid = (titleKey, items, cardGenerator, clickHandler) => {
     const titleEl = document.getElementById('categories-title-heading');
     if (!grid || !titleEl) return;
 
-    titleEl.textContent = translations[currentLang][titleKey];
+    titleEl.textContent = translations[AppState.currentLang][titleKey];
     grid.innerHTML = '';
     items.forEach(item => {
         const card = document.createElement('a');
@@ -653,12 +650,12 @@ const renderPartCategories = () => {
     renderDynamicGrid('categories_title', Object.entries(categories), 
         ([key, cat]) => {
             const isImage = cat.icon.endsWith('.png') || cat.icon.endsWith('.jpg');
-            const iconContent = isImage ? `<img src="${cat.icon}" alt="${cat[currentLang]}" class="h-10 w-10 object-contain">` : `<i class="fas ${cat.icon} text-3xl"></i>`;
+            const iconContent = isImage ? `<img src="${cat.icon}" alt="${cat[AppState.currentLang]}" class="h-10 w-10 object-contain">` : `<i class="fas ${cat.icon} text-3xl"></i>`;
             return `
                 <div class="p-4 rounded-full bg-blue-50 dark:bg-gray-700 text-blue-600 dark:text-blue-400 mx-auto w-16 h-16 flex items-center justify-center mb-2 category-icon">
                     ${iconContent}
                 </div>
-                <h3 class="font-semibold text-sm md:text-base">${cat[currentLang]}</h3>
+                <h3 class="font-semibold text-sm md:text-base">${cat[AppState.currentLang]}</h3>
             `;
         },
         (e, [key]) => {
@@ -680,7 +677,7 @@ const renderSubCategories = (categoryKey) => {
             <div class="p-4 rounded-full bg-blue-50 dark:bg-gray-700 text-blue-600 dark:text-blue-400 mx-auto w-16 h-16 flex items-center justify-center mb-2 category-icon">
                 <i class="fas fa-tools text-3xl"></i>
             </div>
-            <h3 class="font-semibold text-sm md:text-base">${subCat[currentLang]}</h3>`,
+            <h3 class="font-semibold text-sm md:text-base">${subCat[AppState.currentLang]}</h3>`,
         (e, [key]) => {
             e.preventDefault();
             const newUrl = new URL(window.location);
@@ -747,7 +744,7 @@ const setupFilterListeners = (container = document) => {
         const selectedBrand = brandFilter.value;
         if (modelContainer && modelFilter) {
             if (selectedBrand && car_data[selectedBrand]) {
-                populateSelect(modelFilter, car_data[selectedBrand], 'all_models', currentLang);
+                populateSelect(modelFilter, car_data[selectedBrand], 'all_models', AppState.currentLang);
                 modelContainer.classList.remove('hidden');
             } else {
                 modelContainer.classList.add('hidden');
@@ -764,7 +761,7 @@ const setupFilterListeners = (container = document) => {
         const selectedWilaya = wilayaFilter.value;
         if (communeContainer && communeFilter) {
             if (selectedWilaya && wilayas[selectedWilaya]) {
-                populateSelect(communeFilter, wilayas[selectedWilaya], 'all_communes', currentLang);
+                populateSelect(communeFilter, wilayas[selectedWilaya], 'all_communes', AppState.currentLang);
                 communeContainer.classList.remove('hidden');
             } else {
                 communeContainer.classList.add('hidden');
@@ -795,19 +792,19 @@ const setupFilterListeners = (container = document) => {
         renderView('home');
     });
 
-    populateSelect(brandFilter, car_data, 'all_brands', currentLang);
-    populateSelect(container.querySelector('#year-filter'), years, 'all_years', currentLang);
-    populateSelect(wilayaFilter, wilayas, 'all_wilayas', currentLang);
-    populateSelect(container.querySelector('#category-filter'), categories, 'all_categories', currentLang, true);
+    populateSelect(brandFilter, car_data, 'all_brands', AppState.currentLang);
+    populateSelect(container.querySelector('#year-filter'), years, 'all_years', AppState.currentLang);
+    populateSelect(wilayaFilter, wilayas, 'all_wilayas', AppState.currentLang);
+    populateSelect(container.querySelector('#category-filter'), categories, 'all_categories', AppState.currentLang, true);
 };
 
 const renderListings = async (loadMore = false) => {
     const listingsSection = document.getElementById('listings-section');
     const loadMoreContainer = document.getElementById('load-more-container');
     const recommendationsSection = document.getElementById('recommendations-section');
-    if (!listingsSection || isFetching) return;
+    if (!listingsSection || AppState.isFetching) return;
 
-    isFetching = true;
+    AppState.isFetching = true;
     if (!loadMore) {
         listingsSection.innerHTML = `
             <div class="skeleton-card">
@@ -815,7 +812,7 @@ const renderListings = async (loadMore = false) => {
                 <div class="skeleton-text"></div>
                 <div class="skeleton-text short"></div>
             </div>`.repeat(8);
-        lastVisibleProduct = null;
+        AppState.lastVisibleProduct = null;
         if (recommendationsSection) recommendationsSection.classList.add('hidden');
     }
     if (loadMoreContainer) loadMoreContainer.innerHTML = '';
@@ -832,8 +829,8 @@ const renderListings = async (loadMore = false) => {
     
     let productsToShow = [];
     
-    if (listingsCache && (Date.now() - cacheTimestamp) < CACHE_DURATION && !loadMore && !searchQuery) {
-        productsToShow = listingsCache;
+    if (AppState.listingsCache && (Date.now() - AppState.cacheTimestamp) < AppState.CACHE_DURATION && !loadMore && !searchQuery) {
+        productsToShow = AppState.listingsCache;
     } else {
         let baseQuery = collection(db, "products");
         
@@ -842,8 +839,8 @@ const renderListings = async (loadMore = false) => {
         }
         
         let finalQuery = query(baseQuery, orderBy("createdAt", "desc"));
-        if (loadMore && lastVisibleProduct) {
-            finalQuery = query(finalQuery, startAfter(lastVisibleProduct));
+        if (loadMore && AppState.lastVisibleProduct) {
+            finalQuery = query(finalQuery, startAfter(AppState.lastVisibleProduct));
         }
         finalQuery = query(finalQuery, limit(PRODUCTS_PER_PAGE));
 
@@ -859,11 +856,11 @@ const renderListings = async (loadMore = false) => {
             }
             
             if (!loadMore && !searchQuery && productsToShow.length > 0) {
-                listingsCache = productsToShow;
-                cacheTimestamp = Date.now();
+                AppState.listingsCache = productsToShow;
+                AppState.cacheTimestamp = Date.now();
             }
 
-            lastVisibleProduct = snapshot.docs[snapshot.docs.length - 1];
+            AppState.lastVisibleProduct = snapshot.docs[snapshot.docs.length - 1];
             if (snapshot.docs.length === PRODUCTS_PER_PAGE && loadMoreContainer) {
                 loadMoreContainer.innerHTML = `<button id="load-more-btn" class="px-6 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors" data-i18n-key="load_more"></button>`;
                 document.getElementById('load-more-btn').onclick = () => renderListings(true);
@@ -872,7 +869,7 @@ const renderListings = async (loadMore = false) => {
         } catch (error) {
             console.error("❌ Error loading products:", error);
             listingsSection.innerHTML = `<p class="col-span-full text-center text-red-500">Error loading products: ${error.message}</p>`;
-            isFetching = false;
+            AppState.isFetching = false;
             return;
         }
     }
@@ -889,8 +886,8 @@ const renderListings = async (loadMore = false) => {
     } else {
         displayProducts(productsToShow, listingsSection);
     }
-    translatePage(currentLang);
-    isFetching = false;
+    translatePage(AppState.currentLang);
+    AppState.isFetching = false;
 };
 
 const displayProducts = (docs, container) => {
@@ -903,7 +900,7 @@ const displayProducts = (docs, container) => {
   let htmlString = "";
   docs.forEach(product => {
     const id = product.id;
-    const isMyProduct = currentUser && currentUser.uid === product.sellerId;
+    const isMyProduct = AppState.currentUser && AppState.currentUser.uid === product.sellerId;
     const imageUrl = product.imageUrl || './assets/placeholder.png';
     const webpUrl = imageUrl.replace(/\.(png|jpe?g)$/i, '.webp');
 
@@ -945,13 +942,13 @@ const displayProducts = (docs, container) => {
 const renderRecentlyViewed = async () => {
     const section = document.getElementById('recently-viewed-section');
     const grid = document.getElementById('recently-viewed-grid');
-    if (!section || !grid || recentlyViewed.length === 0) {
+    if (!section || !grid || AppState.recentlyViewed.length === 0) {
         if(section) section.classList.add('hidden');
         return;
     }
     
     try {
-        const q = query(collection(db, "products"), where(documentId(), "in", recentlyViewed.slice(0, 4)));
+        const q = query(collection(db, "products"), where(documentId(), "in", AppState.recentlyViewed.slice(0, 4)));
         const snapshots = await getDocs(q);
         const products = snapshots.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         
@@ -987,8 +984,8 @@ window.renderProductPage = async (product) => {
     
     trackUserInteraction(product.id, 'viewed');
 
-    recentlyViewed = [product.id, ...recentlyViewed.filter(id => id !== product.id)].slice(0, 4);
-    localStorage.setItem('piecety_recently_viewed', JSON.stringify(recentlyViewed));
+    AppState.recentlyViewed = [product.id, ...AppState.recentlyViewed.filter(id => id !== product.id)].slice(0, 4);
+    localStorage.setItem('piecety_recently_viewed', JSON.stringify(AppState.recentlyViewed));
     
     document.getElementById('product-title-detail').textContent = product.title;
     document.getElementById('product-price-detail').textContent = `${product.price.toLocaleString()} DA`;
@@ -1019,7 +1016,7 @@ window.renderProductPage = async (product) => {
     if (contactBtn) contactBtn.onclick = () => startOrOpenChat(product.sellerId, product.sellerName, product.id);
 
     renderProductReviews(product.id);
-    if(currentUser) {
+    if(AppState.currentUser) {
         renderAddReviewSection(product.id);
     }
 };
@@ -1054,7 +1051,7 @@ const renderProductReviews = async (productId) => {
         console.error("Error fetching reviews:", error);
         reviewsList.innerHTML = `<p class="text-red-500">Could not load reviews.</p>`;
     }
-    translatePage(currentLang);
+    translatePage(AppState.currentLang);
 };
 
 const renderStarRating = (rating) => {
@@ -1111,8 +1108,8 @@ const renderAddReviewSection = (productId) => {
 
               await addDoc(collection(db, "reviews"), {
                   productId,
-                  userId: currentUser.uid,
-                  reviewerName: currentUser.displayName,
+                  userId: AppState.currentUser.uid,
+                  reviewerName: AppState.currentUser.displayName,
                   rating: selectedRating,
                   review: sanitizedReview,
                   createdAt: serverTimestamp()
@@ -1131,7 +1128,7 @@ const renderAddReviewSection = (productId) => {
 };
 
 window.renderCartPage = async () => {
-    if (!currentUser) {
+    if (!AppState.currentUser) {
         showMessage('login_required', 3000, 'error');
         renderView('home');
         return;
@@ -1141,17 +1138,17 @@ window.renderCartPage = async () => {
     if (!container || !summary) return;
     container.innerHTML = `<div class="text-center p-8"><i class="fas fa-spinner fa-spin text-3xl text-blue-500"></i></div>`;
 
-    if (Object.keys(userCart).length === 0) {
+    if (Object.keys(AppState.userCart).length === 0) {
         container.innerHTML = `<p class="text-center p-8 text-lg text-gray-500" data-i18n-key="your_cart_is_empty"></p>`;
         summary.classList.add('hidden');
-        translatePage(currentLang);
+        translatePage(AppState.currentLang);
         return;
     } 
     
     summary.classList.remove('hidden');
     
     try {
-        const productIds = Object.keys(userCart);
+        const productIds = Object.keys(AppState.userCart);
         const productRefs = productIds.map(id => doc(db, "products", id));
         const productSnaps = await Promise.all(productRefs.map(ref => getDoc(ref)));
         
@@ -1160,7 +1157,7 @@ window.renderCartPage = async () => {
         productSnaps.forEach(snap => {
             if (snap.exists()) {
                 const product = { id: snap.id, ...snap.data() };
-                const item = userCart[product.id];
+                const item = AppState.userCart[product.id];
                 totalPrice += product.price * item.quantity;
                 const itemEl = document.createElement('div');
                 itemEl.className = 'flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg';
@@ -1187,10 +1184,10 @@ window.renderCartPage = async () => {
 };
 
 window.renderDashboardPage = async () => {
-    if (!currentUser) { renderView('home'); return; }
+    if (!AppState.currentUser) { renderView('home'); return; }
     
     const becomeStoreCard = document.getElementById('become-store-card');
-    if (userProfile?.role === "store") {
+    if (AppState.userProfile?.role === "store") {
         if (becomeStoreCard) becomeStoreCard.classList.add('hidden');
     } else {
         if (becomeStoreCard) becomeStoreCard.classList.remove('hidden');
@@ -1207,7 +1204,7 @@ window.renderDashboardPage = async () => {
     grid.innerHTML = `<div class="col-span-full text-center p-8"><i class="fas fa-spinner fa-spin text-3xl text-blue-500"></i></div>`;
 
     try {
-        const q = query(collection(db, "products"), where("sellerId", "==", currentUser.uid), orderBy("createdAt", "desc"));
+        const q = query(collection(db, "products"), where("sellerId", "==", AppState.currentUser.uid), orderBy("createdAt", "desc"));
         const snapshot = await getDocs(q);
         grid.innerHTML = '';
         if (snapshot.empty) {
@@ -1227,10 +1224,10 @@ window.renderDashboardPage = async () => {
                         modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
                         modal.innerHTML = `
                             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-sm w-full p-6 text-center">
-                                <p class="text-lg font-semibold mb-4">${translations[currentLang].delete_ad_confirm}</p>
+                                <p class="text-lg font-semibold mb-4">${translations[AppState.currentLang].delete_ad_confirm}</p>
                                 <div class="flex justify-center space-x-4">
-                                    <button id="cancel-delete" class="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded-md hover:bg-gray-400 dark:hover:bg-gray-500">${translations[currentLang].back}</button>
-                                    <button id="confirm-delete" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">${translations[currentLang].delete_account}</button>
+                                    <button id="cancel-delete" class="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded-md hover:bg-gray-400 dark:hover:bg-gray-500">${translations[AppState.currentLang].back}</button>
+                                    <button id="confirm-delete" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">${translations[AppState.currentLang].delete_account}</button>
                                 </div>
                             </div>
                         `;
@@ -1265,11 +1262,11 @@ window.renderDashboardPage = async () => {
                 modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
                 modal.innerHTML = `
                     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-sm w-full p-6 text-center">
-                        <p class="text-lg font-semibold mb-4 text-red-500">${translations[currentLang].danger_zone}</p>
-                        <p class="mb-4">${translations[currentLang].delete_account_confirm}</p>
+                        <p class="text-lg font-semibold mb-4 text-red-500">${translations[AppState.currentLang].danger_zone}</p>
+                        <p class="mb-4">${translations[AppState.currentLang].delete_account_confirm}</p>
                         <div class="flex justify-center space-x-4">
-                            <button id="cancel-delete" class="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded-md hover:bg-gray-400 dark:hover:bg-gray-500">${translations[currentLang].back}</button>
-                            <button id="confirm-delete" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">${translations[currentLang].delete_account}</button>
+                            <button id="cancel-delete" class="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded-md hover:bg-gray-400 dark:hover:bg-gray-500">${translations[AppState.currentLang].back}</button>
+                            <button id="confirm-delete" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">${translations[AppState.currentLang].delete_account}</button>
                         </div>
                     </div>
                 `;
@@ -1287,17 +1284,17 @@ window.renderDashboardPage = async () => {
 window.renderProfilePage = async (data) => {
     if (!data?.userId) { renderView('home'); return; }
     
-    const isCurrentUserProfile = currentUser && currentUser.uid === data.userId;
+    const isCurrentUserProfile = AppState.currentUser && AppState.currentUser.uid === data.userId;
     const userSnap = await getDoc(doc(db, "users", data.userId));
     const profileData = userSnap.exists() ? userSnap.data() : { isStore: false };
 
     const profilePicEl = document.getElementById('profile-pic');
     if (profilePicEl) {
-        profilePicEl.src = (isCurrentUserProfile ? currentUser?.photoURL : profileData.photoURL) || './assets/placeholder.png';
+        profilePicEl.src = (isCurrentUserProfile ? AppState.currentUser?.photoURL : profileData.photoURL) || './assets/placeholder.png';
     }
     const profileNameEl = document.getElementById('profile-name');
     if (profileNameEl) {
-        profileNameEl.textContent = isCurrentUserProfile ? currentUser?.displayName : data.userName || 'Seller Profile';
+        profileNameEl.textContent = isCurrentUserProfile ? AppState.currentUser?.displayName : data.userName || 'Seller Profile';
     }
     
     const storeNameDisplay = document.getElementById('store-name-display');
@@ -1308,7 +1305,7 @@ window.renderProfilePage = async (data) => {
     if (isCurrentUserProfile) {
         if (editProfileSection) editProfileSection.classList.remove('hidden');
         const profileNameInput = document.getElementById('profile-name-input');
-        if (profileNameInput) profileNameInput.value = currentUser?.displayName || '';
+        if (profileNameInput) profileNameInput.value = AppState.currentUser?.displayName || '';
         if (profileData.role === 'store') {
             if (becomeStoreCard) becomeStoreCard.classList.add('hidden');
         } else {
@@ -1365,7 +1362,7 @@ window.renderProfilePage = async (data) => {
 
 const updateProfileData = async (e) => {
     e.preventDefault();
-    if (!currentUser) { showMessage('login_required', 3000, 'error'); return; }
+    if (!AppState.currentUser) { showMessage('login_required', 3000, 'error'); return; }
 
     const form = e.target;
     const displayName = sanitizeInput(form.elements['displayName']?.value.trim()); // Sanitize display name
@@ -1380,23 +1377,23 @@ const updateProfileData = async (e) => {
     if (btn) btn.disabled = true;
 
     try {
-        let newPhotoURL = currentUser.photoURL;
+        let newPhotoURL = AppState.currentUser.photoURL;
 
         if (profilePicFile) {
-            const imageRef = ref(storage, `profile_pictures/${currentUser.uid}/${profilePicFile.name}`);
+            const imageRef = ref(storage, `profile_pictures/${AppState.currentUser.uid}/${profilePicFile.name}`);
             await uploadBytes(imageRef, profilePicFile);
             newPhotoURL = await getDownloadURL(imageRef);
         }
 
-        await updateProfile(currentUser, { displayName, photoURL: newPhotoURL });
+        await updateProfile(AppState.currentUser, { displayName, photoURL: newPhotoURL });
         
-        await updateDoc(doc(db, "users", currentUser.uid), {
+        await updateDoc(doc(db, "users", AppState.currentUser.uid), {
             displayName: displayName,
             photoURL: newPhotoURL,
         });
 
         showMessage('Profile updated successfully!', 3000, 'success');
-        renderView('profile', { userId: currentUser.uid, userName: currentUser.displayName });
+        renderView('profile', { userId: AppState.currentUser.uid, userName: AppState.currentUser.displayName });
     } catch (error) {
         console.error("Error updating profile:", error);
         showMessage("Failed to update profile.", 3000, "error");
@@ -1406,12 +1403,12 @@ const updateProfileData = async (e) => {
 };
 
 window.renderInboxPage = () => {
-    if (!currentUser) { renderView('home'); return; }
+    if (!AppState.currentUser) { renderView('home'); return; }
     const listContainer = document.getElementById('conversations-list');
     if (!listContainer) return;
-    const q = query(collection(db, "chats"), where("participants", "array-contains", currentUser.uid), orderBy("lastMessageTimestamp", "desc"));
+    const q = query(collection(db, "chats"), where("participants", "array-contains", AppState.currentUser.uid), orderBy("lastMessageTimestamp", "desc"));
 
-    chatsUnsubscribe = onSnapshot(q, (snapshot) => {
+    AppState.chatsUnsubscribe = onSnapshot(q, (snapshot) => {
         if (snapshot.empty) {
             listContainer.innerHTML = `<p class="text-center text-gray-500">You have no messages.</p>`;
             return;
@@ -1419,14 +1416,14 @@ window.renderInboxPage = () => {
         listContainer.innerHTML = '';
         snapshot.forEach(doc => {
             const chat = doc.data();
-            const otherUserId = chat.participants.find(id => id !== currentUser.uid);
+            const otherUserId = chat.participants.find(id => id !== AppState.currentUser.uid);
             const otherUserName = chat.participantNames?.[otherUserId] || 'Unknown User';
             
             const convoEl = document.createElement('div');
             convoEl.className = 'p-4 bg-gray-50 dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 flex justify-between items-center';
             convoEl.innerHTML = `
                 <div><h4 class="font-bold">${otherUserName}</h4><p class="text-sm text-gray-500 dark:text-gray-400 truncate">${chat.lastMessage}</p></div>
-                ${(chat.unreadCount?.[currentUser.uid] || 0) > 0 ? `<span class="bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">${chat.unreadCount[currentUser.uid]}</span>` : ''}`;
+                ${(chat.unreadCount?.[AppState.currentUser.uid] || 0) > 0 ? `<span class="bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">${chat.unreadCount[AppState.currentUser.uid]}</span>` : ''}`;
             convoEl.onclick = () => renderView('chat', { chatId: doc.id, otherUserName });
             listContainer.appendChild(convoEl);
         });
@@ -1437,19 +1434,19 @@ window.renderInboxPage = () => {
 };
 
 window.renderChatPage = async (chatData) => {
-    if (!currentUser || !chatData) { renderView('home'); return; }
+    if (!AppState.currentUser || !chatData) { renderView('home'); return; }
     
     const { chatId, otherUserName, productId } = chatData;
     const chatRef = doc(db, "chats", chatId);
     try {
-        await updateDoc(chatRef, { [`unreadCount.${currentUser.uid}`]: 0 });
+        await updateDoc(chatRef, { [`unreadCount.${AppState.currentUser.uid}`]: 0 });
     } catch (error) {
         console.error("Error updating unread count:", error);
     }
 
     const chatWithNameEl = document.getElementById('chat-with-name');
     if (chatWithNameEl) {
-      chatWithNameEl.textContent = `${translations[currentLang].chat_with} ${otherUserName}`;
+      chatWithNameEl.textContent = `${translations[AppState.currentLang].chat_with} ${otherUserName}`;
     }
     const backBtn = document.getElementById('back-to-inbox-btn');
     if (backBtn) backBtn.onclick = () => renderView('inbox');
@@ -1464,14 +1461,14 @@ window.renderChatPage = async (chatData) => {
         if (productSnap.exists()) {
             const product = productSnap.data();
             const offerBtn = document.createElement('button');
-            offerBtn.textContent = translations[currentLang].offer_btn_text;
+            offerBtn.textContent = translations[AppState.currentLang].offer_btn_text;
             offerBtn.className = 'px-4 py-2 bg-yellow-500 text-white rounded-md font-semibold hover:bg-yellow-600 transition-colors shadow-md';
             offerBtn.onclick = () => {
-                const offeredPrice = prompt(translations[currentLang].offer_prompt);
+                const offeredPrice = prompt(translations[AppState.currentLang].offer_prompt);
                 if (offeredPrice && !isNaN(offeredPrice) && parseFloat(offeredPrice) > 0) {
-                    const offerMessage = `${currentUser.displayName} has offered you ${offeredPrice} DA for "${product.title}".`;
+                    const offerMessage = `${AppState.currentUser.displayName} has offered you ${offeredPrice} DA for "${product.title}".`;
                     sendMessage(offerMessage, true);
-                    showMessage(translations[currentLang].offer_sent, 3000, "success");
+                    showMessage(translations[AppState.currentLang].offer_sent, 3000, "success");
                 }
             };
             chatActions.appendChild(offerBtn);
@@ -1479,14 +1476,14 @@ window.renderChatPage = async (chatData) => {
     }
     
     const q = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "desc"), limit(25));
-    if(messagesListener) messagesListener();
+    if(AppState.messagesListener) AppState.messagesListener();
     if(messagesContainer) {
-      messagesListener = onSnapshot(q, (snapshot) => {
+      AppState.messagesListener = onSnapshot(q, (snapshot) => {
           messagesContainer.innerHTML = snapshot.empty ? '<p class="text-center text-gray-500">No messages yet. Say hi!</p>' : '';
           snapshot.docs.reverse().forEach(doc => {
               const msg = doc.data();
               const msgEl = document.createElement('div');
-              msgEl.className = `p-3 rounded-lg max-w-xs ${msg.senderId === currentUser?.uid ? 'bg-blue-500 text-white self-end' : 'bg-gray-200 dark:bg-gray-600 self-start'}`;
+              msgEl.className = `p-3 rounded-lg max-w-xs ${msg.senderId === AppState.currentUser?.uid ? 'bg-blue-500 text-white self-end' : 'bg-gray-200 dark:bg-gray-600 self-start'}`;
               msgEl.textContent = msg.text;
               messagesContainer.appendChild(msgEl);
           });
@@ -1501,12 +1498,12 @@ window.renderChatPage = async (chatData) => {
         if (!text) return;
         try {
             await addDoc(collection(db, "chats", chatId, "messages"), {
-                senderId: currentUser.uid,
+                senderId: AppState.currentUser.uid,
                 text: text,
                 timestamp: serverTimestamp(),
                 isOffer: isOffer
             });
-            const otherUserId = chatId.replace(currentUser.uid, '').replace('_', '');
+            const otherUserId = chatId.replace(AppState.currentUser.uid, '').replace('_', '');
             await updateDoc(chatRef, { 
                 lastMessage: text, 
                 lastMessageTimestamp: serverTimestamp(),
@@ -1537,27 +1534,27 @@ window.renderTermsPage = () => {
 
 // REMOVED store setup function from here, it's now in store-setup.js
 const deleteUserData = async () => {
-    if (!currentUser) {
+    if (!AppState.currentUser) {
         showMessage("You must be logged in to delete your account.", 3000, 'error');
         return;
     }
 
     try {
-        const productsQuery = query(collection(db, "products"), where("sellerId", "==", currentUser.uid));
+        const productsQuery = query(collection(db, "products"), where("sellerId", "==", AppState.currentUser.uid));
         const productsSnapshot = await getDocs(productsQuery);
         const deleteProductPromises = productsSnapshot.docs.map(docToDelete => deleteDoc(doc(db, "products", docToDelete.id)));
         await Promise.all(deleteProductPromises);
 
-        await deleteDoc(doc(db, "carts", currentUser.uid));
+        await deleteDoc(doc(db, "carts", AppState.currentUser.uid));
         
         // Also delete the store profile if it exists
-        const storeRef = doc(db, "stores", currentUser.uid);
+        const storeRef = doc(db, "stores", AppState.currentUser.uid);
         const storeSnap = await getDoc(storeRef);
         if (storeSnap.exists()) {
             await deleteDoc(storeRef);
         }
 
-        await deleteDoc(doc(db, "users", currentUser.uid));
+        await deleteDoc(doc(db, "users", AppState.currentUser.uid));
 
         await deleteUser(auth.currentUser);
 
@@ -1573,21 +1570,21 @@ const deleteUserData = async () => {
 const handleSignOut = () => signOut(auth).catch(error => console.error("Sign out error", error));
 
 const startOrOpenChat = async (sellerId, sellerName, productId = null) => {
-    if (!currentUser) { showMessage('login_required', 3000, 'error'); return; }
-    if (currentUser.uid === sellerId) { showMessage("You cannot message yourself.", 3000, 'error'); return; }
+    if (!AppState.currentUser) { showMessage('login_required', 3000, 'error'); return; }
+    if (AppState.currentUser.uid === sellerId) { showMessage("You cannot message yourself.", 3000, 'error'); return; }
 
-    const chatId = [currentUser.uid, sellerId].sort().join('_');
+    const chatId = [AppState.currentUser.uid, sellerId].sort().join('_');
     const chatRef = doc(db, "chats", chatId);
     
     try {
         const chatSnap = await getDoc(chatRef);
         if (!chatSnap.exists()) {
             await setDoc(chatRef, {
-                participants: [currentUser.uid, sellerId],
-                participantNames: { [currentUser.uid]: currentUser.displayName, [sellerId]: sellerName },
+                participants: [AppState.currentUser.uid, sellerId],
+                participantNames: { [AppState.currentUser.uid]: AppState.currentUser.displayName, [sellerId]: sellerName },
                 lastMessage: "Chat started.",
                 lastMessageTimestamp: serverTimestamp(),
-                unreadCount: { [currentUser.uid]: 0, [sellerId]: 0 }
+                unreadCount: { [AppState.currentUser.uid]: 0, [sellerId]: 0 }
             });
         }
         renderView('chat', { chatId, otherUserName: sellerName, productId });
@@ -1598,12 +1595,12 @@ const startOrOpenChat = async (sellerId, sellerName, productId = null) => {
 };
 
 const clearCart = async () => {
-    if (!currentUser) return;
+    if (!AppState.currentUser) return;
     try {
-        await setDoc(doc(db, "carts", currentUser.uid), {});
-        userCart = {};
+        await setDoc(doc(db, "carts", AppState.currentUser.uid), {});
+        AppState.userCart = {};
         updateCartDisplay();
-        if(currentView === 'cart') renderView('cart');
+        if(AppState.currentView === 'cart') renderView('cart');
     } catch (error) {
         console.error("Error clearing cart:", error);
         showMessage("Failed to clear cart.", 3000, "error");
@@ -1611,10 +1608,10 @@ const clearCart = async () => {
 };
 
 const addToCart = async (product) => {
-    if (!currentUser) { showMessage('login_required', 3000, 'error'); return; }
-    userCart[product.id] = { productId: product.id, quantity: (userCart[product.id]?.quantity || 0) + 1 };
+    if (!AppState.currentUser) { showMessage('login_required', 3000, 'error'); return; }
+    AppState.userCart[product.id] = { productId: product.id, quantity: (AppState.userCart[product.id]?.quantity || 0) + 1 };
     try {
-        await setDoc(doc(db, "carts", currentUser.uid), userCart);
+        await setDoc(doc(db, "carts", AppState.currentUser.uid), AppState.userCart);
         updateCartDisplay();
         showMessage('item_added_to_cart', 2000, 'success');
     } catch (error) {
@@ -1624,13 +1621,13 @@ const addToCart = async (product) => {
 };
 
 const updateCartItem = async (productId, quantity) => {
-    if (!currentUser || !userCart[productId]) return;
+    if (!AppState.currentUser || !AppState.userCart[productId]) return;
     if (quantity <= 0) { removeFromCart(productId); return; }
-    userCart[productId].quantity = quantity;
+    AppState.userCart[productId].quantity = quantity;
     try {
-        await setDoc(doc(db, "carts", currentUser.uid), userCart);
+        await setDoc(doc(db, "carts", AppState.currentUser.uid), AppState.userCart);
         updateCartDisplay();
-        if (currentView === 'cart') renderView('cart');
+        if (AppState.currentView === 'cart') renderView('cart');
     } catch (error) {
         console.error("Error updating cart item:", error);
         showMessage("Failed to update cart.", 3000, "error");
@@ -1638,12 +1635,12 @@ const updateCartItem = async (productId, quantity) => {
 };
 
 const removeFromCart = async (productId) => {
-    if (!currentUser || !userCart[productId]) return;
-    delete userCart[productId];
+    if (!AppState.currentUser || !AppState.userCart[productId]) return;
+    delete AppState.userCart[productId];
     try {
-        await setDoc(doc(db, "carts", currentUser.uid), userCart);
+        await setDoc(doc(db, "carts", AppState.currentUser.uid), AppState.userCart);
         updateCartDisplay();
-        if (currentView === 'cart') renderView('cart');
+        if (AppState.currentView === 'cart') renderView('cart');
     } catch (error) {
         console.error("Error removing from cart:", error);
         showMessage("Failed to remove item.", 3000, "error");
@@ -1692,11 +1689,11 @@ const updateAuthUI = (user) => {
         const logoutBtn = document.getElementById('logout-btn');
         if (logoutBtn) logoutBtn.onclick = handleSignOut;
         const profileLink = document.getElementById('profile-link');
-        if (profileLink) profileLink.onclick = (e) => { e.preventDefault(); renderView('profile', { userId: currentUser.uid, userName: currentUser.displayName }); };
+        if (profileLink) profileLink.onclick = (e) => { e.preventDefault(); renderView('profile', { userId: AppState.currentUser.uid, userName: AppState.currentUser.displayName }); };
         const dashboardLink = document.getElementById('dashboard-link');
         if (dashboardLink) dashboardLink.onclick = (e) => { e.preventDefault(); renderView('dashboard'); };
         const messagesLink = document.getElementById('messages-link');
-        if (messagesLink) messagesLink.onclick = (e) => { e.preventDefault(); currentUser ? renderView('inbox') : toggleModal(DOMElements.authModal, true); };
+        if (messagesLink) messagesLink.onclick = (e) => { e.preventDefault(); AppState.currentUser ? renderView('inbox') : toggleModal(DOMElements.authModal, true); };
     } else {
         authLinksContainer.innerHTML = `<button id="login-btn" class="px-4 py-2 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none" data-i18n-key="connect"></button>`;
         mobileLinksHTML += `<button id="mobile-login-btn" class="p-2 text-lg text-left" data-i18n-key="connect"></button>`;
@@ -1706,15 +1703,15 @@ const updateAuthUI = (user) => {
 
     mobileNavLinks.innerHTML = mobileLinksHTML;
     updateCartDisplay();
-    translatePage(currentLang);
+    translatePage(AppState.currentLang);
 };
 
 const listenForUnreadMessages = (user) => {
-    if (chatsUnsubscribe) chatsUnsubscribe();
+    if (AppState.chatsUnsubscribe) AppState.chatsUnsubscribe();
     if (!user) { updateUnreadBadge(0); return; }
 
     const q = query(collection(db, "chats"), where("participants", "array-contains", user.uid));
-    chatsUnsubscribe = onSnapshot(q, (snapshot) => {
+    AppState.chatsUnsubscribe = onSnapshot(q, (snapshot) => {
         const totalUnread = snapshot.docs.reduce((acc, doc) => acc + (doc.data().unreadCount?.[user.uid] || 0), 0);
         updateUnreadBadge(totalUnread);
     });
@@ -1738,7 +1735,7 @@ const showRoleModal = () => {
     }
 };
 const hideRoleModal = () => {
-    if (DOMEElements.roleModal) {
+    if (DOMElements.roleModal) {
       toggleModal(DOMElements.roleModal, false);
     }
 };
@@ -1768,7 +1765,7 @@ const setupEventListeners = () => {
     });
 
     if (sellLink) {
-        sellLink.onclick = (e) => { e.preventDefault(); toggleModal(currentUser ? DOMElements.postProductModal : DOMElements.authModal, true); if(currentUser && DOMElements.postProductModal) trapModalFocus('post-product-modal'); };
+        sellLink.onclick = (e) => { e.preventDefault(); toggleModal(AppState.currentUser ? DOMElements.postProductModal : DOMElements.authModal, true); if(AppState.currentUser && DOMElements.postProductModal) trapModalFocus('post-product-modal'); };
     }
     if (cartBtn) {
         cartBtn.onclick = (e) => { e.preventDefault(); renderView('cart'); };
@@ -1777,14 +1774,14 @@ const setupEventListeners = () => {
         homeLink.onclick = (e) => { e.preventDefault(); window.history.pushState({}, '', window.location.pathname); renderView('home'); };
     }
 
-    if (mobileMenuBtn) mobileMenuBtn.onclick = openMobileMenu;
-    if (mobileMenuCloseBtn) mobileMenuCloseBtn.onclick = closeMobileMenu;
+    // FIX: Removed duplicated mobile menu listeners, ui-fixes.js handles this
+    // if (mobileMenuBtn) mobileMenuBtn.onclick = openMobileMenu;
+    // if (mobileMenuCloseBtn) mobileMenuCloseBtn.onclick = closeMobileMenu;
     
-    // FIX 2: Corrected the typo from DOMEElements to DOMElements
-    if (DOMElements.mobileMenuBackdrop) DOMElements.mobileMenuBackdrop.onclick = closeMobileMenu;
-
-    document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
-    document.addEventListener('touchend', e => { touchEndX = e.changedTouches[0].screenX; handleSwipe(); }, { passive: true });
+    // FIX: Removed duplicated swipe gesture listeners, ui-fixes.js handles this
+    // if (DOMElements.mobileMenuBackdrop) DOMElements.mobileMenuBackdrop.onclick = closeMobileMenu;
+    // document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+    // document.addEventListener('touchend', e => { touchEndX = e.changedTouches[0].screenX; handleSwipe(); }, { passive: true });
 
     const mobileNavLinksEl = document.getElementById('mobile-nav-links');
     if (mobileNavLinksEl) {
@@ -1798,7 +1795,7 @@ const setupEventListeners = () => {
                 'mobile-search-link': () => DOMElements.searchInput?.focus(),
                 'mobile-sell-link': () => sellLink?.click(),
                 'mobile-cart-link': () => renderView('cart'),
-                'mobile-profile-link': () => renderView('profile', { userId: currentUser.uid, userName: currentUser.displayName }),
+                'mobile-profile-link': () => renderView('profile', { userId: AppState.currentUser.uid, userName: AppState.currentUser.displayName }),
                 'mobile-dashboard-link': () => renderView('dashboard'),
                 'mobile-messages-link': () => renderView('inbox'),
                 'mobile-logout-btn': handleSignOut,
@@ -1818,17 +1815,17 @@ const setupEventListeners = () => {
     if (DOMElements.postProductModal) {
       DOMElements.postProductModal.addEventListener('transitionend', (e) => {
           if (!DOMElements.postProductModal.classList.contains('invisible')) {
-              populateSelect(DOMElements.postProductBrandSelect, car_data, 'select_brand', currentLang);
-              populateSelect(DOMElements.postProductYearSelect, years, 'select_year', currentLang);
-              populateSelect(DOMElements.postProductWilayaSelect, wilayas, 'select_wilaya', currentLang);
-              populateSelect(DOMElements.postProductCategorySelect, categories, 'select_category', currentLang, true);
+              populateSelect(DOMElements.postProductBrandSelect, car_data, 'select_brand', AppState.currentLang);
+              populateSelect(DOMElements.postProductYearSelect, years, 'select_year', AppState.currentLang);
+              populateSelect(DOMElements.postProductWilayaSelect, wilayas, 'select_wilaya', AppState.currentLang);
+              populateSelect(DOMElements.postProductCategorySelect, categories, 'select_category', AppState.currentLang, true);
               
               // Populate condition select dropdown
               const conditionSelect = DOMElements.postProductConditionSelect;
               if (conditionSelect) {
-                  conditionSelect.innerHTML = `<option value="">${translations[currentLang]['any_condition']}</option>`;
-                  conditionSelect.innerHTML += `<option value="new">${translations[currentLang]['new']}</option>`;
-                  conditionSelect.innerHTML += `<option value="used">${translations[currentLang]['used']}</option>`;
+                  conditionSelect.innerHTML = `<option value="">${translations[AppState.currentLang]['any_condition']}</option>`;
+                  conditionSelect.innerHTML += `<option value="new">${translations[AppState.currentLang]['new']}</option>`;
+                  conditionSelect.innerHTML += `<option value="used">${translations[AppState.currentLang]['used']}</option>`;
               }
               trapModalFocus('post-product-modal');
           }
@@ -1841,11 +1838,11 @@ const setupEventListeners = () => {
           const selectedBrand = DOMElements.postProductBrandSelect.value;
           if (modelSelect) {
             if (selectedBrand && car_data[selectedBrand]) {
-                populateSelect(modelSelect, car_data[selectedBrand], 'select_model', currentLang);
+                populateSelect(modelSelect, car_data[selectedBrand], 'select_model', AppState.currentLang);
                 modelSelect.disabled = false;
             } else {
                 modelSelect.disabled = true;
-                modelSelect.innerHTML = `<option value="">${translations[currentLang].select_model}</option>`;
+                modelSelect.innerHTML = `<option value="">${translations[AppState.currentLang].select_model}</option>`;
             }
           }
       };
@@ -1857,11 +1854,11 @@ const setupEventListeners = () => {
           const selectedWilaya = DOMElements.postProductWilayaSelect.value;
           if (communeSelect) {
             if (selectedWilaya && wilayas[selectedWilaya]) {
-                populateSelect(communeSelect, wilayas[selectedWilaya], 'select_commune', currentLang);
+                populateSelect(communeSelect, wilayas[selectedWilaya], 'select_commune', AppState.currentLang);
                 communeSelect.disabled = false;
             } else {
                 communeSelect.disabled = true;
-                communeSelect.innerHTML = `<option value="">${translations[currentLang].select_commune}</option>`;
+                communeSelect.innerHTML = `<option value="">${translations[AppState.currentLang].select_commune}</option>`;
             }
           }
       };
@@ -1932,9 +1929,9 @@ const setupEventListeners = () => {
     const navSell = document.getElementById('nav-sell');
     if (navSell) navSell.onclick = (e) => { e.preventDefault(); DOMElements.sellLink?.click(); };
     const navMessages = document.getElementById('nav-messages');
-    if (navMessages) navMessages.onclick = (e) => { e.preventDefault(); currentUser ? renderView('inbox') : toggleModal(DOMElements.authModal, true); };
+    if (navMessages) navMessages.onclick = (e) => { e.preventDefault(); AppState.currentUser ? renderView('inbox') : toggleModal(DOMElements.authModal, true); };
     const navProfile = document.getElementById('nav-profile');
-    if (navProfile) navProfile.onclick = (e) => { e.preventDefault(); currentUser ? renderView('profile', { userId: currentUser.uid, userName: currentUser.displayName }) : toggleModal(DOMElements.authModal, true); };
+    if (navProfile) navProfile.onclick = (e) => { e.preventDefault(); AppState.currentUser ? renderView('profile', { userId: AppState.currentUser.uid, userName: AppState.currentUser.displayName }) : toggleModal(DOMElements.authModal, true); };
     
     const termsLink = document.getElementById('terms-link');
     if (termsLink) {
@@ -1981,16 +1978,16 @@ const bootApp = () => {
     }
 
     onAuthStateChanged(auth, async (user) => {
-        currentUser = user;
+        AppState.currentUser = user;
         updateAuthUI(user);
         listenForUnreadMessages(user);
-        userCart = {};
-        userProfile = null;
+        AppState.userCart = {};
+        AppState.userProfile = null;
         if (user) {
             toggleModal(DOMElements.authModal, false);
             try {
                 const cartSnap = await getDoc(doc(db, "carts", user.uid));
-                if (cartSnap.exists()) userCart = cartSnap.data();
+                if (cartSnap.exists()) AppState.userCart = cartSnap.data();
             } catch (error) {
                 console.error("Error fetching cart:", error);
             }
@@ -2008,9 +2005,9 @@ const bootApp = () => {
                     photoURL: user.photoURL,
                     role: "pending"
                 });
-                userProfile = { role: "pending" };
+                AppState.userProfile = { role: "pending" };
             } else {
-                 userProfile = userSnap.data();
+                 AppState.userProfile = userSnap.data();
             }
         }
         updateCartDisplay();
@@ -2036,7 +2033,7 @@ const bootApp = () => {
         }
     };
     renderView('home');
-    setLanguage(currentLang);
+    setLanguage(AppState.currentLang);
 };
 
 bootApp();
