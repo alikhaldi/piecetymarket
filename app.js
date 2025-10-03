@@ -62,17 +62,21 @@ const translations = {
     fr: {
         page_title: "Piecety - Marché des Pièces Auto en Algérie", meta_description: "Achetez et vendez des pièces automobiles en Algérie avec Piecety, le marché fiable pour les pièces neuves et d'occasion.", fr_short: "FR", en_short: "EN", ar_short: "AR", menu: "Menu", sell: "Vendre", connect: "Se connecter", language: "Langue", logout: "Déconnexion", dashboard: "Tableau de Bord", nav_home: "Accueil", nav_search: "Recherche", nav_profile: "Profil", hero_title: "Trouvez la bonne pièce pour votre voiture", hero_subtitle: "Le marché algérien des pièces automobiles le plus fiable.", categories_title: "Catégories de Pièces", sub_categories_title: "Sous-catégories pour", brands_title: "Sélectionnez une Marque", years_title: "Sélectionnez une Année", filters_title: "Filtrer les annonces", all_brands: "Toutes les marques", all_models: "Tous les modèles", all_years: "Toutes années", all_wilayas: "Toutes wilayas", all_communes: "Toutes communes", condition: "État", any_condition: "Tout", new: "Neuf", used: "Occasion", apply_filters: "Appliquer les filtres", reset: "Réinitialiser", search_placeholder: "Rechercher une pièce...", submit_ad: "Soumettre une annonce", ad_title_label: "Titre de la pièce *", ad_title_placeholder: "Ex: Disque de frein avant", brand_label: "Marque *", select_brand: "Sélectionnez une marque", model_label: "Modèle", select_model: "Sélectionnez un modèle", year_label: "Année", select_year: "Sélectionnez une année", wilaya_label: "Wilaya *", select_wilaya: "Sélectionnez une wilaya", commune_label: "Commune", select_commune: "Sélectionnez une commune", condition_label: "État", price_label: "Prix (DA) *", price_placeholder: "Ex: 15000", description_label: "Description", description_placeholder: "Informations supplémentaires...", submit_ad_btn_text: "Soumettre", loading_text: "Envoi...", error_valid_title: "Veuillez entrer un titre valide.", error_select_brand: "Veuillez sélectionner une marque.", error_select_wilaya: "Veuillez sélectionner une wilaya.", error_select_category: "Veuillez sélectionner une catégorie.", error_valid_price: "Veuillez entrer un prix valide.", login_text: "Connectez-vous pour accéder à toutes les fonctionnalités.", google_login: "Se connecter avec Google", back_to_listings: "Retour aux annonces", add_to_cart: "Ajouter au panier", cart_title: "Mon panier", cart_total: "Total", checkout_btn: "Passer à la caisse", no_listings: "Aucune annonce trouvée.", your_cart_is_empty: "Votre panier est vide.", remove: "Supprimer", quantity: "Quantité", item_total: "Total de l'article", login_required: "Veuillez vous connecter pour utiliser cette fonctionnalité.", show_filters: "Afficher les filtres", price_range: "Gamme de prix", all_categories: "Toutes catégories", category_label: "Catégorie *", select_category: "Sélectionnez une catégorie", contact_seller: "Contacter le vendeur", clear_cart: "Vider le panier", ad_posted: "Votre annonce a été publiée avec succès !", ad_post_failed: "Échec de la publication de l'annonce.", item_added_to_cart: "Article ajouté au panier!", delete_ad_confirm: "Êtes-vous sûr de vouloir supprimer cette annonce ?", sold_by: "Vendu par:", my_listings: "Mes Annonces", seller_listings: "Annonces de ce vendeur", buyer_reviews: "Avis des acheteurs", reviews_soon: "(Avis bientôt disponibles)", reviews_soon_2: "La fonctionnalité d'avis sera bientôt disponible.", messages: "Messages", loading_convos: "Chargement des conversations...", chat_with: "Chat avec", type_message_placeholder: "Écrire un message...", recently_viewed: "Récemment consultés", chat: "Chat", load_more: "Charger plus", ad_image_label: "Image de la pièce *", facebook_login: "Se connecter avec Facebook", store_label: "Nom du magasin", store_name_placeholder: "Ex: Pièces Autos Abdelkader", store_profile: "Profil de Magasin", setup_store_profile: "Configurer le Profil de Magasin", store_name_label: "Nom du Magasin", store_logo_label: "Logo du Magasin", save: "Enregistrer", profile_pic_label: "Photo de Profil", update_profile_pic: "Mettre à jour la Photo",
         contact_us: "Contactez-nous", terms_of_service: "Conditions d'utilisation", terms_title: "Conditions d'utilisation", terms_last_updated: "Dernière mise à jour :", terms_intro_title: "1. Introduction", terms_intro_text: "Bienvenue sur Piecety. En accédant ou en utilisant notre application, vous acceptez d'être lié par ces conditions. Si vous n'êtes pas d'accord avec une partie de ces conditions, veuillez ne pas utiliser notre service.", terms_use_title: "2. Utilisation de l'application", terms_use_text: "Piecety est un marché en ligne pour l'achat et la vente de pièces automobiles. Vous êtes responsable de toute activité liée à votre compte. L'application ne peut être utilisée qu'à des fins légales et d'une manière qui ne porte pas atteinte aux droits d'autrui.", terms_account_title: "3. Comptes utilisateurs", terms_account_text: "Vous devez être âgé d'au moins 18 ans pour créer un compte. Vous êtes responsable de la sécurité de votre mot de passe et de votre compte. Vous acceptez de ne pas partager les informations de votre compte ou de les utiliser pour d'autres personnes.", terms_delete_account_policy: "Vous pouvez supprimer votre compte à tout moment. La suppression de votre compte entraînera la suppression définitive de toutes vos annonces, messages et données personnelles.", terms_content_title: "4. Contenu utilisateur", terms_content_text: "Vous êtes seul responsable du contenu (annonces, photos, messages) que vous publiez sur l'application. Vous garantissez que vous avez les droits nécessaires pour publier ce contenu et qu'il n'est pas illégal, menaçant, diffamatoire ou obscène. Piecety se réserve le droit de supprimer tout contenu jugé inapproprié.", terms_liability_title: "5. Limitation de responsabilité", terms_liability_text: "Piecety est fourni 'tel quel'. Nous ne garantissons pas que le service sera ininterrompu ou sans erreur. En aucun cas, Piecety ne sera responsable des dommages directs ou indirects résultant de votre utilisation du service.", terms_termination_title: "6. Résiliation du compte", terms_termination_text: "Nous pouvons résilier ou suspendre votre compte et votre accès à l'application, sans préavis ni responsabilité, pour quelque raison que ce soit, y inclus si vous enfreignez les Conditions. Vous pouvez supprimer votre compte à tout moment depuis votre tableau de bord.", danger_zone: "Zone de danger", delete_account: "Supprimer mon compte", delete_account_confirm: "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible et supprimera toutes vos annonces, messages et données personnelles. Cette action est IRREVERSIBLE!", back: "Retour", edit_profile: "Modifier le profil", name_label: "Nom", write_review_placeholder: "Écrivez votre avis ici...", add_review: "Ajouter un avis", submit_review: "Soumettre l'avis", offer_btn_text: "Faire une offre", offer_prompt: "Entrez votre prix d'offre :", offer_sent: "Votre offre a été envoyée.", recommendations: "Recommandations pour vous",
+        recent_ads_title: "Dernières Annonces", // ADDED: New translation key for default listings title
     },
     en: {
         page_title: "Piecety - Car Parts Marketplace in Algeria", meta_description: "Buy and sell car parts in Algeria with Piecety, the reliable marketplace for new and used parts.", fr_short: "FR", en_short: "EN", ar_short: "AR", menu: "Menu", sell: "Sell", connect: "Log In", language: "Language", logout: "Logout", dashboard: "Dashboard", nav_home: "Home", nav_search: "Search", nav_profile: "Profile", hero_title: "Find the right car part for your vehicle", hero_subtitle: "The most trusted Algerian car parts marketplace.", categories_title: "Parts Categories", sub_categories_title: "Sub-categories for", brands_title: "Select a Brand", years_title: "Select a Year", filters_title: "Filter Listings", all_brands: "All brands", all_models: "All models", all_years: "All years", all_wilayas: "All wilayas", all_communes: "All communes", condition: "Condition", any_condition: "Any", new: "New", used: "Used", apply_filters: "Apply Filters", reset: "Reset", search_placeholder: "Search for a part...", submit_ad: "Submit an Ad", ad_title_label: "Part Title *", ad_title_placeholder: "e.g., Front brake disc", brand_label: "Brand *", select_brand: "Select a brand", model_label: "Model", select_model: "Select a model", year_label: "Year", select_year: "Select a year", wilaya_label: "State *", select_wilaya: "Select a state", commune_label: "City", select_commune: "Select a city", condition_label: "Condition", price_label: "Price (DA) *", price_placeholder: "e.g., 15000", description_label: "Description", description_placeholder: "Additional information...", submit_ad_btn_text: "Submit", loading_text: "Submitting...", error_valid_title: "Please enter a valid title.", error_select_brand: "Please select a brand.", error_select_wilaya: "Please select a state.", error_select_category: "Please select a category.", error_valid_price: "Please enter a valid price.", login_text: "Log in to access all features.", google_login: "Sign in with Google", back_to_listings: "Back to listings", add_to_cart: "Add to cart", cart_title: "My Cart", cart_total: "Total", checkout_btn: "Proceed to Checkout", no_listings: "No listings found.", your_cart_is_empty: "Your cart is empty.", remove: "Remove", quantity: "Quantity", item_total: "Item Total", login_required: "Please log in to use this feature.", show_filters: "Show Filters", price_range: "Price Range", all_categories: "All Categories", category_label: "Category *", select_category: "Select a category", contact_seller: "Contact Seller", clear_cart: "Clear Cart", ad_posted: "Your ad has been posted successfully!", ad_post_failed: "Failed to post ad.", item_added_to_cart: "Item added to cart!", delete_ad_confirm: "Are you sure you want to delete this ad?", sold_by: "Sold by:", my_listings: "My Listings", seller_listings: "Listings from this seller", buyer_reviews: "Buyer Reviews", reviews_soon: "(Reviews coming soon)", reviews_soon_2: "Review functionality will be available soon.", messages: "Messages", loading_convos: "Loading conversations...", chat_with: "Chat with", type_message_placeholder: "Type a message...", recently_viewed: "Recently Viewed", chat: "Chat", load_more: "Load More", ad_image_label: "Part Image *", facebook_login: "Sign in with Facebook", store_label: "Store Name", store_name_placeholder: "e.g., Abdelkader Auto Parts", store_profile: "Store Profile", setup_store_profile: "Set Up Store Profile", store_name_label: "Store Name", store_logo_label: "Store Logo", save: "Save", profile_pic_label: "Profile Picture", update_profile_pic: "Update Picture",
         contact_us: "Contact Us", terms_of_service: "Terms of Service", terms_title: "Terms of Service", terms_last_updated: "Last Updated:", terms_intro_title: "1. Introduction", terms_intro_text: "Welcome to Piecety. By accessing or using our app, you agree to be bound by these terms. If you disagree with any part of these terms, please do not use our service.", terms_delete_account_policy: "You can delete your account at any time. Deleting your account will result in the permanent deletion of all your ads, messages, and personal data.", terms_use_title: "2. Use of the App", terms_use_text: "Piecety is an online marketplace for buying and selling car parts. You are responsible for all activity under your account. The app may only be used for lawful purposes and in a way that does not infringe on the rights of others.", terms_account_title: "3. User Accounts", terms_account_text: "You must be at least 18 years old to create an account. You are responsible for keeping your password and account secure. You agree not to share your account information or use it for any other person.", terms_content_title: "4. User Content", terms_content_text: "You are solely responsible for the content (ads, photos, messages) you post on the app. You warrant that you have the necessary rights to post this content and that it is not unlawful, threatening, defamatory, or obscene. Piecety reserves the right to remove any content deemed inappropriate.", terms_liability_title: "5. Limitation of Liability", terms_liability_text: "Piecety is provided 'as is'. We do not warrant that the service will be uninterrupted or without error. In no event shall Piecety be liable for any direct or indirect damages resulting from your use of the service.", terms_termination_title: "6. Account Termination", terms_termination_text: "We may terminate or suspend your account and access to the app, without prior notice or liability, for any reason whatsoever, including if you breach the Terms. You may delete your account at any time from your dashboard.", danger_zone: "Danger Zone", delete_account: "Delete My Account", delete_account_confirm: "Are you sure you want to delete your account? This action is irreversible and will permanently delete all your ads, messages, and personal data. This action is IRREVERSIBLE!", sub_categories_title: "Sub-categories for", back: "Back", edit_profile: "Edit Profile", name_label: "Name", write_review_placeholder: "Write your review here...", add_review: "Add a review", submit_review: "Submit Review", offer_btn_text: "Make Offer", offer_prompt: "Enter your offer price:", offer_sent: "Your offer has been sent.", recommendations: "Recommendations for you",
+        recent_ads_title: "Latest Listings", // ADDED: New translation key for default listings title
     },
     ar: {
         page_title: "Piecety - سوق قطع غيار السيارات في الجزائر", meta_description: "بيع وشراء قطع غيار السيارات في الجزائر مع Piecety، السوق الموثوق للقطع الجديدة والمستعملة.", fr_short: "FR", en_short: "EN", ar_short: "AR", menu: "القائمة", sell: "بيع", connect: "تسجيل الدخول", language: "اللغة", logout: "تسجيل الخروج", dashboard: "لوحة التحكم", nav_home: "الرئيسية", nav_search: "بحث", nav_profile: "ملفي", hero_title: "ابحث عن قطعة الغيار المناسبة لسيارتك", hero_subtitle: "أكثر أسواق قطع غيار السيارات ثقة في الجزائر.", categories_title: "فئات القطع", sub_categories_title: "الفئات الفرعية لـ", brands_title: "اختر ماركة", years_title: "اختر سنة", filters_title: "تصفية الإعلانات", all_brands: "جميع الماركات", all_models: "جميع الموديلات", all_years: "جميع السنوات", all_wilayas: "جميع الولايات", all_communes: "جميع البلديات", condition: "الحالة", any_condition: "الكل", new: "جديد", used: "مستعمل", apply_filters: "تطبيق الفلاتر", reset: "إعادة تعيين", search_placeholder: "ابحث عن قطعة...", submit_ad: "إرسال إعلان", ad_title_label: "عنوان القطعة *", ad_title_placeholder: "مثال: قرص فرامل أمامي", brand_label: "الماركة *", select_brand: "اختر ماركة", model_label: "الموديل", select_model: "اختر موديل", year_label: "السنة", select_year: "اختر سنة", wilaya_label: "الولاية *", select_wilaya: "اختر ولاية", commune_label: "البلدية", select_commune: "اختر بلدية", condition_label: "الحالة", price_label: "السعر (دج) *", price_placeholder: "مثال: 15000", description_label: "الوصف", description_placeholder: "معلومات إضافية...", submit_ad_btn_text: "إرسال", loading_text: "جاري الإرسال...", error_valid_title: "الرجاء إدخال عنوان صالح.", error_select_brand: "الرجاء اختيار ماركة.", error_select_wilaya: "الرجاء اختيار ولاية.", error_select_category: "الرجاء اختيار فئة.", error_valid_price: "الرجاء إدخال سعر صالح.", login_text: "تسجيل الدخول للوصول إلى جميع الميزات.", google_login: "تسجيل الدخول باستخدام Google", back_to_listings: "العودة إلى الإعلانات", add_to_cart: "أضف إلى السلة", cart_title: "سلة التسوق", cart_total: "الإجمالي", checkout_btn: "الدفع", no_listings: "لم يتم العثور على إعلانات.", your_cart_is_empty: "سلة التسوق فارغة.", remove: "حذف", quantity: "الكمية", item_total: "إجمالي السلعة", login_required: "يرجى تسجيل الدخول لاستخدام هذه الميزة.", show_filters: "إظهار الفلاتر", price_range: "نطاق السعر", all_categories: "جميع الفئات", category_label: "الفئة *", select_category: "اختر فئة", contact_seller: "اتصل بالبائع", clear_cart: "إفراغ السلة", ad_posted: "تم نشر إعلانك بنجاح!", ad_post_failed: "فشل نشر الإعلان.", item_added_to_cart: "تمت إضافة المنتج إلى السلة!", delete_ad_confirm: "هل أنت متأكد من أنك تريد حذف هذا الإعلان؟", sold_by: "البائع:", my_listings: "إعلاناتي", seller_listings: "إعلانات من هذا البائع", buyer_reviews: "تقييمات المشترين", reviews_soon: "(التقييمات قريبا)", reviews_soon_2: "ميزة التقييم ستكون متاحة قريبا.", messages: "الرسائل", loading_convos: "جاري تحميل المحادثات...", chat_with: "محادثة مع", type_message_placeholder: "اكتب رسالة...", recently_viewed: "شوهدت مؤخرا", chat: "محادثة", load_more: "تحميل المزيد", ad_image_label: "صورة القطعة *", facebook_login: "تسجيل الدخول باستخدام Facebook", store_label: "اسم المتجر", store_name_placeholder: "مثال: قطع غيار سيارات عبد القادر", store_profile: "ملف المتجر", setup_store_profile: "إعداد ملف المتجر", store_name_label: "اسم المتجر", store_logo_label: "شعار المتجر", save: "حفظ", profile_pic_label: "صورة الملف الشخصي", update_profile_pic: "تحديث الصورة",
+        recent_ads_title: "أحدث الإعلانات", // ADDED: New translation key for default listings title
     }
 };
 
 const categories = {
+// ... (omitted categories data)
     "braking-system": { fr: "Système de Freinage", en: "Braking System", ar: "نظام الفرملة", icon: "icons/brake.png", sub: {
         "brake-pads": { fr: "Plaquettes de frein", en: "Brake Pads", ar: "وسادات الفرامل" },
         "brake-discs": { fr: "Disques de frein", en: "Brake Discs", ar: "أقراص الفرامل" },
@@ -134,9 +138,11 @@ const categories = {
     }}
 };
 const wilayas = {
+// ... (omitted wilayas data)
     "Adrar": ["Adrar", "Charouine", "Reggane", "Aoulef", "Timimoun", "Bordj Badji Mokhtar", "In Salah"], "Chlef": ["Chlef", "Ténès", "Ouled Farès", "El Marsa", "Oued Fodda"], "Laghouat": ["Laghouat", "Aflou", "Aïn Madhi", "Ksar El Hirane", "Hassi R'Mel"], "Oum El Bouaghi": ["Oum El Bouaghi", "Aïn Beïda", "Aïn M'lila", "F'kirina", "Souk Naamane"], "Batna": ["Batna", "Barika", "Arris", "Merouana", "Timgad"], "Béjaïa": ["Béjaïa", "Akbou", "El Kseur", "Sidi Aïch", "Aokas"], "Biskra": ["Biskra", "Tolga", "Sidi Okba", "El Kantara", "Ouled Djellal"], "Béchar": ["Béchar", "Kenadsa", "Beni Ounif", "Taghit", "Abadla"], "Blida": ["Blida", "Boufarik", "Larbaâ", "Meftah", "Mouzaia"], "Bouira": ["Bouira", "Lakhdaria", "Sour El Ghozlane", "Aïn Bessem", "M'chedallah"], "Tamanrasset": ["Tamanrasset", "In Salah", "In Guezzam", "Djanet"], "Tébessa": ["Tébessa", "Bir El Ater", "Cheria", "El Aouinet", "Ouenza"], "Tlemcen": ["Tlemcen", "Maghnia", "Ghazaouet", "Remchi", "Nedroma"], "Tiaret": ["Tiaret", "Frenda", "Sougueur", "Ksar Chellala", "Mahdia"], "Tizi Ouzou": ["Tizi Ouzou", "Azazga", "Draâ Ben Khedda", "Tigzirt", "Larbaâ Nath Irathen"], "Alger": ["Alger Centre", "Bab El Oued", "Hussein Dey", "Kouba", "El Harrach", "Dar El Beïda"], "Djelfa": ["Djelfa", "Messaad", "Aïn Oussera", "Hassi Bahbah", "El Idrissia"], "Jijel": ["Jijel", "Taher", "El Milia", "Chekfa", "Ziama Mansouriah"], "Sétif": ["Sétif", "El Eulma", "Aïn Oulmane", "Bougaâ", "Beni Ouartilane"], "Saïda": ["Saïda", "Aïn El Hadjar", "Sidi Boubkeur", "Youb", "Ouled Brahim"], "Skikda": ["Skikda", "Azzaba", "Collo", "El Harrouch", "Ramdane Djamel"], "Sidi Bel Abbès": ["Sidi Bel Abbès", "Telagh", "Sfisef", "Ras El Ma", "Ben Badis"], "Annaba": ["Annaba", "El Bouni", "El Hadjar", "Sidi Amar", "Berrahal"], "Guelma": ["Guelma", "Oued Zenati", "Héliopolis", "Bouchegouf", "Ain Reggada"], "Constantine": ["Constantine", "El Khroub", "Hamma Bouziane", "Didouche Mourad", "Aïn Smara"], "Médéa": ["Médéa", "Berrouaghia", "Ksar Boukhari", "Tablat", "Aïn Boucif"], "Mostaganem": ["Mostaganem", "Sidi Ali", "Achaacha", "Hassi Mameche", "Aïn Tédelès"], "M'Sila": ["M'Sila", "Bou Saâda", "Sidi Aïssa", "Aïn El Melh", "Magra"], "Mascara": ["Mascara", "Tighennif", "Sig", "Ghriss", "Mohammadia"], "Ouargla": ["Ouargla", "Hassi Messaoud", "Touggourt", "Rouissat", "N'Goussa"], "Oran": ["Oran", "Es Senia", "Arzew", "Bir El Djir", "Aïn El Turk"], "El Bayadh": ["El Bayadh", "Bougtob", "Brezina", "Rogassa", "El Abiodh Sidi Cheikh"], "Illizi": ["Illizi", "Djanet", "In Amenas", "Bordj Omar Driss"], "Bordj Bou Arréridj": ["Bordj Bou Arréridj", "Ras El Oued", "Mansoura", "Medjana", "El Achir"], "Boumerdès": ["Boumerdès", "Boudouaou", "Dellys", "Réghaïa", "Isser"], "El Tarf": ["El Tarf", "El Kala", "Ben M'Hidi", "Besbes", "Dréan"], "Tindouf": ["Tindouf", "Oum El Assel"], "Tissemsilt": ["Tissemsilt", "Théniet El Had", "Lardjem", "Bordj Bounaama", "Ammi Moussa"], "El Oued": ["El Oued", "Guemar", "Debila", "Robbah", "El M'Ghair"], "Khenchela": ["Khenchela", "Kais", "Chechar", "Ouled Rechache", "El Hamma"], "Souk Ahras": ["Souk Ahras", "M'daourouch", "Sedrata", "Taoura", "Heddada"], "Tipaza": ["Tipaza", "Cherchell", "Koléa", "Hadjout", "Fouka"], "Mila": ["Mila", "Ferdjioua", "Grarem Gouga", "Tadjenanet", "Chelghoum Laïd"], "Aïn Defla": ["Aïn Defla", "Khemis Miliana", "Miliana", "El Attaf", "Djelida"], "Naâma": ["Naâma", "Mécheria", "Aïn Sefra", "Sfissifa", "Moghrar"], "Aïn Témouchent": ["Aïn Témouchent", "Béni Saf", "Hammam Bou Hadjar", "El Malah", "Aghlal"], "Ghardaïa": ["Ghardaïa", "Metlili", "El Guerrara", "Berriane", "Bounoura"], "Relizane": ["Relizane", "Oued Rhiou", "Mazouna", "Ammi Moussa", "Zemmoura"], "El M'ghair": ["El M'ghair", "Djamaa", "Sidi Amrane", "Oum Toub"], "El Meniaa": ["El Meniaa", "Hassi Gara", "Mansourah"],
 };
 const car_data = {
+// ... (omitted car_data)
     "Toyota": ["Yaris", "Corolla", "Camry", "Land Cruiser", "Hilux", "RAV4", "Prado", "Fortuner"], 
     "Peugeot": ["208", "308", "301", "2008", "3008", "508", "406", "Partner", "Expert"], 
     "Volkswagen": ["Golf", "Polo", "Passat", "Tiguan", "Touareg", "Jetta", "Caddy", "Transporter"], 
@@ -156,6 +162,7 @@ const car_data = {
     "Seat": ["Ibiza", "Leon", "Ateca", "Tarraco"]
 };
 const brand_icons = {
+// ... (omitted brand_icons data)
     "Toyota": "icons/toyota.png", "Peugeot": "icons/peugeot.png", "Volkswagen": "icons/volkswagen.png", "Renault": "icons/renault.png", "Hyundai": "icons/hyundai.png", "Nissan": "icons/nissan.png", "Fiat": "icons/fiat.png", "Citroën": "icons/citroen.png", "Kia": "icons/kia.png", "Mercedes-Benz": "icons/mercedes.png", "Audi": "icons/audi.png", "BMW": "icons/bmw.png", "Ford": "icons/ford.png", "Chevrolet": "icons/chevrolet.png", "Dacia": "icons/dacia.png", "Skoda": "icons/skoda.png", "Seat": "icons/seat.png"
 };
 const currentYear = new Date().getFullYear();
@@ -163,6 +170,7 @@ const years = Array.from({length: currentYear - 1979}, (_, i) => (currentYear - 
 
 // --- DOM ELEMENTS ---
 const DOMElements = {
+// ... (omitted DOMElements)
     html: document.documentElement,
     appContainer: document.getElementById("app-container"),
     messageBox: document.getElementById("message-box"),
@@ -212,6 +220,7 @@ const DOMElements = {
 
 // --- UTILITY FUNCTIONS ---
 const announceToScreenReader = (message) => {
+// ... (omitted utility functions)
   if (DOMElements.liveRegion) {
     DOMElements.liveRegion.textContent = message;
     setTimeout(() => {
@@ -329,7 +338,7 @@ const getRecommendations = async () => {
   }
 };
 
-// --- MOBILE MENU CONTROL (Now handled by ui-fixes.js) ---
+// --- MOBILE MENU CONTROL (Fixed, now handled internally) ---
 const openMobileMenu = () => {
   DOMElements.mobileMenu.classList.remove('-translate-x-full');
   DOMElements.mobileMenuBackdrop.classList.remove('invisible', 'opacity-0');
@@ -344,6 +353,7 @@ const closeMobileMenu = () => {
 
 // --- APP LOGIC ---
 const setDarkMode = (isDark) => {
+// ... (omitted setDarkMode function)
   DOMElements.html.classList.toggle('dark', !!isDark);
   localStorage.setItem('piecety_dark_mode', !!isDark);
   
@@ -366,6 +376,7 @@ const setLanguage = (lang) => {
 };
 
 const updateTitle = (view) => {
+// ... (omitted updateTitle function)
     const titleKeyMap = { cart: "cart_title", dashboard: "dashboard", inbox: "messages", chat: "messages", terms: "terms_title" };
     const titleKey = titleKeyMap[view] || "page_title";
     document.title = translations[AppState.currentLang][titleKey] || "Piecety";
@@ -373,6 +384,7 @@ const updateTitle = (view) => {
 };
 
 const translatePage = (lang) => {
+// ... (omitted translatePage function)
     const html = DOMElements.html;
     html.setAttribute("dir", lang === "ar" ? "rtl" : "ltr");
     html.setAttribute("lang", lang);
@@ -401,6 +413,7 @@ const translatePage = (lang) => {
 };
 
 const populateSelect = (selectEl, options, defaultLabelKey, lang, valueAsKey = false) => {
+// ... (omitted populateSelect function)
     if (!selectEl) return;
     const currentValue = selectEl.value;
     selectEl.innerHTML = `<option value="">${translations[lang][defaultLabelKey]}</option>`;
@@ -438,6 +451,7 @@ const applyAndRenderFilters = () => {
 };
 
 const applyFiltersFromURL = (container = document) => {
+// ... (omitted applyFiltersFromURL function)
     const params = new URLSearchParams(window.location.search);
     params.forEach((value, key) => {
         const el = container.querySelector(`#${key}-filter`);
@@ -462,6 +476,7 @@ const applyFiltersFromURL = (container = document) => {
 };
 
 const trapModalFocus = (modalId) => {
+// ... (omitted trapModalFocus function)
     const modal = document.getElementById(modalId);
     if (!modal) return;
     const focusableEls = modal.querySelectorAll('a, button, textarea, input, select, [tabindex]:not([tabindex="-1"])');
@@ -492,6 +507,7 @@ const trapModalFocus = (modalId) => {
 
 // --- VIEW RENDERING ---
 const updateBottomNav = (viewName) => {
+// ... (omitted updateBottomNav function)
     const navLinks = {
         home: document.getElementById('nav-home'),
         search: document.getElementById('nav-search'),
@@ -514,6 +530,7 @@ const updateBottomNav = (viewName) => {
 };
 
 const renderView = (viewName, data = null) => {
+// ... (omitted renderView function)
     if (AppState.productsUnsubscribe) AppState.productsUnsubscribe();
     if (AppState.chatsUnsubscribe) AppState.chatsUnsubscribe();
     if (AppState.messagesListener) AppState.messagesListener();
@@ -554,11 +571,30 @@ window.renderHomePage = async () => {
     const brand = params.get('brand');
     const model = params.get('model');
 
+    // These elements are assumed to exist in the HTML template
+    const listingsTitleEl = document.getElementById('listings-title'); 
+    const categoriesTitleHeading = document.getElementById('categories-title-heading'); 
+    
+    const isPureHomepage = !category && !sub_category && !brand && !model;
+
+    // --- FIX 1: Set the Listings Title to "Latest Ads" on the root page ---
+    if (listingsTitleEl) {
+        listingsTitleEl.textContent = isPureHomepage ? 
+            translations[AppState.currentLang]['recent_ads_title'] : 
+            translations[AppState.currentLang]['filters_title'];
+    }
+    
+    // Control the Category/Brand grid title based on depth.
+    if (categoriesTitleHeading && isPureHomepage) {
+        categoriesTitleHeading.textContent = translations[AppState.currentLang]['categories_title'];
+    }
+    // --- END FIX 1 ---
+
     if (model) renderYears(model, brand, category, sub_category);
     else if (brand) renderModels(brand, category, sub_category);
     else if (sub_category) renderBrands(sub_category);
     else if (category) renderSubCategories(category);
-    else renderPartCategories();
+    else renderPartCategories(); // This keeps the category grid visible on the pure homepage
     
     renderRecentlyViewed();
     renderRecommendations();
@@ -584,6 +620,7 @@ window.renderHomePage = async () => {
 };
 
 const updateBreadcrumb = () => {
+// ... (omitted updateBreadcrumb function)
     const breadcrumbNav = document.getElementById('breadcrumb-nav');
     if (!breadcrumbNav) return;
 
@@ -630,6 +667,7 @@ const updateBreadcrumb = () => {
 };
 
 const renderDynamicGrid = (titleKey, items, cardGenerator, clickHandler) => {
+// ... (omitted renderDynamicGrid function)
     const grid = document.getElementById('dynamic-grid');
     const titleEl = document.getElementById('categories-title-heading');
     if (!grid || !titleEl) return;
@@ -647,6 +685,7 @@ const renderDynamicGrid = (titleKey, items, cardGenerator, clickHandler) => {
 };
 
 const renderPartCategories = () => {
+// ... (omitted renderPartCategories function)
     renderDynamicGrid('categories_title', Object.entries(categories), 
         ([key, cat]) => {
             const isImage = cat.icon.endsWith('.png') || cat.icon.endsWith('.jpg');
@@ -669,6 +708,7 @@ const renderPartCategories = () => {
 };
 
 const renderSubCategories = (categoryKey) => {
+// ... (omitted renderSubCategories function)
     const subCategories = categories[categoryKey]?.sub;
     if (!subCategories) { renderPartCategories(); return; }
     
@@ -689,6 +729,7 @@ const renderSubCategories = (categoryKey) => {
 };
 
 const renderBrands = (subCategoryKey) => {
+// ... (omitted renderBrands function)
     renderDynamicGrid('brands_title', Object.entries(car_data), 
         ([brandName]) => `
             <img src="${brand_icons[brandName] || 'icons/car-192.png'}" alt="${brandName}" class="h-16 object-contain mb-2" onerror="this.src='icons/car-192.png'">
@@ -704,6 +745,7 @@ const renderBrands = (subCategoryKey) => {
 };
 
 const renderModels = (brand, category, subCategory) => {
+// ... (omitted renderModels function)
     const models = car_data[brand];
     if (!models) { renderBrands(subCategory); return; }
 
@@ -720,6 +762,7 @@ const renderModels = (brand, category, subCategory) => {
 };
 
 const renderYears = (model, brand, category, subCategory) => {
+// ... (omitted renderYears function)
     renderDynamicGrid('years_title', years, 
         (year) => `<span class="font-semibold">${year}</span>`,
         (e, year) => {
@@ -735,6 +778,7 @@ const renderYears = (model, brand, category, subCategory) => {
 };
 
 const setupFilterListeners = (container = document) => {
+// ... (omitted setupFilterListeners function)
     const debouncedApply = debounce(applyAndRenderFilters, 300);
 
     const brandFilter = container.querySelector('#brand-filter');
@@ -799,6 +843,7 @@ const setupFilterListeners = (container = document) => {
 };
 
 const renderListings = async (loadMore = false) => {
+// ... (omitted renderListings function)
     const listingsSection = document.getElementById('listings-section');
     const loadMoreContainer = document.getElementById('load-more-container');
     const recommendationsSection = document.getElementById('recommendations-section');
@@ -829,7 +874,10 @@ const renderListings = async (loadMore = false) => {
     
     let productsToShow = [];
     
-    if (AppState.listingsCache && (Date.now() - AppState.cacheTimestamp) < AppState.CACHE_DURATION && !loadMore && !searchQuery) {
+    // Check if we can use cache only if no filters and no search are active
+    const isFiltered = Object.keys(filters).length > 0;
+    
+    if (AppState.listingsCache && (Date.now() - AppState.cacheTimestamp) < AppState.CACHE_DURATION && !loadMore && !searchQuery && !isFiltered) {
         productsToShow = AppState.listingsCache;
     } else {
         let baseQuery = collection(db, "products");
@@ -838,6 +886,7 @@ const renderListings = async (loadMore = false) => {
             baseQuery = query(baseQuery, where(key, "==", filters[key]));
         }
         
+        // This orderBy is what ensures the latest listings are shown by default
         let finalQuery = query(baseQuery, orderBy("createdAt", "desc"));
         if (loadMore && AppState.lastVisibleProduct) {
             finalQuery = query(finalQuery, startAfter(AppState.lastVisibleProduct));
@@ -855,7 +904,7 @@ const renderListings = async (loadMore = false) => {
                 });
             }
             
-            if (!loadMore && !searchQuery && productsToShow.length > 0) {
+            if (!loadMore && !searchQuery && !isFiltered && productsToShow.length > 0) {
                 AppState.listingsCache = productsToShow;
                 AppState.cacheTimestamp = Date.now();
             }
@@ -891,6 +940,7 @@ const renderListings = async (loadMore = false) => {
 };
 
 const displayProducts = (docs, container) => {
+// ... (omitted displayProducts function)
   if (!container) return;
   if (docs.length === 0 && container.innerHTML === '') {
     container.innerHTML = `<p class="col-span-full text-center p-8 text-lg text-gray-500" data-i18n-key="no_listings"></p>`;
@@ -940,6 +990,7 @@ const displayProducts = (docs, container) => {
 };
 
 const renderRecentlyViewed = async () => {
+// ... (omitted renderRecentlyViewed function)
     const section = document.getElementById('recently-viewed-section');
     const grid = document.getElementById('recently-viewed-grid');
     if (!section || !grid || AppState.recentlyViewed.length === 0) {
@@ -965,6 +1016,7 @@ const renderRecentlyViewed = async () => {
 };
 
 const renderRecommendations = async () => {
+// ... (omitted renderRecommendations function)
     const section = document.getElementById('recommendations-section');
     const grid = document.getElementById('recommendations-grid');
     if (!section || !grid) return;
@@ -980,6 +1032,7 @@ const renderRecommendations = async () => {
 };
 
 window.renderProductPage = async (product) => {
+// ... (omitted renderProductPage function)
     if (!product) { renderView('home'); return; }
     
     trackUserInteraction(product.id, 'viewed');
@@ -1022,6 +1075,7 @@ window.renderProductPage = async (product) => {
 };
 
 const renderProductReviews = async (productId) => {
+// ... (omitted renderProductReviews function)
     const reviewsList = document.getElementById('reviews-list');
     if (!reviewsList) return;
     reviewsList.innerHTML = `<p class="text-center text-gray-500">Loading reviews...</p>`;
@@ -1055,6 +1109,7 @@ const renderProductReviews = async (productId) => {
 };
 
 const renderStarRating = (rating) => {
+// ... (omitted renderStarRating function)
     const container = document.createElement('span');
     container.className = 'flex items-center text-yellow-500';
     for (let i = 1; i <= 5; i++) {
@@ -1066,6 +1121,7 @@ const renderStarRating = (rating) => {
 };
 
 const renderAddReviewSection = (productId) => {
+// ... (omitted renderAddReviewSection function)
     const section = document.getElementById('add-review-section');
     if (!section) return;
     section.classList.remove('hidden');
@@ -1128,6 +1184,7 @@ const renderAddReviewSection = (productId) => {
 };
 
 window.renderCartPage = async () => {
+// ... (omitted renderCartPage function)
     if (!AppState.currentUser) {
         showMessage('login_required', 3000, 'error');
         renderView('home');
@@ -1184,6 +1241,7 @@ window.renderCartPage = async () => {
 };
 
 window.renderDashboardPage = async () => {
+// ... (omitted renderDashboardPage function)
     if (!AppState.currentUser) { renderView('home'); return; }
     
     const becomeStoreCard = document.getElementById('become-store-card');
@@ -1282,6 +1340,7 @@ window.renderDashboardPage = async () => {
 };
 
 window.renderProfilePage = async (data) => {
+// ... (omitted renderProfilePage function)
     if (!data?.userId) { renderView('home'); return; }
     
     const isCurrentUserProfile = AppState.currentUser && AppState.currentUser.uid === data.userId;
@@ -1361,6 +1420,7 @@ window.renderProfilePage = async (data) => {
 };
 
 const updateProfileData = async (e) => {
+// ... (omitted updateProfileData function)
     e.preventDefault();
     if (!AppState.currentUser) { showMessage('login_required', 3000, 'error'); return; }
 
@@ -1403,6 +1463,7 @@ const updateProfileData = async (e) => {
 };
 
 window.renderInboxPage = () => {
+// ... (omitted renderInboxPage function)
     if (!AppState.currentUser) { renderView('home'); return; }
     const listContainer = document.getElementById('conversations-list');
     if (!listContainer) return;
@@ -1434,6 +1495,7 @@ window.renderInboxPage = () => {
 };
 
 window.renderChatPage = async (chatData) => {
+// ... (omitted renderChatPage function)
     if (!AppState.currentUser || !chatData) { renderView('home'); return; }
     
     const { chatId, otherUserName, productId } = chatData;
@@ -1526,6 +1588,7 @@ window.renderChatPage = async (chatData) => {
 };
 
 window.renderTermsPage = () => {
+// ... (omitted renderTermsPage function)
     const lastUpdatedEl = document.getElementById('last-updated');
     if (lastUpdatedEl) {
       lastUpdatedEl.textContent = "September 13, 2025";
@@ -1534,6 +1597,7 @@ window.renderTermsPage = () => {
 
 // REMOVED store setup function from here, it's now in store-setup.js
 const deleteUserData = async () => {
+// ... (omitted deleteUserData function)
     if (!AppState.currentUser) {
         showMessage("You must be logged in to delete your account.", 3000, 'error');
         return;
@@ -1570,6 +1634,7 @@ const deleteUserData = async () => {
 const handleSignOut = () => signOut(auth).catch(error => console.error("Sign out error", error));
 
 const startOrOpenChat = async (sellerId, sellerName, productId = null) => {
+// ... (omitted startOrOpenChat function)
     if (!AppState.currentUser) { showMessage('login_required', 3000, 'error'); return; }
     if (AppState.currentUser.uid === sellerId) { showMessage("You cannot message yourself.", 3000, 'error'); return; }
 
@@ -1595,6 +1660,7 @@ const startOrOpenChat = async (sellerId, sellerName, productId = null) => {
 };
 
 const clearCart = async () => {
+// ... (omitted clearCart function)
     if (!AppState.currentUser) return;
     try {
         await setDoc(doc(db, "carts", AppState.currentUser.uid), {});
@@ -1608,6 +1674,7 @@ const clearCart = async () => {
 };
 
 const addToCart = async (product) => {
+// ... (omitted addToCart function)
     if (!AppState.currentUser) { showMessage('login_required', 3000, 'error'); return; }
     AppState.userCart[product.id] = { productId: product.id, quantity: (AppState.userCart[product.id]?.quantity || 0) + 1 };
     try {
@@ -1621,6 +1688,7 @@ const addToCart = async (product) => {
 };
 
 const updateCartItem = async (productId, quantity) => {
+// ... (omitted updateCartItem function)
     if (!AppState.currentUser || !AppState.userCart[productId]) return;
     if (quantity <= 0) { removeFromCart(productId); return; }
     AppState.userCart[productId].quantity = quantity;
@@ -1635,6 +1703,7 @@ const updateCartItem = async (productId, quantity) => {
 };
 
 const removeFromCart = async (productId) => {
+// ... (omitted removeFromCart function)
     if (!AppState.currentUser || !AppState.userCart[productId]) return;
     delete AppState.userCart[productId];
     try {
@@ -1648,6 +1717,7 @@ const removeFromCart = async (productId) => {
 };
 
 const validatePostForm = (form) => {
+// ... (omitted validatePostForm function)
     let isValid = true;
     ['title', 'brand', 'wilaya', 'category', 'price'].forEach(fieldName => {
         const input = form.elements[fieldName];
@@ -1668,6 +1738,7 @@ const validatePostForm = (form) => {
 
 // --- AUTHENTICATION & UI UPDATES ---
 const updateAuthUI = (user) => {
+// ... (omitted updateAuthUI function)
     const { authLinksContainer, mobileNavLinks } = DOMElements;
     if (!authLinksContainer || !mobileNavLinks) return;
     authLinksContainer.innerHTML = '';
@@ -1707,6 +1778,7 @@ const updateAuthUI = (user) => {
 };
 
 const listenForUnreadMessages = (user) => {
+// ... (omitted listenForUnreadMessages function)
     if (AppState.chatsUnsubscribe) AppState.chatsUnsubscribe();
     if (!user) { updateUnreadBadge(0); return; }
 
@@ -1718,6 +1790,7 @@ const listenForUnreadMessages = (user) => {
 };
 
 const updateUnreadBadge = (count) => {
+// ... (omitted updateUnreadBadge function)
     ['unread-badge', 'mobile-unread-badge', 'nav-unread-badge'].forEach(id => {
         const el = document.getElementById(id);
         if (el) {
@@ -1742,7 +1815,7 @@ const hideRoleModal = () => {
 
 // --- SETUP & INITIALIZATION ---
 const setupEventListeners = () => {
-    const { darkModeToggle, langDropdownBtn, langBtns, sellLink, cartBtn, homeLink, mobileMenuBtn, mobileMenuCloseBtn, authModalCloseBtn, googleLoginBtn, facebookLoginBtn, modalCloseBtn, searchInput, mobileFiltersCloseBtn, mobileApplyFiltersBtn } = DOMElements;
+    const { darkModeToggle, langDropdownBtn, langBtns, sellLink, cartBtn, homeLink, mobileMenuBtn, mobileMenuCloseBtn, authModalCloseBtn, googleLoginBtn, facebookLoginBtn, modalCloseBtn, searchInput, mobileFiltersCloseBtn, mobileApplyFiltersBtn, mobileMenuBackdrop } = DOMElements;
     
     // Desktop Dark Mode Toggle
     if (darkModeToggle) {
@@ -1774,15 +1847,12 @@ const setupEventListeners = () => {
         homeLink.onclick = (e) => { e.preventDefault(); window.history.pushState({}, '', window.location.pathname); renderView('home'); };
     }
 
-    // FIX: Removed duplicated mobile menu listeners, ui-fixes.js handles this
-    // if (mobileMenuBtn) mobileMenuBtn.onclick = openMobileMenu;
-    // if (mobileMenuCloseBtn) mobileMenuCloseBtn.onclick = closeMobileMenu;
+    // FIX 2: Re-adding mobile menu listeners to fix unresponsive button
+    if (mobileMenuBtn) mobileMenuBtn.onclick = openMobileMenu;
+    if (mobileMenuCloseBtn) mobileMenuCloseBtn.onclick = closeMobileMenu;
+    if (mobileMenuBackdrop) mobileMenuBackdrop.onclick = closeMobileMenu;
+    // --- END FIX 2 ---
     
-    // FIX: Removed duplicated swipe gesture listeners, ui-fixes.js handles this
-    // if (DOMElements.mobileMenuBackdrop) DOMElements.mobileMenuBackdrop.onclick = closeMobileMenu;
-    // document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
-    // document.addEventListener('touchend', e => { touchEndX = e.changedTouches[0].screenX; handleSwipe(); }, { passive: true });
-
     const mobileNavLinksEl = document.getElementById('mobile-nav-links');
     if (mobileNavLinksEl) {
         mobileNavLinksEl.addEventListener('click', (e) => {
@@ -1964,6 +2034,7 @@ const setupEventListeners = () => {
 };
 
 const bootApp = () => {
+// ... (omitted bootApp function)
     setDarkMode(localStorage.getItem('piecety_dark_mode') === 'true');
     const currentYearEl = document.getElementById('current-year');
     if (currentYearEl) {
